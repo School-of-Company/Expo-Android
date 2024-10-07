@@ -62,7 +62,7 @@ retrofitKotlinxSerializableJson = "1.0.0"
 room = "2.6.1"
 swiperefresh = "0.27.0"
 turbine = "1.0.0"
-zxing = "3.5.1"
+zxing = "3.5.3"
 chuck = "1.1.0"
 
 

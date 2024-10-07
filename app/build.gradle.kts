@@ -17,7 +17,7 @@ android {
 dependencies {
     // todo : Add Other Project Implementation -> ex) implementation(project(":core:___")) / (project(":feature:____"))
 
-    implementation(libs.junit)
+    testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext)
     implementation(libs.app.update.ktx)
 }

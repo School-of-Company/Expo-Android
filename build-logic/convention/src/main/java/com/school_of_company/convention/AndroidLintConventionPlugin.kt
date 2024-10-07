@@ -37,4 +37,6 @@ class AndroidLintConventionPlugin : Plugin<Project> {
 private fun Lint.configure() {
     xmlReport = true  // Enable XML report generation
     checkDependencies = true  // Enable checking of dependencies
+    abortOnError = false  // Sets whether to stop the build on Lint errors
+    warningsAsErrors = true  // Treats warnings as errors to improve code quality
 }

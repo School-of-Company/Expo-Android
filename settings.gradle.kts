@@ -18,3 +18,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Expo-Android"
 include(":app")
+gradle.startParameter.excludedTaskNames.addAll(listOf(":build-logic:convention:testClasses"))

@@ -31,7 +31,7 @@ class AndroidCoreConventionPlugin : Plugin<Project> {
             dependencies {
                 add("implementation", libs.findLibrary("androidx-core-ktx").get())  // Add AndroidX Core KTX library
                 add("implementation", libs.findLibrary("kotlinx-coroutines-android").get())  // Add Kotlin Coroutines for Android
-                add("implementation", libs.findLibrary("junit").get())  // Add JUnit for unit testing
+                add("testImplementation", libs.findLibrary("junit").get())  // Add JUnit for unit testing
                 add("androidTestImplementation", libs.findLibrary("androidx-test-ext").get())  // Add AndroidX Test extension for Android testing
             }
         }

@@ -9,17 +9,8 @@ android {
     namespace = "com.school_of_company.network"
 }
 
-android {
-    // todo : buildConfig
-
-    namespace = "com.sweat.network"
-}
-
 dependencies {
     // todo : Add Other Project Implementation -> ex) implementation(project(":core:___")) / (project(":feature:____"))
-
-    debugImplementation(libs.debug.chuck)
-    releaseImplementation(libs.release.chuck)
 
     implementation(libs.kotlinx.datetime)
     implementation(libs.kotlinx.serialization.json)

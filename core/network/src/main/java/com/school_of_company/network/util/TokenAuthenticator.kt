@@ -1,6 +1,5 @@
 package com.school_of_company.network.util
 
-import kotlinx.serialization.Serializer
 import okhttp3.Authenticator
 import okhttp3.Request
 import okhttp3.Response

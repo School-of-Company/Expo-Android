@@ -1,4 +1,12 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+@file:Suppress("DSL_SCOPE_VIOLATION")
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.android.library) apply false
@@ -10,3 +18,14 @@ plugins {
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.org.jetbrains.kotlin.android) apply false
 }
+
+allprojects {
+    tasks.withType(org.jetbrains.kotlin.gradle.dsl.KotlinCompile::class.java).configureEach {
+        kotlinOptions {
+            if (project.findProperty("enableMultiModuleComposeReports") == "true") {
+                freeCompilerArgs += listOf("-P", "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" + rootProject.buildDir.absolutePath + "/compose_metrics/")
+                freeCompilerArgs += listOf("-P", "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=" + rootProject.buildDir.absolutePath + "/compose_metrics/")
+            }
+        }
+    }
+} // Setting Mendabe Code

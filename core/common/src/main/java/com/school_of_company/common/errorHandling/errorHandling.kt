@@ -2,32 +2,38 @@ package com.school_of_company.common.errorHandling
 
 import com.school_of_company.common.exception.*
 
-fun Throwable.errorHandling(
-    badRequestAction: () -> Unit = {},
-    unauthorizedAction: () -> Unit = {},
-    forbiddenAction: () -> Unit = {},
-    notFoundAction: () -> Unit = {},
-    notAcceptableAction: () -> Unit = {},
-    timeOutAction: () -> Unit = {},
-    conflictAction: () -> Unit = {},
-    tooManyRequestAction: () -> Unit = {},
-    serverAction: () -> Unit = {},
-    noInternetAction: () -> Unit = {},
-    otherHttpAction: () -> Unit = {},
-    unknownAction: () -> Unit = {},
-) {
-    when (this) {
-        is BadRequestException -> badRequestAction()
-        is UnauthorizedException, is TokenExpirationException -> unauthorizedAction()
-        is ForBiddenException -> forbiddenAction()
-        is NotFoundException -> notFoundAction()
-        is NotAcceptableException -> notAcceptableAction()
-        is TimeOutException -> timeOutAction()
-        is ConflictException -> conflictAction()
-        is TooManyRequestException -> tooManyRequestAction()
-        is ServerException -> serverAction()
-        is NoInternetException -> noInternetAction()
-        is OtherHttpException -> otherHttpAction()
-        else -> unknownAction()
+class ErrorHandlingBuilder {
+    var badRequestAction: () -> Unit = {}
+    var unauthorizedAction: () -> Unit = {}
+    var forbiddenAction: () -> Unit = {}
+    var notFoundAction: () -> Unit = {}
+    var notAcceptableAction: () -> Unit = {}
+    var timeOutAction: () -> Unit = {}
+    var conflictAction: () -> Unit = {}
+    var tooManyRequestAction: () -> Unit = {}
+    var serverAction: () -> Unit = {}
+    var noInternetAction: () -> Unit = {}
+    var otherHttpAction: () -> Unit = {}
+    var unknownAction: () -> Unit = {}
+
+    fun build(): (Throwable) -> Unit = { throwable ->
+        when (throwable) {
+            is BadRequestException -> badRequestAction()
+            is UnauthorizedException, is TokenExpirationException -> unauthorizedAction()
+            is ForBiddenException -> forbiddenAction()
+            is NotFoundException -> notFoundAction()
+            is NotAcceptableException -> notAcceptableAction()
+            is TimeOutException -> timeOutAction()
+            is ConflictException -> conflictAction()
+            is TooManyRequestException -> tooManyRequestAction()
+            is ServerException -> serverAction()
+            is NoInternetException -> noInternetAction()
+            is OtherHttpException -> otherHttpAction()
+            else -> unknownAction()
+        }
     }
+}
+
+fun Throwable.errorHandling(init: ErrorHandlingBuilder.() -> Unit) {
+    ErrorHandlingBuilder().apply(init).build()(this)
 }

@@ -20,7 +20,7 @@ class ErrorHandlingBuilder {
         when (throwable) {
             is BadRequestException -> badRequestAction()
             is UnauthorizedException, is TokenExpirationException -> unauthorizedAction()
-            is ForBiddenException -> forbiddenAction()
+            is ForbiddenException -> forbiddenAction()
             is NotFoundException -> notFoundAction()
             is NotAcceptableException -> notAcceptableAction()
             is TimeOutException -> timeOutAction()

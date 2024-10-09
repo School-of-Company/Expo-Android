@@ -19,7 +19,7 @@ class ExpoApiHandler<T> {
             throw  when(e.code()) {
                 400 -> BadRequestException(message = message)
                 401 -> UnauthorizedException(message = message)
-                403 -> ForBiddenException(message = message)
+                403 -> ForbiddenException(message = message)
                 404 -> NotFoundException(message = message)
                 409 -> ConflictException(message = message)
                 500, 501, 502, 503 -> ServerException(message = message)

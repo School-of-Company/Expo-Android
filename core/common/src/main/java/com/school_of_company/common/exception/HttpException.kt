@@ -11,7 +11,7 @@ class UnauthorizedException(
 ) : RuntimeException()
 
 // 403: Forbidden - No permission
-class ForBiddenException(
+class ForbiddenException(
     override val message: String?
 ) : RuntimeException()
 

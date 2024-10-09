@@ -2,6 +2,7 @@ package com.school_of_company.network.di
 
 import android.content.Context
 import android.util.Log
+import com.school_of_company.network.BuildConfig
 import com.school_of_company.network.util.AuthInterceptor
 import com.school_of_company.network.util.TokenAuthenticator
 import com.squareup.moshi.Moshi
@@ -65,7 +66,7 @@ object NetworkModule {
         moshiConverterFactory: MoshiConverterFactory
     ) : Retrofit {
         return Retrofit.Builder()
-            .baseUrl("") // todo : Add BaseUrl -> Use buildConfig
+            .baseUrl(BuildConfig.BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(moshiConverterFactory)
             .build()

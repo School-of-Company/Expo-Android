@@ -1,10 +1,23 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     id("expo.android.core")
     id("expo.android.hilt")
 }
 
 android {
-    // todo : buildConfig
+    buildFeatures {
+        buildConfig = true
+    }
+
+    defaultConfig {
+        buildConfigField(
+            type = "String",
+            name = "BASE_URL",
+            getApiKey("BASE_URL")
+        )
+    }
 
     namespace = "com.school_of_company.network"
 }
@@ -23,4 +36,9 @@ dependencies {
     ksp(libs.retrofit.moshi.codegen)
 }
 
-// todo : Create getApiKey
+fun getApiKey(propertyKey: String) : String {
+    val propFile = rootProject.file("./local.properties")
+    val properties = Properties()
+    properties.load(FileInputStream(propFile))
+    return properties.getProperty(propertyKey) ?: throw IllegalArgumentException("Property $propertyKey not found in local.properties")
+}

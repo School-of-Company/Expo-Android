@@ -2,6 +2,7 @@ package com.school_of_company.network.di
 
 import android.content.Context
 import android.util.Log
+import com.readystatesoftware.chuck.ChuckInterceptor
 import com.school_of_company.network.BuildConfig
 import com.school_of_company.network.util.AuthInterceptor
 import com.school_of_company.network.util.TokenAuthenticator
@@ -43,6 +44,12 @@ object NetworkModule {
             .writeTimeout(30, TimeUnit.SECONDS)
             .addInterceptor(httpLoggingInterceptor)
             .addInterceptor(authInterceptor)
+            .addInterceptor(
+                ChuckInterceptor(context)
+                    .showNotification(true)
+                    .maxContentLength(150)
+                    .retainDataFor(ChuckInterceptor.Period.ONE_HOUR)
+            )
             .authenticator(tokenAuthenticator)
             .build()
     }

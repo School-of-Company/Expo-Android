@@ -1,4 +1,4 @@
-package com.school_of_company.common.errorHandling
+package com.school_of_company.common.network
 
 import com.school_of_company.common.exception.*
 

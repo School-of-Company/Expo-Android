@@ -26,6 +26,9 @@ dependencies {
     // todo : Add Other Project Implementation -> ex) implementation(project(":core:___")) / (project(":feature:____"))
     implementation(project(":core:common"))
 
+    debugImplementation(libs.debug.chuck)
+    releaseImplementation(libs.release.chuck)
+
     implementation(libs.kotlinx.datetime)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.okhttp.logging)

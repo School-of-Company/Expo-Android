@@ -79,8 +79,8 @@ abstract class BaseViewModel<S, E, I>(initialState: S) : ViewModel() {
      * }
      * ```
      */
-    protected fun setState(newState: () -> S) {
-        _state.update { newState() }
+    protected fun setState(newState: (S) -> S) {
+        _state.update { currentState -> newState(currentState) }
     }
 
     /**

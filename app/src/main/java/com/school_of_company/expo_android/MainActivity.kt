@@ -42,10 +42,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
             .fillMaxSize()
             .background(Color.White)
     )
-    Text(
-        text = "Hello $name!",
-        modifier = Modifier
-    )
+    Text(text = "Hello $name!")
 }
 
 @ExpoPreviews

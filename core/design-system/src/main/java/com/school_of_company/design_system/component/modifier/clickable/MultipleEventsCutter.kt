@@ -18,7 +18,7 @@ private class MultipleEventsCutterImpl(private val intervalMs: Long) : MultipleE
     override fun processEvent(event: () -> Unit) {
         if (now - lastEventTimeMs >= intervalMs) {
             event.invoke()
+            lastEventTimeMs = now
         }
-        lastEventTimeMs = now
     }
 }

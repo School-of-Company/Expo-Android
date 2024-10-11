@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
@@ -21,18 +22,19 @@ fun Modifier.expoClickable(
     onClick: () -> Unit
 ) = composed(
     inspectorInfo = debugInspectorInfo {
-        name = "clickable"
+        name = "expoClickable"
         properties["enabled"] = enabled
         properties["onClickLabel"] = onClickLabel
         properties["role"] = role
         properties["onClick"] = onClick
     }
 ) {
+    val currentOnClick = rememberUpdatedState(onClick)
     val multipleEventsCutter = remember { MultipleEventsCutter.get(intervalMs = interval) }
     Modifier.clickable(
         enabled = enabled,
         onClickLabel = onClickLabel,
-        onClick = { multipleEventsCutter.processEvent { onClick() } },
+        onClick = { multipleEventsCutter.processEvent { currentOnClick.value() } },
         role = role,
         indication = if (isIndication) {
             rippleColor?.let {

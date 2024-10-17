@@ -2,7 +2,7 @@
 #Define Versions
 accompanist = "0.36.0"
 androidGradlePlugin = "8.1.4"
-androidxActivity = "1.9.2"
+androidxActivity = "1.9.3"
 androidxAppCompat = "1.7.0"
 androidxBrowser = "1.8.0"
 androidxComposeBom = "2024.09.03"

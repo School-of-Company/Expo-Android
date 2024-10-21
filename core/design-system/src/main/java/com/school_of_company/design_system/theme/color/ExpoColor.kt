@@ -25,7 +25,7 @@ object ExpoColor : ColorTheme() {
 
     // System Color
     override val error = Color(0xFFFF3434)
-    override val clear = Color(0xFF4CFF34)
+    override val sucess = Color(0xFF4CFF34)
 
     // Black And White Color
     override val black = Color(0xFF121212)

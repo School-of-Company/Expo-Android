@@ -20,6 +20,7 @@ object ExpoTypography {
         Font(R.font.pretendard_thin, FontWeight.Thin),
     )
 
+    // Title Medium 1
     @Stable
     val titleMedium1 = TextStyle(
         fontFamily = pretendard,
@@ -28,6 +29,7 @@ object ExpoTypography {
         lineHeight = 36.sp
     )
 
+    // Title SemiBold 2
     @Stable
     val titleBold2 = TextStyle(
         fontFamily = pretendard,
@@ -36,6 +38,7 @@ object ExpoTypography {
         lineHeight = 28.8.sp
     )
 
+    // Title Regular 2
     @Stable
     val titleRegular2 = TextStyle(
         fontFamily = pretendard,
@@ -44,6 +47,7 @@ object ExpoTypography {
         lineHeight = 28.8.sp
     )
 
+    // Title SemiBold 3
     @Stable
     val titleBold3 = TextStyle(
         fontFamily = pretendard,
@@ -52,6 +56,7 @@ object ExpoTypography {
         lineHeight = 24.sp
     )
 
+    // Title Regular 3
     @Stable
     val titleRegular3 = TextStyle(
         fontFamily = pretendard,
@@ -60,6 +65,7 @@ object ExpoTypography {
         lineHeight = 24.sp
     )
 
+    // Body SemiBold 1
     @Stable
     val bodyBold1 = TextStyle(
         fontFamily = pretendard,
@@ -68,6 +74,7 @@ object ExpoTypography {
         lineHeight = 21.6.sp
     )
 
+    // Body Regular 1
     @Stable
     val bodyRegular1 = TextStyle(
         fontFamily = pretendard,
@@ -76,6 +83,7 @@ object ExpoTypography {
         lineHeight = 21.6.sp
     )
 
+    // Body SemiBold 2
     @Stable
     val bodyBold2 = TextStyle(
         fontFamily = pretendard,
@@ -84,6 +92,7 @@ object ExpoTypography {
         lineHeight = 19.2.sp
     )
 
+    // Body Regular 2
     @Stable
     val bodyRegular2 = TextStyle(
         fontFamily = pretendard,
@@ -92,6 +101,7 @@ object ExpoTypography {
         lineHeight = 19.2.sp
     )
 
+    // Caption SemiBold 1
     @Stable
     val captionBold1 = TextStyle(
         fontFamily = pretendard,
@@ -100,6 +110,7 @@ object ExpoTypography {
         lineHeight = 19.6.sp
     )
 
+    // Caption Regular 1
     @Stable
     val captionRegular1 = TextStyle(
         fontFamily = pretendard,
@@ -108,6 +119,7 @@ object ExpoTypography {
         lineHeight = 19.6.sp
     )
 
+    // Caption SemiBold 2
     @Stable
     val captionBold2 = TextStyle(
         fontFamily = pretendard,
@@ -116,6 +128,7 @@ object ExpoTypography {
         lineHeight = 16.8.sp
     )
 
+    // Caption Regular 2
     @Stable
     val captionRegular2 = TextStyle(
         fontFamily = pretendard,

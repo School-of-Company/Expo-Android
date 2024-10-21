@@ -25,7 +25,7 @@ abstract class ColorTheme {
 
     // System ColorTheme
     abstract val error: Color
-    abstract val sucess: Color
+    abstract val success: Color
 
     // Black And White ColorTheme
     abstract val black: Color

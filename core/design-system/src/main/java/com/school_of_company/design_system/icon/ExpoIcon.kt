@@ -2,107 +2,25 @@ package com.school_of_company.design_system.icon
 
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.ComposableOpenTarget
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.school_of_company.design_system.R
 
 @Composable
-fun ExpoLogoIcon(modifier: Modifier = Modifier) {
+fun ExpoMainLogo(modifier: Modifier = Modifier) {
     Icon(
-        painter = painterResource(id = R.drawable.ic_expo_icon),
-        contentDescription = stringResource(id = R.string.expo_main_icon_description),
+        painter = painterResource(id = R.drawable.ic_main_expo_logo),
+        contentDescription = stringResource(id = R.string.main_expo_logo_description),
         modifier = modifier
     )
 }
 
 @Composable
-fun AeIcon(modifier: Modifier = Modifier) {
+fun DownIcon(modifier: Modifier = Modifier) {
     Icon(
-        painter = painterResource(id = R.drawable.ic_question_mark_icon),
-        contentDescription = stringResource(id = R.string.ae_icon_description),
-        modifier = modifier
-    )
-}
-
-@Composable
-fun TimeIcon(modifier: Modifier = Modifier) {
-    Icon(
-        painter = painterResource(id = R.drawable.ic_time_icon),
-        contentDescription = stringResource(id = R.string.time_icon_description),
-        modifier = modifier
-    )
-}
-
-@Composable
-fun FilterIcon(modifier: Modifier = Modifier) {
-    Icon(
-        painter = painterResource(id = R.drawable.ic_filter_icon),
-        contentDescription = stringResource(id = R.string.filter_icon_description),
-        modifier = modifier
-    )
-}
-
-@Composable
-fun PeopleIcon(modifier: Modifier = Modifier) {
-    Icon(
-        painter = painterResource(id = R.drawable.ic_people_icon),
-        contentDescription = stringResource(id = R.string.people_icon_description),
-        modifier = modifier
-    )
-}
-
-@Composable
-fun SearchIcon(modifier: Modifier = Modifier) {
-    Icon(
-        painter = painterResource(id = R.drawable.ic_search_icon),
-        contentDescription = stringResource(id = R.string.search_icon_description),
-        modifier = modifier
-    )
-}
-
-@Composable
-fun ImageIcon(modifier: Modifier = Modifier) {
-    Icon(
-        painter = painterResource(id = R.drawable.ic_image_icon),
-        contentDescription = stringResource(id = R.string.image_icon_description),
-        modifier = modifier
-    )
-}
-
-@Composable
-fun ExpoIcon(modifier: Modifier = Modifier) {
-    Icon(
-        painter = painterResource(id = R.drawable.ic_expo1_icon),
-        contentDescription = stringResource(id = R.string.expo_icon_description),
-        modifier = modifier
-    )
-}
-
-@Composable
-fun PeopleListIcon(modifier: Modifier = Modifier) {
-    Icon(
-        painter = painterResource(id = R.drawable.ic_people_list_icon),
-        contentDescription = stringResource(id = R.string.people_list_icon_description),
-        modifier = modifier
-    )
-}
-
-@Composable
-fun SettingIcon(modifier: Modifier = Modifier) {
-    Icon(
-        painter = painterResource(id = R.drawable.ic_setting_icon),
-        contentDescription = stringResource(id = R.string.setting_icon_description),
-        modifier = modifier
-    )
-}
-
-@Composable
-fun DownArrowIcon(modifier: Modifier = Modifier) {
-    Icon(
-        painter = painterResource(id = R.drawable.ic_down_arrow_icon),
-        contentDescription = stringResource(id = R.string.down_arrow_icon),
+        painter = painterResource(id = R.drawable.ic_down_arrow),
+        contentDescription = stringResource(id = R.string.down_arrow_description),
         modifier = modifier
     )
 }
@@ -110,8 +28,8 @@ fun DownArrowIcon(modifier: Modifier = Modifier) {
 @Composable
 fun RightArrowIcon(modifier: Modifier = Modifier) {
     Icon(
-        painter = painterResource(id = R.drawable.ic_right_arrow_icon),
-        contentDescription = stringResource(id = R.string.right_arrow_icon),
+        painter = painterResource(id = R.drawable.ic_right_arrow),
+        contentDescription = stringResource(id = R.string.right_arrow_description),
         modifier = modifier
     )
 }
@@ -119,8 +37,8 @@ fun RightArrowIcon(modifier: Modifier = Modifier) {
 @Composable
 fun LeftArrowIcon(modifier: Modifier = Modifier) {
     Icon(
-        painter = painterResource(id = R.drawable.ic_left_arrow_icon),
-        contentDescription = stringResource(id = R.string.left_arrow_icon),
+        painter = painterResource(id = R.drawable.ic_left_arrow),
+        contentDescription = stringResource(id = R.string.left_arrow_description),
         modifier = modifier
     )
 }
@@ -128,79 +46,44 @@ fun LeftArrowIcon(modifier: Modifier = Modifier) {
 @Composable
 fun UpArrowIcon(modifier: Modifier = Modifier) {
     Icon(
-        painter = painterResource(id = R.drawable.ic_up_arrow_icon),
-        contentDescription = stringResource(id = R.string.up_arrow_icon),
+        painter = painterResource(id = R.drawable.ic_up_arrow),
+        contentDescription = stringResource(id = R.string.up_arrow_description),
         modifier = modifier
     )
 }
 
 @Composable
-fun CancelIcon(modifier: Modifier = Modifier) {
+fun XIcon(modifier: Modifier = Modifier) {
     Icon(
-        painter = painterResource(id = R.drawable.ic_cancel_icon),
-        contentDescription = stringResource(id = R.string.cancel_icon),
+        painter = painterResource(id = R.drawable.ic_x),
+        contentDescription = stringResource(id = R.string.x_description),
         modifier = modifier
     )
 }
 
 @Composable
-fun PdfFileIcon(modifier: Modifier = Modifier) {
+fun ExpoIcon(modifier: Modifier = Modifier) {
     Icon(
-        painter = painterResource(id = R.drawable.ic_qdf_file_icon),
-        contentDescription = stringResource(id = R.string.pdf_icon_description),
+        painter = painterResource(id = R.drawable.ic_expo),
+        contentDescription = stringResource(id = R.string.expo_description),
         modifier = modifier
     )
 }
 
 @Composable
-fun TrashIcon(modifier: Modifier = Modifier) {
+fun FilterIcon(modifier: Modifier = Modifier) {
     Icon(
-        painter = painterResource(id = R.drawable.ic_trash_icon),
-        contentDescription = stringResource(id = R.string.trash_icon_description),
+        painter = painterResource(id = R.drawable.ic_filter),
+        contentDescription = stringResource(id = R.string.filter_description),
         modifier = modifier
     )
 }
 
 @Composable
-fun PencilLineIcon(modifier: Modifier = Modifier) {
+fun ImageIcon(modifier: Modifier = Modifier) {
     Icon(
-        painter = painterResource(id = R.drawable.ic_pencil_line_icon),
-        contentDescription = stringResource(id = R.string.pencil_line_icon_description),
-        modifier = modifier
-    )
-}
-
-@Composable
-fun PlusIcon(modifier: Modifier = Modifier) {
-    Icon(
-        painter = painterResource(id = R.drawable.ic_plus_icon),
-        contentDescription = stringResource(id = R.string.plus_icon_description),
-        modifier = modifier
-    )
-}
-@Composable
-fun ThreeDotIcon(modifier: Modifier = Modifier) {
-    Icon(
-        painter = painterResource(id = R.drawable.ic_three_dot_icon),
-        contentDescription = stringResource(id = R.string.three_dot_icon_description),
-        modifier = modifier
-    )
-}
-
-@Composable
-fun CopyIcon(modifier: Modifier = Modifier) {
-    Icon(
-        painter = painterResource(id = R.drawable.ic_copy_icon),
-        contentDescription = stringResource(id = R.string.two_page_icon_description),
-        modifier = modifier
-    )
-}
-
-@Composable
-fun BellIcon(modifier: Modifier = Modifier) {
-    Icon(
-        painter = painterResource(id = R.drawable.ic_bell_icon),
-        contentDescription = stringResource(id = R.string.bell_icon_description),
+        painter = painterResource(id = R.drawable.ic_image),
+        contentDescription = stringResource(id = R.string.image_description),
         modifier = modifier
     )
 }
@@ -208,8 +91,98 @@ fun BellIcon(modifier: Modifier = Modifier) {
 @Composable
 fun CheckIcon(modifier: Modifier = Modifier) {
     Icon(
-        painter = painterResource(id = R.drawable.ic_check_icon),
-        contentDescription = stringResource(id = R.string.check_icon_description),
+        painter = painterResource(id = R.drawable.ic_check),
+        contentDescription = stringResource(id = R.string.check_description),
+        modifier = modifier
+    )
+}
+
+@Composable
+fun PlusIcon(modifier: Modifier = Modifier) {
+    Icon(
+        painter = painterResource(id = R.drawable.ic_plus),
+        contentDescription = stringResource(id = R.string.plus_description),
+        modifier = modifier
+    )
+}
+
+@Composable
+fun TrashIcon(modifier: Modifier = Modifier) {
+    Icon(
+        painter = painterResource(id = R.drawable.ic_trash),
+        contentDescription = stringResource(id = R.string.trash_description),
+        modifier = modifier
+    )
+}
+
+@Composable
+fun UserIcon(modifier: Modifier = Modifier) {
+    Icon(
+        painter = painterResource(id = R.drawable.ic_user),
+        contentDescription = stringResource(id = R.string.user_description),
+        modifier = modifier
+    )
+}
+
+@Composable
+fun WarnIcon(modifier: Modifier = Modifier) {
+    Icon(
+        painter = painterResource(id = R.drawable.ic_warn),
+        contentDescription = stringResource(id = R.string.warn_description),
+        modifier = modifier
+    )
+}
+
+@Composable
+fun WonderIcon(modifier: Modifier = Modifier) {
+    Icon(
+        painter = painterResource(id = R.drawable.ic_wonder),
+        contentDescription = stringResource(id = R.string.wonder_description),
+        modifier = modifier
+    )
+}
+
+@Composable
+fun CopyIcon(modifier: Modifier = Modifier) {
+    Icon(
+        painter = painterResource(id = R.drawable.ic_copy),
+        contentDescription = stringResource(id = R.string.copy_description),
+        modifier = modifier
+    )
+}
+
+@Composable
+fun CircleIcon(modifier: Modifier = Modifier) {
+    Icon(
+        painter = painterResource(id = R.drawable.ic_circle),
+        contentDescription = stringResource(id = R.string.circle_description),
+        modifier = modifier
+    )
+}
+
+@Composable
+fun BellIcon(modifier: Modifier = Modifier) {
+    Icon(
+        painter = painterResource(id = R.drawable.ic_bell),
+        contentDescription = stringResource(id = R.string.bell_description),
+        modifier = modifier
+    )
+}
+
+@Composable
+fun LogoutIcon(modifier: Modifier = Modifier) {
+    Icon(
+        painter = painterResource(id = R.drawable.ic_logout),
+        contentDescription = stringResource(id = R.string.logout_description),
+        modifier = modifier
+    )
+}
+
+@Composable
+fun SettingIcon(modifier: Modifier = Modifier) {
+    Icon(
+        painter = painterResource(id = R.drawable.ic_setting),
+        contentDescription = stringResource(id = R.string.setting_description),
         modifier = modifier
     )
 }

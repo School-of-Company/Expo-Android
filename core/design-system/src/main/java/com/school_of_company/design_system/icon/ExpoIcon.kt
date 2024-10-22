@@ -19,7 +19,7 @@ fun ExpoLogoIcon(modifier: Modifier = Modifier) {
 @Composable
 fun AeIcon(modifier: Modifier = Modifier) {
     Icon(
-        painter = painterResource(id = R.drawable.ic_ae_icon),
+        painter = painterResource(id = R.drawable.ic_question_mark_icon),
         contentDescription = stringResource(id = R.string.ae_icon_description),
         modifier = modifier
     )

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="main_expo_logo_description">엑스포 메인 로고</string>
+    <string name="down_arrow_description">아래 방향 아이콘</string>
+    <string name="right_arrow_description">오른쪽 방향 아이콘</string>
+    <string name="left_arrow_description">왼쪽 방향 아이콘</string>
+    <string name="up_arrow_description">윗 방향 아이콘</string>
+    <string name="x_description">x 아이콘</string>
+    <string name="expo_description">박람회 아이콘</string>
+    <string name="filter_description">필터 아이콘</string>
+    <string name="image_description">이미지 아이콘</string>
+    <string name="check_description">체크 아이콘</string>
+    <string name="plus_description">플러스 아이콘</string>
+    <string name="trash_description">스레기통 아이콘</string>
+    <string name="user_description">유저 아이콘</string>
+    <string name="warn_description">경고 아이콘</string>
+    <string name="wonder_description">물음표 아이콘</string>
+    <string name="copy_description">복사 아이콘</string>
+</resources>

@@ -2,6 +2,7 @@ package com.school_of_company.design_system.icon
 
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ComposableOpenTarget
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -138,6 +139,77 @@ fun CancelIcon(modifier: Modifier = Modifier) {
     Icon(
         painter = painterResource(id = R.drawable.ic_cancel_icon),
         contentDescription = stringResource(id = R.string.cancel_icon),
+        modifier = modifier
+    )
+}
+
+@Composable
+fun PdfFileIcon(modifier: Modifier = Modifier) {
+    Icon(
+        painter = painterResource(id = R.drawable.ic_qdf_file_icon),
+        contentDescription = stringResource(id = R.string.pdf_icon_description),
+        modifier = modifier
+    )
+}
+
+@Composable
+fun TrashIcon(modifier: Modifier = Modifier) {
+    Icon(
+        painter = painterResource(id = R.drawable.ic_trash_icon),
+        contentDescription = stringResource(id = R.string.trash_icon_description),
+        modifier = modifier
+    )
+}
+
+@Composable
+fun PencilLineIcon(modifier: Modifier = Modifier) {
+    Icon(
+        painter = painterResource(id = R.drawable.ic_pencil_line_icon),
+        contentDescription = stringResource(id = R.string.pencil_line_icon_description),
+        modifier = modifier
+    )
+}
+
+@Composable
+fun PlusIcon(modifier: Modifier = Modifier) {
+    Icon(
+        painter = painterResource(id = R.drawable.ic_plus_icon),
+        contentDescription = stringResource(id = R.string.plus_icon_description),
+        modifier = modifier
+    )
+}
+@Composable
+fun ThreeDotIcon(modifier: Modifier = Modifier) {
+    Icon(
+        painter = painterResource(id = R.drawable.ic_three_dot_icon),
+        contentDescription = stringResource(id = R.string.three_dot_icon_description),
+        modifier = modifier
+    )
+}
+
+@Composable
+fun CopyIcon(modifier: Modifier = Modifier) {
+    Icon(
+        painter = painterResource(id = R.drawable.ic_copy_icon),
+        contentDescription = stringResource(id = R.string.two_page_icon_description),
+        modifier = modifier
+    )
+}
+
+@Composable
+fun BellIcon(modifier: Modifier = Modifier) {
+    Icon(
+        painter = painterResource(id = R.drawable.ic_bell_icon),
+        contentDescription = stringResource(id = R.string.bell_icon_description),
+        modifier = modifier
+    )
+}
+
+@Composable
+fun CheckIcon(modifier: Modifier = Modifier) {
+    Icon(
+        painter = painterResource(id = R.drawable.ic_check_icon),
+        contentDescription = stringResource(id = R.string.check_icon_description),
         modifier = modifier
     )
 }

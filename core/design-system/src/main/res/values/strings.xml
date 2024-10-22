@@ -16,4 +16,8 @@
     <string name="warn_description">경고 아이콘</string>
     <string name="wonder_description">물음표 아이콘</string>
     <string name="copy_description">복사 아이콘</string>
+    <string name="circle_description">원형 아이콘</string>
+    <string name="bell_description">알림 아이콘</string>
+    <string name="logout_description">로그아웃 아이콘</string>
+    <string name="setting_description">세팅 아이콘</string>
 </resources>

@@ -10,6 +10,14 @@
     <string name="image_icon_description">이미지 아이콘</string>
     <string name="expo_icon_description">박람회 아이콘</string>
     <string name="people_list_icon_description">캘린터 아이콘</string>
+    <string name="pdf_icon_description">pdf 파일 아이콘</string>
+    <string name="trash_icon_description">스레기통 아이콘</string>
+    <string name="pencil_line_icon_description">연필 아이콘</string>
+    <string name="plus_icon_description">추가 아이콘</string>
+    <string name="three_dot_icon_description">세부 목록 아이콘</string>
+    <string name="two_page_icon_description">복사 아이콘</string>
+    <string name="bell_icon_description">벨 아이콘</string>
+    <string name="check_icon_description">체크 아이콘</string>
     
     <string name="down_arrow_icon">아랫 방향 화살표 아이콘</string>
     <string name="right_arrow_icon">오른쪽 방향 아이콘</string>

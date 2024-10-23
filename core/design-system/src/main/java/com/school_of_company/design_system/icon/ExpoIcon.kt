@@ -10,7 +10,7 @@ import com.school_of_company.design_system.R
 @Composable
 fun ExpoMainLogo(modifier: Modifier = Modifier) {
     Icon(
-        painter = painterResource(id = R.drawable.ic_main_expo_logo),
+        painter = painterResource(id = R.drawable.logo_expo),
         contentDescription = stringResource(id = R.string.main_expo_logo_description),
         modifier = modifier
     )

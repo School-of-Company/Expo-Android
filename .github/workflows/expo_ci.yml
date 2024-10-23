@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@163217dfcd28294438ea1c1c149cfaf66eec283e
+      - uses: actions/checkout@e3d2460bbb42d7710191569f88069044cfb9d8cf
         with:
           fetch-depth: 0
          

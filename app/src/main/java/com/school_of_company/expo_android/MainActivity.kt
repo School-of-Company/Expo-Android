@@ -8,6 +8,7 @@ import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSiz
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.expo_android.ui.ExpoApp
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -18,13 +19,16 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // 스플래시 스크린을 표기합니다. 앱 시작 시 기본 스플래스 화면을 설정.
         installSplashScreen()
 
         enableEdgeToEdge()
 
         setContent {
             CompositionLocalProvider {
-                ExpoApp(windowSizeClass = calculateWindowSizeClass(activity = this))
+                ExpoAndroidTheme { _, _ ->
+                    ExpoApp(windowSizeClass = calculateWindowSizeClass(activity = this))
+                }
             }
         }
     }

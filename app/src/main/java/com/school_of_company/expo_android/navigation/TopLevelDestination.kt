@@ -2,6 +2,7 @@ package com.school_of_company.expo_android.navigation
 
 import com.school_of_company.design_system.R
 
+// TopLevelDestination
 enum class TopLevelDestination(
     val unSelectedIcon: Int,
     val iconText: String

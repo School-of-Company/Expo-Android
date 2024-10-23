@@ -186,3 +186,48 @@ fun SettingIcon(modifier: Modifier = Modifier) {
         modifier = modifier
     )
 }
+
+@Composable
+fun CheckBoxIcon(modifier: Modifier = Modifier) {
+    Icon(
+        painter = painterResource(id = R.drawable.ic_check_box),
+        contentDescription = stringResource(id = R.string.checkbox_description),
+        modifier = modifier
+    )
+}
+
+@Composable
+fun DropDownIcon(modifier: Modifier = Modifier) {
+    Icon(
+        painter = painterResource(id = R.drawable.ic_drop_down),
+        contentDescription = stringResource(id = R.string.drop_down_description),
+        modifier = modifier
+    )
+}
+
+@Composable
+fun TwoCircleIcon(modifier: Modifier = Modifier) {
+    Icon(
+        painter = painterResource(id = R.drawable.ic_two_circle),
+        contentDescription = stringResource(id = R.string.two_circle_description),
+        modifier = modifier
+    )
+}
+
+@Composable
+fun LongContentIcon(modifier: Modifier = Modifier) {
+    Icon(
+        painter = painterResource(id = R.drawable.ic_long_content),
+        contentDescription = stringResource(id = R.string.long_content_description),
+        modifier = modifier
+    )
+}
+
+@Composable
+fun ShortContentIcon(modifier: Modifier = Modifier) {
+    Icon(
+        painter = painterResource(id = R.drawable.ic_short_content),
+        contentDescription = stringResource(id = R.string.short_content_description),
+        modifier = modifier
+    )
+}

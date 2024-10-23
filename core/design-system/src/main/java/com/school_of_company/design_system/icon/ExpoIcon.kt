@@ -231,3 +231,21 @@ fun ShortContentIcon(modifier: Modifier = Modifier) {
         modifier = modifier
     )
 }
+
+@Composable
+fun HomeIcon(modifier: Modifier = Modifier) {
+    Icon(
+        painter = painterResource(id = R.drawable.ic_house),
+        contentDescription = stringResource(id = R.string.home_description),
+        modifier = modifier
+    )
+}
+
+@Composable
+fun AppendIcon(modifier: Modifier = Modifier) {
+    Icon(
+        painter = painterResource(id = R.drawable.ic_append),
+        contentDescription = stringResource(id = R.string.append_description),
+        modifier = modifier
+    )
+}

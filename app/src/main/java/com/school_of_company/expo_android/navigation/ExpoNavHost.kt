@@ -1,14 +1,20 @@
 package com.school_of_company.expo_android.navigation
 
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import com.school_of_company.expo_android.ui.ExpoAppState
 
 @Composable
 fun ExpoNavHost(
     modifier: Modifier = Modifier,
-    appState: ExpoAppState,
+    appState: ExpoAppState, // 네비게이션의 상태를 포함하는 앱의 상태
     startDestination: String = ""
 ) {
     val navController = appState.navController
@@ -16,7 +22,48 @@ fun ExpoNavHost(
     NavHost(
         navController = navController,
         startDestination = startDestination,
-        modifier = modifier
+        modifier = modifier,
+
+        // 화면을 들어갈 때의 애니메이션 - forward navigation
+        enterTransition = {
+            // mainRoute가 아니라면 왼쪽에서 슬라이드하여 나타나게 됨
+            if (targetState.destination.route != "") { // add mainRoute
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left, // 왼쪽에서 들어옴
+                    animationSpec = tween(durationMillis = 500) // 500 밀리초 동안 진행
+                )
+            } else {
+                EnterTransition.None
+            }
+        },
+        // 화면을 나갈 때의 애니메이션 - forward navigation
+        exitTransition = {
+            // mainRoute가 아니라면 왼쪽으로 슬라이드하여 사라지게 됨
+            if (targetState.destination.route != "") { // add mainRoute
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left, // 왼쪽으로 나감
+                    animationSpec = tween(durationMillis = 500) // 500 밀리초 동안 진행
+                )
+            } else {
+                ExitTransition.None
+            }
+        },
+        // 이전 화면으로 돌아갈 때의 애니메이션 - back navigation
+        popEnterTransition = {
+            // 오른쪽에서 슬라이드하여 화면이 들어옴
+            slideIntoContainer(
+                AnimatedContentTransitionScope.SlideDirection.Right, // 오른쪽에서 들어옴
+                animationSpec = tween(durationMillis = 350) // 350 밀리초 동안 진행
+            )
+        },
+        // 이전 화면으로 돌아갈 때의 애니메이션 설정 - back navigation
+        popExitTransition = {
+            // 화면이 오른쪽으로 슬라이드하며 나감
+            slideOutOfContainer(
+                AnimatedContentTransitionScope.SlideDirection.Right, // 오른쪽으로 나가는 슬라이드
+                animationSpec = tween(durationMillis = 350) // 350 밀리초 동안 진행
+            )
+        }
     ) {
 
     }

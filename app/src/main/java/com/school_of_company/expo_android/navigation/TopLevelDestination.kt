@@ -3,8 +3,8 @@ package com.school_of_company.expo_android.navigation
 import com.school_of_company.design_system.R
 
 enum class TopLevelDestination(
-    unSelectedIcon: Int,
-    iconText: String
+    val unSelectedIcon: Int,
+    val iconText: String
 ) {
     HOME(
         unSelectedIcon = R.drawable.ic_house,

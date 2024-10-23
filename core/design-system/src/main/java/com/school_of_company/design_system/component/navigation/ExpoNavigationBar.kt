@@ -24,7 +24,7 @@ fun RowScope.ExpoNavigationBarItem(
     onClick: () -> Unit,
     icon: @Composable () -> Unit,
     selectedIcon: @Composable () -> Unit = icon,
-    label: @Composable (() -> Unit)? = null,
+    label: @Composable () -> Unit,
     enabled: Boolean = true,
     alwaysShowLabel: Boolean = true
 ) {

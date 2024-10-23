@@ -20,4 +20,9 @@
     <string name="bell_description">알림 아이콘</string>
     <string name="logout_description">로그아웃 아이콘</string>
     <string name="setting_description">세팅 아이콘</string>
+    <string name="checkbox_description">체크박스 아이콘</string>
+    <string name="drop_down_description">드롭다운 아이콘</string>
+    <string name="two_circle_description">질문 아이콘</string>
+    <string name="long_content_description">장문 아이콘</string>
+    <string name="short_content_description">단문 아이콘</string>
 </resources>

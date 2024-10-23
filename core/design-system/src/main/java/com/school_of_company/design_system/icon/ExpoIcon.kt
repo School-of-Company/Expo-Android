@@ -10,7 +10,7 @@ import com.school_of_company.design_system.R
 @Composable
 fun ExpoMainLogo(modifier: Modifier = Modifier) {
     Icon(
-        painter = painterResource(id = R.drawable.ic_main_expo_logo),
+        painter = painterResource(id = R.drawable.logo_expo),
         contentDescription = stringResource(id = R.string.main_expo_logo_description),
         modifier = modifier
     )
@@ -183,6 +183,51 @@ fun SettingIcon(modifier: Modifier = Modifier) {
     Icon(
         painter = painterResource(id = R.drawable.ic_setting),
         contentDescription = stringResource(id = R.string.setting_description),
+        modifier = modifier
+    )
+}
+
+@Composable
+fun CheckBoxIcon(modifier: Modifier = Modifier) {
+    Icon(
+        painter = painterResource(id = R.drawable.ic_check_box),
+        contentDescription = stringResource(id = R.string.checkbox_description),
+        modifier = modifier
+    )
+}
+
+@Composable
+fun DropDownIcon(modifier: Modifier = Modifier) {
+    Icon(
+        painter = painterResource(id = R.drawable.ic_drop_down),
+        contentDescription = stringResource(id = R.string.drop_down_description),
+        modifier = modifier
+    )
+}
+
+@Composable
+fun TwoCircleIcon(modifier: Modifier = Modifier) {
+    Icon(
+        painter = painterResource(id = R.drawable.ic_two_circle),
+        contentDescription = stringResource(id = R.string.two_circle_description),
+        modifier = modifier
+    )
+}
+
+@Composable
+fun LongContentIcon(modifier: Modifier = Modifier) {
+    Icon(
+        painter = painterResource(id = R.drawable.ic_long_content),
+        contentDescription = stringResource(id = R.string.long_content_description),
+        modifier = modifier
+    )
+}
+
+@Composable
+fun ShortContentIcon(modifier: Modifier = Modifier) {
+    Icon(
+        painter = painterResource(id = R.drawable.ic_short_content),
+        contentDescription = stringResource(id = R.string.short_content_description),
         modifier = modifier
     )
 }

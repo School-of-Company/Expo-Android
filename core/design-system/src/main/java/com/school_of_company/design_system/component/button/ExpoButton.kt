@@ -21,7 +21,7 @@ import com.school_of_company.design_system.component.modifier.clickable.expoClic
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 
 @Composable
-fun ExpoButton1(
+fun ExpoButton(
     modifier: Modifier = Modifier,
     text: String,
     state: ButtonState = ButtonState.Enable,
@@ -61,7 +61,7 @@ fun ExpoButton1(
 private fun ExpoButtonPreview() {
     val isPositiveActionDialogVisible = remember { mutableStateOf(false) }
     Column {
-        ExpoButton1(
+        ExpoButton(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 12.dp),

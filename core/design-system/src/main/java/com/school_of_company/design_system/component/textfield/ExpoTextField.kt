@@ -3,8 +3,10 @@ package com.school_of_company.design_system.component.textfield
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -142,20 +144,26 @@ fun ErrorText(
 @Preview
 @Composable
 fun ExpoOutlinedTextField() {
-    Column(verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.Top),) {
-        ExpoOutlineTextField(
-            label = "아이디",
-            value = "",
-            onValueChange = {},
-            placeholder = "아이디를 입력해주세요",
-        )
-        ExpoOutlineTextField(
-            label = "로그인",
-            value = "",
-            onValueChange = {},
-            placeholder = "아이디를 입력해주세요.",
-            errorPlaceholder = "아이디를 잘못입력했습니다.",
-            isError = true
-        )
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+    ) {
+        Column(verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.Top),) {
+            ExpoOutlineTextField(
+                label = "아이디",
+                value = "",
+                onValueChange = {},
+                placeholder = "아이디를 입력해주세요",
+            )
+            ExpoOutlineTextField(
+                label = "로그인",
+                value = "",
+                onValueChange = {},
+                placeholder = "아이디를 입력해주세요.",
+                errorPlaceholder = "아이디를 잘못입력했습니다.",
+                isError = true
+            )
+        }
     }
 }

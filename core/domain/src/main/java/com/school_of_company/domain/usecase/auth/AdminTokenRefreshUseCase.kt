@@ -6,7 +6,7 @@ import javax.inject.Inject
 class AdminTokenRefreshUseCase @Inject constructor(
     private val authRepository: AuthRepository
 ) {
-    operator fun invoke(refreshToken: String) = runCatching {
-        authRepository.adminTokenRefresh(refreshToken = refreshToken)
+    operator fun invoke() = runCatching {
+        authRepository.adminTokenRefresh()
     }
 }

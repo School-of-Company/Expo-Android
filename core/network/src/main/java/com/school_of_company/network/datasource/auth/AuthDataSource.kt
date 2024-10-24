@@ -8,6 +8,6 @@ import kotlinx.coroutines.flow.Flow
 interface AuthDataSource {
     fun adminSignUp(body: AdminSignUpRequest) : Flow<Unit>
     fun adminSignIn(body: AdminSignInRequest) : Flow<AdminTokenResponse>
-    fun adminTokenRefresh(refreshToken: String) : Flow<AdminTokenResponse>
+    fun adminTokenRefresh() : Flow<AdminTokenResponse>
     fun adminLogout() : Flow<Unit>
 }

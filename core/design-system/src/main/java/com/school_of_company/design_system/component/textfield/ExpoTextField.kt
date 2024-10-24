@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.dp
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 
 @Composable
-fun ExpoOutlineTextField(
+fun ExpoOutlinedTextField(
     modifier: Modifier = Modifier,
     label: String,
     value: String,

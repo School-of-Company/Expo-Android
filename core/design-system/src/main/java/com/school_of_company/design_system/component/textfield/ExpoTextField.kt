@@ -143,13 +143,13 @@ fun ErrorText(
 
 @Preview
 @Composable
-fun ExpoOutlinedTextField() {
+fun ExpoOutlinedTextFieldPreview() {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
     ) {
-        Column(verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.Top),) {
+        Column(verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.Top)) {
             ExpoOutlineTextField(
                 label = "아이디",
                 value = "",

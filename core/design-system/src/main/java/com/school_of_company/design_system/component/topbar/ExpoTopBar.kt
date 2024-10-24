@@ -24,9 +24,9 @@ fun ExpoTopBar(
     modifier: Modifier = Modifier,
     startIcon: @Composable () -> Unit,
     betweenText: String = "",
-    endIcon: @Composable () -> Unit = { Spacer(modifier = modifier.size(24.dp)) }
+    endIcon: @Composable () -> Unit = { Spacer(modifier = Modifier.size(24.dp)) }
 ) {
-    ExpoAndroidTheme { colors, typography ->
+    ExpoAndroidTheme { _, _ ->
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,

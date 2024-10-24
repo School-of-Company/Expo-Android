@@ -11,14 +11,14 @@ import kotlinx.coroutines.flow.transform
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
-    private val datasource: AuthDataSource
+    private val remoteDatasource: AuthDataSource
 ) : AuthRepository {
     override fun adminSignUp(body: AdminSignUpRequestParam): Flow<Unit> {
-        return datasource.adminSignUp(body = body.toDto())
+        return remoteDatasource.adminSignUp(body = body.toDto())
     }
 
     override fun adminSignIn(body: AdminSignInRequestParam): Flow<AdminTokenResponseModel> {
-        return datasource.adminSignIn(
+        return remoteDatasource.adminSignIn(
             body = body.toDto()
         ).transform { reponse ->
             emit(reponse.toModel())
@@ -26,7 +26,7 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override fun adminTokenRefresh(refreshToken: String): Flow<AdminTokenResponseModel> {
-        return datasource.adminTokenRefresh(
+        return remoteDatasource.adminTokenRefresh(
             refreshToken = refreshToken
         ).transform { reponse ->
             emit(reponse.toModel())
@@ -34,6 +34,6 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override fun adminLogout(): Flow<Unit> {
-        return datasource.adminLogout()
+        return remoteDatasource.adminLogout()
     }
 }

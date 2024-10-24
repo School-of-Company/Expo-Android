@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.readystatesoftware.chuck.ChuckInterceptor
 import com.school_of_company.network.BuildConfig
+import com.school_of_company.network.api.AuthAPI
 import com.school_of_company.network.util.AuthInterceptor
 import com.school_of_company.network.util.TokenAuthenticator
 import com.squareup.moshi.Moshi
@@ -83,4 +84,8 @@ object NetworkModule {
             .addConverterFactory(moshiConverterFactory)
             .build()
     }
+
+    @Provides
+    fun provideAuthAPI(retrofit: Retrofit) : AuthAPI =
+        retrofit.create(AuthAPI::class.java)
 }

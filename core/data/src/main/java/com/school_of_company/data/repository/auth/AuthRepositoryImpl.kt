@@ -20,14 +20,14 @@ class AuthRepositoryImpl @Inject constructor(
     override fun adminSignIn(body: AdminSignInRequestParam): Flow<AdminTokenResponseModel> {
         return remoteDatasource.adminSignIn(
             body = body.toDto()
-        ).transform { reponse ->
-            emit(reponse.toModel())
+        ).transform { response ->
+            emit(response.toModel())
         }
     }
 
     override fun adminTokenRefresh(): Flow<AdminTokenResponseModel> {
-        return remoteDatasource.adminTokenRefresh().transform { reponse ->
-            emit(reponse.toModel())
+        return remoteDatasource.adminTokenRefresh().transform { response ->
+            emit(response.toModel())
         }
     }
 

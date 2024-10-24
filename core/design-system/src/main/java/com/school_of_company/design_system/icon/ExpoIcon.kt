@@ -249,3 +249,12 @@ fun AppendIcon(modifier: Modifier = Modifier) {
         modifier = modifier
     )
 }
+
+@Composable
+fun ProgramIcon(modifier: Modifier = Modifier) {
+    Icon(
+        painter = painterResource(id = R.drawable.ic_program),
+        contentDescription = stringResource(id = R.string.program_description),
+        modifier = modifier
+    )
+}

@@ -73,15 +73,17 @@ fun ExpoNavigationBar(
 fun ExpoNavigationPreview() {
     val items = listOf(
         "홈",
+        "프로그램",
         "명단 관리",
         "박람회 생성",
-        "프로필"
+        "프로필",
     )
     val icons = listOf(
         R.drawable.ic_house,
+        R.drawable.ic_program,
         R.drawable.ic_append,
         R.drawable.ic_expo,
-        R.drawable.ic_user
+        R.drawable.ic_user,
     )
     ExpoAndroidTheme { colors, typography ->
         ExpoNavigationBar {

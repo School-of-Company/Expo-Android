@@ -1,6 +1,5 @@
 package com.school_of_company.expo_android.navigation
 
-import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -9,7 +8,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
+import com.school_of_company.common.exception.*
+import com.school_of_company.design_system.R
 import com.school_of_company.expo_android.ui.ExpoAppState
+import com.school_of_company.ui.toast.makeToast
 
 @Composable
 fun ExpoNavHost(
@@ -18,7 +20,22 @@ fun ExpoNavHost(
     startDestination: String = ""
 ) {
     val navController = appState.navController
+    val context = LocalContext.current
 
+    val makeErrorToast: (throwable: Throwable?, message: Int?) -> Unit = { throwable, message ->
+        val errorMessage = throwable?.let {
+            when(it) {
+                is ForbiddenException -> R.string.error_for_bidden
+                is TimeOutException -> R.string.error_time_out
+                is ServerException -> R.string.error_server
+                is NoInternetException -> R.string.error_no_internet
+                is OtherHttpException -> R.string.error_other_http
+                is UnKnownException -> R.string.error_un_known
+                else -> message
+            }
+        } ?: message ?: R.string.error_default
+        makeToast(context, context.getString(errorMessage))
+    }
     NavHost(
         navController = navController,
         startDestination = startDestination,

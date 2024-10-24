@@ -18,6 +18,7 @@ dependencies {
     // todo : Add Other Project Implementation -> ex) implementation(project(":core:___")) / (project(":feature:____"))
     implementation(project(":core:ui"))
     implementation(project(":core:design-system"))
+    implementation(project(":core:common"))
 
     implementation(libs.androidx.core.splashscreen)
 

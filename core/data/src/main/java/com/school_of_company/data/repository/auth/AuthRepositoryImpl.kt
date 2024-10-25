@@ -42,12 +42,10 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun saveToken(token: AdminTokenResponseModel) {
-        token.let {
-            localDataSource.setAccessToken(it.accessToken)
-            localDataSource.setRefreshToken(it.refreshToken)
-            localDataSource.setAccessTokenExp(it.accessTokenExpiresIn)
-            localDataSource.setRefreshTokenExp(it.refreshTokenExpiresIn)
-        }
+        localDataSource.setAccessToken(token.accessToken)
+        localDataSource.setRefreshToken(token.refreshToken)
+        localDataSource.setAccessTokenExp(token.accessTokenExpiresIn)
+        localDataSource.setRefreshTokenExp(token.refreshTokenExpiresIn)
     }
 
     override suspend fun deleteTokenData() {

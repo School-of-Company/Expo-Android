@@ -26,6 +26,7 @@ dependencies {
     // todo : Add Other Project Implementation -> ex) implementation(project(":core:___")) / (project(":feature:____"))
     implementation(project(":core:common"))
     implementation(project(":core:model"))
+    implementation(project(":core:datastore"))
 
     debugImplementation(libs.debug.chuck)
     releaseImplementation(libs.release.chuck)

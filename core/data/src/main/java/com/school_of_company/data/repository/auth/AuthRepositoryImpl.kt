@@ -1,5 +1,6 @@
 package com.school_of_company.data.repository.auth
 
+import com.school_of_company.datastore.datasource.AuthTokenDataSource
 import com.school_of_company.model.model.auth.AdminTokenResponseModel
 import com.school_of_company.model.param.auth.AdminSignInRequestParam
 import com.school_of_company.model.param.auth.AdminSignUpRequestParam
@@ -11,7 +12,8 @@ import kotlinx.coroutines.flow.transform
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
-    private val remoteDatasource: AuthDataSource
+    private val remoteDatasource: AuthDataSource,
+    private val localDataSource: AuthTokenDataSource
 ) : AuthRepository {
     override fun adminSignUp(body: AdminSignUpRequestParam): Flow<Unit> {
         return remoteDatasource.adminSignUp(body = body.toDto())
@@ -33,5 +35,25 @@ class AuthRepositoryImpl @Inject constructor(
 
     override fun adminLogout(): Flow<Unit> {
         return remoteDatasource.adminLogout()
+    }
+
+    override fun getRefreshToken(): Flow<String> {
+        return localDataSource.getRefreshToken()
+    }
+
+    override suspend fun saveToken(token: AdminTokenResponseModel) {
+        token.let {
+            localDataSource.setAccessToken(it.accessToken)
+            localDataSource.setRefreshToken(it.refreshToken)
+            localDataSource.setAccessTokenExp(it.accessTokenExpiresIn)
+            localDataSource.setRefreshTokenExp(it.refreshTokenExpiresIn)
+        }
+    }
+
+    override suspend fun deleteTokenData() {
+        localDataSource.removeAccessToken()
+        localDataSource.removeRefreshToken()
+        localDataSource.removeAccessTokenExp()
+        localDataSource.removeRefreshTokenExp()
     }
 }

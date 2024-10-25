@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 interface AuthRepository {
     fun adminSignUp(body: AdminSignUpRequestParam) : Flow<Unit>
     fun adminSignIn(body: AdminSignInRequestParam) : Flow<AdminTokenResponseModel>
-    fun adminTokenRefresh() : Flow<AdminTokenResponseModel>
+    fun adminTokenRefresh(refreshToken: String) : Flow<AdminTokenResponseModel>
     fun adminLogout() : Flow<Unit>
     fun getRefreshToken() : Flow<String>
     suspend fun saveToken(token: AdminTokenResponseModel)

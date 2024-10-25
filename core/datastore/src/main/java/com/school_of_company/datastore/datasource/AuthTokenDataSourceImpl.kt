@@ -57,7 +57,7 @@ class AuthTokenDataSourceImpl @Inject constructor(
     override suspend fun setRefreshToken(refreshToken: String) {
         authToken.updateData {
             it.toBuilder()
-                .setRefreshExp(refreshToken)
+                .setRefreshToken(refreshToken)
                 .build()
         }
     }

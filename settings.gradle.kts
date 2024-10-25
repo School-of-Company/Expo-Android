@@ -30,5 +30,6 @@ include(":core:network")
 include(":core:ui")
 
 include(":feature")
+include(":feature:signin")
 
 gradle.startParameter.excludedTaskNames.addAll(listOf(":build-logic:convention:testClasses"))

@@ -22,10 +22,8 @@ interface AuthAPI {
     ) : AdminTokenResponse
 
     @PATCH("/auth")
-    suspend fun adminTokenRefresh(
-        // @Header ("Authorization") refreshToken: String
-    ) : AdminTokenResponse
+    suspend fun adminTokenRefresh() : AdminTokenResponse
 
-    @DELETE("auth")
+    @DELETE("/auth")
     suspend fun adminLogout()
 }

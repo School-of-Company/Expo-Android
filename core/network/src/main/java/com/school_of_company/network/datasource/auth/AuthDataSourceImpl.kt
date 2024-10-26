@@ -17,8 +17,8 @@ class AuthDataSourceImpl @Inject constructor(
     override fun adminSignIn(body: AdminSignInRequest): Flow<AdminTokenResponse> =
         performApiRequest { service.adminSignIn(body = body) }
 
-    override fun adminTokenRefresh(refreshToken: String): Flow<AdminTokenResponse> =
-        performApiRequest { service.adminTokenRefresh(refreshToken = refreshToken) }
+    override fun adminTokenRefresh(): Flow<AdminTokenResponse> =
+        performApiRequest { service.adminTokenRefresh() }
 
     override fun adminLogout(): Flow<Unit> =
         performApiRequest { service.adminLogout() }

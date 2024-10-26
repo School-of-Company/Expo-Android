@@ -27,10 +27,8 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun adminTokenRefresh(refreshToken: String): Flow<AdminTokenResponseModel> {
-        return remoteDatasource.adminTokenRefresh(
-            refreshToken = refreshToken
-        ).transform { response ->
+    override fun adminTokenRefresh(): Flow<AdminTokenResponseModel> {
+        return remoteDatasource.adminTokenRefresh().transform { response ->
             emit(response.toModel())
         }
     }

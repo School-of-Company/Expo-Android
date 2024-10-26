@@ -47,7 +47,7 @@ class TokenAuthenticator @Inject constructor(
                 .build()
 
             val authApi = retrofit.create(AuthAPI::class.java)
-            val respone = runBlocking { authApi.adminTokenRefresh("Bearer $refreshToken") }
+            val respone = runBlocking { authApi.adminTokenRefresh() }
 
             // 새롭게 발급을 받은 토큰을 DataSource에 저장하고, 이후 요청에 사용하도록 합니다.
             runBlocking {

@@ -9,4 +9,5 @@ sealed interface SignInUiState {
     object BadRequest : SignInUiState
     object NotFound : SignInUiState
     object EmailNotValid : SignInUiState
+    object PasswordValid : SignInUiState
 }

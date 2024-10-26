@@ -20,6 +20,8 @@ dependencies {
     implementation(project(":core:design-system"))
     implementation(project(":core:common"))
 
+    implementation(project(":feature:signin"))
+
     implementation(libs.androidx.core.splashscreen)
 
     testImplementation(libs.junit)

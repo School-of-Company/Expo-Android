@@ -189,7 +189,8 @@ internal fun SignInScreen(
                     isDisabled = false,
                     errorText = stringResource(id = R.string.wrong_password),
                     onValueChange = onPasswordChange,
-                    label = stringResource(id = R.string.password_label)
+                    label = stringResource(id = R.string.password_label),
+                    visualTransformationState = true
                 )
 
                 Spacer(modifier = modifier.padding(top = 24.dp))

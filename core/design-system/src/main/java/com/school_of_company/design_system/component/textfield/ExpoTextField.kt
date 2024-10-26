@@ -1,5 +1,6 @@
 package com.school_of_company.design_system.component.textfield
 
+import android.content.pm.ActivityInfo
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -17,14 +18,17 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -53,7 +57,8 @@ fun ExpoDefaultTextField(
     label: String,
     placeholder: String,
     isReadOnly: Boolean = false,
-    isNumberOnly: Boolean = false,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    focusManager: FocusManager = LocalFocusManager.current,
     isError: Boolean,
     isDisabled: Boolean,
     errorText: String,
@@ -64,6 +69,13 @@ fun ExpoDefaultTextField(
 ) {
     var text by remember { mutableStateOf(value ?: "") }
     val isFocused = remember { mutableStateOf(false) }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            focusManager.clearFocus()
+        }
+    }
+
     ExpoAndroidTheme { colors, typography ->
         Column(
             verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.Top),
@@ -120,9 +132,7 @@ fun ExpoDefaultTextField(
                 maxLines = 1,
                 singleLine = true,
                 readOnly = isReadOnly,
-                keyboardOptions = if (isNumberOnly) KeyboardOptions(keyboardType = KeyboardType.Number) else KeyboardOptions(
-                    autoCorrect = false
-                ),
+                keyboardOptions = keyboardOptions,
                 visualTransformation = if (visualTransformationState) PasswordVisualTransformation() else VisualTransformation.None
             )
             if (isError) {
@@ -155,7 +165,7 @@ fun ExpoOutlinedTextFieldPreview() {
                 isDisabled = false,
                 isReadOnly = false,
                 onClicked = {},
-                label = "이메일"
+                label = "이메일",
             )
             ExpoDefaultTextField(
                 modifier = Modifier

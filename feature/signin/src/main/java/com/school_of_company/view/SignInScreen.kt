@@ -10,21 +10,32 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.school_of_company.common.regex.checkEmailRegex
 import com.school_of_company.common.regex.checkPasswordRegex
+import com.school_of_company.design_system.R
 import com.school_of_company.design_system.component.button.ExpoButton
 import com.school_of_company.design_system.component.button.ExpoStateButton
 import com.school_of_company.design_system.component.button.state.ButtonState
@@ -32,24 +43,43 @@ import com.school_of_company.design_system.component.modifier.clickable.expoClic
 import com.school_of_company.design_system.component.textfield.ExpoDefaultTextField
 import com.school_of_company.design_system.icon.ExpoMainLogo
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
+import com.school_of_company.model.param.auth.AdminSignInRequestParam
 import com.school_of_company.signin.viewmodel.SignInViewModel
+import com.school_of_company.signin.viewmodel.uistate.SaveTokenUiState
+import com.school_of_company.signin.viewmodel.uistate.SignInUiState
 
 @Composable
 internal fun SignInRoute(
     onSignInClick: () -> Unit,
     onSignUpClick: () -> Unit,
+    onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
     viewModel: SignInViewModel = hiltViewModel()
 ) {
+    val signInUiState by viewModel.signInUiState.collectAsStateWithLifecycle()
+    val saveTokenUiState by viewModel.savedTokenUiState.collectAsStateWithLifecycle()
     val emailState by viewModel.email.collectAsStateWithLifecycle()
     val passwordState by viewModel.password.collectAsStateWithLifecycle()
+    val isEmailError by viewModel.isEmailError.collectAsStateWithLifecycle()
+    val isPasswordError by viewModel.isPasswordError.collectAsStateWithLifecycle()
 
     SignInScreen(
+        onErrorToast = onErrorToast,
+        signInUiState = signInUiState,
+        saveTokenUiState = saveTokenUiState,
+        isEmailError = isEmailError,
+        isPasswordError = isPasswordError,
         email = emailState,
         password = passwordState,
         onEmailChange = viewModel::onEmailChange,
         onPasswordChange = viewModel::onPasswordChange,
         onSignInClick = onSignInClick,
-        onSignUpClick = onSignUpClick
+        onSignUpClick = onSignUpClick,
+        signInCallBack =  {
+            viewModel.signIn(body = AdminSignInRequestParam(
+                nickname = emailState,
+                password = passwordState
+            ))
+        }
     )
 }
 
@@ -57,13 +87,51 @@ internal fun SignInRoute(
 internal fun SignInScreen(
     modifier: Modifier = Modifier,
     focusManager: FocusManager = LocalFocusManager.current,
+    signInUiState: SignInUiState,
+    saveTokenUiState: SaveTokenUiState,
+    isEmailError: Boolean,
+    isPasswordError: Boolean,
     email: String,
     password: String,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onSignInClick: () -> Unit,
-    onSignUpClick: () -> Unit
-) {
+    onSignUpClick: () -> Unit,
+    signInCallBack: () -> Unit,
+    onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
+    ) {
+
+    DisposableEffect(signInUiState, saveTokenUiState) {
+        when (signInUiState) {
+            is SignInUiState.Loading -> Unit
+            is SignInUiState.Success -> {
+                when (saveTokenUiState) {
+                    is SaveTokenUiState.Loading -> Unit
+                    is SaveTokenUiState.Success -> onSignInClick()
+                    is SaveTokenUiState.Error -> {
+                        onErrorToast(saveTokenUiState.exception, R.string.expection_saveToken)
+                    }
+                }
+            }
+            is SignInUiState.NotFound -> {
+                onErrorToast(null, R.string.expection_not_found)
+            }
+            is SignInUiState.EmailNotValid -> {
+                onErrorToast(null, R.string.expection_email_not_valid)
+            }
+            is SignInUiState.PasswordValid -> {
+                onErrorToast(null, R.string.expection_password_valid)
+            }
+            is SignInUiState.BadRequest -> {
+                onErrorToast(null, R.string.expection_bad_request)
+            }
+            is SignInUiState.Error -> {
+                onErrorToast(signInUiState.exception,  R.string.expection_signIn)
+            }
+        }
+        onDispose {}
+    }
+
     ExpoAndroidTheme { colors, typography ->
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -76,78 +144,83 @@ internal fun SignInScreen(
                     }
                 }
         ) {
-            Spacer(modifier = Modifier.padding(top = 110.dp))
-
-            ExpoMainLogo()
+            Spacer(modifier = modifier.padding(top = 150.dp))
 
             Text(
-                text = "관리자 로그인",
+                text =  stringResource(id = R.string.main_string),
+                style = typography.mainTypo,
+                color = colors.main
+            )
+
+            Text(
+                text = stringResource(id = R.string.admin_sign_in),
                 style = typography.titleBold2,
                 color = colors.black,
                 fontWeight = FontWeight.Medium
             )
 
-            Spacer(modifier = Modifier.padding(40.dp))
+            Spacer(modifier = modifier.padding(40.dp))
 
             Column(
-                modifier = Modifier.padding(horizontal = 16.dp),
+                modifier = modifier.padding(horizontal = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 ExpoDefaultTextField(
-                    modifier = Modifier
+                    modifier = modifier
                         .fillMaxWidth()
                         .height(50.dp),
-                    placeholder = "이메일을 입력해주세요.",
-                    isError = false,
+                    placeholder = stringResource(id = R.string.email_hint),
+                    isError = isEmailError,
                     isDisabled = false,
-                    errorText = "이메일을 잘못 입력했습니다.",
+                    errorText = stringResource(id = R.string.wrong_email),
                     onValueChange = onEmailChange,
-                    label = "이메일",
+                    label = stringResource(id = R.string.email_label),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
                 )
 
-                Spacer(modifier = Modifier.padding(20.dp))
+                Spacer(modifier = modifier.padding(20.dp))
 
                 ExpoDefaultTextField(
-                    modifier = Modifier
+                    modifier = modifier
                         .fillMaxWidth()
                         .height(50.dp),
-                    placeholder = "비밀번호를 입력해주세요.",
-                    isError = false,
+                    placeholder = stringResource(id = R.string.password_hint),
+                    isError = isPasswordError,
                     isDisabled = false,
-                    errorText = "비빌번호를 잘못 입력했습니다.",
+                    errorText = stringResource(id = R.string.wrong_password),
                     onValueChange = onPasswordChange,
-                    label = "비밀번호"
+                    label = stringResource(id = R.string.password_label)
                 )
 
-                Spacer(modifier = Modifier.padding(top = 24.dp))
+                Spacer(modifier = modifier.padding(top = 24.dp))
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = "아직 관리자 로그인을 안 하셨나요?",
+                        text = stringResource(id = R.string.not_member),
                         style = typography.captionRegular2,
                         color = colors.gray300,
                         fontWeight = FontWeight.Normal
                     )
 
                     Text(
-                        text = " | 회원가입",
+                        text = stringResource(id = R.string.sign_out_bar),
                         style = typography.captionRegular2,
                         color = colors.gray500,
                         fontWeight = FontWeight.Normal,
-                        modifier = Modifier.expoClickable { onSignUpClick() }
+                        modifier = modifier.expoClickable { onSignUpClick() }
                     )
                 }
 
-                Spacer(modifier = Modifier.weight(1f))
+                Spacer(modifier = modifier.weight(1f))
 
                 ExpoStateButton(
-                    text = "로그인",
-                    state = if (email.checkEmailRegex() && password.checkPasswordRegex()) ButtonState.Enable else ButtonState.Disable,
-                    modifier = Modifier
+                    text = stringResource(id = R.string.sign_in),
+                    state = if (email.isNotBlank() && password.checkPasswordRegex()) ButtonState.Enable else ButtonState.Disable,
+                    modifier = modifier
                         .fillMaxWidth()
-                        .padding(bottom = 28.dp)
+                        .padding(bottom = 52.dp)
                 ) {
-                    onSignInClick()
+                    signInCallBack()
                 }
             }
         }
@@ -163,6 +236,12 @@ fun SignInScreenPreview() {
         onEmailChange = {},
         onPasswordChange = {},
         onSignInClick = {},
-        onSignUpClick = {}
+        onSignUpClick = {},
+        signInCallBack = {},
+        signInUiState = SignInUiState.Loading,
+        saveTokenUiState = SaveTokenUiState.Loading,
+        onErrorToast = { _, _ -> },
+        isEmailError = false,
+        isPasswordError = false
     )
 }

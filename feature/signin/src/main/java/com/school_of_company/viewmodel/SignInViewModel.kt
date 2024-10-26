@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.school_of_company.common.network.errorHandling
 import com.school_of_company.common.regex.checkEmailRegex
+import com.school_of_company.common.regex.checkPasswordRegex
 import com.school_of_company.common.result.Result
 import com.school_of_company.common.result.asResult
 import com.school_of_company.domain.usecase.auth.AdminSignInRequestUseCase
@@ -15,6 +16,7 @@ import com.school_of_company.signin.viewmodel.uistate.SaveTokenUiState
 import com.school_of_company.signin.viewmodel.uistate.SignInUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -31,6 +33,29 @@ class SignInViewModel @Inject constructor(
         private const val PASSWORD = "password"
     }
 
+    internal var email = savedStateHandle.getStateFlow(key = EMAIL, initialValue = "")
+    internal var password = savedStateHandle.getStateFlow(key = PASSWORD, initialValue = "")
+
+    private var _isError = MutableStateFlow(false)
+
+    private var _isPasswordError = MutableStateFlow(false)
+    internal val isPasswordError: StateFlow<Boolean> = _isPasswordError.asStateFlow()
+
+    private var _isEmailError = MutableStateFlow(false)
+    internal val isEmailError: StateFlow<Boolean> = _isEmailError.asStateFlow()
+
+    private fun setPasswordError(value: Boolean) {
+        _isPasswordError.value = value
+    }
+
+    private fun setError(value: Boolean) {
+        _isError.value = value
+    }
+
+    private fun setEmailError(value: Boolean) {
+        _isEmailError.value = value
+    }
+
     private var _signInUiState = MutableStateFlow<SignInUiState>(SignInUiState.Loading)
     internal val signInUiState = _signInUiState.asStateFlow()
 
@@ -38,8 +63,14 @@ class SignInViewModel @Inject constructor(
     internal val savedTokenUiState = _savedTokenUiState.asStateFlow()
 
     internal fun signIn(body: AdminSignInRequestParam) = viewModelScope.launch {
-        if (email.value.checkEmailRegex()) {
+        setError(false)
+        setEmailError(false)
+        setPasswordError(false)
+        if (email.value.checkEmailRegex() && password.value.checkPasswordRegex()) {
             _signInUiState.value = SignInUiState.EmailNotValid
+            _signInUiState.value = SignInUiState.PasswordValid
+            setEmailError(true)
+            setPasswordError(true)
         } else {
             signInUseCase(body = body)
                 .asResult()
@@ -52,9 +83,14 @@ class SignInViewModel @Inject constructor(
                         }
                         is Result.Error -> {
                             _signInUiState.value = SignInUiState.Error(result.exception)
+                            setError(true)
                             result.exception.errorHandling {
-                                badRequestAction = { _signInUiState.value = SignInUiState.BadRequest }
+                                badRequestAction = {
+                                    _signInUiState.value = SignInUiState.BadRequest
+                                    setError(true)
+                                }
                                 notFoundAction = { _signInUiState.value = SignInUiState.NotFound }
+                                setError(true)
                             }
                         }
                     }
@@ -70,11 +106,9 @@ class SignInViewModel @Inject constructor(
             }
             .onFailure { remoteError ->
                 _savedTokenUiState.value = SaveTokenUiState.Error(remoteError)
+                setError(true)
             }
     }
-
-    internal var email = savedStateHandle.getStateFlow(key = EMAIL, initialValue = "")
-    internal var password = savedStateHandle.getStateFlow(key = PASSWORD, initialValue = "")
 
     internal fun onEmailChange(value: String) { savedStateHandle[EMAIL] = value }
 

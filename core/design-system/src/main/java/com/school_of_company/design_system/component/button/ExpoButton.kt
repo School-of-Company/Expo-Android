@@ -1,12 +1,16 @@
 package com.school_of_company.design_system.component.button
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -55,6 +59,46 @@ fun ExpoButton(
         }
     }
 }
+
+@Composable
+fun ExpoStateButton(
+    modifier: Modifier = Modifier,
+    text: String,
+    state: ButtonState = ButtonState.Enable,
+    onClick: () -> Unit,
+) {
+    ExpoAndroidTheme { colors, typography ->
+
+        val interactionSource = remember { MutableInteractionSource() }
+
+        val enabledState: (buttonState: ButtonState) -> Boolean = {
+            when (it) {
+                ButtonState.Enable -> true
+                ButtonState.Disable -> false
+            }
+        }
+        Button(
+            modifier = modifier,
+            interactionSource = interactionSource,
+            enabled = enabledState(state),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = colors.main,
+                contentColor = colors.white,
+                disabledContainerColor = colors.gray200,
+                disabledContentColor = colors.gray400
+            ),
+            contentPadding = PaddingValues(vertical = 16.dp),
+            shape = RoundedCornerShape(12.dp),
+            onClick = onClick,
+        ) {
+            Text(
+                text = text,
+                style = typography.bodyBold2
+            )
+        }
+    }
+}
+
 
 @Preview
 @Composable

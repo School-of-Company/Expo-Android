@@ -91,7 +91,7 @@ fun ExpoDefaultTextField(
             OutlinedTextField(
                 value = text,
                 onValueChange = {
-                    text = value ?: it
+                    text = it
                     onValueChange(it)
                 },
                 modifier = modifier

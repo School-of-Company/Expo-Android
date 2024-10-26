@@ -66,11 +66,15 @@ class SignInViewModel @Inject constructor(
         setError(false)
         setEmailError(false)
         setPasswordError(false)
-        if (email.value.checkEmailRegex() && password.value.checkPasswordRegex()) {
-            _signInUiState.value = SignInUiState.EmailNotValid
-            _signInUiState.value = SignInUiState.PasswordValid
-            setEmailError(true)
-            setPasswordError(true)
+        if (!email.value.checkEmailRegex() || !password.value.checkPasswordRegex()) {
+            if (!email.value.checkEmailRegex()) {
+                _signInUiState.value = SignInUiState.EmailNotValid
+                setEmailError(true)
+            }
+            if(!password.value.checkPasswordRegex()) {
+                _signInUiState.value = SignInUiState.PasswordValid
+                setPasswordError(true)
+            }
         } else {
             signInUseCase(body = body)
                 .asResult()
@@ -89,8 +93,10 @@ class SignInViewModel @Inject constructor(
                                     _signInUiState.value = SignInUiState.BadRequest
                                     setError(true)
                                 }
-                                notFoundAction = { _signInUiState.value = SignInUiState.NotFound }
-                                setError(true)
+                                notFoundAction = {
+                                    _signInUiState.value = SignInUiState.NotFound
+                                    setError(true)
+                                }
                             }
                         }
                     }

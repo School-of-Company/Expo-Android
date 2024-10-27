@@ -51,7 +51,7 @@
     <string name="admin_sign_in">관리자 로그인</string>
     <string name="admin_sign_up">관리자 회원가입</string>
     <string name="name_label">이름</string>
-    <string name="name_hint">이름 입력해주세요.</string>
+    <string name="name_hint">이름을 입력해주세요.</string>
     <string name="email_hint">이메일을 입력해주세요.</string>
     <string name="password_hint">비밀번호를 입력해주세요.</string>
     <string name="wrong_email">이메일을 잘못 입력하셨습니다.</string>
@@ -68,5 +68,7 @@
     <string name="check">확인</string>
     <string name="duplication_account_error">등록된 사용자가 있습니다.</string>
     <string name="sign_up_fail">회원가입에 실패하였습니다.</string>
+    <string name="nickname_label">아이디</string>
+    <string name="hint_nickname">아이디를 입력해주세요.</string>
 
 </resources>

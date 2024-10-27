@@ -265,6 +265,7 @@ internal fun SignUpScreen(
                     isDisabled = false,
                     errorText = "",
                     onValueChange = onPhoneNumberChange,
+                )
             }
 
             Spacer(modifier = Modifier.weight(1f))

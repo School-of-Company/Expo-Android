@@ -177,7 +177,7 @@ internal fun SignUpScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp),
-                    label = "이름",
+                    label = stringResource(id = R.string.name_label),
                     placeholder = stringResource(id = R.string.name_hint),
                     isError = false,
                     isDisabled = false,

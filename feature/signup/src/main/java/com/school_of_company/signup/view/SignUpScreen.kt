@@ -57,11 +57,16 @@ internal fun SignUpRoute(
     val phoneNumber by viewModel.phoneNumber.collectAsStateWithLifecycle()
     val isPasswordValidError by viewModel.isPasswordValidError.collectAsStateWithLifecycle()
     val isPasswordMismatchError by viewModel.isPasswordMismatchError.collectAsStateWithLifecycle()
+    val isEmailValidError by viewModel.isEmailValidError.collectAsStateWithLifecycle()
 
     DisposableEffect(signUpUiState) {
         when (signUpUiState) {
             is SignUpUiState.Loading -> Unit
             is SignUpUiState.Success -> onSignUpClick()
+            is SignUpUiState.EmailValid -> {
+                viewModel.setEmailValidError(true)
+                onErrorToast(null, R.string.expection_email_validdddd)
+            }
             is SignUpUiState.PasswordValid -> {
                 viewModel.setPasswordValidError(true)
                 onErrorToast(null, R.string.expection_password_validdd)
@@ -96,6 +101,7 @@ internal fun SignUpRoute(
         onPhoneNumberChange = viewModel::onPhoneNumberChange,
         isPasswordValidError = isPasswordValidError,
         isPasswordMismatchError = isPasswordMismatchError,
+        isEmailValidError = isEmailValidError,
         signUpCallBack = {
             viewModel.signUp(
                 body = AdminSignUpRequestParam(
@@ -127,6 +133,7 @@ internal fun SignUpScreen(
     onPhoneNumberChange: (String) -> Unit,
     isPasswordValidError: Boolean,
     isPasswordMismatchError: Boolean,
+    isEmailValidError: Boolean,
     signUpCallBack: () -> Unit
 ) {
     ExpoAndroidTheme { colors, typography ->
@@ -193,7 +200,7 @@ internal fun SignUpScreen(
                     value = email,
                     label = stringResource(id = R.string.email_label),
                     placeholder = stringResource(id = R.string.email_hint),
-                    isError = false,
+                    isError = isEmailValidError,
                     isDisabled = false,
                     errorText = stringResource(id = R.string.wrong_email),
                     onValueChange = onEmailChange,

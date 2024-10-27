@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.school_of_company.design_system.R
@@ -36,11 +37,15 @@ fun RightArrowIcon(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun LeftArrowIcon(modifier: Modifier = Modifier) {
+fun LeftArrowIcon(
+    modifier: Modifier = Modifier,
+    tint: Color = Color.Unspecified
+) {
     Icon(
         painter = painterResource(id = R.drawable.ic_left_arrow),
         contentDescription = stringResource(id = R.string.left_arrow_description),
-        modifier = modifier
+        modifier = modifier,
+        tint = tint
     )
 }
 

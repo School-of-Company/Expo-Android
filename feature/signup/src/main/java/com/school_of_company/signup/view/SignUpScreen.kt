@@ -177,6 +177,7 @@ internal fun SignUpScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp),
+                    value = nickname,
                     label = stringResource(id = R.string.name_label),
                     placeholder = stringResource(id = R.string.name_hint),
                     isError = false,
@@ -189,6 +190,7 @@ internal fun SignUpScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp),
+                    value = email,
                     label = stringResource(id = R.string.email_label),
                     placeholder = stringResource(id = R.string.email_hint),
                     isError = false,
@@ -202,6 +204,7 @@ internal fun SignUpScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp),
+                    value = password,
                     label = stringResource(id = R.string.password_label),
                     placeholder = stringResource(id = R.string.password_hint),
                     isError = isPasswordValidError,
@@ -215,6 +218,7 @@ internal fun SignUpScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp),
+                    value = rePassword,
                     placeholder = stringResource(id = R.string.retry_password),
                     isError = isPasswordMismatchError,
                     isDisabled = false,
@@ -227,6 +231,7 @@ internal fun SignUpScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp),
+                    value = phoneNumber,
                     label = stringResource(id = R.string.number),
                     placeholder = stringResource(id = R.string.write_number),
                     isError = false,

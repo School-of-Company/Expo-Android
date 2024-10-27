@@ -72,7 +72,7 @@ internal fun SignUpRoute(
             }
             is SignUpUiState.DuplicateAccount -> {
                 viewModel.setDuplicateAccountError(true)
-                onErrorToast(null, R.string.duplication_accout_error)
+                onErrorToast(null, R.string.duplication_account_error)
             }
             is SignUpUiState.Error -> {
                 viewModel.setError(true)

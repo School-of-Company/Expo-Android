@@ -11,8 +11,12 @@ import androidx.navigation.compose.NavHost
 import com.school_of_company.common.exception.*
 import com.school_of_company.design_system.R
 import com.school_of_company.expo_android.ui.ExpoAppState
+import com.school_of_company.navigation.navigateToSignIn
 import com.school_of_company.navigation.sigInRoute
 import com.school_of_company.navigation.signInScreen
+import com.school_of_company.signup.navigation.navigationToSignUp
+import com.school_of_company.signup.navigation.signUpRoute
+import com.school_of_company.signup.navigation.signUpScreen
 import com.school_of_company.ui.toast.makeToast
 
 @Composable
@@ -85,8 +89,14 @@ fun ExpoNavHost(
         }
     ) {
         signInScreen(
-            onSignUpClick = { /* todo : navigateToSignUp */ },
+            onSignUpClick = navController::navigationToSignUp,
             onSignInClick = { /* todo : navigateToMain */ },
+            onErrorToast = makeErrorToast
+        )
+
+        signUpScreen(
+            onSignUpClick = navController::navigateToSignIn,
+            onBackClicked = navController::popBackStack,
             onErrorToast = makeErrorToast
         )
     }

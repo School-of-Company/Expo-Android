@@ -1,6 +1,6 @@
 package com.school_of_company.signup.view
 
-import android.text.BoringLayout
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -10,13 +10,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
@@ -50,6 +50,7 @@ internal fun SignUpRoute(
     viewModel: SignUpViewModel = hiltViewModel()
 ) {
     val signUpUiState by viewModel.signUpUiState.collectAsStateWithLifecycle()
+    val name by viewModel.name.collectAsStateWithLifecycle()
     val nickname by viewModel.nickname.collectAsStateWithLifecycle()
     val email by viewModel.email.collectAsStateWithLifecycle()
     val password by viewModel.password.collectAsStateWithLifecycle()
@@ -89,11 +90,13 @@ internal fun SignUpRoute(
 
     SignUpScreen(
         onBackClick = onBackClick,
+        name = name,
         nickname = nickname,
         email = email,
         password = password,
         rePassword = rePassword,
         phoneNumber = phoneNumber,
+        onNameChange = viewModel::onNameChange,
         onNicknameChange = viewModel::onNicknameChange,
         onEmailChange = viewModel::onEmailChange,
         onPasswordChange = viewModel::onPasswordChange,
@@ -105,7 +108,7 @@ internal fun SignUpRoute(
         signUpCallBack = {
             viewModel.signUp(
                 body = AdminSignUpRequestParam(
-                    name = "",
+                    name = name,
                     nickname = nickname,
                     email = email,
                     password = password,
@@ -120,12 +123,15 @@ internal fun SignUpRoute(
 internal fun SignUpScreen(
     modifier: Modifier = Modifier,
     focusManager: FocusManager = LocalFocusManager.current,
+    scrollState: ScrollState = rememberScrollState(),
     onBackClick: () -> Unit,
+    name: String,
     nickname: String,
     email: String,
     password: String,
     rePassword: String,
     phoneNumber: String,
+    onNameChange: (String) -> Unit,
     onNicknameChange: (String) -> Unit,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
@@ -143,6 +149,7 @@ internal fun SignUpScreen(
             modifier = modifier
                 .fillMaxSize()
                 .background(color = colors.white)
+                .verticalScroll(scrollState)
                 .pointerInput(Unit) {
                     detectTapGestures {
                         focusManager.clearFocus()
@@ -184,13 +191,26 @@ internal fun SignUpScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp),
-                    value = nickname,
+                    value = name,
                     label = stringResource(id = R.string.name_label),
                     placeholder = stringResource(id = R.string.name_hint),
                     isError = false,
                     isDisabled = false,
                     errorText = "",
-                    onValueChange = onNicknameChange,
+                    onValueChange = onNameChange,
+                )
+
+                ExpoDefaultTextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp),
+                    value = nickname,
+                    label = stringResource(id = R.string.nickname_label),
+                    placeholder = stringResource(id = R.string.hint_nickname),
+                    isError = false,
+                    isDisabled = false,
+                    errorText = "",
+                    onValueChange = onNicknameChange
                 )
 
                 ExpoDefaultTextField(
@@ -245,15 +265,13 @@ internal fun SignUpScreen(
                     isDisabled = false,
                     errorText = "",
                     onValueChange = onPhoneNumberChange,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-                )
             }
 
             Spacer(modifier = Modifier.weight(1f))
 
             ExpoStateButton(
                 text = stringResource(id = R.string.check),
-                state = if (nickname.isNotBlank() && email.isNotBlank() && password.isNotBlank() && rePassword.isNotBlank() && phoneNumber.isNotBlank()) ButtonState.Enable else ButtonState.Disable,
+                state = if (name.isNotBlank() && nickname.isNotBlank() && email.isNotBlank() && password.isNotBlank() && rePassword.isNotBlank() && phoneNumber.isNotBlank()) ButtonState.Enable else ButtonState.Disable,
                 modifier = Modifier
                     .fillMaxWidth()
                     .paddingHorizontal(horizontal = 16.dp, bottom = 52.dp)
@@ -269,11 +287,13 @@ internal fun SignUpScreen(
 private fun SignUpScreenPreview() {
     SignUpScreen(
         onBackClick = {},
+        name = "",
         nickname = "",
         email = "",
         password = "",
         rePassword = "",
         phoneNumber = "",
+        onNameChange = {},
         onNicknameChange = {},
         onEmailChange = {},
         onPasswordChange = {},
@@ -281,6 +301,7 @@ private fun SignUpScreenPreview() {
         onPhoneNumberChange = {},
         signUpCallBack = {},
         isPasswordMismatchError = false,
-        isPasswordValidError = false
+        isPasswordValidError = false,
+        isEmailValidError = false,
     )
 }

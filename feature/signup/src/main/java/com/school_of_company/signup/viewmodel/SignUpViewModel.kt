@@ -23,6 +23,7 @@ class SignUpViewModel @Inject constructor(
     private val signUpRequestUseCase: AdminSignUpRequestUseCase
 ) : ViewModel() {
     companion object {
+        private const val NAME = "nickname"
         private const val NICKNAME = "nickname"
         private const val EMAIL = "email"
         private const val PASSWORD = "password"
@@ -31,6 +32,8 @@ class SignUpViewModel @Inject constructor(
     }
     private var _signUpUiState = MutableStateFlow<SignUpUiState>(SignUpUiState.Loading)
     internal val signUpUiState = _signUpUiState.asStateFlow()
+
+    internal var name = savedStateHandle.getStateFlow(key = NAME, initialValue = "")
 
     internal var nickname = savedStateHandle.getStateFlow(key = NICKNAME, initialValue = "")
 
@@ -119,6 +122,8 @@ class SignUpViewModel @Inject constructor(
             }
         }
     }
+
+    internal fun onNameChange(value: String) { savedStateHandle[NAME] = value }
 
     internal fun onNicknameChange(value: String) { savedStateHandle[NICKNAME] = value }
 

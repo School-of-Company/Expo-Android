@@ -106,11 +106,7 @@ fun ExpoDefaultTextField(
                         },
                         shape = RoundedCornerShape(8.dp)
                     )
-                    .onFocusChanged {
-                        isFocused.value = it.isFocused
-                        if (it.isFocused && onClicked != null) onClicked()
-                        if (!it.isFocused && value != null) text = value
-                    }
+                    .onFocusChanged { isFocused.value = it.isFocused }
                     .background(
                         color = if (isDisabled) colors.white else Color.Transparent
                     ),

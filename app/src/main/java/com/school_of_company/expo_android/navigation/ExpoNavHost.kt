@@ -11,13 +11,15 @@ import androidx.navigation.compose.NavHost
 import com.school_of_company.common.exception.*
 import com.school_of_company.design_system.R
 import com.school_of_company.expo_android.ui.ExpoAppState
+import com.school_of_company.navigation.sigInRoute
+import com.school_of_company.navigation.signInScreen
 import com.school_of_company.ui.toast.makeToast
 
 @Composable
 fun ExpoNavHost(
     modifier: Modifier = Modifier,
     appState: ExpoAppState, // 네비게이션의 상태를 포함하는 앱의 상태
-    startDestination: String = ""
+    startDestination: String = sigInRoute
 ) {
     val navController = appState.navController
     val context = LocalContext.current
@@ -82,6 +84,10 @@ fun ExpoNavHost(
             )
         }
     ) {
-
+        signInScreen(
+            onSignUpClick = { /* todo : navigateToSignUp */ },
+            onSignInClick = { /* todo : navigateToMain */ },
+            onErrorToast = makeErrorToast
+        )
     }
 }

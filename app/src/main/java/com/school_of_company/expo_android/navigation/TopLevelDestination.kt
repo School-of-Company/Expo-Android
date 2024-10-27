@@ -11,6 +11,10 @@ enum class TopLevelDestination(
         unSelectedIcon = R.drawable.ic_house,
         iconText = "홈"
     ),
+    PROGRAM(
+        unSelectedIcon = R.drawable.ic_program,
+        iconText = "프로그램"
+    ),
     ROSTER(
         unSelectedIcon = R.drawable.ic_append,
         iconText = "명단 관리"

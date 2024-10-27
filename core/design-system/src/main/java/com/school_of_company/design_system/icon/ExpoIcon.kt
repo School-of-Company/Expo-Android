@@ -1,5 +1,6 @@
 package com.school_of_company.design_system.icon
 
+import androidx.compose.foundation.Image
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -9,8 +10,8 @@ import com.school_of_company.design_system.R
 
 @Composable
 fun ExpoMainLogo(modifier: Modifier = Modifier) {
-    Icon(
-        painter = painterResource(id = R.drawable.logo_expo),
+    Image(
+        painter = painterResource(id = R.drawable.ic_eexxppoo),
         contentDescription = stringResource(id = R.string.main_expo_logo_description),
         modifier = modifier
     )

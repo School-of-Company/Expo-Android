@@ -20,6 +20,18 @@ object ExpoTypography {
         Font(R.font.pretendard_thin, FontWeight.Thin),
     )
 
+    private val changwondangamasac = FontFamily(
+        Font(R.font.changwondangamasac)
+    )
+
+    @Stable
+    val mainTypo = TextStyle(
+        fontFamily = changwondangamasac,
+        fontWeight = FontWeight.Bold,
+        fontSize = 50.sp,
+        lineHeight = 36.sp
+    )
+
     // Title Medium 1
     @Stable
     val titleMedium1 = TextStyle(

@@ -51,7 +51,7 @@ fun ExpoApp(
             containerColor = Color.Transparent,
             contentColor = colors.white,
             contentWindowInsets = WindowInsets(0, 0, 0, 0),
-            bottomBar = {
+            /*bottomBar = {
                 // BottomBar가 보여져야 하는 경우에만 표시합니다.
                 if (isBottomBarVisible.value) {
                     ExpoBottomBar(
@@ -60,7 +60,7 @@ fun ExpoApp(
                         currentDestination = appState.currentDestination // 현재 목적지 정보
                     )
                 }
-            }
+            } */
         ) { _ ->
             // 네비게이션 호스트
             ExpoNavHost(appState = appState)

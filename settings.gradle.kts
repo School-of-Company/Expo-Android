@@ -33,3 +33,4 @@ include(":feature")
 include(":feature:signin")
 
 gradle.startParameter.excludedTaskNames.addAll(listOf(":build-logic:convention:testClasses"))
+include(":feature:signup")

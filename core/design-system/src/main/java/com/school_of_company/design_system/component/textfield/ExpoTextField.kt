@@ -140,6 +140,86 @@ fun ExpoDefaultTextField(
     }
 }
 
+@Composable
+fun ExpoNoneLabelTextField(
+    modifier: Modifier,
+    placeholder: String,
+    isReadOnly: Boolean = false,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    focusManager: FocusManager = LocalFocusManager.current,
+    isError: Boolean,
+    isDisabled: Boolean,
+    errorText: String,
+    onValueChange: (String) -> Unit,
+    onClicked: (() -> Unit)? = null,
+    value: String? = null,
+    visualTransformationState: Boolean = false,
+) {
+    var text by remember { mutableStateOf(value ?: "") }
+    val isFocused = remember { mutableStateOf(false) }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            focusManager.clearFocus()
+        }
+    }
+
+    ExpoAndroidTheme { colors, typography ->
+        Column(
+            horizontalAlignment = Alignment.Start,
+        ) {
+            OutlinedTextField(
+                value = text,
+                onValueChange = {
+                    text = it
+                    onValueChange(it)
+                },
+                modifier = modifier
+                    .border(
+                        width = 1.dp,
+                        color = when {
+                            isDisabled -> colors.gray100
+                            isError -> colors.error
+                            isFocused.value -> colors.main
+                            text.isNotEmpty() -> colors.gray100
+                            else -> colors.gray100
+                        },
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                    .onFocusChanged { isFocused.value = it.isFocused }
+                    .background(
+                        color = if (isDisabled) colors.white else Color.Transparent
+                    ),
+                textStyle = typography.captionRegular2,
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedPlaceholderColor = colors.gray300,
+                    unfocusedPlaceholderColor = colors.gray300,
+                    focusedBorderColor = Color.Transparent,
+                    unfocusedBorderColor = Color.Transparent,
+                    focusedTextColor = if (isError) colors.error else colors.black,
+                    unfocusedTextColor = if (isError) colors.error else colors.black,
+                    disabledTextColor = colors.gray300,
+                    cursorColor = colors.main
+                ),
+                enabled = !isDisabled,
+                placeholder = {
+                    Text(text = placeholder, style = typography.captionRegular2)
+                },
+                maxLines = 1,
+                singleLine = true,
+                readOnly = isReadOnly,
+                keyboardOptions = keyboardOptions,
+                visualTransformation = if (visualTransformationState) PasswordVisualTransformation() else VisualTransformation.None
+            )
+            if (isError) {
+                Row(horizontalArrangement = if (isError) Arrangement.Start else Arrangement.End) {
+                    ErrorText(text = errorText)
+                }
+            }
+        }
+    }
+}
+
 
 @Preview
 @Composable

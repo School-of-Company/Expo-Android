@@ -32,8 +32,14 @@ class SignInViewModel @Inject constructor(
         private const val EMAIL = "email"
         private const val PASSWORD = "password"
     }
+    private var _signInUiState = MutableStateFlow<SignInUiState>(SignInUiState.Loading)
+    internal val signInUiState = _signInUiState.asStateFlow()
+
+    private var _savedTokenUiState = MutableStateFlow<SaveTokenUiState>(SaveTokenUiState.Loading)
+    internal val savedTokenUiState = _savedTokenUiState.asStateFlow()
 
     internal var email = savedStateHandle.getStateFlow(key = EMAIL, initialValue = "")
+
     internal var password = savedStateHandle.getStateFlow(key = PASSWORD, initialValue = "")
 
     private var _isError = MutableStateFlow(false)
@@ -55,12 +61,6 @@ class SignInViewModel @Inject constructor(
     private fun setEmailError(value: Boolean) {
         _isEmailError.value = value
     }
-
-    private var _signInUiState = MutableStateFlow<SignInUiState>(SignInUiState.Loading)
-    internal val signInUiState = _signInUiState.asStateFlow()
-
-    private var _savedTokenUiState = MutableStateFlow<SaveTokenUiState>(SaveTokenUiState.Loading)
-    internal val savedTokenUiState = _savedTokenUiState.asStateFlow()
 
     internal fun signIn(body: AdminSignInRequestParam) = viewModelScope.launch {
         setError(false)

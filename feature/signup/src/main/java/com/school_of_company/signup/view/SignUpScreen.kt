@@ -74,7 +74,7 @@ internal fun SignUpRoute(
             is SignUpUiState.Loading -> Unit
             is SignUpUiState.Success -> {
                 onSignUpClick()
-                makeToast(context, "회원가입 성공")
+                makeToast(context, "회원가입 성공, 다시 로그인 해주세요.")
             }
 
             is SignUpUiState.EmailValid -> {

@@ -307,6 +307,7 @@ internal fun SignUpScreen(
                     isDisabled = false,
                     errorText = "",
                     onValueChange = onPhoneNumberChange,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
 
                 Row(
@@ -322,7 +323,8 @@ internal fun SignUpScreen(
                         isError = isCertificationCodeError,
                         isDisabled = false,
                         errorText = stringResource(id = R.string.valid_certification),
-                        onValueChange = onCertificationNumberChange
+                        onValueChange = { if (it.length <= 6 && it.all { char -> char.isDigit() }) onCertificationNumberChange(it) },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                     )
 
                     ExpoStateButton(

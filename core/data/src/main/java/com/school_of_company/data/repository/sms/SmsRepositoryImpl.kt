@@ -1,6 +1,5 @@
 package com.school_of_company.data.repository.sms
 
-import com.school_of_company.model.param.sms.SmsSignUpCertificationNumberCertificationRequestParam
 import com.school_of_company.model.param.sms.SmsSignUpCertificationNumberSendRequestParam
 import com.school_of_company.network.datasource.sms.SmsDataSource
 import com.school_of_company.network.mapper.sms.request.toDto
@@ -14,7 +13,10 @@ class SmsRepositoryImpl @Inject constructor(
         return dataSource.smsSignUpCertificationNumberSend(body = body.toDto())
     }
 
-    override fun smsSignUpCertificationNumberCertification(body: SmsSignUpCertificationNumberCertificationRequestParam): Flow<Unit> {
-        return dataSource.smsSignUpCertificationNumberCertification(body = body.toDto())
+    override fun smsSignUpCertificationNumberCertification(phoneNumber: String, code: String): Flow<Unit> {
+        return dataSource.smsSignUpCertificationNumberCertification(
+            phoneNumber = phoneNumber,
+            code = code
+        )
     }
 }

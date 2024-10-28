@@ -41,7 +41,6 @@ import com.school_of_company.design_system.component.textfield.ExpoNoneLabelText
 import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.model.param.auth.AdminSignUpRequestParam
-import com.school_of_company.model.param.sms.SmsSignUpCertificationNumberCertificationRequestParam
 import com.school_of_company.model.param.sms.SmsSignUpCertificationNumberSendRequestParam
 import com.school_of_company.signup.viewmodel.SignUpViewModel
 import com.school_of_company.signup.viewmodel.uistate.SignUpUiState
@@ -124,10 +123,8 @@ internal fun SignUpRoute(
         isCertificationCodeError = isCertificationCodeError,
         certificationCallBack = {
             viewModel.certificationCode(
-                body = SmsSignUpCertificationNumberCertificationRequestParam(
-                    phoneNumber = phoneNumber,
-                    randomCode = certificationNumber
-                )
+                phoneNumber = phoneNumber,
+                certificationNumber = certificationNumber
             )
         },
         sendCertificationCodeCallBack = {

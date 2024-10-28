@@ -32,6 +32,7 @@ class SignInViewModel @Inject constructor(
         private const val EMAIL = "email"
         private const val PASSWORD = "password"
     }
+
     private var _signInUiState = MutableStateFlow<SignInUiState>(SignInUiState.Loading)
     internal val signInUiState = _signInUiState.asStateFlow()
 
@@ -66,25 +67,24 @@ class SignInViewModel @Inject constructor(
         setError(false)
         setEmailError(false)
         setPasswordError(false)
-        if (!email.value.checkEmailRegex() || !password.value.checkPasswordRegex()) {
-            if (!email.value.checkEmailRegex()) {
-                _signInUiState.value = SignInUiState.EmailNotValid
-                setEmailError(true)
-            }
-            if(!password.value.checkPasswordRegex()) {
-                _signInUiState.value = SignInUiState.PasswordValid
-                setPasswordError(true)
-            }
+
+        if (!password.value.checkPasswordRegex()) {
+            _signInUiState.value = SignInUiState.PasswordValid
+            setPasswordError(true)
         } else {
             signInUseCase(body = body)
                 .asResult()
                 .collectLatest { result ->
                     when (result) {
-                        is Result.Loading -> { _signInUiState.value = SignInUiState.Loading }
+                        is Result.Loading -> {
+                            _signInUiState.value = SignInUiState.Loading
+                        }
+
                         is Result.Success -> {
                             _signInUiState.value = SignInUiState.Success(result.data)
                             saveToken(result.data)
                         }
+
                         is Result.Error -> {
                             _signInUiState.value = SignInUiState.Error(result.exception)
                             setError(true)
@@ -116,8 +116,12 @@ class SignInViewModel @Inject constructor(
             }
     }
 
-    internal fun onEmailChange(value: String) { savedStateHandle[EMAIL] = value }
+    internal fun onEmailChange(value: String) {
+        savedStateHandle[EMAIL] = value
+    }
 
-    internal fun onPasswordChange(value: String) { savedStateHandle[PASSWORD] = value }
+    internal fun onPasswordChange(value: String) {
+        savedStateHandle[PASSWORD] = value
+    }
 }
 

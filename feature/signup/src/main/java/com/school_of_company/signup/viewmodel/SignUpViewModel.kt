@@ -81,6 +81,9 @@ class SignUpViewModel @Inject constructor(
     private var _isCertificationCodeValid = MutableStateFlow(false)
     internal val isCertificationCodeValid: StateFlow<Boolean> = _isCertificationCodeValid.asStateFlow()
 
+    private val _isCertificationResent = MutableStateFlow(false)
+    internal val isCertificationResent: StateFlow<Boolean> = _isCertificationResent.asStateFlow()
+
     internal fun setCodeError(value: Boolean) {
         _isCodeError.value = value
     }
@@ -107,6 +110,10 @@ class SignUpViewModel @Inject constructor(
 
     internal fun setCertificationCodeValid(value: Boolean) {
         _isCertificationCodeValid.value = value
+    }
+
+    internal fun setCertificationResent(value: Boolean) {
+        _isCertificationResent.value = value
     }
 
     internal fun initSignUp() {

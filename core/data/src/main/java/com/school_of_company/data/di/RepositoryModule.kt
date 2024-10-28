@@ -2,6 +2,8 @@ package com.school_of_company.data.di
 
 import com.school_of_company.data.repository.auth.AuthRepository
 import com.school_of_company.data.repository.auth.AuthRepositoryImpl
+import com.school_of_company.data.repository.sms.SmsRepository
+import com.school_of_company.data.repository.sms.SmsRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -16,4 +18,8 @@ abstract class RepositoryModule {
         authRepositoryImpl: AuthRepositoryImpl
     ) : AuthRepository
 
+    @Binds
+    abstract fun bindSmsRepository(
+        smsRepositoryImpl: SmsRepositoryImpl
+    ) : SmsRepository
 }

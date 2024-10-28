@@ -149,16 +149,14 @@ class SignUpViewModel @Inject constructor(
                         it.catch { remoteError ->
                             _signUpUiState.value = SignUpUiState.Error(remoteError)
                             remoteError.errorHandling {
-                                conflictAction =
-                                    { _signUpUiState.value = SignUpUiState.DuplicateAccount }
+                                conflictAction = { _signUpUiState.value = SignUpUiState.DuplicateAccount }
                             }
                         }.collect { _signUpUiState.value = SignUpUiState.Success }
                     }
                     .onFailure { error ->
                         _signUpUiState.value = SignUpUiState.Error(error)
                         error.errorHandling {
-                            conflictAction =
-                                { _signUpUiState.value = SignUpUiState.DuplicateAccount }
+                            conflictAction = { _signUpUiState.value = SignUpUiState.DuplicateAccount }
                         }
                     }
             }
@@ -191,16 +189,11 @@ class SignUpViewModel @Inject constructor(
             smsSignUpCertificationNumberSendRequestUseCase(body = body)
                 .onSuccess {
                     it.catch { remoteError ->
-                        _smsSignUpCertificationSendCodeUiState.value =
-                            SmsSignUpCertificationSendCodeUiState.Error(remoteError)
-                    }.collect {
-                        _smsSignUpCertificationSendCodeUiState.value =
-                            SmsSignUpCertificationSendCodeUiState.Success
-                    }
+                        _smsSignUpCertificationSendCodeUiState.value = SmsSignUpCertificationSendCodeUiState.Error(remoteError)
+                    }.collect { _smsSignUpCertificationSendCodeUiState.value = SmsSignUpCertificationSendCodeUiState.Success }
                 }
                 .onFailure { error ->
-                    _smsSignUpCertificationSendCodeUiState.value =
-                        SmsSignUpCertificationSendCodeUiState.Error(error)
+                    _smsSignUpCertificationSendCodeUiState.value = SmsSignUpCertificationSendCodeUiState.Error(error)
                 }
         }
 

@@ -11,7 +11,6 @@ import com.school_of_company.domain.usecase.auth.AdminSignUpRequestUseCase
 import com.school_of_company.domain.usecase.sms.SmsSignUpCertificationNumberCertificationRequestUseCase
 import com.school_of_company.domain.usecase.sms.SmsSignUpCertificationNumberSendRequestUseCase
 import com.school_of_company.model.param.auth.AdminSignUpRequestParam
-import com.school_of_company.model.param.sms.SmsSignUpCertificationNumberCertificationRequestParam
 import com.school_of_company.model.param.sms.SmsSignUpCertificationNumberSendRequestParam
 import com.school_of_company.signup.viewmodel.uistate.SignUpUiState
 import com.school_of_company.signup.viewmodel.uistate.SmsSignUpCertificationCodeUiState
@@ -40,6 +39,7 @@ class SignUpViewModel @Inject constructor(
         private const val PHONE_NUMBER = "phoneNumber"
         private const val CERTIFICATION_NUMBER = "certificationNumber"
     }
+
     private var _signUpUiState = MutableStateFlow<SignUpUiState>(SignUpUiState.Loading)
     internal val signUpUiState = _signUpUiState.asStateFlow()
 
@@ -130,76 +130,105 @@ class SignUpViewModel @Inject constructor(
                 _signUpUiState.value = SignUpUiState.PasswordMismatch
                 setPasswordMismatchError(true)
             }
+
             !password.value.checkPasswordRegex() -> {
                 _signUpUiState.value = SignUpUiState.PasswordValid
                 setPasswordValidError(true)
             }
+
             else -> {
                 signUpRequestUseCase(body = body)
                     .onSuccess {
                         it.catch { remoteError ->
                             _signUpUiState.value = SignUpUiState.Error(remoteError)
                             remoteError.errorHandling {
-                                conflictAction = { _signUpUiState.value = SignUpUiState.DuplicateAccount }
+                                conflictAction =
+                                    { _signUpUiState.value = SignUpUiState.DuplicateAccount }
                             }
                         }.collect { _signUpUiState.value = SignUpUiState.Success }
                     }
                     .onFailure { error ->
                         _signUpUiState.value = SignUpUiState.Error(error)
                         error.errorHandling {
-                            conflictAction = { _signUpUiState.value = SignUpUiState.DuplicateAccount }
+                            conflictAction =
+                                { _signUpUiState.value = SignUpUiState.DuplicateAccount }
                         }
                     }
             }
         }
     }
 
-    internal fun certificationCode(body: SmsSignUpCertificationNumberCertificationRequestParam) = viewModelScope.launch {
-        Log.d("SignUpViewModel", "Certification Code function called") // 로그 추가
-        setCodeError(false)
-        setCertificationCodeValid(false)
-        smsSignUpCertificationNumberCertificationRequestUseCase(body = body)
-            .onSuccess {
-                Log.d("SignUpViewModel", "Certification code request successful") // 성공 로그
-                it.catch { remoteError ->
-                    Log.e("SignUpViewModel", "Error caught in flow", remoteError)
-                    _smsSignUpCertificationCodeUiState.value = SmsSignUpCertificationCodeUiState.Error(remoteError)
-                }.collect {
-                    _smsSignUpCertificationCodeUiState.value = SmsSignUpCertificationCodeUiState.Success
+    internal fun certificationCode(phoneNumber: String, certificationNumber: String) =
+        viewModelScope.launch {
+            setCodeError(false)
+            setCertificationCodeValid(false)
+            smsSignUpCertificationNumberCertificationRequestUseCase(
+                phoneNumber = phoneNumber,
+                code = certificationNumber
+            )
+                .onSuccess {
+                    it.catch { remoteError ->
+                        _smsSignUpCertificationCodeUiState.value =
+                            SmsSignUpCertificationCodeUiState.Error(remoteError)
+                    }.collect {
+                        _smsSignUpCertificationCodeUiState.value =
+                            SmsSignUpCertificationCodeUiState.Success
+                        setCodeError(true)
+                    }
+                }
+                .onFailure { error ->
+                    Log.e("SignUpViewModel", "Certification code request failed", error) // 실패 로그
+                    _smsSignUpCertificationCodeUiState.value =
+                        SmsSignUpCertificationCodeUiState.Error(error)
                     setCodeError(true)
                 }
-            }
-            .onFailure { error ->
-                Log.e("SignUpViewModel", "Certification code request failed", error) // 실패 로그
-                _smsSignUpCertificationCodeUiState.value = SmsSignUpCertificationCodeUiState.Error(error)
-                setCodeError(true)
-            }
+        }
+
+    internal fun sendCertificationCode(body: SmsSignUpCertificationNumberSendRequestParam) =
+        viewModelScope.launch {
+            _smsSignUpCertificationSendCodeUiState.value =
+                SmsSignUpCertificationSendCodeUiState.Loading
+            smsSignUpCertificationNumberSendRequestUseCase(body = body)
+                .onSuccess {
+                    it.catch { remoteError ->
+                        _smsSignUpCertificationSendCodeUiState.value =
+                            SmsSignUpCertificationSendCodeUiState.Error(remoteError)
+                    }.collect {
+                        _smsSignUpCertificationSendCodeUiState.value =
+                            SmsSignUpCertificationSendCodeUiState.Success
+                    }
+                }
+                .onFailure { error ->
+                    _smsSignUpCertificationSendCodeUiState.value =
+                        SmsSignUpCertificationSendCodeUiState.Error(error)
+                }
+        }
+
+    internal fun onNameChange(value: String) {
+        savedStateHandle[NAME] = value
     }
 
-    internal fun sendCertificationCode(body: SmsSignUpCertificationNumberSendRequestParam) = viewModelScope.launch {
-        _smsSignUpCertificationSendCodeUiState.value = SmsSignUpCertificationSendCodeUiState.Loading
-        smsSignUpCertificationNumberSendRequestUseCase(body = body)
-            .onSuccess {
-                it.catch { remoteError ->
-                    _smsSignUpCertificationSendCodeUiState.value = SmsSignUpCertificationSendCodeUiState.Error(remoteError)
-                }.collect { _smsSignUpCertificationSendCodeUiState.value = SmsSignUpCertificationSendCodeUiState.Success }
-            }
-            .onFailure { error ->
-                _smsSignUpCertificationSendCodeUiState.value = SmsSignUpCertificationSendCodeUiState.Error(error)
-            }
+    internal fun onNicknameChange(value: String) {
+        savedStateHandle[NICKNAME] = value
     }
 
-    internal fun onNameChange(value: String) { savedStateHandle[NAME] = value }
+    internal fun onEmailChange(value: String) {
+        savedStateHandle[EMAIL] = value
+    }
 
-    internal fun onNicknameChange(value: String) { savedStateHandle[NICKNAME] = value }
+    internal fun onPasswordChange(value: String) {
+        savedStateHandle[PASSWORD] = value
+    }
 
-    internal fun onEmailChange(value: String) { savedStateHandle[EMAIL] = value }
+    internal fun onRePasswordChange(value: String) {
+        savedStateHandle[RE_PASSWORD] = value
+    }
 
-    internal fun onPasswordChange(value: String) { savedStateHandle[PASSWORD] = value }
+    internal fun onPhoneNumberChange(value: String) {
+        savedStateHandle[PHONE_NUMBER] = value
+    }
 
-    internal fun onRePasswordChange(value: String) { savedStateHandle[RE_PASSWORD] = value }
-
-    internal fun onPhoneNumberChange(value: String) { savedStateHandle[PHONE_NUMBER] = value }
-
-    internal fun onCertificationNumberChange(value: String) { savedStateHandle[CERTIFICATION_NUMBER] = value }
+    internal fun onCertificationNumberChange(value: String) {
+        savedStateHandle[CERTIFICATION_NUMBER] = value
+    }
 }

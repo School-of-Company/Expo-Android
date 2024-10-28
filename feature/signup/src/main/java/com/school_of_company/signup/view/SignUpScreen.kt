@@ -5,11 +5,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -39,8 +41,11 @@ import com.school_of_company.design_system.component.textfield.ExpoNoneLabelText
 import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.model.param.auth.AdminSignUpRequestParam
+import com.school_of_company.model.param.sms.SmsSignUpCertificationNumberCertificationRequestParam
+import com.school_of_company.model.param.sms.SmsSignUpCertificationNumberSendRequestParam
 import com.school_of_company.signup.viewmodel.SignUpViewModel
 import com.school_of_company.signup.viewmodel.uistate.SignUpUiState
+import com.school_of_company.signup.viewmodel.uistate.SmsSignUpCertificationCodeUiState
 
 @Composable
 internal fun SignUpRoute(
@@ -50,17 +55,20 @@ internal fun SignUpRoute(
     viewModel: SignUpViewModel = hiltViewModel()
 ) {
     val signUpUiState by viewModel.signUpUiState.collectAsStateWithLifecycle()
+    val smsSignUpCertificationCodeUiState by viewModel.smsSignUpCertificationCodeUiState.collectAsStateWithLifecycle()
     val name by viewModel.name.collectAsStateWithLifecycle()
     val nickname by viewModel.nickname.collectAsStateWithLifecycle()
     val email by viewModel.email.collectAsStateWithLifecycle()
     val password by viewModel.password.collectAsStateWithLifecycle()
     val rePassword by viewModel.rePassword.collectAsStateWithLifecycle()
     val phoneNumber by viewModel.phoneNumber.collectAsStateWithLifecycle()
+    val certificationNumber by viewModel.certificationNumber.collectAsStateWithLifecycle()
     val isPasswordValidError by viewModel.isPasswordValidError.collectAsStateWithLifecycle()
     val isPasswordMismatchError by viewModel.isPasswordMismatchError.collectAsStateWithLifecycle()
     val isEmailValidError by viewModel.isEmailValidError.collectAsStateWithLifecycle()
+    val isCertificationCodeError by viewModel.isCertificationCodeValid.collectAsStateWithLifecycle()
 
-    DisposableEffect(signUpUiState) {
+    DisposableEffect(signUpUiState, smsSignUpCertificationCodeUiState) {
         when (signUpUiState) {
             is SignUpUiState.Loading -> Unit
             is SignUpUiState.Success -> onSignUpClick()
@@ -68,21 +76,27 @@ internal fun SignUpRoute(
                 viewModel.setEmailValidError(true)
                 onErrorToast(null, R.string.expection_email_validdddd)
             }
+
             is SignUpUiState.PasswordValid -> {
                 viewModel.setPasswordValidError(true)
                 onErrorToast(null, R.string.expection_password_validdd)
             }
+
             is SignUpUiState.PasswordMismatch -> {
                 viewModel.setPasswordMismatchError(true)
                 onErrorToast(null, R.string.mismatch_password)
             }
+
             is SignUpUiState.DuplicateAccount -> {
                 viewModel.setDuplicateAccountError(true)
                 onErrorToast(null, R.string.duplication_account_error)
             }
+
             is SignUpUiState.Error -> {
                 viewModel.setError(true)
-                onErrorToast((signUpUiState as SignUpUiState.Error).exception, R.string.sign_up_fail)
+                onErrorToast(
+                    (signUpUiState as SignUpUiState.Error).exception, R.string.sign_up_fail
+                )
             }
         }
         onDispose { viewModel.initSignUp() }
@@ -96,15 +110,33 @@ internal fun SignUpRoute(
         password = password,
         rePassword = rePassword,
         phoneNumber = phoneNumber,
+        certificationNumber = certificationNumber,
         onNameChange = viewModel::onNameChange,
         onNicknameChange = viewModel::onNicknameChange,
         onEmailChange = viewModel::onEmailChange,
         onPasswordChange = viewModel::onPasswordChange,
         onRePasswordChange = viewModel::onRePasswordChange,
         onPhoneNumberChange = viewModel::onPhoneNumberChange,
+        onCertificationNumberChange = viewModel::onCertificationNumberChange,
         isPasswordValidError = isPasswordValidError,
         isPasswordMismatchError = isPasswordMismatchError,
         isEmailValidError = isEmailValidError,
+        isCertificationCodeError = isCertificationCodeError,
+        certificationCallBack = {
+            viewModel.certificationCode(
+                body = SmsSignUpCertificationNumberCertificationRequestParam(
+                    phoneNumber = phoneNumber,
+                    randomCode = certificationNumber
+                )
+            )
+        },
+        sendCertificationCodeCallBack = {
+            viewModel.sendCertificationCode(
+                body = SmsSignUpCertificationNumberSendRequestParam(
+                    phoneNumber = phoneNumber
+                )
+            )
+        },
         signUpCallBack = {
             viewModel.signUp(
                 body = AdminSignUpRequestParam(
@@ -131,16 +163,21 @@ internal fun SignUpScreen(
     password: String,
     rePassword: String,
     phoneNumber: String,
+    certificationNumber: String,
     onNameChange: (String) -> Unit,
     onNicknameChange: (String) -> Unit,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onRePasswordChange: (String) -> Unit,
     onPhoneNumberChange: (String) -> Unit,
+    onCertificationNumberChange: (String) -> Unit,
     isPasswordValidError: Boolean,
     isPasswordMismatchError: Boolean,
     isEmailValidError: Boolean,
-    signUpCallBack: () -> Unit
+    isCertificationCodeError: Boolean,
+    signUpCallBack: () -> Unit,
+    certificationCallBack: () -> Unit,
+    sendCertificationCodeCallBack: () -> Unit
 ) {
     ExpoAndroidTheme { colors, typography ->
 
@@ -168,7 +205,7 @@ internal fun SignUpScreen(
             Spacer(modifier = Modifier.padding(top = 16.dp))
 
             Text(
-                text =  stringResource(id = R.string.main_string),
+                text = stringResource(id = R.string.main_string),
                 style = typography.mainTypo,
                 color = colors.main
             )
@@ -184,7 +221,6 @@ internal fun SignUpScreen(
 
             Column(
                 verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.Top),
-                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(horizontal = 16.dp)
             ) {
                 ExpoDefaultTextField(
@@ -236,7 +272,9 @@ internal fun SignUpScreen(
                     placeholder = stringResource(id = R.string.password_hint),
                     isError = isPasswordValidError,
                     isDisabled = false,
-                    errorText = if (isPasswordValidError) stringResource(id = R.string.expection_password_validdd) else stringResource(id = R.string.wrong_password),
+                    errorText = if (isPasswordValidError) stringResource(id = R.string.expection_password_validdd) else stringResource(
+                        id = R.string.wrong_password
+                    ),
                     onValueChange = onPasswordChange,
                     visualTransformationState = true
                 )
@@ -249,7 +287,9 @@ internal fun SignUpScreen(
                     placeholder = stringResource(id = R.string.retry_password),
                     isError = isPasswordMismatchError,
                     isDisabled = false,
-                    errorText = if (isPasswordMismatchError) stringResource(id = R.string.mismatch_password) else stringResource(id = R.string.wrong_password),
+                    errorText = if (isPasswordMismatchError) stringResource(id = R.string.mismatch_password) else stringResource(
+                        id = R.string.wrong_password
+                    ),
                     onValueChange = onRePasswordChange,
                     visualTransformationState = true
                 )
@@ -266,7 +306,42 @@ internal fun SignUpScreen(
                     errorText = "",
                     onValueChange = onPhoneNumberChange,
                 )
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.Start),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    ExpoNoneLabelTextField(
+                        modifier = Modifier
+                            .height(50.dp)
+                            .width(242.dp),
+                        value = certificationNumber,
+                        placeholder = "인증 번호 입력",
+                        isError = isCertificationCodeError,
+                        isDisabled = false,
+                        errorText = "인증번호가 올바르지 않습니다.",
+                        onValueChange = onCertificationNumberChange
+                    )
+
+                    ExpoStateButton(
+                        text = stringResource(id = R.string.check),
+                        state = if (certificationNumber.isNotBlank()) ButtonState.Enable else ButtonState.Disable,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        certificationCallBack()
+                    }
+                }
             }
+
+            Text(
+                text = "인증번호 발송",
+                style = typography.captionRegular2,
+                color = colors.gray300,
+                modifier = Modifier
+                    .expoClickable { sendCertificationCodeCallBack() }
+                    .align(Alignment.Start)
+                    .padding(start = 16.dp, top = 6.dp)
+            )
 
             Spacer(modifier = Modifier.weight(1f))
 
@@ -275,7 +350,7 @@ internal fun SignUpScreen(
                 state = if (name.isNotBlank() && nickname.isNotBlank() && email.isNotBlank() && password.isNotBlank() && rePassword.isNotBlank() && phoneNumber.isNotBlank()) ButtonState.Enable else ButtonState.Disable,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .paddingHorizontal(horizontal = 16.dp, bottom = 52.dp)
+                    .paddingHorizontal(horizontal = 16.dp, bottom = 52.dp, top = 30.dp)
             ) {
                 signUpCallBack()
             }
@@ -294,6 +369,7 @@ private fun SignUpScreenPreview() {
         password = "",
         rePassword = "",
         phoneNumber = "",
+        certificationNumber = "",
         onNameChange = {},
         onNicknameChange = {},
         onEmailChange = {},
@@ -301,8 +377,12 @@ private fun SignUpScreenPreview() {
         onRePasswordChange = {},
         onPhoneNumberChange = {},
         signUpCallBack = {},
+        onCertificationNumberChange = {},
         isPasswordMismatchError = false,
         isPasswordValidError = false,
         isEmailValidError = false,
+        certificationCallBack = {},
+        sendCertificationCodeCallBack = {},
+        isCertificationCodeError = false
     )
 }

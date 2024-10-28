@@ -175,18 +175,11 @@ class SignUpViewModel @Inject constructor(
             )
                 .onSuccess {
                     it.catch { remoteError ->
-                        _smsSignUpCertificationCodeUiState.value =
-                            SmsSignUpCertificationCodeUiState.Error(remoteError)
-                    }.collect {
-                        _smsSignUpCertificationCodeUiState.value =
-                            SmsSignUpCertificationCodeUiState.Success
-                        setCodeError(true)
-                    }
+                        _smsSignUpCertificationCodeUiState.value = SmsSignUpCertificationCodeUiState.Error(remoteError)
+                    }.collect { _smsSignUpCertificationCodeUiState.value = SmsSignUpCertificationCodeUiState.Success }
                 }
                 .onFailure { error ->
-                    Log.e("SignUpViewModel", "Certification code request failed", error) // 실패 로그
-                    _smsSignUpCertificationCodeUiState.value =
-                        SmsSignUpCertificationCodeUiState.Error(error)
+                    _smsSignUpCertificationCodeUiState.value = SmsSignUpCertificationCodeUiState.Error(error)
                     setCodeError(true)
                 }
         }

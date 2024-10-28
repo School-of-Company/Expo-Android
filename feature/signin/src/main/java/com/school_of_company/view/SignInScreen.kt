@@ -1,5 +1,6 @@
 package com.school_of_company.signin.view
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -37,6 +39,7 @@ import com.school_of_company.model.param.auth.AdminSignInRequestParam
 import com.school_of_company.signin.viewmodel.SignInViewModel
 import com.school_of_company.signin.viewmodel.uistate.SaveTokenUiState
 import com.school_of_company.signin.viewmodel.uistate.SignInUiState
+import com.school_of_company.ui.toast.makeToast
 
 @Composable
 internal fun SignInRoute(
@@ -77,6 +80,7 @@ internal fun SignInRoute(
 internal fun SignInScreen(
     modifier: Modifier = Modifier,
     focusManager: FocusManager = LocalFocusManager.current,
+    context: Context = LocalContext.current,
     signInUiState: SignInUiState,
     saveTokenUiState: SaveTokenUiState,
     isEmailError: Boolean,
@@ -97,7 +101,10 @@ internal fun SignInScreen(
             is SignInUiState.Success -> {
                 when (saveTokenUiState) {
                     is SaveTokenUiState.Loading -> Unit
-                    is SaveTokenUiState.Success -> onSignInClick()
+                    is SaveTokenUiState.Success -> {
+                        onSignInClick()
+                        makeToast(context, "로그인 성공")
+                    }
                     is SaveTokenUiState.Error -> {
                         onErrorToast(saveTokenUiState.exception, R.string.expection_saveToken)
                     }
@@ -206,7 +213,7 @@ internal fun SignInScreen(
 
                 ExpoStateButton(
                     text = stringResource(id = R.string.sign_in),
-                    state = if (email.isNotBlank() && password.checkPasswordRegex()) ButtonState.Enable else ButtonState.Disable,
+                    state = if (email.isNotBlank() && password.isNotBlank()) ButtonState.Enable else ButtonState.Disable,
                     modifier = modifier
                         .fillMaxWidth()
                         .padding(bottom = 52.dp)

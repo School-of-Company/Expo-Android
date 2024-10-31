@@ -1,6 +1,5 @@
 package com.school_of_company.signup.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -84,7 +83,7 @@ class SignUpViewModel @Inject constructor(
     private val _isCertificationResent = MutableStateFlow(false)
     internal val isCertificationResent: StateFlow<Boolean> = _isCertificationResent.asStateFlow()
 
-    internal fun setCodeError(value: Boolean) {
+    private fun setCodeError(value: Boolean) {
         _isCodeError.value = value
     }
 
@@ -106,10 +105,6 @@ class SignUpViewModel @Inject constructor(
 
     internal fun setDuplicateAccountError(value: Boolean) {
         _isDuplicateAccountError.value = value
-    }
-
-    internal fun setCertificationCodeValid(value: Boolean) {
-        _isCertificationCodeValid.value = value
     }
 
     internal fun setCertificationResent(value: Boolean) {
@@ -166,7 +161,6 @@ class SignUpViewModel @Inject constructor(
     internal fun certificationCode(phoneNumber: String, certificationNumber: String) =
         viewModelScope.launch {
             setCodeError(false)
-            setCertificationCodeValid(false)
             smsSignUpCertificationNumberCertificationRequestUseCase(
                 phoneNumber = phoneNumber,
                 code = certificationNumber
@@ -184,8 +178,7 @@ class SignUpViewModel @Inject constructor(
 
     internal fun sendCertificationCode(body: SmsSignUpCertificationNumberSendRequestParam) =
         viewModelScope.launch {
-            _smsSignUpCertificationSendCodeUiState.value =
-                SmsSignUpCertificationSendCodeUiState.Loading
+            _smsSignUpCertificationSendCodeUiState.value = SmsSignUpCertificationSendCodeUiState.Loading
             smsSignUpCertificationNumberSendRequestUseCase(body = body)
                 .onSuccess {
                     it.catch { remoteError ->

@@ -4,7 +4,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.school_of_company.common.network.errorHandling
-import com.school_of_company.common.regex.checkEmailRegex
 import com.school_of_company.common.regex.checkPasswordRegex
 import com.school_of_company.common.result.Result
 import com.school_of_company.common.result.asResult
@@ -51,15 +50,15 @@ class SignInViewModel @Inject constructor(
     private var _isEmailError = MutableStateFlow(false)
     internal val isEmailError: StateFlow<Boolean> = _isEmailError.asStateFlow()
 
-    private fun setPasswordError(value: Boolean) {
+    internal fun setPasswordError(value: Boolean) {
         _isPasswordError.value = value
     }
 
-    private fun setError(value: Boolean) {
+    internal fun setError(value: Boolean) {
         _isError.value = value
     }
 
-    private fun setEmailError(value: Boolean) {
+    internal fun setEmailError(value: Boolean) {
         _isEmailError.value = value
     }
 
@@ -67,10 +66,8 @@ class SignInViewModel @Inject constructor(
         setError(false)
         setEmailError(false)
         setPasswordError(false)
-
         if (!password.value.checkPasswordRegex()) {
             _signInUiState.value = SignInUiState.PasswordValid
-            setPasswordError(true)
         } else {
             signInUseCase(body = body)
                 .asResult()
@@ -87,21 +84,18 @@ class SignInViewModel @Inject constructor(
 
                         is Result.Error -> {
                             _signInUiState.value = SignInUiState.Error(result.exception)
-                            setError(true)
                             result.exception.errorHandling {
-                                badRequestAction = {
-                                    _signInUiState.value = SignInUiState.BadRequest
-                                    setError(true)
-                                }
-                                notFoundAction = {
-                                    _signInUiState.value = SignInUiState.NotFound
-                                    setError(true)
-                                }
+                                badRequestAction = { _signInUiState.value = SignInUiState.BadRequest }
+                                notFoundAction = { _signInUiState.value = SignInUiState.NotFound }
                             }
                         }
                     }
                 }
         }
+    }
+
+    internal fun initSignIn() {
+        _signInUiState.value = SignInUiState.Loading
     }
 
     private fun saveToken(token: AdminTokenResponseModel) = viewModelScope.launch {

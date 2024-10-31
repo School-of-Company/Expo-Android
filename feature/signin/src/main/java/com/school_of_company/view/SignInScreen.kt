@@ -1,6 +1,5 @@
 package com.school_of_company.signin.view
 
-import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Column
@@ -28,7 +27,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.school_of_company.common.regex.checkPasswordRegex
 import com.school_of_company.design_system.R
 import com.school_of_company.design_system.component.button.ExpoStateButton
 import com.school_of_company.design_system.component.button.state.ButtonState
@@ -54,18 +52,55 @@ internal fun SignInRoute(
     val passwordState by viewModel.password.collectAsStateWithLifecycle()
     val isEmailError by viewModel.isEmailError.collectAsStateWithLifecycle()
     val isPasswordError by viewModel.isPasswordError.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+
+    DisposableEffect(signInUiState, saveTokenUiState) {
+        when (signInUiState) {
+            is SignInUiState.Loading -> Unit
+            is SignInUiState.Success -> {
+                when (saveTokenUiState) {
+                    is SaveTokenUiState.Loading -> Unit
+                    is SaveTokenUiState.Success -> {
+                        onSignInClick()
+                        makeToast(context, "로그인 성공")
+                    }
+                    is SaveTokenUiState.Error -> {
+                        viewModel.setError(true)
+                        onErrorToast((saveTokenUiState as SaveTokenUiState.Error).exception, R.string.expection_saveToken)
+                    }
+                }
+            }
+            is SignInUiState.NotFound -> {
+                viewModel.setError(true)
+                onErrorToast(null, R.string.expection_not_found)
+            }
+            is SignInUiState.EmailNotValid -> {
+                viewModel.setEmailError(true)
+                onErrorToast(null, R.string.expection_email_not_valid)
+            }
+            is SignInUiState.PasswordValid -> {
+                viewModel.setPasswordError(true)
+                onErrorToast(null, R.string.expection_password_valid)
+            }
+            is SignInUiState.BadRequest -> {
+                viewModel.setError(true)
+                onErrorToast(null, R.string.expection_bad_request)
+            }
+            is SignInUiState.Error -> {
+                viewModel.setError(true)
+                onErrorToast((signInUiState as SignInUiState.Error).exception,  R.string.expection_signIn)
+            }
+        }
+        onDispose { viewModel.initSignIn() }
+    }
 
     SignInScreen(
-        onErrorToast = onErrorToast,
-        signInUiState = signInUiState,
-        saveTokenUiState = saveTokenUiState,
         isEmailError = isEmailError,
         isPasswordError = isPasswordError,
         email = emailState,
         password = passwordState,
         onEmailChange = viewModel::onEmailChange,
         onPasswordChange = viewModel::onPasswordChange,
-        onSignInClick = onSignInClick,
         onSignUpClick = onSignUpClick,
         signInCallBack =  {
             viewModel.signIn(body = AdminSignInRequestParam(
@@ -80,54 +115,15 @@ internal fun SignInRoute(
 internal fun SignInScreen(
     modifier: Modifier = Modifier,
     focusManager: FocusManager = LocalFocusManager.current,
-    context: Context = LocalContext.current,
-    signInUiState: SignInUiState,
-    saveTokenUiState: SaveTokenUiState,
     isEmailError: Boolean,
     isPasswordError: Boolean,
     email: String,
     password: String,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
-    onSignInClick: () -> Unit,
     onSignUpClick: () -> Unit,
     signInCallBack: () -> Unit,
-    onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
     ) {
-
-    DisposableEffect(signInUiState, saveTokenUiState) {
-        when (signInUiState) {
-            is SignInUiState.Loading -> Unit
-            is SignInUiState.Success -> {
-                when (saveTokenUiState) {
-                    is SaveTokenUiState.Loading -> Unit
-                    is SaveTokenUiState.Success -> {
-                        onSignInClick()
-                        makeToast(context, "로그인 성공")
-                    }
-                    is SaveTokenUiState.Error -> {
-                        onErrorToast(saveTokenUiState.exception, R.string.expection_saveToken)
-                    }
-                }
-            }
-            is SignInUiState.NotFound -> {
-                onErrorToast(null, R.string.expection_not_found)
-            }
-            is SignInUiState.EmailNotValid -> {
-                onErrorToast(null, R.string.expection_email_not_valid)
-            }
-            is SignInUiState.PasswordValid -> {
-                onErrorToast(null, R.string.expection_password_valid)
-            }
-            is SignInUiState.BadRequest -> {
-                onErrorToast(null, R.string.expection_bad_request)
-            }
-            is SignInUiState.Error -> {
-                onErrorToast(signInUiState.exception,  R.string.expection_signIn)
-            }
-        }
-        onDispose {}
-    }
 
     ExpoAndroidTheme { colors, typography ->
         Column(
@@ -233,12 +229,8 @@ fun SignInScreenPreview() {
         password = "",
         onEmailChange = {},
         onPasswordChange = {},
-        onSignInClick = {},
         onSignUpClick = {},
         signInCallBack = {},
-        signInUiState = SignInUiState.Loading,
-        saveTokenUiState = SaveTokenUiState.Loading,
-        onErrorToast = { _, _ -> },
         isEmailError = false,
         isPasswordError = false
     )

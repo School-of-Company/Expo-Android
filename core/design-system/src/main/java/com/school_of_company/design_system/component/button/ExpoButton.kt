@@ -28,12 +28,9 @@ import com.school_of_company.design_system.theme.ExpoAndroidTheme
 fun ExpoButton(
     modifier: Modifier = Modifier,
     text: String,
-    state: ButtonState = ButtonState.Enable,
     onClick: () -> Unit
 ) {
     ExpoAndroidTheme { colors, typography ->
-
-        val isEnabled = state == ButtonState.Enable
 
         Row(
             horizontalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterHorizontally),
@@ -45,7 +42,6 @@ fun ExpoButton(
                 )
                 .expoClickable(
                     onClick = onClick,
-                    enabled = isEnabled,
                     rippleColor = colors.white
                 )
                 .then(modifier)
@@ -111,10 +107,6 @@ private fun ExpoButtonPreview() {
                 .fillMaxWidth()
                 .padding(vertical = 12.dp),
             text = "뀨뀨뀨뀨뀨뀨",
-            state = when (isPositiveActionDialogVisible.value) {
-                true -> ButtonState.Enable
-                false -> ButtonState.Disable
-            }
         ) {}
     }
 }

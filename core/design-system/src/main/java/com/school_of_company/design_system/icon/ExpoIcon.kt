@@ -77,20 +77,28 @@ fun ExpoIcon(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun FilterIcon(modifier: Modifier = Modifier) {
+fun FilterIcon(
+    modifier: Modifier = Modifier,
+    tint: Color = Color.Unspecified
+) {
     Icon(
         painter = painterResource(id = R.drawable.ic_filter),
         contentDescription = stringResource(id = R.string.filter_description),
-        modifier = modifier
+        modifier = modifier,
+        tint = tint
     )
 }
 
 @Composable
-fun ImageIcon(modifier: Modifier = Modifier) {
+fun ImageIcon(
+    modifier: Modifier = Modifier,
+    tint: Color = Color.Unspecified
+) {
     Icon(
         painter = painterResource(id = R.drawable.ic_image),
         contentDescription = stringResource(id = R.string.image_description),
-        modifier = modifier
+        modifier = modifier,
+        tint = tint
     )
 }
 

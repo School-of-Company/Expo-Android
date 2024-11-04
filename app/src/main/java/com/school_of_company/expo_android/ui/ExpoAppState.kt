@@ -15,6 +15,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.school_of_company.expo_android.navigation.TopLevelDestination
+import com.school_of_company.home.navigation.navigateToHome
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
@@ -51,7 +52,6 @@ class ExpoAppState(
     // 현재 화면이 최상위 목적지인지 여부를 반환합니다.
     val currentTopLevelDestination: TopLevelDestination?
         @Composable get() = when (currentDestination?.route) {
-            // add TopLevelDestination Route
             else -> null
         }
 
@@ -72,7 +72,7 @@ class ExpoAppState(
                 restoreState = true // 이번에 방문한 목적지의 상태를 복원합니다.
             }
             when (topLevelDestination) {
-                // add TopLevelDestination
+                TopLevelDestination.HOME -> navController.navigateToHome(topLevelNavOptions)
                 else -> null
             }
         }

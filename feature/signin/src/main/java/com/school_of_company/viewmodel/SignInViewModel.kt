@@ -50,6 +50,12 @@ class SignInViewModel @Inject constructor(
     private var _isEmailError = MutableStateFlow(false)
     internal val isEmailError: StateFlow<Boolean> = _isEmailError.asStateFlow()
 
+    private var _isNotFoundError = MutableStateFlow(false)
+    internal val isNotFoundError: StateFlow<Boolean> = _isNotFoundError.asStateFlow()
+
+    private var _isBadRequestError = MutableStateFlow(false)
+    internal val isBadRequestError: StateFlow<Boolean> = _isBadRequestError.asStateFlow()
+
     internal fun setPasswordError(value: Boolean) {
         _isPasswordError.value = value
     }
@@ -60,6 +66,14 @@ class SignInViewModel @Inject constructor(
 
     internal fun setEmailError(value: Boolean) {
         _isEmailError.value = value
+    }
+
+    internal fun setNotFoundError(value: Boolean) {
+        _isNotFoundError.value = value
+    }
+
+    internal fun setBadRequestError(value: Boolean) {
+        _isBadRequestError.value = value
     }
 
     internal fun signIn(body: AdminSignInRequestParam) = viewModelScope.launch {

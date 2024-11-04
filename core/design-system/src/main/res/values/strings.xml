@@ -28,6 +28,7 @@
     <string name="home_description">홈 아이콘</string>
     <string name="append_description">출력 아이콘</string>
     <string name="program_description">프로그래밍 아이콘</string>
+    <string name="HomeScreen_Image_description">홈스크린 리스트 이미지</string>
 
     <string name="close_app">\'뒤로\'버튼 한번 더 누르시면 종료됩니다.</string>
     <string name="error_for_bidden">학생회 권한인 학생만 요청 가능해요</string>
@@ -78,4 +79,13 @@
 
     <string name="re_certificationCode">인증번호 재발송</string>
     <string name="certificationCode">인증번호 발송</string>
+
+    <string name="date_type">%s ~ %s</string>
+    <string name="expo_register">박람회 신청</string>
+    <string name="array_recent">최신순</string>
+    <string name="array_older">오랜된 순</string>
+    <string name="cancel">취소</string>
+    <string name="filter">필터</string>
+    <string name="not_image_description">이미지 없음</string>
+    <string name="register_temp">모집 기간</string>
 </resources>

@@ -71,7 +71,7 @@ internal fun SignInRoute(
                 }
             }
             is SignInUiState.NotFound -> {
-                viewModel.setError(true)
+                viewModel.setNotFoundError(true)
                 onErrorToast(null, R.string.expection_not_found)
             }
             is SignInUiState.EmailNotValid -> {
@@ -83,7 +83,7 @@ internal fun SignInRoute(
                 onErrorToast(null, R.string.expection_password_valid)
             }
             is SignInUiState.BadRequest -> {
-                viewModel.setError(true)
+                viewModel.setBadRequestError(true)
                 onErrorToast(null, R.string.expection_bad_request)
             }
             is SignInUiState.Error -> {
@@ -107,7 +107,7 @@ internal fun SignInRoute(
                 nickname = emailState,
                 password = passwordState
             ))
-        }
+        },
     )
 }
 

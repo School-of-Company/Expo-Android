@@ -22,6 +22,7 @@ dependencies {
 
     implementation(project(":feature:signin"))
     implementation(project(":feature:signup"))
+    implementation(project(":feature:home"))
 
     implementation(libs.androidx.core.splashscreen)
 

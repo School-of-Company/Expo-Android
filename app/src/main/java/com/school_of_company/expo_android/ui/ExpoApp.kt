@@ -20,6 +20,7 @@ import com.school_of_company.design_system.component.navigation.ExpoNavigationBa
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.expo_android.navigation.ExpoNavHost
 import com.school_of_company.expo_android.navigation.TopLevelDestination
+import com.school_of_company.home.navigation.homeRoute
 
 /**
  * 객체로 앱 상태를 중앙에서 관리하고, Scaffold와 BottomBar를 통해 유연한 UI 구성을 제공합니다.
@@ -38,12 +39,12 @@ fun ExpoApp(
 
     // 최상위 목적지들 중에 현재 보고 있는 화면이 있는 확인합니다.
     val topLevelDestinationRoute = arrayOf(
-        TopLevelDestination.EXPO // Example Cold
+        homeRoute
     )
 
     // 현재 목적지가 최상위 목적지 목록에 포함되면 BottomBar를 표시하도록 설정합니다.
     navBackStackEntry?.destination?.route?.let {
-        isBottomBarVisible.value = topLevelDestinationRoute.contains(TopLevelDestination.EXPO) // Example Code <- contains()
+        isBottomBarVisible.value = topLevelDestinationRoute.contains(it)
     }
 
     ExpoAndroidTheme { colors, _ ->
@@ -51,7 +52,7 @@ fun ExpoApp(
             containerColor = Color.Transparent,
             contentColor = colors.white,
             contentWindowInsets = WindowInsets(0, 0, 0, 0),
-            /*bottomBar = {
+            bottomBar = {
                 // BottomBar가 보여져야 하는 경우에만 표시합니다.
                 if (isBottomBarVisible.value) {
                     ExpoBottomBar(
@@ -60,7 +61,7 @@ fun ExpoApp(
                         currentDestination = appState.currentDestination // 현재 목적지 정보
                     )
                 }
-            } */
+            }
         ) { _ ->
             // 네비게이션 호스트
             ExpoNavHost(appState = appState)

@@ -59,8 +59,8 @@
     <string name="wrong_password">비밀번호를 잘못 입력하셨습니다.</string>
     <string name="email_label">이메일</string>
     <string name="password_label">비밀번호</string>
-    <string name="not_member">아직 관리자 로그인을 안 하셨나요? </string>
-    <string name="sign_out_bar">  | 회원가입</string>
+    <string name="not_member">아직 관리자 로그인을 안 하셨나요?</string>
+    <string name="sign_out_bar">회원가입</string>
     <string name="sign_in">로그인</string>
     <string name="retry_password">비밀번호를 다시 입력해주세요.</string>
     <string name="mismatch_password">비밀번호가 일치하지 않습니다.</string>
@@ -88,4 +88,8 @@
     <string name="filter">필터</string>
     <string name="not_image_description">이미지 없음</string>
     <string name="register_temp">모집 기간</string>
+
+    <string name="id_hint">아이디를 입력해주세요.</string>
+    <string name="wrong_id">아이디를 잘못 입력하셨습니다.</string>
+    <string name="id">아이디</string>
 </resources>

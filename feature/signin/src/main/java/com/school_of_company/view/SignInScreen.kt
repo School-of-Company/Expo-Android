@@ -2,6 +2,7 @@ package com.school_of_company.signin.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -91,7 +93,7 @@ internal fun SignInRoute(
                 onErrorToast((signInUiState as SignInUiState.Error).exception,  R.string.expection_signIn)
             }
         }
-        onDispose { viewModel.initSignIn() }
+        onDispose {  }
     }
 
     SignInScreen(
@@ -162,12 +164,12 @@ internal fun SignInScreen(
                     modifier = modifier
                         .fillMaxWidth()
                         .height(50.dp),
-                    placeholder = stringResource(id = R.string.email_hint),
+                    placeholder = stringResource(id = R.string.id_hint),
                     isError = isEmailError,
                     isDisabled = false,
-                    errorText = stringResource(id = R.string.wrong_email),
+                    errorText = stringResource(id = R.string.wrong_id),
                     onValueChange = onEmailChange,
-                    label = stringResource(id = R.string.email_label),
+                    label = stringResource(id = R.string.id),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
                 )
 
@@ -188,12 +190,21 @@ internal fun SignInScreen(
 
                 Spacer(modifier = modifier.padding(top = 24.dp))
 
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(10.dp, Alignment.Start),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
                     Text(
                         text = stringResource(id = R.string.not_member),
                         style = typography.captionRegular2,
                         color = colors.gray300,
                         fontWeight = FontWeight.Normal
+                    )
+
+                    Spacer(modifier = Modifier
+                        .width(1.dp)
+                        .height(12.dp)
+                        .background(color = colors.gray400)
                     )
 
                     Text(

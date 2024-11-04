@@ -17,11 +17,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.school_of_company.design_system.R
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
+import com.school_of_company.design_system.theme.ExpoTypography
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,65 +56,57 @@ fun HomeBottomSheet(
                         )
                     )
             ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable(
-                            onClick = onRecentClick,
-                            indication = ripple(color = colors.main),
-                            interactionSource = remember { MutableInteractionSource() }
-                        )
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.array_recent),
-                        style = typography.bodyRegular2,
-                        color = colors.black,
-                        modifier = Modifier
-                            .align(Alignment.Center)
-                            .padding(vertical = 14.dp)
-                    )
-                }
+                HomeBottomSheetOptions(
+                    text = stringResource(id = R.string.array_recent),
+                    onClick = onRecentClick,
+                    textColor = colors.black,
+                    rippleColor = colors.main
+                )
 
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable(
-                            onClick = onOldClick,
-                            indication = ripple(color = colors.main),
-                            interactionSource = remember { MutableInteractionSource() }
-                        )
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.array_older),
-                        style = typography.bodyRegular2,
-                        color = colors.black,
-                        modifier = Modifier
-                            .align(Alignment.Center)
-                            .padding(vertical = 14.dp)
-                    )
-                }
+                HomeBottomSheetOptions(
+                    text = stringResource(id = R.string.array_older),
+                    onClick = onOldClick,
+                    textColor = colors.black,
+                    rippleColor = colors.main
+                )
 
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable(
-                            onClick = onCancelClick,
-                            indication = ripple(color = colors.error),
-                            interactionSource = remember { MutableInteractionSource() }
-                        )
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.cancel),
-                        style = typography.bodyRegular2,
-                        color = colors.error,
-                        modifier = Modifier
-                            .align(Alignment.Center)
-                            .padding(vertical = 14.dp)
-                    )
-                }
+                HomeBottomSheetOptions(
+                    text = stringResource(id = R.string.cancel),
+                    onClick = onCancelClick,
+                    textColor = colors.error,
+                    rippleColor = colors.error
+                )
             }
         }
     }
+}
+
+@Composable
+private fun HomeBottomSheetOptions(
+    text: String,
+    onClick: () -> Unit,
+    textColor: Color,
+    rippleColor: Color,
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(
+                onClick = onClick,
+                indication = ripple(color = rippleColor),
+                interactionSource = remember { MutableInteractionSource() }
+            )
+    ) {
+        Text(
+            text = text,
+            style = ExpoTypography.bodyRegular2,
+            color = textColor,
+            modifier = Modifier
+                .align(Alignment.Center)
+                .padding(vertical = 14.dp)
+        )
+    }
+
 }
 
 @Preview

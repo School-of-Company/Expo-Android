@@ -49,7 +49,7 @@ internal fun HomeRoute(
     navigationToDetail: () -> Unit
 ) {
     HomeScreen(
-        item = generateSampleData().toPersistentList(),
+        item = generateSampleData(),
         navigationToDetail = navigationToDetail
     )
 }

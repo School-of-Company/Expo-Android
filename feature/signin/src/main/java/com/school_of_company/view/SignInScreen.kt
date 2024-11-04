@@ -2,6 +2,7 @@ package com.school_of_company.signin.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -48,7 +50,7 @@ internal fun SignInRoute(
 ) {
     val signInUiState by viewModel.signInUiState.collectAsStateWithLifecycle()
     val saveTokenUiState by viewModel.savedTokenUiState.collectAsStateWithLifecycle()
-    val emailState by viewModel.email.collectAsStateWithLifecycle()
+    val idState by viewModel.id.collectAsStateWithLifecycle()
     val passwordState by viewModel.password.collectAsStateWithLifecycle()
     val isEmailError by viewModel.isEmailError.collectAsStateWithLifecycle()
     val isPasswordError by viewModel.isPasswordError.collectAsStateWithLifecycle()
@@ -75,8 +77,8 @@ internal fun SignInRoute(
                 onErrorToast(null, R.string.expection_not_found)
             }
             is SignInUiState.EmailNotValid -> {
-                viewModel.setEmailError(true)
-                onErrorToast(null, R.string.expection_email_not_valid)
+                viewModel.setIdError(true)
+                onErrorToast(null, R.string.expection_id_not_valid)
             }
             is SignInUiState.PasswordValid -> {
                 viewModel.setPasswordError(true)
@@ -91,20 +93,20 @@ internal fun SignInRoute(
                 onErrorToast((signInUiState as SignInUiState.Error).exception,  R.string.expection_signIn)
             }
         }
-        onDispose { viewModel.initSignIn() }
+        onDispose {  }
     }
 
     SignInScreen(
         isEmailError = isEmailError,
         isPasswordError = isPasswordError,
-        email = emailState,
+        id = idState,
         password = passwordState,
-        onEmailChange = viewModel::onEmailChange,
+        onIdChange = viewModel::onIdChange,
         onPasswordChange = viewModel::onPasswordChange,
         onSignUpClick = onSignUpClick,
         signInCallBack =  {
             viewModel.signIn(body = AdminSignInRequestParam(
-                nickname = emailState,
+                nickname = idState,
                 password = passwordState
             ))
         },
@@ -117,9 +119,9 @@ internal fun SignInScreen(
     focusManager: FocusManager = LocalFocusManager.current,
     isEmailError: Boolean,
     isPasswordError: Boolean,
-    email: String,
+    id: String,
     password: String,
-    onEmailChange: (String) -> Unit,
+    onIdChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onSignUpClick: () -> Unit,
     signInCallBack: () -> Unit,
@@ -162,13 +164,12 @@ internal fun SignInScreen(
                     modifier = modifier
                         .fillMaxWidth()
                         .height(50.dp),
-                    placeholder = stringResource(id = R.string.email_hint),
+                    placeholder = stringResource(id = R.string.id_hint),
                     isError = isEmailError,
                     isDisabled = false,
-                    errorText = stringResource(id = R.string.wrong_email),
-                    onValueChange = onEmailChange,
-                    label = stringResource(id = R.string.email_label),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+                    errorText = stringResource(id = R.string.wrong_id),
+                    onValueChange = onIdChange,
+                    label = stringResource(id = R.string.id),
                 )
 
                 Spacer(modifier = modifier.padding(20.dp))
@@ -188,12 +189,21 @@ internal fun SignInScreen(
 
                 Spacer(modifier = modifier.padding(top = 24.dp))
 
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(10.dp, Alignment.Start),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
                     Text(
                         text = stringResource(id = R.string.not_member),
                         style = typography.captionRegular2,
                         color = colors.gray300,
                         fontWeight = FontWeight.Normal
+                    )
+
+                    Spacer(modifier = Modifier
+                        .width(1.dp)
+                        .height(12.dp)
+                        .background(color = colors.gray400)
                     )
 
                     Text(
@@ -209,7 +219,7 @@ internal fun SignInScreen(
 
                 ExpoStateButton(
                     text = stringResource(id = R.string.sign_in),
-                    state = if (email.isNotBlank() && password.isNotBlank()) ButtonState.Enable else ButtonState.Disable,
+                    state = if (id.isNotBlank() && password.isNotBlank()) ButtonState.Enable else ButtonState.Disable,
                     modifier = modifier
                         .fillMaxWidth()
                         .padding(bottom = 52.dp)
@@ -225,9 +235,9 @@ internal fun SignInScreen(
 @Composable
 fun SignInScreenPreview() {
     SignInScreen(
-        email = "",
+        id = "",
         password = "",
-        onEmailChange = {},
+        onIdChange = {},
         onPasswordChange = {},
         onSignUpClick = {},
         signInCallBack = {},

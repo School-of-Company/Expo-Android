@@ -28,7 +28,7 @@ class SignInViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     companion object {
-        private const val EMAIL = "email"
+        private const val ID = "id"
         private const val PASSWORD = "password"
     }
 
@@ -38,7 +38,7 @@ class SignInViewModel @Inject constructor(
     private var _savedTokenUiState = MutableStateFlow<SaveTokenUiState>(SaveTokenUiState.Loading)
     internal val savedTokenUiState = _savedTokenUiState.asStateFlow()
 
-    internal var email = savedStateHandle.getStateFlow(key = EMAIL, initialValue = "")
+    internal var id = savedStateHandle.getStateFlow(key = ID, initialValue = "")
 
     internal var password = savedStateHandle.getStateFlow(key = PASSWORD, initialValue = "")
 
@@ -64,7 +64,7 @@ class SignInViewModel @Inject constructor(
         _isError.value = value
     }
 
-    internal fun setEmailError(value: Boolean) {
+    internal fun setIdError(value: Boolean) {
         _isEmailError.value = value
     }
 
@@ -78,7 +78,7 @@ class SignInViewModel @Inject constructor(
 
     internal fun signIn(body: AdminSignInRequestParam) = viewModelScope.launch {
         setError(false)
-        setEmailError(false)
+        setIdError(false)
         setPasswordError(false)
         if (!password.value.checkPasswordRegex()) {
             _signInUiState.value = SignInUiState.PasswordValid
@@ -108,10 +108,6 @@ class SignInViewModel @Inject constructor(
         }
     }
 
-    internal fun initSignIn() {
-        _signInUiState.value = SignInUiState.Loading
-    }
-
     private fun saveToken(token: AdminTokenResponseModel) = viewModelScope.launch {
         _savedTokenUiState.value = SaveTokenUiState.Loading
         saveTokenUseCase(token = token)
@@ -124,8 +120,8 @@ class SignInViewModel @Inject constructor(
             }
     }
 
-    internal fun onEmailChange(value: String) {
-        savedStateHandle[EMAIL] = value
+    internal fun onIdChange(value: String) {
+        savedStateHandle[ID] = value
     }
 
     internal fun onPasswordChange(value: String) {

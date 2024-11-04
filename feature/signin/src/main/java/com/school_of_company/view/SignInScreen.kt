@@ -170,7 +170,6 @@ internal fun SignInScreen(
                     errorText = stringResource(id = R.string.wrong_id),
                     onValueChange = onIdChange,
                     label = stringResource(id = R.string.id),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
                 )
 
                 Spacer(modifier = modifier.padding(20.dp))

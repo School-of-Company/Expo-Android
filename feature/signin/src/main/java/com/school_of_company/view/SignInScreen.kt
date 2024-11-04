@@ -50,7 +50,7 @@ internal fun SignInRoute(
 ) {
     val signInUiState by viewModel.signInUiState.collectAsStateWithLifecycle()
     val saveTokenUiState by viewModel.savedTokenUiState.collectAsStateWithLifecycle()
-    val emailState by viewModel.email.collectAsStateWithLifecycle()
+    val idState by viewModel.id.collectAsStateWithLifecycle()
     val passwordState by viewModel.password.collectAsStateWithLifecycle()
     val isEmailError by viewModel.isEmailError.collectAsStateWithLifecycle()
     val isPasswordError by viewModel.isPasswordError.collectAsStateWithLifecycle()
@@ -77,8 +77,8 @@ internal fun SignInRoute(
                 onErrorToast(null, R.string.expection_not_found)
             }
             is SignInUiState.EmailNotValid -> {
-                viewModel.setEmailError(true)
-                onErrorToast(null, R.string.expection_email_not_valid)
+                viewModel.setIdError(true)
+                onErrorToast(null, R.string.expection_id_not_valid)
             }
             is SignInUiState.PasswordValid -> {
                 viewModel.setPasswordError(true)
@@ -99,14 +99,14 @@ internal fun SignInRoute(
     SignInScreen(
         isEmailError = isEmailError,
         isPasswordError = isPasswordError,
-        email = emailState,
+        id = idState,
         password = passwordState,
-        onEmailChange = viewModel::onEmailChange,
+        onIdChange = viewModel::onIdChange,
         onPasswordChange = viewModel::onPasswordChange,
         onSignUpClick = onSignUpClick,
         signInCallBack =  {
             viewModel.signIn(body = AdminSignInRequestParam(
-                nickname = emailState,
+                nickname = idState,
                 password = passwordState
             ))
         },
@@ -119,9 +119,9 @@ internal fun SignInScreen(
     focusManager: FocusManager = LocalFocusManager.current,
     isEmailError: Boolean,
     isPasswordError: Boolean,
-    email: String,
+    id: String,
     password: String,
-    onEmailChange: (String) -> Unit,
+    onIdChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onSignUpClick: () -> Unit,
     signInCallBack: () -> Unit,
@@ -168,7 +168,7 @@ internal fun SignInScreen(
                     isError = isEmailError,
                     isDisabled = false,
                     errorText = stringResource(id = R.string.wrong_id),
-                    onValueChange = onEmailChange,
+                    onValueChange = onIdChange,
                     label = stringResource(id = R.string.id),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
                 )
@@ -220,7 +220,7 @@ internal fun SignInScreen(
 
                 ExpoStateButton(
                     text = stringResource(id = R.string.sign_in),
-                    state = if (email.isNotBlank() && password.isNotBlank()) ButtonState.Enable else ButtonState.Disable,
+                    state = if (id.isNotBlank() && password.isNotBlank()) ButtonState.Enable else ButtonState.Disable,
                     modifier = modifier
                         .fillMaxWidth()
                         .padding(bottom = 52.dp)
@@ -236,9 +236,9 @@ internal fun SignInScreen(
 @Composable
 fun SignInScreenPreview() {
     SignInScreen(
-        email = "",
+        id = "",
         password = "",
-        onEmailChange = {},
+        onIdChange = {},
         onPasswordChange = {},
         onSignUpClick = {},
         signInCallBack = {},

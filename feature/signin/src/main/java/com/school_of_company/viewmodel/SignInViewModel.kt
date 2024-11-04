@@ -108,10 +108,6 @@ class SignInViewModel @Inject constructor(
         }
     }
 
-    internal fun initSignIn() {
-        _signInUiState.value = SignInUiState.Loading
-    }
-
     private fun saveToken(token: AdminTokenResponseModel) = viewModelScope.launch {
         _savedTokenUiState.value = SaveTokenUiState.Loading
         saveTokenUseCase(token = token)

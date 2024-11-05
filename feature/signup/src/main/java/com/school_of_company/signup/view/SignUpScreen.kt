@@ -350,7 +350,7 @@ internal fun SignUpScreen(
             Spacer(modifier = Modifier.weight(1f))
 
             ExpoStateButton(
-                text = stringResource(id = R.string.check),
+                text = stringResource(id = R.string.check_sign_up),
                 state = if (name.isNotBlank() && nickname.isNotBlank() && email.isNotBlank() && password.isNotBlank() && rePassword.isNotBlank() && phoneNumber.isNotBlank() && certificationNumber.isNotBlank()) ButtonState.Enable else ButtonState.Disable,
                 modifier = Modifier
                     .fillMaxWidth()

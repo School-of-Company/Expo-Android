@@ -272,3 +272,16 @@ fun ProgramIcon(modifier: Modifier = Modifier) {
         modifier = modifier
     )
 }
+
+@Composable
+fun LocationIcon(
+    modifier: Modifier = Modifier,
+    tint: Color = Color.Unspecified
+) {
+    Icon(
+        painter = painterResource(id = R.drawable.ic_location),
+        contentDescription = stringResource(id = R.string.location_icon_description),
+        modifier = modifier,
+        tint = tint
+    )
+}

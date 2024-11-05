@@ -29,6 +29,7 @@
     <string name="append_description">출력 아이콘</string>
     <string name="program_description">프로그래밍 아이콘</string>
     <string name="HomeScreen_Image_description">홈스크린 리스트 이미지</string>
+    <string name="location_icon_description">위치 아이콘</string>
 
     <string name="close_app">\'뒤로\'버튼 한번 더 누르시면 종료됩니다.</string>
     <string name="error_for_bidden">학생회 권한인 학생만 요청 가능해요</string>

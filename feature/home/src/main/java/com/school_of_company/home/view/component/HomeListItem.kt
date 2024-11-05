@@ -43,6 +43,7 @@ data class HomeTempData(
 fun HomeListItem(
     modifier: Modifier = Modifier,
     data: HomeTempData,
+    navigateToHomeDetail: () -> Unit
 ) {
     ExpoAndroidTheme { colors, typography ->
 
@@ -96,57 +97,62 @@ fun HomeListItem(
                     }
                 }
             } else {
-                Image(
-                    painter = rememberAsyncImagePainter(model = data.image),
-                    contentDescription = stringResource(id = R.string.HomeScreen_Image_description),
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .width(110.dp)
-                        .height(110.dp)
-                        .clip(RoundedCornerShape(6.dp))
-                )
-            }
-
-            Column(
-                verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.Top),
-                horizontalAlignment = Alignment.Start,
-            ) {
-                Row(horizontalArrangement = Arrangement.spacedBy(11.dp, Alignment.Start)) {
-
-                    Text(
-                        text = stringResource(id = R.string.register_temp),
-                        style = typography.captionRegular2,
-                        color = colors.gray600
+                Row (
+                    horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.Start),
+                    modifier = Modifier.expoClickable { navigateToHomeDetail() }
+                ) {
+                    Image(
+                        painter = rememberAsyncImagePainter(model = data.image),
+                        contentDescription = stringResource(id = R.string.HomeScreen_Image_description),
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .width(110.dp)
+                            .height(110.dp)
+                            .clip(RoundedCornerShape(6.dp))
                     )
 
-                    Text(
-                        text = stringResource(
-                            R.string.date_type,
-                            data.started_at.formatServerDate(),
-                            data.ended_at.formatServerDate()
-                        ),
-                        style = typography.captionRegular2,
-                        color = colors.gray600,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.Top),
+                        horizontalAlignment = Alignment.Start,
+                    ) {
+                        Row(horizontalArrangement = Arrangement.spacedBy(11.dp, Alignment.Start)) {
+
+                            Text(
+                                text = stringResource(id = R.string.register_temp),
+                                style = typography.captionRegular2,
+                                color = colors.gray600
+                            )
+
+                            Text(
+                                text = stringResource(
+                                    R.string.date_type,
+                                    data.started_at.formatServerDate(),
+                                    data.ended_at.formatServerDate()
+                                ),
+                                style = typography.captionRegular2,
+                                color = colors.gray600,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
+
+                        Text(
+                            text = data.title,
+                            style = typography.captionBold1,
+                            color = colors.black,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+
+                        Text(
+                            text = data.content,
+                            style = typography.captionRegular2,
+                            color = colors.gray300,
+                            maxLines = 3,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
                 }
-
-                Text(
-                    text = data.title,
-                    style = typography.captionBold1,
-                    color = colors.black,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-
-                Text(
-                    text = data.content,
-                    style = typography.captionRegular2,
-                    color = colors.gray300,
-                    maxLines = 3,
-                    overflow = TextOverflow.Ellipsis
-                )
             }
         }
     }
@@ -163,5 +169,6 @@ private fun HomeListItemPreview() {
             title = "2024 AI 광주 미래교육 2024 AI 광주 미래교육",
             content = "2024 AI 광주 미래교육 2024 AI 광주 미래교육2024 AI 광주 미래교육 2024 AI 광주 미래교육2024 AI 광주 미래교육 2024 AI 광주 미래교육2024 AI 광주 미래교육 2024 AI 광주 미래교육2024 AI 광주 미래교육 2024 AI 광주 미래교육2024 AI 광주 미래교육 2024 AI 광주 미래교육2024 AI 광주 미래교육 2024 AI 광주 미래교육"
         ),
+        navigateToHomeDetail = {}
     )
 }

@@ -102,7 +102,8 @@ internal fun HomeScreen(
 
             HomeList(
                 item = arrayItems,
-                modifier = Modifier.expoClickable { navigationToDetail() }
+                emptyList = false,
+                navigateToHomeDetail = navigationToDetail
             )
         }
     }

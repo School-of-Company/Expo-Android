@@ -126,6 +126,35 @@ fun ExpoEnableButton(
     }
 }
 
+@Composable
+fun ExpoEnableDetailButton(
+    modifier: Modifier = Modifier,
+    text: String,
+    onClick: () -> Unit,
+) {
+    ExpoAndroidTheme { colors, typography ->
+
+        val interactionSource = remember { MutableInteractionSource() }
+
+        Button(
+            modifier = modifier,
+            interactionSource = interactionSource,
+            contentPadding = PaddingValues(vertical = 16.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = colors.main100,
+                contentColor = colors.main,
+            ),
+            shape = RoundedCornerShape(6.dp),
+            onClick = onClick,
+        ) {
+            Text(
+                text = text,
+                style = typography.bodyBold2,
+                color = colors.main
+            )
+        }
+    }
+}
 
 @Preview
 @Composable

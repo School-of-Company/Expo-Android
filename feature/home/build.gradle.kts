@@ -9,4 +9,5 @@ android {
 
 dependencies {
     implementation(libs.coil.kt)
+    implementation(libs.android.kakao.map)
 }

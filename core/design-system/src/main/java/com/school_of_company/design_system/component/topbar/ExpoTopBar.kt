@@ -30,15 +30,12 @@ fun ExpoTopBar(
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(
-                    horizontal = 24.dp,
-                    vertical = 15.dp
-                )
+            modifier = modifier.fillMaxWidth()
         ) {
             startIcon()
-            ExpoSubjectTitleText(subjectText = betweenText)
+            ExpoSubjectTitleText(
+                subjectText = betweenText
+            )
             endIcon()
         }
     }

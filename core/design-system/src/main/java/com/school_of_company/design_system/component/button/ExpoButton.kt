@@ -17,6 +17,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -95,6 +96,65 @@ fun ExpoStateButton(
     }
 }
 
+@Composable
+fun ExpoEnableButton(
+    modifier: Modifier = Modifier,
+    text: String,
+    onClick: () -> Unit,
+) {
+    ExpoAndroidTheme { colors, typography ->
+
+        val interactionSource = remember { MutableInteractionSource() }
+
+        Button(
+            modifier = modifier,
+            interactionSource = interactionSource,
+            contentPadding = PaddingValues(vertical = 16.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = colors.white,
+                contentColor = colors.white,
+            ),
+            shape = RoundedCornerShape(6.dp),
+            onClick = onClick,
+        ) {
+            Text(
+                text = text,
+                style = typography.bodyBold2,
+                color = colors.main
+            )
+        }
+    }
+}
+
+@Composable
+fun ExpoEnableDetailButton(
+    modifier: Modifier = Modifier,
+    text: String,
+    onClick: () -> Unit,
+) {
+    ExpoAndroidTheme { colors, typography ->
+
+        val interactionSource = remember { MutableInteractionSource() }
+
+        Button(
+            modifier = modifier,
+            interactionSource = interactionSource,
+            contentPadding = PaddingValues(vertical = 16.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = colors.main100,
+                contentColor = colors.main,
+            ),
+            shape = RoundedCornerShape(6.dp),
+            onClick = onClick,
+        ) {
+            Text(
+                text = text,
+                style = typography.bodyBold2,
+                color = colors.main
+            )
+        }
+    }
+}
 
 @Preview
 @Composable

@@ -1,6 +1,7 @@
 [versions]
 #Define Versions
 accompanist = "0.36.0"
+android = "2.12.8"
 androidGradlePlugin = "8.1.4"
 androidxActivity = "1.9.3"
 androidxAppCompat = "1.7.0"
@@ -65,11 +66,13 @@ swiperefresh = "0.27.0"
 turbine = "1.2.0"
 zxing = "3.5.3"
 chuck = "1.1.0"
+identityAndroidLegacy = "202408.1"
 
 
 [libraries]
 #Define Library
 accompanist-permission = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist" }
+android_kakao_map = { module = "com.kakao.maps.open:android", version.ref = "android" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidxActivity" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidxAppCompat" }
 androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "androidxBrowser" }
@@ -164,6 +167,7 @@ ui = { group = "androidx.compose.ui", name = "ui" }
 ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+identity-android-legacy = { group = "com.android.identity", name = "identity-android-legacy", version.ref = "identityAndroidLegacy" }
 
 [plugins]
 #Define Plugins

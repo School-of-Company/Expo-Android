@@ -1,10 +1,25 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     id("expo.android.application")
     id("expo.android.hilt")
 }
 
 android {
-    namespace = "com.school_of_company.expo_android"
+
+    buildFeatures {
+        buildConfig = true
+    }
+
+    defaultConfig {
+        buildConfigField(
+            "String",
+            "NATIVE_APP_KEY",
+            getApiKey("NATIVE_APP_KEY")
+        )
+    }
+
 
     packaging {
         resources {
@@ -12,6 +27,8 @@ android {
             excludes += "META-INF/DEPENDENCIES"
         }
     }
+
+    namespace = "com.school_of_company.expo_android"
 }
 
 dependencies {
@@ -29,4 +46,13 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext)
     implementation(libs.app.update.ktx)
+
+    implementation(libs.android.kakao.map)
+}
+
+fun getApiKey(propertyKey: String) : String {
+    val propFile = rootProject.file("./local.properties")
+    val properties = Properties()
+    properties.load(FileInputStream(propFile))
+    return properties.getProperty(propertyKey) ?: throw IllegalArgumentException("Property $propertyKey not found in local.properties")
 }

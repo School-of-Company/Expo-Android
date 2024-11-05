@@ -29,9 +29,21 @@ fun NavGraphBuilder.homeScreen(
 }
 
 fun NavGraphBuilder.homeDetailScreen(
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onMessageClick: () -> Unit,
+    onCheckClick: () -> Unit,
+    onQrGenerateClick: () -> Unit,
+    onModifyClick: () -> Unit,
+    onProgramClick: () -> Unit
 ) {
     composable(route = homeDetailRoute) {
-        HomeDetailRoute(onBackClick = onBackClick)
+        HomeDetailRoute(
+            onBackClick = onBackClick,
+            onMessageClick = onMessageClick,
+            onCheckClick = onCheckClick,
+            onQrGenerateClick = onQrGenerateClick,
+            onModifyClick = onModifyClick,
+            onProgramClick = onProgramClick
+        )
     }
 }

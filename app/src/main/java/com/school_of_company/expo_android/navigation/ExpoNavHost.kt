@@ -109,7 +109,12 @@ fun ExpoNavHost(
         )
 
         homeDetailScreen(
-            onBackClick = navController::popBackStack
+            onBackClick = navController::popBackStack,
+            onMessageClick = {},
+            onCheckClick = {},
+            onQrGenerateClick = {},
+            onModifyClick = {},
+            onProgramClick = {}
         )
     }
 }

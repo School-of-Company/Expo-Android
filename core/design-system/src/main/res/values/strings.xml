@@ -68,6 +68,7 @@
     <string name="number">연락처</string>
     <string name="write_number">연락처를 입력해주세요.(ex.01012345678)</string>
     <string name="check">확인</string>
+    <string name="check_sign_up">회원가입 완료</string>
     <string name="duplication_account_error">등록된 사용자가 있습니다.</string>
     <string name="sign_up_fail">회원가입에 실패하였습니다.</string>
     <string name="nickname_label">아이디</string>

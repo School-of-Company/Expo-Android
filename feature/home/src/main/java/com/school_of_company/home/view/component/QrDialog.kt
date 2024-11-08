@@ -47,10 +47,14 @@ internal fun QrDialog(
                 Text(
                     text = "현장 신청 QR코드",
                     style = typography.titleBold3,
+                    color = colors.black,
                     fontWeight = FontWeight(600)
                 )
 
-                XIcon(modifier = Modifier.expoClickable { onCancelClick() })
+                XIcon(
+                    tint = colors.black,
+                    modifier = Modifier.expoClickable { onCancelClick() }
+                )
             }
 
             Image(

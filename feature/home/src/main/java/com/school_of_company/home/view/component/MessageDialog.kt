@@ -45,11 +45,15 @@ internal fun MessageDialog(
             ) {
                 Text(
                     text = "누구에게 문자를 전송하시겠습니까?",
+                    color = colors.black,
                     style = typography.bodyBold2,
                     fontWeight = FontWeight(600)
                 )
 
-                XIcon(modifier = Modifier.expoClickable { onCancelClick() })
+                XIcon(
+                    tint = colors.black,
+                    modifier = Modifier.expoClickable { onCancelClick() }
+                )
             }
 
             Row(horizontalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterHorizontally),) {

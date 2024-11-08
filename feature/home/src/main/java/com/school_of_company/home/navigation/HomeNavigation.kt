@@ -6,9 +6,11 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.school_of_company.home.view.HomeDetailRoute
 import com.school_of_company.home.view.HomeRoute
+import com.school_of_company.home.view.SendMessageRoute
 
 const val homeRoute = "home_route"
 const val homeDetailRoute=  "home_detail_route"
+const val homeSendMessageRoute = "home_send_message_route"
 
 fun NavController.navigateToHome(navOptions: NavOptions? = null) {
     this.navigate(homeRoute, navOptions)
@@ -16,6 +18,10 @@ fun NavController.navigateToHome(navOptions: NavOptions? = null) {
 
 fun NavController.navigateToHomeDetail(navOptions: NavOptions? = null) {
     this.navigate(homeDetailRoute, navOptions)
+}
+
+fun NavController.navigateToHomeSendMessage(navOptions: NavOptions? = null) {
+    this.navigate(homeSendMessageRoute, navOptions)
 }
 
 fun NavGraphBuilder.homeScreen(
@@ -44,6 +50,18 @@ fun NavGraphBuilder.homeDetailScreen(
             onQrGenerateClick = onQrGenerateClick,
             onModifyClick = onModifyClick,
             onProgramClick = onProgramClick
+        )
+    }
+}
+
+fun NavGraphBuilder.homeSendMessageScreen(
+    onSendClick: () -> Unit,
+    onBackClick: () -> Unit
+) {
+    composable(route = homeSendMessageRoute) {
+        SendMessageRoute(
+            onSendClick = onSendClick,
+            onBackClick = onBackClick
         )
     }
 }

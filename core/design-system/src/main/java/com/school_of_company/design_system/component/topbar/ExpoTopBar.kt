@@ -33,9 +33,7 @@ fun ExpoTopBar(
             modifier = modifier.fillMaxWidth()
         ) {
             startIcon()
-            ExpoSubjectTitleText(
-                subjectText = betweenText
-            )
+            ExpoSubjectTitleText(subjectText = betweenText)
             endIcon()
         }
     }

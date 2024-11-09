@@ -94,4 +94,6 @@
     <string name="id_hint">아이디를 입력해주세요.</string>
     <string name="wrong_id">아이디를 잘못 입력하셨습니다.</string>
     <string name="id">아이디</string>
+
+    <string name="slash">/</string>
 </resources>

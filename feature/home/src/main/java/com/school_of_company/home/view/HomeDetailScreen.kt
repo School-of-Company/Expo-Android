@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -24,11 +23,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import coil.compose.rememberAsyncImagePainter
 import com.school_of_company.design_system.R
 import com.school_of_company.design_system.component.button.ExpoButton
@@ -41,6 +40,9 @@ import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.home.view.component.HomeKakaoMap
 import com.school_of_company.home.view.component.HomeTempData
+import com.school_of_company.home.view.component.MessageDialog
+import com.school_of_company.home.view.component.QrCode
+import com.school_of_company.home.view.component.QrDialog
 import com.school_of_company.ui.preview.ExpoPreviews
 import com.school_of_company.ui.util.formatServerDate
 
@@ -61,6 +63,7 @@ internal fun HomeDetailRoute(
             title = "2024 AI 광주 미래교육",
             content = "2024 AI 광주 미래교육 2024 AI 광주 미래교육2024 AI 광주 미래교육 2024 AI 광주 미래교육2024 AI 광주 미래교육"
         ),
+        qrData = QrCode(content = "121231342352"),
         onBackClick = onBackClick,
         onMessageClick = onMessageClick,
         onCheckClick = onCheckClick,
@@ -75,6 +78,7 @@ internal fun HomeDetailScreen(
     modifier: Modifier = Modifier,
     scrollState: ScrollState = rememberScrollState(),
     data: HomeTempData,
+    qrData: QrCode,
     onBackClick: () -> Unit,
     onMessageClick: () -> Unit,
     onCheckClick: () -> Unit,
@@ -105,7 +109,7 @@ internal fun HomeDetailScreen(
 
             Spacer(modifier = Modifier.height(28.dp))
 
-            Column(modifier = Modifier.verticalScroll(scrollState)){
+            Column(modifier = Modifier.verticalScroll(scrollState)) {
                 Image(
                     painter = rememberAsyncImagePainter(model = data.image),
                     contentDescription = stringResource(id = R.string.HomeScreen_Image_description),
@@ -216,7 +220,7 @@ internal fun HomeDetailScreen(
 
                 Spacer(modifier = Modifier.weight(1f))
 
-                Column(verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top),) {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top)) {
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(
                             16.dp,
@@ -229,23 +233,30 @@ internal fun HomeDetailScreen(
                     ) {
                         ExpoButton(
                             text = "문자 보내기",
+                            color = colors.main,
+                            onClick = { isOpenDialog(true) },
                             modifier = Modifier
                                 .weight(1f)
                                 .padding(
                                     vertical = 15.dp,
                                     horizontal = 41.5.dp
                                 )
-                        ) { onMessageClick() }
+                        )
 
                         ExpoButton(
                             text = "QR 조회하기",
+                            color = colors.main,
+                            onClick = {
+                                onQrGenerateClick()
+                                isOpenQrDialog(true)
+                            },
                             modifier = Modifier
                                 .weight(1f)
                                 .padding(
                                     vertical = 15.dp,
                                     horizontal = 37.dp
                                 )
-                        ) { onQrGenerateClick() }
+                        )
                     }
 
                     ExpoEnableDetailButton(
@@ -287,6 +298,32 @@ internal fun HomeDetailScreen(
 
                 Spacer(modifier = Modifier.padding(bottom = 28.dp))
             }
+            if (openDialog) {
+                Dialog(onDismissRequest = { isOpenDialog(false) }) {
+                    MessageDialog(
+                        onCancelClick = { isOpenDialog(false) },
+                        onParticipantClick = {
+                            isOpenDialog(false)
+                            onMessageClick()
+                            /*TODO -> SMS Logic*/
+                        },
+                        onTraineeClick = {
+                            isOpenDialog(false)
+                            onMessageClick()
+                            /*TODO -> SMS Logic*/
+                        }
+                    )
+                }
+            }
+
+            if (openQrDialog) {
+                Dialog(onDismissRequest = { isOpenQrDialog(false) }) {
+                    QrDialog(
+                        data = qrData,
+                        onCancelClick = { isOpenQrDialog(false) }
+                    )
+                }
+            }
         }
     }
 }
@@ -308,6 +345,7 @@ private fun HomeDetailScreenPreview() {
         onCheckClick = {},
         onQrGenerateClick = {},
         onModifyClick = {},
-        onProgramClick = {}
+        onProgramClick = {},
+        qrData = QrCode(content = "121231342352")
     )
 }

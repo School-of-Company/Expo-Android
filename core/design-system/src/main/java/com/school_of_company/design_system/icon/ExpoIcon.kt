@@ -59,11 +59,15 @@ fun UpArrowIcon(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun XIcon(modifier: Modifier = Modifier) {
+fun XIcon(
+    modifier: Modifier = Modifier,
+    tint: Color = Color.Unspecified
+) {
     Icon(
         painter = painterResource(id = R.drawable.ic_x),
         contentDescription = stringResource(id = R.string.x_description),
-        modifier = modifier
+        modifier = modifier,
+        tint = tint
     )
 }
 

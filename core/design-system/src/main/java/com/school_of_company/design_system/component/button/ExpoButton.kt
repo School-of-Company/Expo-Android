@@ -29,7 +29,8 @@ import com.school_of_company.design_system.theme.ExpoAndroidTheme
 fun ExpoButton(
     modifier: Modifier = Modifier,
     text: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    color: Color
 ) {
     ExpoAndroidTheme { colors, typography ->
 
@@ -38,7 +39,7 @@ fun ExpoButton(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .background(
-                    color = colors.main,
+                    color = color,
                     shape = RoundedCornerShape(6.dp),
                 )
                 .expoClickable(
@@ -167,6 +168,8 @@ private fun ExpoButtonPreview() {
                 .fillMaxWidth()
                 .padding(vertical = 12.dp),
             text = "뀨뀨뀨뀨뀨뀨",
-        ) {}
+            color = Color.Blue,
+            onClick = { isPositiveActionDialogVisible.value = true }
+        )
     }
 }

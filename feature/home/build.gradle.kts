@@ -10,4 +10,7 @@ android {
 dependencies {
     implementation(libs.coil.kt)
     implementation(libs.android.kakao.map)
+
+    implementation(libs.mlkit)
+    implementation(libs.zxing.core)
 }

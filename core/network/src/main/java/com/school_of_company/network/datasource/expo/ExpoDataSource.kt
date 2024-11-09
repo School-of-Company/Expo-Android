@@ -1,0 +1,11 @@
+package com.school_of_company.network.datasource.expo
+
+import com.school_of_company.network.dto.expo.request_response.ExpoRequestAndResponse
+import kotlinx.coroutines.flow.Flow
+
+interface ExpoDataSource {
+    fun getExpoInformation(expoId: Long) : Flow<ExpoRequestAndResponse>
+    fun registerExpoInformation(body: ExpoRequestAndResponse) : Flow<Unit>
+    fun modifyExpoInformation(expoId: Long, body: ExpoRequestAndResponse) : Flow<Unit>
+    fun deleteExpoInformation(expoId: Long) : Flow<Unit>
+}

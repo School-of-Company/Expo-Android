@@ -2,6 +2,8 @@ package com.school_of_company.network.di
 
 import com.school_of_company.network.datasource.auth.AuthDataSource
 import com.school_of_company.network.datasource.auth.AuthDataSourceImpl
+import com.school_of_company.network.datasource.expo.ExpoDataSource
+import com.school_of_company.network.datasource.expo.ExpoDataSourceImpl
 import com.school_of_company.network.datasource.sms.SmsDataSource
 import com.school_of_company.network.datasource.sms.SmsDataSourceImpl
 import dagger.Binds
@@ -22,4 +24,9 @@ abstract class RemoteDataSourceModule {
     abstract fun bindSmsRemoteDataSource(
         smsDataSourceImpl: SmsDataSourceImpl
     ) : SmsDataSource
+
+    @Binds
+    abstract fun bindExpoRemoteDataSource(
+        expoDataSourceImpl: ExpoDataSourceImpl
+    ) : ExpoDataSource
 }

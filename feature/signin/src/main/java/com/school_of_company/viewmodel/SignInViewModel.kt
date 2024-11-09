@@ -32,10 +32,10 @@ class SignInViewModel @Inject constructor(
         private const val PASSWORD = "password"
     }
 
-    private var _signInUiState = MutableStateFlow<SignInUiState>(SignInUiState.Loading)
+    private val _signInUiState = MutableStateFlow<SignInUiState>(SignInUiState.Loading)
     internal val signInUiState = _signInUiState.asStateFlow()
 
-    private var _savedTokenUiState = MutableStateFlow<SaveTokenUiState>(SaveTokenUiState.Loading)
+    private val _savedTokenUiState = MutableStateFlow<SaveTokenUiState>(SaveTokenUiState.Loading)
     internal val savedTokenUiState = _savedTokenUiState.asStateFlow()
 
     internal var id = savedStateHandle.getStateFlow(key = ID, initialValue = "")
@@ -44,16 +44,16 @@ class SignInViewModel @Inject constructor(
 
     private var _isError = MutableStateFlow(false)
 
-    private var _isPasswordError = MutableStateFlow(false)
+    private val _isPasswordError = MutableStateFlow(false)
     internal val isPasswordError: StateFlow<Boolean> = _isPasswordError.asStateFlow()
 
-    private var _isEmailError = MutableStateFlow(false)
+    private val _isEmailError = MutableStateFlow(false)
     internal val isEmailError: StateFlow<Boolean> = _isEmailError.asStateFlow()
 
-    private var _isNotFoundError = MutableStateFlow(false)
+    private val _isNotFoundError = MutableStateFlow(false)
     internal val isNotFoundError: StateFlow<Boolean> = _isNotFoundError.asStateFlow()
 
-    private var _isBadRequestError = MutableStateFlow(false)
+    private val _isBadRequestError = MutableStateFlow(false)
     internal val isBadRequestError: StateFlow<Boolean> = _isBadRequestError.asStateFlow()
 
     internal fun setPasswordError(value: Boolean) {

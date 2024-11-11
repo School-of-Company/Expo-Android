@@ -7,14 +7,17 @@ import com.school_of_company.common.result.Result
 import com.school_of_company.common.result.asResult
 import com.school_of_company.domain.usecase.expo.DeleteExpoInformationUseCase
 import com.school_of_company.domain.usecase.expo.GetExpoInformationUseCase
+import com.school_of_company.domain.usecase.expo.GetExpoListUseCase
 import com.school_of_company.domain.usecase.expo.ModifyExpoInformationUseCase
 import com.school_of_company.domain.usecase.expo.RegisterExpoInformationUseCase
 import com.school_of_company.home.viewmodel.uistate.DeleteExpoInformationUiState
 import com.school_of_company.home.viewmodel.uistate.GetExpoInformationUiState
+import com.school_of_company.home.viewmodel.uistate.GetExpoListUiState
 import com.school_of_company.home.viewmodel.uistate.ModifyExpoInformationUiState
 import com.school_of_company.home.viewmodel.uistate.RegisterExpoInformationUiState
 import com.school_of_company.model.model.expo.ExpoRequestAndResponseModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -28,6 +31,7 @@ class HomeViewModel @Inject constructor(
     private val registerExpoInformationUseCase: RegisterExpoInformationUseCase,
     private val modifyExpoInformationUseCase: ModifyExpoInformationUseCase,
     private val deleteExpoInformationUseCase: DeleteExpoInformationUseCase,
+    private val getExpoListUseCase: GetExpoListUseCase,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     companion object {
@@ -46,6 +50,9 @@ class HomeViewModel @Inject constructor(
 
     private val _deleteExpoInformationUiState = MutableStateFlow<DeleteExpoInformationUiState>(DeleteExpoInformationUiState.Loading)
     internal val deleteExpoInformationUiState = _deleteExpoInformationUiState.asStateFlow()
+
+    private val _getExpoListUiState = MutableStateFlow<GetExpoListUiState>(GetExpoListUiState.Loading)
+    internal val getExpoListUiState = _getExpoListUiState.asStateFlow()
 
 
     internal var title = savedStateHandle.getStateFlow(key = TITLE, initialValue = "")
@@ -114,6 +121,24 @@ class HomeViewModel @Inject constructor(
             }
             .onFailure { error ->
                 _deleteExpoInformationUiState.value = DeleteExpoInformationUiState.Error(error)
+            }
+    }
+
+    internal fun expoList() = viewModelScope.launch {
+        getExpoListUseCase()
+            .asResult()
+            .collectLatest { result ->
+                when (result) {
+                    is Result.Loading -> _getExpoListUiState.value = GetExpoListUiState.Loading
+                    is Result.Success -> {
+                        if (result.data.isEmpty()) {
+                            _getExpoListUiState.value = GetExpoListUiState.Empty
+                        } else {
+                            _getExpoListUiState.value = GetExpoListUiState.Success(result.data)
+                        }
+                    }
+                    is Result.Error -> _getExpoListUiState.value = GetExpoListUiState.Error(result.exception)
+                }
             }
     }
 

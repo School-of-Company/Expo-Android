@@ -15,6 +15,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -55,6 +56,12 @@ internal fun SignInRoute(
     val isEmailError by viewModel.isEmailError.collectAsStateWithLifecycle()
     val isPasswordError by viewModel.isPasswordError.collectAsStateWithLifecycle()
     val context = LocalContext.current
+
+    DisposableEffect(Unit) {
+        onDispose {
+            viewModel.initSignIn()
+        }
+    }
 
     DisposableEffect(signInUiState, saveTokenUiState) {
         when (signInUiState) {

@@ -120,6 +120,15 @@ class SignInViewModel @Inject constructor(
             }
     }
 
+    internal fun initSignIn() {
+        setError(false)
+        setIdError(false)
+        setPasswordError(false)
+        setNotFoundError(false)
+        setBadRequestError(false)
+        _signInUiState.value = SignInUiState.Loading
+    }
+
     internal fun onIdChange(value: String) {
         savedStateHandle[ID] = value
     }

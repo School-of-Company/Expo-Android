@@ -5,6 +5,7 @@ import android.util.Log
 import com.readystatesoftware.chuck.ChuckInterceptor
 import com.school_of_company.network.BuildConfig
 import com.school_of_company.network.api.AuthAPI
+import com.school_of_company.network.api.ExpoAPI
 import com.school_of_company.network.api.SmsAPI
 import com.school_of_company.network.util.AuthInterceptor
 import com.school_of_company.network.util.TokenAuthenticator
@@ -93,4 +94,8 @@ object NetworkModule {
     @Provides
     fun provideSmsAPI(retrofit: Retrofit) : SmsAPI =
         retrofit.create(SmsAPI::class.java)
+
+    @Provides
+    fun provideExpoAPI(retrofit: Retrofit) : ExpoAPI =
+        retrofit.create(ExpoAPI::class.java)
 }

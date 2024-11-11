@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.design_system.R
-import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.home.enum.ArrayHomeListEnum
 import com.school_of_company.home.view.component.HomeBottomSheet
 import com.school_of_company.home.view.component.HomeFilterButton

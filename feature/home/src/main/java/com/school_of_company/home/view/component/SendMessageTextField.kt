@@ -28,7 +28,7 @@ import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.design_system.R
 
 @Composable
-fun SendMessageTextField(
+fun LimitedLengthTextField(
     modifier: Modifier = Modifier,
     label: String,
     textState: String,
@@ -160,7 +160,7 @@ fun SendMessageTextField(
 @Preview
 @Composable
 private fun SendMessageTextFieldPreview() {
-    SendMessageTextField(
+    LimitedLengthTextField(
         label = "제목",
         textState = "asdfasdf",
         placeholder = "제목을 입력해주세요",

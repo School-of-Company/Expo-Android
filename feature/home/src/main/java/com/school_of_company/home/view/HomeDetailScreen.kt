@@ -104,7 +104,7 @@ internal fun HomeDetailScreen(
                     )
                 },
                 betweenText = data.title,
-                modifier = Modifier.padding(top = 50.dp)
+                modifier = Modifier.padding(top = 68.dp)
             )
 
             Spacer(modifier = Modifier.height(28.dp))

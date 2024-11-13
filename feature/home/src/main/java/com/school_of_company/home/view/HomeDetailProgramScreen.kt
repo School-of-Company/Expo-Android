@@ -15,6 +15,8 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.TabRow
+import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -91,7 +93,12 @@ internal fun HomeDetailProgramScreen(
             TabRow(
                 selectedTabIndex = pagerState.currentPage,
                 containerColor = Color.Transparent,
-                indicator = { Color.Transparent },
+                indicator = { tabPositions ->
+                    TabRowDefaults.Indicator(
+                        color = colors.main,
+                        modifier = modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
+                    )
+                },
                 modifier = Modifier.width(230.dp)
             ) {
                 persistentListOf(

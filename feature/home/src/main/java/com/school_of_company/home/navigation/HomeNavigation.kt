@@ -4,7 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
-import com.school_of_company.home.view.HomeDetailProgramParticipantScreen
+import com.school_of_company.home.view.HomeDetailProgramParticipantRoute
 import com.school_of_company.home.view.HomeDetailProgramRoute
 import com.school_of_company.home.view.HomeDetailRoute
 import com.school_of_company.home.view.HomeRoute
@@ -94,7 +94,7 @@ fun NavGraphBuilder.homeDetailProgramParticipantScreen(
     onBackClick: () -> Unit
 ) {
     composable(route = homeDetailProgramParticipantRoute) {
-        HomeDetailProgramParticipantScreen(
+        HomeDetailProgramParticipantRoute(
             onBackClick = onBackClick
         )
     }

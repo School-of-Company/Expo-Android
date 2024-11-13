@@ -170,16 +170,16 @@ internal fun HomeDetailProgramParticipantScreen(
                         modifier = Modifier.width(80.dp)
                     )
                     Text(
-                        text = "교과명",
+                        text = "중고등학교인교인 교과명",
                         style = typography.captionBold1,
                         color = colors.gray600,
-                        modifier = Modifier.width(120.dp)
+                        modifier = Modifier.width(150.dp)
                     )
                     Text(
-                        text = "연락처",
+                        text = "안내문자 발송용 연락처",
                         style = typography.captionBold1,
                         color = colors.gray600,
-                        modifier = Modifier.width(100.dp)
+                        modifier = Modifier.width(130.dp)
                     )
                 }
             }

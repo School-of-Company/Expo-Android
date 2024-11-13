@@ -26,37 +26,41 @@ import com.school_of_company.design_system.component.topbar.ExpoTopBar
 import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
+import com.school_of_company.home.view.component.HomeDetailParticipantManagementData
+import com.school_of_company.home.view.component.HomeDetailParticipantManagementList
 import com.school_of_company.home.view.component.HomeDetailProgramParticipantData
 import com.school_of_company.home.view.component.HomeDetailProgramParticipantList
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 
-fun generateParticipantSampleData(): ImmutableList<HomeDetailProgramParticipantData> {
+fun generateParticipantManagementSampleData(): ImmutableList<HomeDetailParticipantManagementData> {
     return List(20) {
-        HomeDetailProgramParticipantData(
+        HomeDetailParticipantManagementData(
             name = "이명훈",
             company = "초등학교",
             position = "교사",
             schoolSubject = "컴퓨터공학",
-            phone = "010-1234-5678"
+            checkHere = true,
+            inTime = "12:00",
+            outTime = "13:00"
         )
     }.toPersistentList()
 }
 
 @Composable
-internal fun HomeDetailProgramParticipantRoute(
+internal fun HomeDetailParticipantManagementRoute(
     onBackClick: () -> Unit
 ) {
-    HomeDetailProgramParticipantScreen(
+    HomeDetailParticipantManagementScreen(
         onBackClick = onBackClick,
-        participantData = generateParticipantSampleData()
+        participantManagementData = generateParticipantManagementSampleData()
     )
 }
 
 @Composable
-internal fun HomeDetailProgramParticipantScreen(
+internal fun HomeDetailParticipantManagementScreen(
     modifier: Modifier = Modifier,
-    participantData: ImmutableList<HomeDetailProgramParticipantData>,
+    participantManagementData: ImmutableList<HomeDetailParticipantManagementData>,
     onBackClick: () -> Unit
 ) {
     ExpoAndroidTheme { colors, typography ->
@@ -80,7 +84,7 @@ internal fun HomeDetailProgramParticipantScreen(
             Spacer(modifier = Modifier.height(28.dp))
 
             Text(
-                text = "프로그램",
+                text = "참가자 조회하기",
                 style = typography.bodyBold2,
                 color = colors.black,
                 modifier = Modifier.padding(start = 16.dp)
@@ -89,7 +93,7 @@ internal fun HomeDetailProgramParticipantScreen(
             Spacer(modifier = Modifier.height(12.dp))
 
             Row(modifier = Modifier.padding(horizontal = 16.dp)) {
-                Row(horizontalArrangement = Arrangement.spacedBy(10.dp, Alignment.Start),) {
+                Row(horizontalArrangement = Arrangement.spacedBy(10.dp, Alignment.Start)) {
                     WarnIcon(
                         tint = colors.gray300,
                         modifier = Modifier.size(16.dp)
@@ -122,7 +126,7 @@ internal fun HomeDetailProgramParticipantScreen(
                     )
 
                     Text(
-                        text = "${participantData.size}명",
+                        text = "${participantManagementData.size}명",
                         style = typography.captionRegular2,
                         color = colors.main
                     )
@@ -150,50 +154,68 @@ internal fun HomeDetailProgramParticipantScreen(
                     horizontalArrangement = Arrangement.spacedBy(20.dp)
                 ) {
                     Spacer(modifier = Modifier.width(20.dp))
-                    
+
                     Text(
                         text = "성명",
                         style = typography.captionBold1,
                         color = colors.gray600,
                         modifier = Modifier.width(80.dp)
                     )
+
                     Text(
                         text = "소속",
                         style = typography.captionBold1,
                         color = colors.gray600,
                         modifier = Modifier.width(100.dp)
                     )
+
                     Text(
                         text = "직급",
                         style = typography.captionBold1,
                         color = colors.gray600,
                         modifier = Modifier.width(80.dp)
                     )
+
                     Text(
-                        text = "중고등학교인교인 교과명",
+                        text = "프로그램 선택",
                         style = typography.captionBold1,
                         color = colors.gray600,
-                        modifier = Modifier.width(150.dp)
+                        modifier = Modifier.width(120.dp)
                     )
+
                     Text(
-                        text = "안내문자 발송용 연락처",
+                        text = "출석 여부",
                         style = typography.captionBold1,
                         color = colors.gray600,
-                        modifier = Modifier.width(130.dp)
+                        modifier = Modifier.width(100.dp)
+                    )
+
+                    Text(
+                        text = "입실시간",
+                        style = typography.captionBold1,
+                        color = colors.gray600,
+                        modifier = Modifier.width(80.dp)
+                    )
+
+                    Text(
+                        text = "퇴실시간",
+                        style = typography.captionBold1,
+                        color = colors.gray600,
+                        modifier = Modifier.width(80.dp)
                     )
                 }
             }
 
-            HomeDetailProgramParticipantList(item = participantData)
+            HomeDetailParticipantManagementList(item = participantManagementData)
         }
     }
 }
 
 @Preview
 @Composable
-private fun HomeDetailProgramParticipantScreenPreview() {
-    HomeDetailProgramParticipantScreen(
+private fun HomeDetailParticipantManagementScreenPreview() {
+    HomeDetailParticipantManagementScreen(
         onBackClick = {},
-        participantData = generateParticipantSampleData()
+        participantManagementData = generateParticipantManagementSampleData()
     )
 }

@@ -34,7 +34,6 @@ import com.school_of_company.design_system.component.button.ExpoButton
 import com.school_of_company.design_system.component.button.ExpoEnableButton
 import com.school_of_company.design_system.component.button.ExpoEnableDetailButton
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
-import com.school_of_company.design_system.component.modifier.padding.paddingVertical
 import com.school_of_company.design_system.component.topbar.ExpoTopBar
 import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
@@ -43,7 +42,6 @@ import com.school_of_company.home.view.component.HomeTempData
 import com.school_of_company.home.view.component.MessageDialog
 import com.school_of_company.home.view.component.QrCode
 import com.school_of_company.home.view.component.QrDialog
-import com.school_of_company.ui.preview.ExpoPreviews
 import com.school_of_company.ui.util.formatServerDate
 
 @Composable
@@ -104,7 +102,7 @@ internal fun HomeDetailScreen(
                     )
                 },
                 betweenText = data.title,
-                modifier = Modifier.padding(top = 50.dp)
+                modifier = Modifier.padding(top = 68.dp)
             )
 
             Spacer(modifier = Modifier.height(28.dp))

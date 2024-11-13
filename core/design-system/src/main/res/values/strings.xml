@@ -96,4 +96,6 @@
     <string name="id">아이디</string>
 
     <string name="slash">/</string>
+
+    <string name="string_type">%s</string>
 </resources>

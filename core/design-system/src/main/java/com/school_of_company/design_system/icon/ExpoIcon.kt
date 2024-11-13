@@ -170,10 +170,14 @@ fun CopyIcon(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun CircleIcon(modifier: Modifier = Modifier) {
+fun CircleIcon(
+    modifier: Modifier = Modifier,
+    tint: Color = Color.Unspecified
+) {
     Icon(
         painter = painterResource(id = R.drawable.ic_circle),
         contentDescription = stringResource(id = R.string.circle_description),
+        tint = tint,
         modifier = modifier
     )
 }

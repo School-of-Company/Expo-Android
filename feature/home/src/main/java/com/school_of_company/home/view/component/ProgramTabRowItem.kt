@@ -22,24 +22,15 @@ fun ProgramTabRowItem(
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = modifier
-                .padding(8.dp)
                 .expoClickable(onClick = onClick)
+                .padding(8.dp)
         ) {
-            if (isCurrentIndex) {
-                Text(
-                    text = title,
-                    style = typography.bodyBold1,
-                    fontWeight = FontWeight.SemiBold,
-                    color = colors.black,
-                )
-            } else {
-                Text(
-                    text = title,
-                    style = typography.bodyBold1,
-                    fontWeight = FontWeight.Normal,
-                    color = colors.gray500,
-                )
-            }
+            Text(
+                text = title,
+                style = typography.bodyBold1,
+                fontWeight = if (isCurrentIndex) FontWeight.SemiBold else FontWeight.Normal,
+                color = if (isCurrentIndex) colors.black else colors.gray500,
+            )
         }
     }
 }

@@ -143,10 +143,14 @@ fun UserIcon(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun WarnIcon(modifier: Modifier = Modifier) {
+fun WarnIcon(
+    modifier: Modifier = Modifier,
+    tint: Color = Color.Unspecified
+) {
     Icon(
         painter = painterResource(id = R.drawable.ic_warn),
         contentDescription = stringResource(id = R.string.warn_description),
+        tint = tint,
         modifier = modifier
     )
 }

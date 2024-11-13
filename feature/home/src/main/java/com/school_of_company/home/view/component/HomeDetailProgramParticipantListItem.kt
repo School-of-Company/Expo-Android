@@ -1,7 +1,6 @@
 package com.school_of_company.home.view.component
 
 import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -42,45 +41,45 @@ fun HomeDetailProgramParticipantListItem(
             modifier = modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)
-                .horizontalScroll(rememberScrollState()), // 수평 스크롤 가능
+                .horizontalScroll(horizontalScrollState),
             horizontalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             Text(
                 text = index.toString(),
                 style = typography.captionRegular2,
                 color = colors.black,
-                modifier = Modifier.width(20.dp) // 제목과 동일한 너비
+                modifier = Modifier.width(20.dp)
             )
 
             Text(
                 text = data.name,
                 style = typography.captionRegular2,
                 color = colors.black,
-                modifier = Modifier.width(80.dp) // 제목과 동일한 너비 설정
+                modifier = Modifier.width(80.dp)
             )
             Text(
                 text = data.company,
                 style = typography.captionRegular2,
                 color = colors.black,
-                modifier = Modifier.width(100.dp) // 제목과 동일한 너비 설정
+                modifier = Modifier.width(100.dp)
             )
             Text(
                 text = data.position,
                 style = typography.captionRegular2,
                 color = colors.black,
-                modifier = Modifier.width(80.dp) // 제목과 동일한 너비 설정
+                modifier = Modifier.width(80.dp)
             )
             Text(
                 text = data.schoolSubject,
                 style = typography.captionRegular2,
                 color = colors.black,
-                modifier = Modifier.width(120.dp) // 제목과 동일한 너비 설정
+                modifier = Modifier.width(120.dp)
             )
             Text(
                 text = data.phone,
                 style = typography.captionRegular2,
                 color = colors.black,
-                modifier = Modifier.width(100.dp) // 제목과 동일한 너비 설정
+                modifier = Modifier.width(100.dp)
             )
         }
     }

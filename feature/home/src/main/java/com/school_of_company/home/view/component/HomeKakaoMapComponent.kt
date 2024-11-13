@@ -14,11 +14,7 @@ import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.MapView
 import com.kakao.vectormap.camera.CameraUpdateFactory
-import com.kakao.vectormap.label.LabelOptions
-import com.kakao.vectormap.label.LabelStyle
-import com.kakao.vectormap.label.LabelStyles
 import com.school_of_company.ui.toast.makeToast
-import com.school_of_company.design_system.R
 
 @Composable
 fun HomeKakaoMap(
@@ -31,7 +27,7 @@ fun HomeKakaoMap(
 
     AndroidView(
         modifier = modifier.height(200.dp),
-        factory = { context ->
+        factory = { _ ->
             mapView.apply {
                 mapView.start(
                     object : MapLifeCycleCallback() {

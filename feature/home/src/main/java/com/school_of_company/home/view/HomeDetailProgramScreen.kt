@@ -160,8 +160,6 @@ internal fun HomeDetailProgramScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.height(14.dp))
-            
             HorizontalPager(state = pagerState) { page ->
                 when (page) {
                     0 -> {

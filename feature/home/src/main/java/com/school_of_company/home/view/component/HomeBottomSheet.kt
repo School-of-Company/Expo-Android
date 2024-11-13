@@ -35,7 +35,7 @@ fun HomeBottomSheet(
 ) {
     val sheetState = rememberModalBottomSheetState()
 
-    ExpoAndroidTheme { colors, typography ->
+    ExpoAndroidTheme { colors, _ ->
 
         ModalBottomSheet(
             onDismissRequest = { onCancelClick() },

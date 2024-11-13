@@ -11,7 +11,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.school_of_company.design_system.component.text.ExpoSubjectTitleText
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 
 @Composable

@@ -24,7 +24,7 @@ import com.school_of_company.design_system.component.modifier.padding.paddingHor
 import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.home.view.component.HomeSendMessageTopBar
-import com.school_of_company.home.view.component.SendMessageTextField
+import com.school_of_company.home.view.component.LimitedLengthTextField
 import com.school_of_company.home.viewmodel.HomeViewModel
 
 @Composable
@@ -87,7 +87,7 @@ internal fun SendMessageScreen(
 
             Spacer(modifier = Modifier.padding(top = 28.dp))
 
-            SendMessageTextField(
+            LimitedLengthTextField(
                 label = "제목",
                 textState = title,
                 placeholder = "제목을 입력해주세요.",
@@ -99,7 +99,7 @@ internal fun SendMessageScreen(
 
             Spacer(modifier = Modifier.padding(top = 18.dp))
 
-            SendMessageTextField(
+            LimitedLengthTextField(
                 label = "내용",
                 textState = content,
                 placeholder = "내용을 입력해주세요.",

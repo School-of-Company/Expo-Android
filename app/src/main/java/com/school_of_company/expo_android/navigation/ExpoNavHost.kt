@@ -11,6 +11,7 @@ import androidx.navigation.compose.NavHost
 import com.school_of_company.common.exception.*
 import com.school_of_company.design_system.R
 import com.school_of_company.expo_android.ui.ExpoAppState
+import com.school_of_company.home.navigation.homeDetailParticipantManagementScreen
 import com.school_of_company.home.navigation.homeDetailProgramParticipantScreen
 import com.school_of_company.home.navigation.homeDetailProgramScreen
 import com.school_of_company.home.navigation.homeDetailScreen
@@ -18,6 +19,7 @@ import com.school_of_company.home.navigation.homeScreen
 import com.school_of_company.home.navigation.homeSendMessageScreen
 import com.school_of_company.home.navigation.navigateToHome
 import com.school_of_company.home.navigation.navigateToHomeDetail
+import com.school_of_company.home.navigation.navigateToHomeDetailParticipantManagement
 import com.school_of_company.home.navigation.navigateToHomeDetailProgram
 import com.school_of_company.home.navigation.navigateToHomeDetailProgramParticipant
 import com.school_of_company.home.navigation.navigateToHomeSendMessage
@@ -116,7 +118,7 @@ fun ExpoNavHost(
         homeDetailScreen(
             onBackClick = navController::popBackStack,
             onMessageClick = navController::navigateToHomeSendMessage,
-            onCheckClick = {},
+            onCheckClick = navController::navigateToHomeDetailParticipantManagement,
             onQrGenerateClick = {},
             onModifyClick = {},
             onProgramClick = navController::navigateToHomeDetailProgram
@@ -133,6 +135,10 @@ fun ExpoNavHost(
         )
 
         homeDetailProgramParticipantScreen(
+            onBackClick = navController::popBackStack
+        )
+
+        homeDetailParticipantManagementScreen(
             onBackClick = navController::popBackStack
         )
     }

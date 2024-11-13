@@ -4,6 +4,8 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import com.school_of_company.home.view.HomeDetailProgramParticipantScreen
+import com.school_of_company.home.view.HomeDetailProgramRoute
 import com.school_of_company.home.view.HomeDetailRoute
 import com.school_of_company.home.view.HomeRoute
 import com.school_of_company.home.view.SendMessageRoute
@@ -11,6 +13,8 @@ import com.school_of_company.home.view.SendMessageRoute
 const val homeRoute = "home_route"
 const val homeDetailRoute=  "home_detail_route"
 const val homeSendMessageRoute = "home_send_message_route"
+const val homeDetailProgramRoute = "home_detail_program_route"
+const val homeDetailProgramParticipantRoute = "home_detail_program_participant_route"
 
 fun NavController.navigateToHome(navOptions: NavOptions? = null) {
     this.navigate(homeRoute, navOptions)
@@ -22,6 +26,14 @@ fun NavController.navigateToHomeDetail(navOptions: NavOptions? = null) {
 
 fun NavController.navigateToHomeSendMessage(navOptions: NavOptions? = null) {
     this.navigate(homeSendMessageRoute, navOptions)
+}
+
+fun NavController.navigateToHomeDetailProgram(navOptions: NavOptions? = null) {
+    this.navigate(homeDetailProgramRoute, navOptions)
+}
+
+fun NavController.navigateToHomeDetailProgramParticipant(navOptions: NavOptions? = null) {
+    this.navigate(homeDetailProgramParticipantRoute, navOptions)
 }
 
 fun NavGraphBuilder.homeScreen(
@@ -61,6 +73,28 @@ fun NavGraphBuilder.homeSendMessageScreen(
     composable(route = homeSendMessageRoute) {
         SendMessageRoute(
             onSendClick = onSendClick,
+            onBackClick = onBackClick
+        )
+    }
+}
+
+fun NavGraphBuilder.homeDetailProgramScreen(
+    onBackClick: () -> Unit,
+    navigateToProgramDetail: () -> Unit
+) {
+    composable(route = homeDetailProgramRoute) {
+        HomeDetailProgramRoute(
+            onBackClick = onBackClick,
+            navigateToProgramDetail = navigateToProgramDetail
+        )
+    }
+}
+
+fun NavGraphBuilder.homeDetailProgramParticipantScreen(
+    onBackClick: () -> Unit
+) {
+    composable(route = homeDetailProgramParticipantRoute) {
+        HomeDetailProgramParticipantScreen(
             onBackClick = onBackClick
         )
     }

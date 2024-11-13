@@ -11,17 +11,20 @@ import androidx.navigation.compose.NavHost
 import com.school_of_company.common.exception.*
 import com.school_of_company.design_system.R
 import com.school_of_company.expo_android.ui.ExpoAppState
+import com.school_of_company.home.navigation.homeDetailProgramParticipantScreen
+import com.school_of_company.home.navigation.homeDetailProgramScreen
 import com.school_of_company.home.navigation.homeDetailScreen
 import com.school_of_company.home.navigation.homeScreen
 import com.school_of_company.home.navigation.homeSendMessageScreen
 import com.school_of_company.home.navigation.navigateToHome
 import com.school_of_company.home.navigation.navigateToHomeDetail
+import com.school_of_company.home.navigation.navigateToHomeDetailProgram
+import com.school_of_company.home.navigation.navigateToHomeDetailProgramParticipant
 import com.school_of_company.home.navigation.navigateToHomeSendMessage
 import com.school_of_company.navigation.navigateToSignIn
 import com.school_of_company.navigation.sigInRoute
 import com.school_of_company.navigation.signInScreen
 import com.school_of_company.signup.navigation.navigationToSignUp
-import com.school_of_company.signup.navigation.signUpRoute
 import com.school_of_company.signup.navigation.signUpScreen
 import com.school_of_company.ui.toast.makeToast
 
@@ -116,12 +119,21 @@ fun ExpoNavHost(
             onCheckClick = {},
             onQrGenerateClick = {},
             onModifyClick = {},
-            onProgramClick = {}
+            onProgramClick = navController::navigateToHomeDetailProgram
         )
 
         homeSendMessageScreen(
             onBackClick = navController::popBackStack,
             onSendClick = navController::navigateToHomeDetail
+        )
+
+        homeDetailProgramScreen(
+            onBackClick = navController::popBackStack,
+            navigateToProgramDetail = navController::navigateToHomeDetailProgramParticipant
+        )
+
+        homeDetailProgramParticipantScreen(
+            onBackClick = navController::popBackStack
         )
     }
 }

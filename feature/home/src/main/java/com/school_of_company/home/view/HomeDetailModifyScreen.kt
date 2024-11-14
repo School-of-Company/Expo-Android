@@ -1,7 +1,7 @@
 package com.school_of_company.home.view
 
+import android.graphics.BitmapFactory
 import android.net.Uri
-import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -49,10 +49,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import com.school_of_company.design_system.R
-import com.school_of_company.design_system.component.button.ExpoButton
+import com.school_of_company.design_system.component.button.ExpoStateButton
+import com.school_of_company.design_system.component.button.state.ButtonState
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.component.modifier.padding.paddingHorizontal
-import com.school_of_company.design_system.component.modifier.padding.paddingVertical
 import com.school_of_company.design_system.component.textfield.LimitedLengthTextField
 import com.school_of_company.design_system.component.textfield.NoneLimitedLengthTextField
 import com.school_of_company.design_system.component.topbar.ExpoTopBar
@@ -85,11 +85,14 @@ internal fun HomeDetailModifyRoute(
     val galleryLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             if (uri != null) {
-                val bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
-                if (bitmap.width == 328 && bitmap.height == 178) {
-                    selectedImageUri = uri
-                } else {
-                    makeToast(context, "이미지 크기는 328 × 178이어야 합니다.")
+                val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+                context.contentResolver.openInputStream(uri)?.use { inputStream ->
+                    BitmapFactory.decodeStream(inputStream, null, options)
+                    if (options.outWidth == 328 && options.outHeight == 178) {
+                        selectedImageUri = uri
+                    } else {
+                        makeToast(context, "이미지 크기는 328 × 178이어야 합니다.")
+                    }
                 }
             }
         }
@@ -379,14 +382,13 @@ internal fun HomeDetailModifyScreen(
 
                     Spacer(modifier = Modifier.height(28.dp))
 
-                    ExpoButton(
+                    ExpoStateButton(
                         text = "수정완료",
-                        color = colors.main,
-                        onClick = { /* todo : add Expo Modify CallBack */ },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .paddingVertical(vertical = 14.dp)
-                    )
+                        state = if (imageUri.isNullOrEmpty() && modifyTitleState.isEmpty() && startedDateState.isEmpty() && endedDateState.isEmpty() && introduceTitleState.isEmpty() && addressState.isEmpty() && locationState.isEmpty() && trainingTextState.isEmpty()) ButtonState.Enable else ButtonState.Disable,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        /* todo : Expo Modify CallBack */
+                    }
 
                     Spacer(modifier = Modifier.height(48.dp))
                 }

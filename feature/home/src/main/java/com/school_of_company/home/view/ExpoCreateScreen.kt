@@ -365,7 +365,7 @@ internal fun ExpoCreateScreen(
 
                     ExpoStateButton(
                         text = "수정완료",
-                        state = if (imageUri.isNullOrEmpty() && modifyTitleState.isEmpty() && startedDateState.isEmpty() && endedDateState.isEmpty() && introduceTitleState.isEmpty() && addressState.isEmpty() && locationState.isEmpty() && trainingTextState.isEmpty()) ButtonState.Enable else ButtonState.Disable,
+                        state = if (!imageUri.isNullOrEmpty() && modifyTitleState.isNotEmpty() && startedDateState.isNotEmpty() && endedDateState.isNotEmpty() && introduceTitleState.isNotEmpty() && addressState.isNotEmpty() && locationState.isNotEmpty() && trainingTextState.all { it.isNotEmpty() }) ButtonState.Enable else ButtonState.Disable,
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         /* todo : Expo Modify CallBack */

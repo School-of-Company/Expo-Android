@@ -1,7 +1,9 @@
 package com.school_of_company.expo_android.ui
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -10,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavDestination
@@ -20,6 +23,7 @@ import com.school_of_company.design_system.component.navigation.ExpoNavigationBa
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.expo_android.navigation.ExpoNavHost
 import com.school_of_company.expo_android.navigation.TopLevelDestination
+import com.school_of_company.home.navigation.expoCreateRoute
 import com.school_of_company.home.navigation.homeRoute
 
 /**
@@ -39,7 +43,8 @@ fun ExpoApp(
 
     // 최상위 목적지들 중에 현재 보고 있는 화면이 있는 확인합니다.
     val topLevelDestinationRoute = arrayOf(
-        homeRoute
+        homeRoute,
+        expoCreateRoute
     )
 
     // 현재 목적지가 최상위 목적지 목록에 포함되면 BottomBar를 표시하도록 설정합니다.
@@ -62,9 +67,12 @@ fun ExpoApp(
                     )
                 }
             }
-        ) { _ ->
+        ) { paddingValues ->
             // 네비게이션 호스트
-            ExpoNavHost(appState = appState)
+            Box(modifier = Modifier.padding(paddingValues =
+            paddingValues)) {
+                ExpoNavHost(appState = appState)
+            }
         }
     }
 }

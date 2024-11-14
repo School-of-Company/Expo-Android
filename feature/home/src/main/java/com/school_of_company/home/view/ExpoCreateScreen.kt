@@ -57,18 +57,15 @@ import com.school_of_company.design_system.component.textfield.ExpoAddTextField
 import com.school_of_company.design_system.component.textfield.ExpoLocationIconTextField
 import com.school_of_company.design_system.component.textfield.LimitedLengthTextField
 import com.school_of_company.design_system.component.textfield.NoneLimitedLengthTextField
-import com.school_of_company.design_system.component.topbar.ExpoTopBar
 import com.school_of_company.design_system.icon.ImageIcon
-import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.home.viewmodel.HomeViewModel
 import com.school_of_company.ui.toast.makeToast
 
 @Composable
-internal fun HomeDetailModifyRoute(
-    onBackClick: () -> Unit,
-    onModifyClick: () -> Unit,
+internal fun ExpoCreateRoute(
+    onExpoCreateClick: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val modifyTitleState by viewModel.modify_title.collectAsStateWithLifecycle()
@@ -97,9 +94,7 @@ internal fun HomeDetailModifyRoute(
             }
         }
 
-
-    HomeDetailModifyScreen(
-        onBackClick = onBackClick,
+    ExpoCreateScreen(
         onImageClick = { galleryLauncher.launch("image/*") },
         imageUri = selectedImageUri?.toString() ?: "",
         modifyTitleState = modifyTitleState,
@@ -118,13 +113,12 @@ internal fun HomeDetailModifyRoute(
 }
 
 @Composable
-internal fun HomeDetailModifyScreen(
+internal fun ExpoCreateScreen(
     modifier: Modifier = Modifier,
+    imageUri: String?,
+    onImageClick: () -> Unit,
     focusManager: FocusManager = LocalFocusManager.current,
     scrollState: ScrollState = rememberScrollState(),
-    imageUri: String?,
-    onBackClick: () -> Unit,
-    onImageClick: () -> Unit,
     modifyTitleState: String,
     startedDateState: String,
     endedDateState: String,
@@ -157,19 +151,6 @@ internal fun HomeDetailModifyScreen(
                     )
                 }
         ) {
-
-            ExpoTopBar(
-                startIcon = {
-                    LeftArrowIcon(
-                        tint = colors.black,
-                        modifier = Modifier.expoClickable { onBackClick() }
-                    )
-                },
-                betweenText = "박람회 수정하기"
-            )
-
-            Spacer(modifier = Modifier.height(33.dp))
-
             Column(
                 modifier = Modifier.verticalScroll(scrollState)
             ) {
@@ -384,7 +365,7 @@ internal fun HomeDetailModifyScreen(
 
                     ExpoStateButton(
                         text = "수정완료",
-                        state = if (imageUri.isNullOrEmpty() && modifyTitleState.isEmpty() && startedDateState.isEmpty() && endedDateState.isEmpty() && introduceTitleState.isEmpty() && addressState.isEmpty() && locationState.isEmpty() && trainingTextState.isEmpty()) ButtonState.Enable else ButtonState.Disable,
+                        state = if (!imageUri.isNullOrEmpty() && modifyTitleState.isNotEmpty() && startedDateState.isNotEmpty() && endedDateState.isNotEmpty() && introduceTitleState.isNotEmpty() && addressState.isNotEmpty() && locationState.isNotEmpty() && trainingTextState.all { it.isNotEmpty() }) ButtonState.Enable else ButtonState.Disable,
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         /* todo : Expo Modify CallBack */
@@ -399,9 +380,9 @@ internal fun HomeDetailModifyScreen(
 
 @Preview
 @Composable
-private fun HomeDetailModifyScreenPreview() {
-    HomeDetailModifyScreen(
-        onBackClick = {},
+private fun ExpoCreateScreenPreview() {
+    ExpoCreateScreen(
+        imageUri = null,
         onImageClick = {},
         modifyTitleState = "",
         startedDateState = "",
@@ -414,8 +395,6 @@ private fun HomeDetailModifyScreenPreview() {
         onAddressChange = {},
         onStartedDateChange = {},
         onEndedDateChange = {},
-        onIntroduceTitleChange = {},
-        scrollState = ScrollState(0),
-        imageUri = ""
+        onIntroduceTitleChange = {}
     )
 }

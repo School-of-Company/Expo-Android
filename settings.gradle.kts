@@ -32,7 +32,6 @@ include(":core:ui")
 
 include(":feature")
 include(":feature:signin")
-
-gradle.startParameter.excludedTaskNames.addAll(listOf(":build-logic:convention:testClasses"))
 include(":feature:signup")
 include(":feature:home")
+gradle.startParameter.excludedTaskNames.addAll(listOf(":build-logic:convention:testClasses"))

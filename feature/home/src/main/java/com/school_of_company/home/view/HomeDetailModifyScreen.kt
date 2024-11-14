@@ -53,6 +53,8 @@ import com.school_of_company.design_system.component.button.ExpoStateButton
 import com.school_of_company.design_system.component.button.state.ButtonState
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.component.modifier.padding.paddingHorizontal
+import com.school_of_company.design_system.component.textfield.ExpoAddTextField
+import com.school_of_company.design_system.component.textfield.ExpoLocationIconTextField
 import com.school_of_company.design_system.component.textfield.LimitedLengthTextField
 import com.school_of_company.design_system.component.textfield.NoneLimitedLengthTextField
 import com.school_of_company.design_system.component.topbar.ExpoTopBar
@@ -60,8 +62,6 @@ import com.school_of_company.design_system.icon.ImageIcon
 import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
-import com.school_of_company.home.view.component.HomeDetailModifyAddTextField
-import com.school_of_company.home.view.component.HomeDetailModifyIconTextField
 import com.school_of_company.home.viewmodel.HomeViewModel
 import com.school_of_company.ui.toast.makeToast
 
@@ -339,7 +339,7 @@ internal fun HomeDetailModifyScreen(
                         color = colors.black,
                     )
 
-                    HomeDetailModifyAddTextField(
+                    ExpoAddTextField(
                         trainingTextFieldList = trainingTextState,
                         onValueChange = { index, newState ->
                             trainingTextState = trainingTextState.toMutableList().apply {
@@ -363,7 +363,7 @@ internal fun HomeDetailModifyScreen(
 
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top)) {
 
-                        HomeDetailModifyIconTextField(
+                        ExpoLocationIconTextField(
                             placeholder = "장소를 입력해주세요.",
                             isDisabled = false,
                             onValueChange = onLocationChange,

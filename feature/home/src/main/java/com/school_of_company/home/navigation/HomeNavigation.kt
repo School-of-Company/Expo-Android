@@ -4,6 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import com.school_of_company.home.view.HomeDetailModifyRoute
 import com.school_of_company.home.view.HomeDetailParticipantManagementRoute
 import com.school_of_company.home.view.HomeDetailProgramParticipantRoute
 import com.school_of_company.home.view.HomeDetailProgramRoute
@@ -17,6 +18,7 @@ const val homeSendMessageRoute = "home_send_message_route"
 const val homeDetailProgramRoute = "home_detail_program_route"
 const val homeDetailProgramParticipantRoute = "home_detail_program_participant_route"
 const val homeDetailParticipantManagementRoute = "home_detail_participant_management_route"
+const val homeDetailModifyRoute = "home_detail_modify_route"
 
 fun NavController.navigateToHome(navOptions: NavOptions? = null) {
     this.navigate(homeRoute, navOptions)
@@ -40,6 +42,10 @@ fun NavController.navigateToHomeDetailProgramParticipant(navOptions: NavOptions?
 
 fun NavController.navigateToHomeDetailParticipantManagement(navOptions: NavOptions? = null) {
     this.navigate(homeDetailParticipantManagementRoute, navOptions)
+}
+
+fun NavController.navigateToHomeDetailModify(navOptions: NavOptions? = null) {
+    this.navigate(homeDetailModifyRoute, navOptions)
 }
 
 fun NavGraphBuilder.homeScreen(
@@ -112,6 +118,18 @@ fun NavGraphBuilder.homeDetailParticipantManagementScreen(
     composable(route = homeDetailParticipantManagementRoute) {
         HomeDetailParticipantManagementRoute(
             onBackClick = onBackClick
+        )
+    }
+}
+
+fun NavGraphBuilder.homeDetailModifyScreen(
+    onBackClick: () -> Unit,
+    onModifyClick: () -> Unit
+) {
+    composable(route = homeDetailModifyRoute) {
+        HomeDetailModifyRoute(
+            onBackClick = onBackClick,
+            onModifyClick = onModifyClick
         )
     }
 }

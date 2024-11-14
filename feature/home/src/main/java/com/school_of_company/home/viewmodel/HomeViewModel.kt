@@ -17,7 +17,6 @@ import com.school_of_company.home.viewmodel.uistate.ModifyExpoInformationUiState
 import com.school_of_company.home.viewmodel.uistate.RegisterExpoInformationUiState
 import com.school_of_company.model.model.expo.ExpoRequestAndResponseModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -37,6 +36,12 @@ class HomeViewModel @Inject constructor(
     companion object {
         private const val TITLE = "title"
         private const val CONTENT = "content"
+        private const val MODIFY_TITLE = "modify_title"
+        private const val STARTED_DATE = "started_date"
+        private const val ENDED_DATE = "ended_date"
+        private const val INTRODUCE_TITLE = "introduce_title"
+        private const val ADDRESS = "address"
+        private const val LOCATION = "location"
     }
 
     private val _getExpoInformationUiState = MutableStateFlow<GetExpoInformationUiState>(GetExpoInformationUiState.Loading)
@@ -58,6 +63,18 @@ class HomeViewModel @Inject constructor(
     internal var title = savedStateHandle.getStateFlow(key = TITLE, initialValue = "")
 
     internal var content = savedStateHandle.getStateFlow(key = CONTENT, initialValue = "")
+
+    internal var modify_title = savedStateHandle.getStateFlow(key = MODIFY_TITLE, initialValue = "")
+
+    internal var started_date = savedStateHandle.getStateFlow(key = STARTED_DATE, initialValue = "")
+
+    internal var ended_date = savedStateHandle.getStateFlow(key = ENDED_DATE, initialValue = "")
+
+    internal var introduce_title = savedStateHandle.getStateFlow(key = INTRODUCE_TITLE, initialValue = "")
+
+    internal var address = savedStateHandle.getStateFlow(key = ADDRESS, initialValue = "")
+
+    internal var location = savedStateHandle.getStateFlow(key = LOCATION, initialValue = "")
 
     internal fun getExpoInformation(expoId: Long) = viewModelScope.launch {
         getExpoInformationUseCase(expoId = expoId)
@@ -148,5 +165,29 @@ class HomeViewModel @Inject constructor(
 
     internal fun onContentChange(value: String) {
         savedStateHandle[CONTENT] = value
+    }
+
+    internal fun onModifyTitleChange(value: String) {
+        savedStateHandle[MODIFY_TITLE] = value
+    }
+
+    internal fun onStartedDateChange(value: String) {
+        savedStateHandle[STARTED_DATE] = value
+    }
+
+    internal fun onEndedDateChange(value: String) {
+        savedStateHandle[ENDED_DATE] = value
+    }
+
+    internal fun onIntroduceTitleChange(value: String) {
+        savedStateHandle[INTRODUCE_TITLE] = value
+    }
+
+    internal fun onAddressChange(value: String) {
+        savedStateHandle[ADDRESS] = value
+    }
+
+    internal fun onLocationChange(value: String) {
+        savedStateHandle[LOCATION] = value
     }
 }

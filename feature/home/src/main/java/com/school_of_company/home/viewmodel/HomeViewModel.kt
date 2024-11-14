@@ -17,7 +17,6 @@ import com.school_of_company.home.viewmodel.uistate.ModifyExpoInformationUiState
 import com.school_of_company.home.viewmodel.uistate.RegisterExpoInformationUiState
 import com.school_of_company.model.model.expo.ExpoRequestAndResponseModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -69,7 +68,7 @@ class HomeViewModel @Inject constructor(
 
     internal var started_date = savedStateHandle.getStateFlow(key = STARTED_DATE, initialValue = "")
 
-    internal var endedd_date = savedStateHandle.getStateFlow(key = ENDED_DATE, initialValue = "")
+    internal var ended_date = savedStateHandle.getStateFlow(key = ENDED_DATE, initialValue = "")
 
     internal var introduce_title = savedStateHandle.getStateFlow(key = INTRODUCE_TITLE, initialValue = "")
 

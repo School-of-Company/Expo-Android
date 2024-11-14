@@ -70,7 +70,7 @@ internal fun HomeDetailModifyRoute(
 ) {
     val modifyTitleState by viewModel.modify_title.collectAsStateWithLifecycle()
     val startedDateState by viewModel.started_date.collectAsStateWithLifecycle()
-    val endedDateState by viewModel.endedd_date.collectAsStateWithLifecycle()
+    val endedDateState by viewModel.ended_date.collectAsStateWithLifecycle()
     val introduceTitleState by viewModel.introduce_title.collectAsStateWithLifecycle()
     val addressState by viewModel.address.collectAsStateWithLifecycle()
     val locationState by viewModel.location.collectAsStateWithLifecycle()

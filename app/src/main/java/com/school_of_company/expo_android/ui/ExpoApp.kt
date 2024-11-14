@@ -20,6 +20,7 @@ import com.school_of_company.design_system.component.navigation.ExpoNavigationBa
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.expo_android.navigation.ExpoNavHost
 import com.school_of_company.expo_android.navigation.TopLevelDestination
+import com.school_of_company.home.navigation.expoCreateRoute
 import com.school_of_company.home.navigation.homeRoute
 
 /**
@@ -39,7 +40,8 @@ fun ExpoApp(
 
     // 최상위 목적지들 중에 현재 보고 있는 화면이 있는 확인합니다.
     val topLevelDestinationRoute = arrayOf(
-        homeRoute
+        homeRoute,
+        expoCreateRoute
     )
 
     // 현재 목적지가 최상위 목적지 목록에 포함되면 BottomBar를 표시하도록 설정합니다.

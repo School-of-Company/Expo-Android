@@ -21,10 +21,10 @@ import com.school_of_company.design_system.component.button.ExpoStateButton
 import com.school_of_company.design_system.component.button.state.ButtonState
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.component.modifier.padding.paddingHorizontal
+import com.school_of_company.design_system.component.textfield.LimitedLengthTextField
 import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.home.view.component.HomeSendMessageTopBar
-import com.school_of_company.home.view.component.LimitedLengthTextField
 import com.school_of_company.home.viewmodel.HomeViewModel
 
 @Composable

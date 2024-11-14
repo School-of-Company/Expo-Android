@@ -9,8 +9,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -26,10 +29,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
@@ -217,6 +222,160 @@ fun ExpoNoneLabelTextField(
     }
 }
 
+@Composable
+fun LimitedLengthTextField(
+    modifier: Modifier = Modifier,
+    label: String = "",
+    textState: String,
+    placeholder: String,
+    overflowErrorMessage: String = "",
+    isError: Boolean,
+    lengthLimit: Int = 0,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    updateTextValue: (String) -> Unit,
+) {
+    val lengthCheck = remember {
+        if (lengthLimit != 0) textState.length >= lengthLimit else false
+    }
+
+    ExpoAndroidTheme { colors, typography ->
+        Column(
+            verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.Top),
+            horizontalAlignment = Alignment.Start,
+            modifier = modifier.background(color = Color.Transparent)
+        ) {
+            Text(
+                text = label,
+                style = typography.bodyBold2,
+                color = colors.black,
+                fontWeight = FontWeight(600),
+                modifier = Modifier.padding(bottom = 10.dp)
+            )
+
+            Box(
+                modifier = Modifier
+                    .border(
+                        width = 1.dp,
+                        color = if (lengthCheck || isError) colors.error else colors.gray100,
+                        shape = RoundedCornerShape(size = 8.dp)
+                    )
+                    .background(
+                        color = colors.white,
+                        shape = RoundedCornerShape(size = 8.dp)
+                    )
+                    .padding(16.dp)
+            ) {
+                BasicTextField(
+                    onValueChange = { newText ->
+                        if (lengthLimit == 0 || newText.length <= lengthLimit) {
+                            updateTextValue(newText)
+                        }
+                    },
+                    keyboardOptions = keyboardOptions,
+                    value = textState,
+                    textStyle = typography.captionRegular1.copy(
+                        fontWeight = FontWeight.Normal,
+                        color = colors.black,
+                        textAlign = TextAlign.Start,
+                    ),
+                    cursorBrush = SolidColor(colors.main),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(min = 10.dp, max = 300.dp)
+                )
+
+                if (textState.isEmpty()) {
+                    Text(
+                        text = placeholder,
+                        style = typography.captionRegular1,
+                        fontWeight = FontWeight.Normal,
+                        color = colors.gray300,
+                    )
+                }
+            }
+
+            if (lengthLimit != 0) {
+                Text(
+                    text = "${textState.length} / $lengthLimit",
+                    style = typography.captionRegular2,
+                    fontWeight = FontWeight.Normal,
+                    color = colors.main,
+                    modifier = Modifier.align(Alignment.End)
+                )
+            }
+
+            if (lengthCheck) {
+                Text(
+                    text = overflowErrorMessage,
+                    style = typography.captionRegular2,
+                    fontWeight = FontWeight.Normal,
+                    color = colors.error
+                )
+            }
+        }
+    }
+}
+
+
+@Composable
+fun NoneLimitedLengthTextField(
+    modifier: Modifier = Modifier,
+    textState: String,
+    placeholder: String,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    updateTextValue: (String) -> Unit,
+) {
+
+    ExpoAndroidTheme { colors, typography ->
+        Column(
+            verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.Top),
+            horizontalAlignment = Alignment.Start,
+            modifier = modifier.background(color = Color.Transparent)
+        ) {
+            Box(
+                modifier = Modifier
+                    .border(
+                        width = 1.dp,
+                        color = colors.gray100,
+                        shape = RoundedCornerShape(size = 8.dp)
+                    )
+                    .background(
+                        color = colors.white,
+                        shape = RoundedCornerShape(size = 8.dp)
+                    )
+                    .padding(16.dp)
+            ) {
+                BasicTextField(
+                    onValueChange = { newText ->
+                        updateTextValue(newText)
+                    },
+                    keyboardOptions = keyboardOptions,
+                    value = textState,
+                    textStyle = typography.captionRegular1.copy(
+                        fontWeight = FontWeight.Normal,
+                        color = colors.black,
+                        textAlign = TextAlign.Start,
+                    ),
+                    cursorBrush = SolidColor(colors.main),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(min = 10.dp, max = 300.dp)
+                )
+
+                if (textState.isEmpty()) {
+                    Text(
+                        text = placeholder,
+                        style = typography.captionRegular1,
+                        fontWeight = FontWeight.Normal,
+                        color = colors.gray300,
+                        modifier = Modifier.padding(start = 4.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
 
 @Preview
 @Composable
@@ -253,6 +412,13 @@ fun ExpoOutlinedTextFieldPreview() {
                 onClicked = {},
                 label = "비밀번호"
             )
+            LimitedLengthTextField(textState = "", placeholder = "", isError = false) {
+                
+            }
+
+            NoneLimitedLengthTextField(textState = "", placeholder = "") {
+                
+            }
         }
     }
 }

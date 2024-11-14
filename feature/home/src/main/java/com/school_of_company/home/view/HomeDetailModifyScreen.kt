@@ -1,6 +1,7 @@
 package com.school_of_company.home.view
 
 import android.net.Uri
+import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -39,6 +40,7 @@ import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -61,6 +63,7 @@ import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.home.view.component.HomeDetailModifyAddTextField
 import com.school_of_company.home.view.component.HomeDetailModifyIconTextField
 import com.school_of_company.home.viewmodel.HomeViewModel
+import com.school_of_company.ui.toast.makeToast
 
 @Composable
 internal fun HomeDetailModifyRoute(
@@ -77,8 +80,18 @@ internal fun HomeDetailModifyRoute(
 
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
-    val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-            if (uri != null) { selectedImageUri = uri }
+    val context = LocalContext.current
+
+    val galleryLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            if (uri != null) {
+                val bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
+                if (bitmap.width == 328 && bitmap.height == 178) {
+                    selectedImageUri = uri
+                } else {
+                    makeToast(context, "이미지 크기는 328 × 178이어야 합니다.")
+                }
+            }
         }
 
 
@@ -187,7 +200,10 @@ internal fun HomeDetailModifyScreen(
                             }
                     ) {
                         Row(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+                            horizontalArrangement = Arrangement.spacedBy(
+                                8.dp,
+                                Alignment.CenterHorizontally
+                            ),
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
                                 .fillMaxSize()

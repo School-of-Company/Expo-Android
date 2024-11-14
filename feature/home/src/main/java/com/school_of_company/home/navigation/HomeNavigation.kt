@@ -4,6 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import com.school_of_company.home.view.ExpoCreateRoute
 import com.school_of_company.home.view.HomeDetailModifyRoute
 import com.school_of_company.home.view.HomeDetailParticipantManagementRoute
 import com.school_of_company.home.view.HomeDetailProgramParticipantRoute
@@ -19,6 +20,7 @@ const val homeDetailProgramRoute = "home_detail_program_route"
 const val homeDetailProgramParticipantRoute = "home_detail_program_participant_route"
 const val homeDetailParticipantManagementRoute = "home_detail_participant_management_route"
 const val homeDetailModifyRoute = "home_detail_modify_route"
+const val expoCreateRoute = "expo_create_route"
 
 fun NavController.navigateToHome(navOptions: NavOptions? = null) {
     this.navigate(homeRoute, navOptions)
@@ -46,6 +48,10 @@ fun NavController.navigateToHomeDetailParticipantManagement(navOptions: NavOptio
 
 fun NavController.navigateToHomeDetailModify(navOptions: NavOptions? = null) {
     this.navigate(homeDetailModifyRoute, navOptions)
+}
+
+fun NavController.navigateToExpoCreate(navOptions: NavOptions? = null) {
+    this.navigate(expoCreateRoute, navOptions)
 }
 
 fun NavGraphBuilder.homeScreen(
@@ -130,6 +136,16 @@ fun NavGraphBuilder.homeDetailModifyScreen(
         HomeDetailModifyRoute(
             onBackClick = onBackClick,
             onModifyClick = onModifyClick
+        )
+    }
+}
+
+fun NavGraphBuilder.expoCreateScreen(
+    onExpoCreateClick: () -> Unit
+) {
+    composable(route = expoCreateRoute) {
+        ExpoCreateRoute(
+            onExpoCreateClick = onExpoCreateClick
         )
     }
 }

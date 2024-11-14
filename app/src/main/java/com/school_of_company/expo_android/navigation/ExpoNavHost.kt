@@ -11,6 +11,7 @@ import androidx.navigation.compose.NavHost
 import com.school_of_company.common.exception.*
 import com.school_of_company.design_system.R
 import com.school_of_company.expo_android.ui.ExpoAppState
+import com.school_of_company.home.navigation.expoCreateScreen
 import com.school_of_company.home.navigation.homeDetailModifyScreen
 import com.school_of_company.home.navigation.homeDetailParticipantManagementScreen
 import com.school_of_company.home.navigation.homeDetailProgramParticipantScreen
@@ -147,6 +148,10 @@ fun ExpoNavHost(
         homeDetailModifyScreen(
             onBackClick = navController::popBackStack,
             onModifyClick = navController::navigateToHomeDetail
+        )
+
+        expoCreateScreen(
+            onExpoCreateClick = navController::navigateToHome
         )
     }
 }

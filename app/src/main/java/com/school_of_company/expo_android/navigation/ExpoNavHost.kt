@@ -8,19 +8,19 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import com.school_of_company.common.exception.*
 import com.school_of_company.design_system.R
+import com.school_of_company.expo.navigation.expoCreateScreen
+import com.school_of_company.expo.navigation.expoDetailScreen
+import com.school_of_company.expo.navigation.expoModifyScreen
+import com.school_of_company.expo.navigation.expoScreen
+import com.school_of_company.expo.navigation.homeRoute
+import com.school_of_company.expo.navigation.navigateToExpoDetail
+import com.school_of_company.expo.navigation.navigateToExpoModify
+import com.school_of_company.expo.navigation.navigateToHome
 import com.school_of_company.expo_android.ui.ExpoAppState
-import com.school_of_company.home.navigation.expoCreateScreen
-import com.school_of_company.home.navigation.homeDetailModifyScreen
 import com.school_of_company.home.navigation.homeDetailParticipantManagementScreen
 import com.school_of_company.home.navigation.homeDetailProgramParticipantScreen
 import com.school_of_company.home.navigation.homeDetailProgramScreen
-import com.school_of_company.home.navigation.homeDetailScreen
-import com.school_of_company.home.navigation.homeRoute
-import com.school_of_company.home.navigation.homeScreen
 import com.school_of_company.home.navigation.homeSendMessageScreen
-import com.school_of_company.home.navigation.navigateToHome
-import com.school_of_company.home.navigation.navigateToHomeDetail
-import com.school_of_company.home.navigation.navigateToHomeDetailModify
 import com.school_of_company.home.navigation.navigateToHomeDetailParticipantManagement
 import com.school_of_company.home.navigation.navigateToHomeDetailProgram
 import com.school_of_company.home.navigation.navigateToHomeDetailProgramParticipant
@@ -118,22 +118,22 @@ fun ExpoNavHost(
             onErrorToast = makeErrorToast
         )
 
-        homeScreen(
-            navigationToDetail = navController::navigateToHomeDetail
+        expoScreen(
+            navigationToDetail = navController::navigateToExpoDetail
         )
 
-        homeDetailScreen(
+        expoDetailScreen(
             onBackClick = navController::popBackStack,
             onMessageClick = navController::navigateToHomeSendMessage,
             onCheckClick = navController::navigateToHomeDetailParticipantManagement,
             onQrGenerateClick = {},
-            onModifyClick = navController::navigateToHomeDetailModify,
+            onModifyClick = navController::navigateToExpoModify,
             onProgramClick = navController::navigateToHomeDetailProgram
         )
 
         homeSendMessageScreen(
             onBackClick = navController::popBackStack,
-            onSendClick = navController::navigateToHomeDetail
+            onSendClick = navController::navigateToExpoDetail
         )
 
         homeDetailProgramScreen(
@@ -149,9 +149,9 @@ fun ExpoNavHost(
             onBackClick = navController::popBackStack
         )
 
-        homeDetailModifyScreen(
+        expoModifyScreen(
             onBackClick = navController::popBackStack,
-            onModifyClick = navController::navigateToHomeDetail
+            onModifyClick = navController::navigateToExpoDetail
         )
 
         expoCreateScreen(

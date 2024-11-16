@@ -14,9 +14,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
+import com.school_of_company.expo.navigation.navigateToExpoCreate
+import com.school_of_company.expo.navigation.navigateToHome
 import com.school_of_company.expo_android.navigation.TopLevelDestination
-import com.school_of_company.home.navigation.navigateToExpoCreate
-import com.school_of_company.home.navigation.navigateToHome
 import kotlinx.coroutines.CoroutineScope
 
 @Composable

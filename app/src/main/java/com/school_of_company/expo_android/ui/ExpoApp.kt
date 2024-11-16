@@ -21,10 +21,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.school_of_company.design_system.component.navigation.ExpoNavigationBar
 import com.school_of_company.design_system.component.navigation.ExpoNavigationBarItem
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
+import com.school_of_company.expo.navigation.expoCreateRoute
+import com.school_of_company.expo.navigation.homeRoute
 import com.school_of_company.expo_android.navigation.ExpoNavHost
 import com.school_of_company.expo_android.navigation.TopLevelDestination
-import com.school_of_company.home.navigation.expoCreateRoute
-import com.school_of_company.home.navigation.homeRoute
 
 /**
  * 객체로 앱 상태를 중앙에서 관리하고, Scaffold와 BottomBar를 통해 유연한 UI 구성을 제공합니다.

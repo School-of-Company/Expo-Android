@@ -191,6 +191,7 @@ private fun HomeDetailProgramScreenPreview() {
                 check = true,
                 must = true
             ),
+
             ProgramTempList(
                 programName = "adsfasfas",
                 check = true,

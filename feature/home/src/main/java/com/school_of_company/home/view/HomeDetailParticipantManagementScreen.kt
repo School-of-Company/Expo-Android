@@ -28,8 +28,6 @@ import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.home.view.component.HomeDetailParticipantManagementData
 import com.school_of_company.home.view.component.HomeDetailParticipantManagementList
-import com.school_of_company.home.view.component.HomeDetailProgramParticipantData
-import com.school_of_company.home.view.component.HomeDetailProgramParticipantList
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 

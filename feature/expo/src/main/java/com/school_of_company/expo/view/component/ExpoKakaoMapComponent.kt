@@ -1,4 +1,4 @@
-package com.school_of_company.home.view.component
+package com.school_of_company.expo.view.component
 
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable

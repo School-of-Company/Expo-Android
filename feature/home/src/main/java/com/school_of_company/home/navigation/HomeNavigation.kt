@@ -4,31 +4,15 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
-import com.school_of_company.home.view.ExpoCreateRoute
-import com.school_of_company.home.view.HomeDetailModifyRoute
 import com.school_of_company.home.view.HomeDetailParticipantManagementRoute
 import com.school_of_company.home.view.HomeDetailProgramParticipantRoute
 import com.school_of_company.home.view.HomeDetailProgramRoute
-import com.school_of_company.home.view.HomeDetailRoute
-import com.school_of_company.home.view.HomeRoute
 import com.school_of_company.home.view.SendMessageRoute
 
-const val homeRoute = "home_route"
-const val homeDetailRoute=  "home_detail_route"
 const val homeSendMessageRoute = "home_send_message_route"
 const val homeDetailProgramRoute = "home_detail_program_route"
 const val homeDetailProgramParticipantRoute = "home_detail_program_participant_route"
 const val homeDetailParticipantManagementRoute = "home_detail_participant_management_route"
-const val homeDetailModifyRoute = "home_detail_modify_route"
-const val expoCreateRoute = "expo_create_route"
-
-fun NavController.navigateToHome(navOptions: NavOptions? = null) {
-    this.navigate(homeRoute, navOptions)
-}
-
-fun NavController.navigateToHomeDetail(navOptions: NavOptions? = null) {
-    this.navigate(homeDetailRoute, navOptions)
-}
 
 fun NavController.navigateToHomeSendMessage(navOptions: NavOptions? = null) {
     this.navigate(homeSendMessageRoute, navOptions)
@@ -44,44 +28,6 @@ fun NavController.navigateToHomeDetailProgramParticipant(navOptions: NavOptions?
 
 fun NavController.navigateToHomeDetailParticipantManagement(navOptions: NavOptions? = null) {
     this.navigate(homeDetailParticipantManagementRoute, navOptions)
-}
-
-fun NavController.navigateToHomeDetailModify(navOptions: NavOptions? = null) {
-    this.navigate(homeDetailModifyRoute, navOptions)
-}
-
-fun NavController.navigateToExpoCreate(navOptions: NavOptions? = null) {
-    this.navigate(expoCreateRoute, navOptions)
-}
-
-fun NavGraphBuilder.homeScreen(
-    navigationToDetail: () -> Unit
-) {
-    composable(route = homeRoute) {
-        HomeRoute(
-            navigationToDetail = navigationToDetail
-        )
-    }
-}
-
-fun NavGraphBuilder.homeDetailScreen(
-    onBackClick: () -> Unit,
-    onMessageClick: () -> Unit,
-    onCheckClick: () -> Unit,
-    onQrGenerateClick: () -> Unit,
-    onModifyClick: () -> Unit,
-    onProgramClick: () -> Unit
-) {
-    composable(route = homeDetailRoute) {
-        HomeDetailRoute(
-            onBackClick = onBackClick,
-            onMessageClick = onMessageClick,
-            onCheckClick = onCheckClick,
-            onQrGenerateClick = onQrGenerateClick,
-            onModifyClick = onModifyClick,
-            onProgramClick = onProgramClick
-        )
-    }
 }
 
 fun NavGraphBuilder.homeSendMessageScreen(
@@ -124,28 +70,6 @@ fun NavGraphBuilder.homeDetailParticipantManagementScreen(
     composable(route = homeDetailParticipantManagementRoute) {
         HomeDetailParticipantManagementRoute(
             onBackClick = onBackClick
-        )
-    }
-}
-
-fun NavGraphBuilder.homeDetailModifyScreen(
-    onBackClick: () -> Unit,
-    onModifyClick: () -> Unit
-) {
-    composable(route = homeDetailModifyRoute) {
-        HomeDetailModifyRoute(
-            onBackClick = onBackClick,
-            onModifyClick = onModifyClick
-        )
-    }
-}
-
-fun NavGraphBuilder.expoCreateScreen(
-    onExpoCreateClick: () -> Unit
-) {
-    composable(route = expoCreateRoute) {
-        ExpoCreateRoute(
-            onExpoCreateClick = onExpoCreateClick
         )
     }
 }

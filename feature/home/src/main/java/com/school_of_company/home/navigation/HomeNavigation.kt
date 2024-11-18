@@ -31,12 +31,10 @@ fun NavController.navigateToHomeDetailParticipantManagement(navOptions: NavOptio
 }
 
 fun NavGraphBuilder.homeSendMessageScreen(
-    onSendClick: () -> Unit,
     onBackClick: () -> Unit
 ) {
     composable(route = homeSendMessageRoute) {
         SendMessageRoute(
-            onSendClick = onSendClick,
             onBackClick = onBackClick
         )
     }

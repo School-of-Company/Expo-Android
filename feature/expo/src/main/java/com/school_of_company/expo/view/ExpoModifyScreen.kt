@@ -67,7 +67,6 @@ import com.school_of_company.ui.toast.makeToast
 @Composable
 internal fun ExpoModifyRoute(
     onBackClick: () -> Unit,
-    onModifyClick: () -> Unit,
     viewModel: com.school_of_company.expo.viewmodel.ExpoViewModel = hiltViewModel()
 ) {
     val modifyTitleState by viewModel.modify_title.collectAsStateWithLifecycle()

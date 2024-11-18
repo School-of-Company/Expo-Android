@@ -1,5 +1,6 @@
 package com.school_of_company.expo.view
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,7 +13,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -46,7 +49,7 @@ import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 internal fun ExpoRoute(
-    navigationToDetail: () -> Unit,
+    navigationToDetail: (Long) -> Unit,
     viewModel: ExpoViewModel = hiltViewModel()
 ) {
     val swipeRefreshLoading by viewModel.swipeRefreshLoading.collectAsStateWithLifecycle()
@@ -68,10 +71,11 @@ internal fun ExpoRoute(
 @Composable
 internal fun ExpoScreen(
     modifier: Modifier = Modifier,
+    scrollState: ScrollState = rememberScrollState(),
     swipeRefreshState: SwipeRefreshState,
     getExpoListData: GetExpoListUiState,
     getExpoList: () -> Unit,
-    navigationToDetail: () -> Unit
+    navigationToDetail: (Long) -> Unit
 ) {
     val (openBottomSheet, isOpenBottomSheet) = rememberSaveable { mutableStateOf(false) }
     var arrayList by rememberSaveable { mutableStateOf(ArrayHomeListEnum.RECENT) }
@@ -183,6 +187,7 @@ internal fun ExpoScreen(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .background(color = colors.white)
+                                .verticalScroll(scrollState)
                         ) {
                             WarnIcon(
                                 tint = colors.black,

@@ -25,7 +25,7 @@ fun ExpoList(
     modifier: Modifier = Modifier,
     emptyList: Boolean = false,
     item: ImmutableList<ExpoListResponseEntity> = persistentListOf(),
-    navigateToExpoDetail: () -> Unit
+    navigateToExpoDetail: (Long) -> Unit
 ) {
     ExpoAndroidTheme { colors, typography ->
         if (emptyList) {
@@ -67,6 +67,7 @@ private fun HomeListPreview() {
     ExpoList(
         item = persistentListOf(
             ExpoListResponseEntity(
+                id = 0,
                 coverImage = "https://image.dongascience.com/Photo/2019/12/fb4f7da04758d289a466f81478f5f488.jpg",
                 startedDay = "09-01",
                 finishedDay = "09-30",

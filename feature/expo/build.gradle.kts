@@ -13,4 +13,6 @@ dependencies {
 
     implementation(libs.mlkit)
     implementation(libs.zxing.core)
+
+    implementation(libs.swiperefresh)
 }

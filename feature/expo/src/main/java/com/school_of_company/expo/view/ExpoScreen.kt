@@ -2,14 +2,20 @@ package com.school_of_company.expo.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -20,49 +26,66 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
+import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.design_system.R
 import com.school_of_company.expo.enum.ArrayHomeListEnum
-import com.school_of_company.expo.view.component.HomeTempData
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toPersistentList
-
-fun generateSampleData(): ImmutableList<HomeTempData> {
-    return List(10) {
-        com.school_of_company.expo.view.component.HomeTempData(
-            image = "https://image.dongascience.com/Photo/2019/12/fb4f7da04758d289a466f81478f5f488.jpg",
-            started_at = "09-20",
-            ended_at = "09-30",
-            title = "2024 AI 광주 미래교육2024 AI 광주 미래교2024 AI 광주 미래교2024 AI 광주 미래교2024 AI 광주 미래교2024 AI 광주 미래교",
-            content = "2024 AI 광주 미래교육 컨텐츠2024 AI 광주 미래교2024 AI 광주 미래교2024 AI 광주 미래교2024 AI 광주 미래교2024 AI 광주 미래교2024 AI 광주 미래교2024 AI 광주 미래교"
-        )
-    }.toPersistentList()
-}
+import com.school_of_company.expo.viewmodel.ExpoViewModel
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.school_of_company.design_system.component.shimmer.shimmerEffect
+import com.school_of_company.design_system.icon.WarnIcon
+import com.school_of_company.expo.view.component.ExpoList
+import com.school_of_company.expo.view.component.HomeBottomSheet
+import com.school_of_company.expo.view.component.HomeFilterButton
+import com.school_of_company.expo.viewmodel.uistate.GetExpoListUiState
+import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 internal fun ExpoRoute(
-    navigationToDetail: () -> Unit
+    navigationToDetail: () -> Unit,
+    viewModel: ExpoViewModel = hiltViewModel()
 ) {
+    val swipeRefreshLoading by viewModel.swipeRefreshLoading.collectAsStateWithLifecycle()
+    val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = swipeRefreshLoading)
+    val getExpoListUiState by viewModel.getExpoListUiState.collectAsStateWithLifecycle()
+
     ExpoScreen(
-        item = generateSampleData(),
+        swipeRefreshState = swipeRefreshState,
+        getExpoListData = getExpoListUiState,
+        getExpoList = { viewModel.expoList() },
         navigationToDetail = navigationToDetail
     )
+
+    LaunchedEffect(Unit) {
+        viewModel.expoList()
+    }
 }
 
 @Composable
 internal fun ExpoScreen(
     modifier: Modifier = Modifier,
-    item: ImmutableList<com.school_of_company.expo.view.component.HomeTempData>,
+    swipeRefreshState: SwipeRefreshState,
+    getExpoListData: GetExpoListUiState,
+    getExpoList: () -> Unit,
     navigationToDetail: () -> Unit
 ) {
     val (openBottomSheet, isOpenBottomSheet) = rememberSaveable { mutableStateOf(false) }
     var arrayList by rememberSaveable { mutableStateOf(ArrayHomeListEnum.RECENT) }
 
-    val arrayItems = when (arrayList) {
-        ArrayHomeListEnum.RECENT -> item.sortedByDescending { it.started_at }
-        ArrayHomeListEnum.OLDER -> item.sortedBy { it.started_at }
-    }.toPersistentList()
+    val sortedItems = when (getExpoListData) {
+        is GetExpoListUiState.Success -> {
+            when (arrayList) {
+                ArrayHomeListEnum.RECENT -> getExpoListData.data.sortedByDescending { it.startedDay }
+                ArrayHomeListEnum.OLDER -> getExpoListData.data.sortedBy { it.startedDay }
+            }
+        }
+
+        else -> emptyList()
+    }
 
     ExpoAndroidTheme { colors, typography ->
         Column(
@@ -93,18 +116,92 @@ internal fun ExpoScreen(
                     color = colors.black
                 )
 
-                com.school_of_company.expo.view.component.HomeFilterButton { isOpenBottomSheet(true) }
+                HomeFilterButton { isOpenBottomSheet(true) }
             }
 
-            com.school_of_company.expo.view.component.HomeList(
-                item = arrayItems,
-                emptyList = false,
-                navigateToHomeDetail = navigationToDetail
-            )
+            SwipeRefresh(
+                state = swipeRefreshState,
+                onRefresh = { getExpoList() },
+                indicator = { state, refreshTrigger ->
+                    SwipeRefreshIndicator(
+                        state = state,
+                        refreshTriggerDistance = refreshTrigger,
+                        contentColor = colors.main
+                    )
+                }
+            ) {
+                when (getExpoListData) {
+                    is GetExpoListUiState.Success -> {
+                        ExpoList(
+                            item = sortedItems.toImmutableList(),
+                            emptyList = false,
+                            navigateToExpoDetail = navigationToDetail
+                        )
+                    }
+
+                    is GetExpoListUiState.Empty -> {
+                        ExpoList(
+                            emptyList = true,
+                            navigateToExpoDetail = navigationToDetail
+                        )
+                    }
+
+                    is GetExpoListUiState.Loading -> {
+                        Column(
+                            modifier = Modifier
+                                .background(
+                                    color = colors.white,
+                                    shape = RoundedCornerShape(8.dp)
+                                )
+                                .fillMaxSize()
+                        ) {
+                            repeat(10) {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(135.dp)
+                                        .padding(vertical = 10.dp)
+                                        .background(
+                                            color = colors.white,
+                                            shape = RoundedCornerShape(8.dp)
+                                        )
+                                        .shimmerEffect(
+                                            shape = RoundedCornerShape(8.dp)
+                                        )
+                                )
+                            }
+                        }
+                    }
+
+                    is GetExpoListUiState.Error -> {
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(
+                                28.dp,
+                                Alignment.CenterVertically
+                            ),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(color = colors.white)
+                        ) {
+                            WarnIcon(
+                                tint = colors.black,
+                                modifier = Modifier.size(100.dp)
+                            )
+                            Text(
+                                text = "네트워크가 불안정해요..",
+                                style = typography.bodyRegular2,
+                                color = colors.gray400
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
+
     if (openBottomSheet) {
-        com.school_of_company.expo.view.component.HomeBottomSheet(
+        HomeBottomSheet(
             onRecentClick = {
                 arrayList = ArrayHomeListEnum.RECENT
                 isOpenBottomSheet(false)
@@ -123,15 +220,9 @@ internal fun ExpoScreen(
 @Composable
 private fun HomeScreenPreview() {
     ExpoScreen(
-        item = persistentListOf(
-            HomeTempData(
-                image = "https://image.dongascience.com/Photo/2019/12/fb4f7da04758d289a466f81478f5f488.jpg",
-                started_at = "09-01",
-                ended_at = "09-30",
-                title = "2024 AI 광주 미래교육 2024 AI 광주 미래교육",
-                content = "2024 AI 광주 미래교육 2024 AI 광주 미래교육2024 AI 광주 미래교육 2024 AI 광주 미래교육2024 AI 광주 미래교육"
-            )
-        ),
-        navigationToDetail = {}
+        navigationToDetail = {},
+        swipeRefreshState = rememberSwipeRefreshState(isRefreshing = false),
+        getExpoListData = GetExpoListUiState.Loading,
+        getExpoList = {},
     )
 }

@@ -5,6 +5,7 @@ import com.school_of_company.network.dto.expo.response.ExpoListResponse
 
 fun ExpoListResponse.toEntity(): ExpoListResponseEntity =
     ExpoListResponseEntity(
+        id = this.id,
         title = this.title,
         description = this.description,
         startedDay = this.startedDay,

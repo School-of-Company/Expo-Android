@@ -9,5 +9,5 @@ data class ExpoListResponse(
     @Json(name = "description") val description: String,
     @Json(name = "startedDay") val startedDay: String, // yyyy-mm-dd
     @Json(name = "finishedDay") val finishedDay: String, // yyyy-mm-dd
-    @Json(name = "coverImage") val coverImage: String,
+    @Json(name = "coverImage") val coverImage: String?,
 )

@@ -5,5 +5,5 @@ data class ExpoListResponseEntity(
     val description: String,
     val startedDay: String, // yyyy-mm-dd
     val finishedDay: String, // yyyy-mm-dd
-    val coverImage: String,
+    val coverImage: String?,
 )

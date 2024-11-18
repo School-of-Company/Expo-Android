@@ -5,6 +5,7 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class ExpoListResponse(
+    @Json(name = "id") val id: Long,
     @Json(name = "title") val title: String,
     @Json(name = "description") val description: String,
     @Json(name = "startedDay") val startedDay: String, // yyyy-mm-dd

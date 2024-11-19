@@ -62,7 +62,7 @@ fun ExpoListItem(
                 )
                 .expoClickable { navigateToExpoDetail(data.id) }
         ) {
-            if (data.coverImage == null) {
+            if (data.coverImage.isNullOrEmpty()) {
                 Row (horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.Start),) {
                     Box(
                         modifier = Modifier

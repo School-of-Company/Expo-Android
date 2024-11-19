@@ -130,7 +130,9 @@ fun ExpoNavHost(
             onMessageClick = navController::navigateToHomeSendMessage,
             onCheckClick = navController::navigateToHomeDetailParticipantManagement,
             onQrGenerateClick = {},
-            onModifyClick = navController::navigateToExpoModify,
+            onModifyClick = { id ->
+                navController.navigateToExpoModify(id)
+            },
             onProgramClick = navController::navigateToHomeDetailProgram
         )
 
@@ -152,10 +154,12 @@ fun ExpoNavHost(
         )
 
         expoModifyScreen(
+            onErrorToast = makeErrorToast,
             onBackClick = navController::popBackStack,
         )
 
         expoCreateScreen(
+            onErrorToast = makeErrorToast,
             onExpoCreateClick = navController::navigateToHome
         )
     }

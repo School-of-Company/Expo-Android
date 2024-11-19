@@ -28,8 +28,14 @@ fun NavController.navigateToExpoDetail(
     )
 }
 
-fun NavController.navigateToExpoModify(navOptions: NavOptions? = null) {
-    this.navigate(expoModifyRoute, navOptions)
+fun NavController.navigateToExpoModify(
+    id: Long,
+    navOptions: NavOptions? = null
+) {
+    this.navigate(
+        route = "$expoModifyRoute/${id}",
+        navOptions
+    )
 }
 
 fun NavController.navigateToExpoCreate(navOptions: NavOptions? = null) {
@@ -51,12 +57,12 @@ fun NavGraphBuilder.expoDetailScreen(
     onMessageClick: () -> Unit,
     onCheckClick: () -> Unit,
     onQrGenerateClick: () -> Unit,
-    onModifyClick: () -> Unit,
+    onModifyClick: (Long) -> Unit,
     onProgramClick: () -> Unit
 ) {
     composable(route = "$expoDetailRoute/{id}") { backStackEntry ->
         val id = backStackEntry.arguments?.getString("id")?.toLongOrNull()
-        if(id != null) {
+        if (id != null) {
             ExpoDetailRoute(
                 id = id,
                 onBackClick = onBackClick,
@@ -72,20 +78,28 @@ fun NavGraphBuilder.expoDetailScreen(
 
 fun NavGraphBuilder.expoModifyScreen(
     onBackClick: () -> Unit,
+    onErrorToast: (throwable: Throwable?, message: Int?) -> Unit
 ) {
-    composable(route = expoModifyRoute) {
-        ExpoModifyRoute(
-            onBackClick = onBackClick,
-        )
+    composable(route = "$expoModifyRoute/{id}") { backStackEntry ->
+        val id = backStackEntry.arguments?.getString("id")?.toLongOrNull()
+        if (id != null) {
+            ExpoModifyRoute(
+                id = id,
+                onBackClick = onBackClick,
+                onErrorToast = onErrorToast
+            )
+        }
     }
 }
 
 fun NavGraphBuilder.expoCreateScreen(
-    onExpoCreateClick: () -> Unit
+    onExpoCreateClick: () -> Unit,
+    onErrorToast: (throwable: Throwable?, message: Int?) -> Unit
 ) {
     composable(route = expoCreateRoute) {
         ExpoCreateRoute(
-            onExpoCreateClick = onExpoCreateClick
+            onExpoCreateClick = onExpoCreateClick,
+            onErrorToast = onErrorToast
         )
     }
 }

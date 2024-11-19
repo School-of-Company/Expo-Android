@@ -1,5 +1,6 @@
 package com.school_of_company.expo.view
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
@@ -48,6 +49,7 @@ import com.school_of_company.expo.view.component.HomeKakaoMap
 import com.school_of_company.expo.view.component.QrCode
 import com.school_of_company.expo.viewmodel.ExpoViewModel
 import com.school_of_company.expo.viewmodel.uistate.GetExpoInformationUiState
+import com.school_of_company.expo.viewmodel.uistate.GetExpoListUiState
 import com.school_of_company.ui.util.formatServerDate
 
 @Composable
@@ -57,13 +59,14 @@ internal fun ExpoDetailRoute(
     onMessageClick: () -> Unit,
     onCheckClick: () -> Unit,
     onQrGenerateClick: () -> Unit,
-    onModifyClick: () -> Unit,
+    onModifyClick: (Long) -> Unit,
     onProgramClick: () -> Unit,
     viewModel: ExpoViewModel = hiltViewModel()
 ) {
     val getExpoInformationUiState by viewModel.getExpoInformationUiState.collectAsStateWithLifecycle()
 
     ExpoDetailScreen(
+        id = id,
         getExpoInformationUiState = getExpoInformationUiState,
         qrData = QrCode(content = "121231342352"),
         onBackClick = onBackClick,
@@ -81,6 +84,7 @@ internal fun ExpoDetailRoute(
 
 @Composable
 internal fun ExpoDetailScreen(
+    id: Long,
     modifier: Modifier = Modifier,
     scrollState: ScrollState = rememberScrollState(),
     getExpoInformationUiState: GetExpoInformationUiState,
@@ -89,7 +93,7 @@ internal fun ExpoDetailScreen(
     onMessageClick: () -> Unit,
     onCheckClick: () -> Unit,
     onQrGenerateClick: () -> Unit,
-    onModifyClick: () -> Unit,
+    onModifyClick: (Long) -> Unit,
     onProgramClick: () -> Unit
 ) {
     val (openDialog, isOpenDialog) = rememberSaveable { mutableStateOf(false) }
@@ -318,7 +322,7 @@ internal fun ExpoDetailScreen(
 
                             ExpoEnableButton(
                                 text = "수정하기",
-                                onClick = onModifyClick,
+                                onClick = { onModifyClick(id) },
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .border(
@@ -418,6 +422,7 @@ private fun HomeDetailScreenPreview() {
         onModifyClick = {},
         onProgramClick = {},
         qrData = QrCode(content = "121231342352"),
-        getExpoInformationUiState = GetExpoInformationUiState.Loading
+        getExpoInformationUiState = GetExpoInformationUiState.Loading,
+        id = 0
     )
 }

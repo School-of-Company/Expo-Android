@@ -36,7 +36,7 @@ import com.school_of_company.ui.util.formatServerDate
 fun ExpoListItem(
     modifier: Modifier = Modifier,
     data: ExpoListResponseEntity,
-    navigateToExpoDetail: () -> Unit
+    navigateToExpoDetail: (Long) -> Unit
 ) {
     ExpoAndroidTheme { colors, typography ->
 
@@ -60,13 +60,10 @@ fun ExpoListItem(
                     top = 10.dp,
                     bottom = 10.dp
                 )
-                .expoClickable { /* todo : navigateToHomeDetail */ }
+                .expoClickable { navigateToExpoDetail(data.id) }
         ) {
             if (data.coverImage == null) {
-                Row (
-                    horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.Start),
-                    modifier = Modifier.expoClickable { navigateToExpoDetail() }
-                ) {
+                Row (horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.Start),) {
                     Box(
                         modifier = Modifier
                             .width(110.dp)
@@ -137,10 +134,7 @@ fun ExpoListItem(
                     }
                 }
             } else {
-                Row (
-                    horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.Start),
-                    modifier = Modifier.expoClickable { navigateToExpoDetail() }
-                ) {
+                Row (horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.Start),) {
                     Image(
                         painter = rememberAsyncImagePainter(model = data.coverImage),
                         contentDescription = stringResource(id = R.string.HomeScreen_Image_description),
@@ -203,6 +197,7 @@ fun ExpoListItem(
 private fun HomeListItemPreview() {
     ExpoListItem(
         data = ExpoListResponseEntity(
+            id = 0,
             coverImage = "https://image.dongascience.com/Photo/2019/12/fb4f7da04758d289a466f81478f5f488.jpg",
             startedDay = "09-01",
             finishedDay = "09-30",

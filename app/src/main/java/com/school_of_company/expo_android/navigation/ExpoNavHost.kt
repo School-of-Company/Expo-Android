@@ -159,8 +159,7 @@ fun ExpoNavHost(
         )
 
         expoCreateScreen(
-            onErrorToast = makeErrorToast,
-            onExpoCreateClick = navController::navigateToHome
+            onErrorToast = makeErrorToast
         )
     }
 }

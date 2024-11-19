@@ -93,12 +93,10 @@ fun NavGraphBuilder.expoModifyScreen(
 }
 
 fun NavGraphBuilder.expoCreateScreen(
-    onExpoCreateClick: () -> Unit,
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit
 ) {
     composable(route = expoCreateRoute) {
         ExpoCreateRoute(
-            onExpoCreateClick = onExpoCreateClick,
             onErrorToast = onErrorToast
         )
     }

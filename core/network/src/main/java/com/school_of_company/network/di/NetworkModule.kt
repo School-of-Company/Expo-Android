@@ -6,6 +6,7 @@ import com.readystatesoftware.chuck.ChuckInterceptor
 import com.school_of_company.network.BuildConfig
 import com.school_of_company.network.api.AuthAPI
 import com.school_of_company.network.api.ExpoAPI
+import com.school_of_company.network.api.ImageAPI
 import com.school_of_company.network.api.SmsAPI
 import com.school_of_company.network.util.AuthInterceptor
 import com.school_of_company.network.util.TokenAuthenticator
@@ -98,4 +99,9 @@ object NetworkModule {
     @Provides
     fun provideExpoAPI(retrofit: Retrofit) : ExpoAPI =
         retrofit.create(ExpoAPI::class.java)
+
+    @Provides
+    fun provideImageAPI(retrofit: Retrofit) : ImageAPI =
+        retrofit.create(ImageAPI::class.java)
+
 }

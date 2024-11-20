@@ -4,6 +4,8 @@ import com.school_of_company.network.datasource.auth.AuthDataSource
 import com.school_of_company.network.datasource.auth.AuthDataSourceImpl
 import com.school_of_company.network.datasource.expo.ExpoDataSource
 import com.school_of_company.network.datasource.expo.ExpoDataSourceImpl
+import com.school_of_company.network.datasource.image.ImageDataSource
+import com.school_of_company.network.datasource.image.ImageDataSourceImpl
 import com.school_of_company.network.datasource.sms.SmsDataSource
 import com.school_of_company.network.datasource.sms.SmsDataSourceImpl
 import dagger.Binds
@@ -29,4 +31,9 @@ abstract class RemoteDataSourceModule {
     abstract fun bindExpoRemoteDataSource(
         expoDataSourceImpl: ExpoDataSourceImpl
     ) : ExpoDataSource
+
+    @Binds
+    abstract fun bindImageRemoteDataSource(
+        imageDataSourceImpl: ImageDataSourceImpl
+    ) : ImageDataSource
 }

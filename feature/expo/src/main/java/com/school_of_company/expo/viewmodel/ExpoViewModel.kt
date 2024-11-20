@@ -1,18 +1,23 @@
 package com.school_of_company.expo.viewmodel
 
+import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.school_of_company.common.result.Result
 import com.school_of_company.common.result.asResult
+import com.school_of_company.domain.usecase.Image.ImageUpLoadUseCase
 import com.school_of_company.domain.usecase.expo.DeleteExpoInformationUseCase
 import com.school_of_company.domain.usecase.expo.GetExpoInformationUseCase
 import com.school_of_company.domain.usecase.expo.GetExpoListUseCase
 import com.school_of_company.domain.usecase.expo.ModifyExpoInformationUseCase
 import com.school_of_company.domain.usecase.expo.RegisterExpoInformationUseCase
+import com.school_of_company.expo.util.getMultipartFile
 import com.school_of_company.expo.viewmodel.uistate.DeleteExpoInformationUiState
 import com.school_of_company.expo.viewmodel.uistate.GetExpoInformationUiState
 import com.school_of_company.expo.viewmodel.uistate.GetExpoListUiState
+import com.school_of_company.expo.viewmodel.uistate.ImageUpLoadUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterExpoInformationUiState
 import com.school_of_company.model.entity.expo.ExpoListResponseEntity
 import com.school_of_company.model.model.expo.ExpoRequestAndResponseModel
@@ -32,6 +37,7 @@ class ExpoViewModel @Inject constructor(
     private val modifyExpoInformationUseCase: ModifyExpoInformationUseCase,
     private val deleteExpoInformationUseCase: DeleteExpoInformationUseCase,
     private val getExpoListUseCase: GetExpoListUseCase,
+    private val imageUpLoadUseCase: ImageUpLoadUseCase,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     companion object {
@@ -61,6 +67,9 @@ class ExpoViewModel @Inject constructor(
 
     private val _getExpoListUiState = MutableStateFlow<GetExpoListUiState>(GetExpoListUiState.Loading)
     internal val getExpoListUiState = _getExpoListUiState.asStateFlow()
+
+    private val _imageUpLoadUiState = MutableStateFlow<ImageUpLoadUiState>(ImageUpLoadUiState.Loading)
+    internal val imageUpLoadUiState = _imageUpLoadUiState.asStateFlow()
 
     internal var modify_title = savedStateHandle.getStateFlow(key = MODIFY_TITLE, initialValue = "")
 
@@ -186,6 +195,23 @@ class ExpoViewModel @Inject constructor(
                         _getExpoListUiState.value = GetExpoListUiState.Error(result.exception)
                         _swipeRefreshLoading.value = false
                     }
+                }
+            }
+    }
+
+    internal fun imageUpLoad(
+        context: Context,
+        image: Uri
+    ) = viewModelScope.launch {
+        val multipartFile = getMultipartFile(context, image)
+
+        imageUpLoadUseCase(multipartFile!!)
+            .asResult()
+            .collectLatest { result ->
+                when (result) {
+                    is Result.Loading -> _imageUpLoadUiState.value = ImageUpLoadUiState.Loading
+                    is Result.Success -> _imageUpLoadUiState.value = ImageUpLoadUiState.Success(result.data)
+                    is Result.Error -> _imageUpLoadUiState.value = ImageUpLoadUiState.Error(result.exception)
                 }
             }
     }

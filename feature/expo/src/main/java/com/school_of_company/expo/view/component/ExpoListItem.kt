@@ -29,21 +29,14 @@ import com.school_of_company.design_system.component.modifier.clickable.expoClic
 import com.school_of_company.design_system.component.modifier.padding.paddingHorizontal
 import com.school_of_company.design_system.icon.ImageIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
+import com.school_of_company.model.entity.expo.ExpoListResponseEntity
 import com.school_of_company.ui.util.formatServerDate
 
-data class HomeTempData(
-    val image: String?,
-    val started_at: String,
-    val ended_at: String,
-    val title: String,
-    val content: String
-)
-
 @Composable
-fun HomeListItem(
+fun ExpoListItem(
     modifier: Modifier = Modifier,
-    data: HomeTempData,
-    navigateToHomeDetail: () -> Unit
+    data: ExpoListResponseEntity,
+    navigateToExpoDetail: (Long) -> Unit
 ) {
     ExpoAndroidTheme { colors, typography ->
 
@@ -67,42 +60,83 @@ fun HomeListItem(
                     top = 10.dp,
                     bottom = 10.dp
                 )
-                .expoClickable { /* todo : navigateToHomeDetail */ }
+                .expoClickable { navigateToExpoDetail(data.id) }
         ) {
-            if (data.image == null) {
-                Box(
-                    modifier = Modifier
-                        .width(110.dp)
-                        .height(110.dp)
-                        .background(
-                            color = colors.main,
-                            shape = RoundedCornerShape(6.dp)
-                        )
-                ) {
+            if (data.coverImage.isNullOrEmpty()) {
+                Row (horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.Start),) {
+                    Box(
+                        modifier = Modifier
+                            .width(110.dp)
+                            .height(110.dp)
+                            .background(
+                                color = colors.main,
+                                shape = RoundedCornerShape(6.dp)
+                            )
+                    ) {
+
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center,
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            ImageIcon(tint = colors.white)
+
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            Text(
+                                text = stringResource(id = R.string.not_image_description),
+                                style = typography.captionRegular1,
+                                color = colors.white
+                            )
+                        }
+                    }
 
                     Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center,
-                        modifier = Modifier.fillMaxSize()
+                        verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.Top),
+                        horizontalAlignment = Alignment.Start,
                     ) {
-                        ImageIcon(tint = colors.white)
+                        Row(horizontalArrangement = Arrangement.spacedBy(11.dp, Alignment.Start)) {
 
-                        Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = stringResource(id = R.string.register_temp),
+                                style = typography.captionRegular2,
+                                color = colors.gray600
+                            )
+
+                            Text(
+                                text = stringResource(
+                                    R.string.date_type,
+                                    data.startedDay.formatServerDate(),
+                                    data.finishedDay.formatServerDate()
+                                ),
+                                style = typography.captionRegular2,
+                                color = colors.gray600,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
 
                         Text(
-                            text = stringResource(id = R.string.not_image_description),
-                            style = typography.captionRegular1,
-                            color = colors.white
+                            text = data.title,
+                            style = typography.captionBold1,
+                            color = colors.black,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+
+                        Text(
+                            text = data.description,
+                            style = typography.captionRegular2,
+                            color = colors.gray300,
+                            maxLines = 3,
+                            overflow = TextOverflow.Ellipsis
                         )
                     }
                 }
             } else {
-                Row (
-                    horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.Start),
-                    modifier = Modifier.expoClickable { navigateToHomeDetail() }
-                ) {
+                Row (horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.Start),) {
                     Image(
-                        painter = rememberAsyncImagePainter(model = data.image),
+                        painter = rememberAsyncImagePainter(model = data.coverImage),
                         contentDescription = stringResource(id = R.string.HomeScreen_Image_description),
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
@@ -126,8 +160,8 @@ fun HomeListItem(
                             Text(
                                 text = stringResource(
                                     R.string.date_type,
-                                    data.started_at.formatServerDate(),
-                                    data.ended_at.formatServerDate()
+                                    data.startedDay.formatServerDate(),
+                                    data.finishedDay.formatServerDate()
                                 ),
                                 style = typography.captionRegular2,
                                 color = colors.gray600,
@@ -145,7 +179,7 @@ fun HomeListItem(
                         )
 
                         Text(
-                            text = data.content,
+                            text = data.description,
                             style = typography.captionRegular2,
                             color = colors.gray300,
                             maxLines = 3,
@@ -161,14 +195,15 @@ fun HomeListItem(
 @Preview
 @Composable
 private fun HomeListItemPreview() {
-    HomeListItem(
-        data = HomeTempData(
-            image = "https://image.dongascience.com/Photo/2019/12/fb4f7da04758d289a466f81478f5f488.jpg",
-            started_at = "2023-09-01",
-            ended_at = "2023-09-30",
+    ExpoListItem(
+        data = ExpoListResponseEntity(
+            id = 0,
+            coverImage = "https://image.dongascience.com/Photo/2019/12/fb4f7da04758d289a466f81478f5f488.jpg",
+            startedDay = "09-01",
+            finishedDay = "09-30",
             title = "2024 AI 광주 미래교육 2024 AI 광주 미래교육",
-            content = "2024 AI 광주 미래교육 2024 AI 광주 미래교육2024 AI 광주 미래교육 2024 AI 광주 미래교육2024 AI 광주 미래교육 2024 AI 광주 미래교육2024 AI 광주 미래교육 2024 AI 광주 미래교육2024 AI 광주 미래교육 2024 AI 광주 미래교육2024 AI 광주 미래교육 2024 AI 광주 미래교육2024 AI 광주 미래교육 2024 AI 광주 미래교육"
+            description = "2024 AI 광주 미래교육 2024 AI 광주 미래교육2024 AI 광주 미래교육 2024 AI 광주 미래교육2024 AI 광주 미래교육"
         ),
-        navigateToHomeDetail = {}
+        navigateToExpoDetail = {}
     )
 }

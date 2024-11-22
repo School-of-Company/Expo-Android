@@ -23,6 +23,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -60,26 +62,33 @@ import com.school_of_company.design_system.component.textfield.NoneLimitedLength
 import com.school_of_company.design_system.icon.ImageIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
+import com.school_of_company.expo.viewmodel.ExpoViewModel
+import com.school_of_company.expo.viewmodel.uistate.ImageUpLoadUiState
+import com.school_of_company.expo.viewmodel.uistate.RegisterExpoInformationUiState
+import com.school_of_company.model.model.expo.ExpoRequestAndResponseModel
 import com.school_of_company.ui.toast.makeToast
 
 @Composable
 internal fun ExpoCreateRoute(
-    onExpoCreateClick: () -> Unit,
-    viewModel: com.school_of_company.expo.viewmodel.ExpoViewModel = hiltViewModel()
+    onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
+    viewModel: ExpoViewModel = hiltViewModel()
 ) {
+    val registerExpoInformationUiState by viewModel.registerExpoInformationUiState.collectAsStateWithLifecycle()
+    val imageUpLoadUiState by viewModel.imageUpLoadUiState.collectAsStateWithLifecycle()
+
     val modifyTitleState by viewModel.modify_title.collectAsStateWithLifecycle()
     val startedDateState by viewModel.started_date.collectAsStateWithLifecycle()
     val endedDateState by viewModel.ended_date.collectAsStateWithLifecycle()
     val introduceTitleState by viewModel.introduce_title.collectAsStateWithLifecycle()
     val addressState by viewModel.address.collectAsStateWithLifecycle()
     val locationState by viewModel.location.collectAsStateWithLifecycle()
+    val coverImageState by viewModel.cover_image.collectAsStateWithLifecycle()
 
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
     val context = LocalContext.current
 
-    val galleryLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+    val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             if (uri != null) {
                 val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
                 context.contentResolver.openInputStream(uri)?.use { inputStream ->
@@ -93,9 +102,52 @@ internal fun ExpoCreateRoute(
             }
         }
 
+    DisposableEffect(Unit) {
+        onDispose {
+            viewModel.initRegisterExpo()
+        }
+    }
+
+    LaunchedEffect(imageUpLoadUiState) {
+        when (imageUpLoadUiState) {
+            is ImageUpLoadUiState.Loading -> Unit
+            is ImageUpLoadUiState.Success -> {
+                viewModel.registerExpoInformation(
+                    body = ExpoRequestAndResponseModel(
+                        title = viewModel.modify_title.value,
+                        startedDay = viewModel.started_date.value,
+                        finishedDay = viewModel.ended_date.value,
+                        description = viewModel.introduce_title.value,
+                        location = viewModel.location.value,
+                        coverImage = (imageUpLoadUiState as ImageUpLoadUiState.Success).data.imageURL,
+                        x = 35.14308f,
+                        y = 126.80043f
+                    )
+                )
+                viewModel.initRegisterExpo()
+            }
+            is ImageUpLoadUiState.Error -> {
+                onErrorToast(null, R.string.expo_image_fail)
+            }
+        }
+    }
+
+    LaunchedEffect(registerExpoInformationUiState) {
+        when (registerExpoInformationUiState) {
+            is RegisterExpoInformationUiState.Loading -> Unit
+            is RegisterExpoInformationUiState.Success -> {
+                viewModel.resetExpoInformation()
+                makeToast(context, "박람회 등록을 완료하였습니다.")
+            }
+            is RegisterExpoInformationUiState.Error -> {
+                onErrorToast(null, R.string.expo_register_fail)
+            }
+        }
+    }
+
     ExpoCreateScreen(
         onImageClick = { galleryLauncher.launch("image/*") },
-        imageUri = selectedImageUri?.toString() ?: "",
+        imageUri = selectedImageUri?.toString() ?: coverImageState,
         modifyTitleState = modifyTitleState,
         startedDateState = startedDateState,
         endedDateState = endedDateState,
@@ -107,7 +159,14 @@ internal fun ExpoCreateRoute(
         onEndedDateChange = viewModel::onEndedDateChange,
         onIntroduceTitleChange = viewModel::onIntroduceTitleChange,
         onAddressChange = viewModel::onAddressChange,
-        onLocationChange = viewModel::onLocationChange
+        onLocationChange = viewModel::onLocationChange,
+        onExpoCreateCallBack = {
+            if (selectedImageUri != null) {
+                viewModel.imageUpLoad(context, selectedImageUri!!)
+            } else {
+                onErrorToast(null, R.string.expo_image_fail)
+            }
+        },
     )
 }
 
@@ -129,7 +188,8 @@ internal fun ExpoCreateScreen(
     onEndedDateChange: (String) -> Unit,
     onIntroduceTitleChange: (String) -> Unit,
     onAddressChange: (String) -> Unit,
-    onLocationChange: (String) -> Unit
+    onLocationChange: (String) -> Unit,
+    onExpoCreateCallBack: () -> Unit,
 ) {
     var trainingTextState by rememberSaveable { mutableStateOf(listOf("")) }
 
@@ -363,11 +423,23 @@ internal fun ExpoCreateScreen(
                     Spacer(modifier = Modifier.height(28.dp))
 
                     ExpoStateButton(
-                        text = "수정완료",
-                        state = if (!imageUri.isNullOrEmpty() && modifyTitleState.isNotEmpty() && startedDateState.isNotEmpty() && endedDateState.isNotEmpty() && introduceTitleState.isNotEmpty() && addressState.isNotEmpty() && locationState.isNotEmpty() && trainingTextState.all { it.isNotEmpty() }) ButtonState.Enable else ButtonState.Disable,
+                        text = "생성하기",
+                        state = if (
+                            modifyTitleState.isNotEmpty() &&
+                            startedDateState.isNotEmpty() &&
+                            endedDateState.isNotEmpty() &&
+                            introduceTitleState.isNotEmpty() &&
+                            addressState.isNotEmpty() &&
+                            locationState.isNotEmpty() &&
+                            trainingTextState.isNotEmpty()
+                        ) {
+                            ButtonState.Enable
+                        } else {
+                            ButtonState.Disable
+                        },
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        /* todo : Expo Modify CallBack */
+                        onExpoCreateCallBack()
                     }
 
                     Spacer(modifier = Modifier.height(48.dp))
@@ -394,6 +466,7 @@ private fun ExpoCreateScreenPreview() {
         onAddressChange = {},
         onStartedDateChange = {},
         onEndedDateChange = {},
-        onIntroduceTitleChange = {}
+        onIntroduceTitleChange = {},
+        onExpoCreateCallBack = {},
     )
 }

@@ -55,10 +55,11 @@ fun ExpoNavHost(
         } ?: message ?: R.string.error_default
         makeToast(context, context.getString(errorMessage))
     }
+
+
     NavHost(
         navController = navController,
         startDestination = startDestination,
-        modifier = modifier,
 
         enterTransition = {
             // homeRoute로 이동할 때도 애니메이션 적용
@@ -104,8 +105,10 @@ fun ExpoNavHost(
                 AnimatedContentTransitionScope.SlideDirection.Right,
                 animationSpec = tween(durationMillis = 350)
             )
-        }
+        },
+        modifier = modifier,
     ) {
+
         signInScreen(
             onSignUpClick = navController::navigationToSignUp,
             onSignInClick = navController::navigateToHome,
@@ -127,13 +130,14 @@ fun ExpoNavHost(
             onMessageClick = navController::navigateToHomeSendMessage,
             onCheckClick = navController::navigateToHomeDetailParticipantManagement,
             onQrGenerateClick = {},
-            onModifyClick = navController::navigateToExpoModify,
+            onModifyClick = { id ->
+                navController.navigateToExpoModify(id)
+            },
             onProgramClick = navController::navigateToHomeDetailProgram
         )
 
         homeSendMessageScreen(
             onBackClick = navController::popBackStack,
-            onSendClick = navController::navigateToExpoDetail
         )
 
         homeDetailProgramScreen(
@@ -150,12 +154,12 @@ fun ExpoNavHost(
         )
 
         expoModifyScreen(
+            onErrorToast = makeErrorToast,
             onBackClick = navController::popBackStack,
-            onModifyClick = navController::navigateToExpoDetail
         )
 
         expoCreateScreen(
-            onExpoCreateClick = navController::navigateToHome
+            onErrorToast = makeErrorToast
         )
     }
 }

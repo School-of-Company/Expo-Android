@@ -4,6 +4,8 @@ import com.school_of_company.data.repository.auth.AuthRepository
 import com.school_of_company.data.repository.auth.AuthRepositoryImpl
 import com.school_of_company.data.repository.expo.ExpoRepository
 import com.school_of_company.data.repository.expo.ExpoRepositoryImpl
+import com.school_of_company.data.repository.image.ImageRepository
+import com.school_of_company.data.repository.image.ImageRepositoryImpl
 import com.school_of_company.data.repository.sms.SmsRepository
 import com.school_of_company.data.repository.sms.SmsRepositoryImpl
 import dagger.Binds
@@ -30,4 +32,8 @@ abstract class RepositoryModule {
         expoRepositoryImpl: ExpoRepositoryImpl
     ) : ExpoRepository
 
+    @Binds
+    abstract fun bindImageRepository(
+        imageRepositoryImpl: ImageRepositoryImpl
+    ) : ImageRepository
 }

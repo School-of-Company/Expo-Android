@@ -18,12 +18,24 @@ fun NavController.navigateToHome(navOptions: NavOptions? = null) {
     this.navigate(homeRoute, navOptions)
 }
 
-fun NavController.navigateToExpoDetail(navOptions: NavOptions? = null) {
-    this.navigate(expoDetailRoute, navOptions)
+fun NavController.navigateToExpoDetail(
+    id: Long,
+    navOptions: NavOptions? = null
+) {
+    this.navigate(
+        route = "$expoDetailRoute/${id}",
+        navOptions
+    )
 }
 
-fun NavController.navigateToExpoModify(navOptions: NavOptions? = null) {
-    this.navigate(expoModifyRoute, navOptions)
+fun NavController.navigateToExpoModify(
+    id: Long,
+    navOptions: NavOptions? = null
+) {
+    this.navigate(
+        route = "$expoModifyRoute/${id}",
+        navOptions
+    )
 }
 
 fun NavController.navigateToExpoCreate(navOptions: NavOptions? = null) {
@@ -31,7 +43,7 @@ fun NavController.navigateToExpoCreate(navOptions: NavOptions? = null) {
 }
 
 fun NavGraphBuilder.expoScreen(
-    navigationToDetail: () -> Unit
+    navigationToDetail: (Long) -> Unit
 ) {
     composable(route = homeRoute) {
         ExpoRoute(
@@ -45,39 +57,47 @@ fun NavGraphBuilder.expoDetailScreen(
     onMessageClick: () -> Unit,
     onCheckClick: () -> Unit,
     onQrGenerateClick: () -> Unit,
-    onModifyClick: () -> Unit,
+    onModifyClick: (Long) -> Unit,
     onProgramClick: () -> Unit
 ) {
-    composable(route = expoDetailRoute) {
-        ExpoDetailRoute(
-            onBackClick = onBackClick,
-            onMessageClick = onMessageClick,
-            onCheckClick = onCheckClick,
-            onQrGenerateClick = onQrGenerateClick,
-            onModifyClick = onModifyClick,
-            onProgramClick = onProgramClick
-        )
+    composable(route = "$expoDetailRoute/{id}") { backStackEntry ->
+        val id = backStackEntry.arguments?.getString("id")?.toLongOrNull()
+        if (id != null) {
+            ExpoDetailRoute(
+                id = id,
+                onBackClick = onBackClick,
+                onMessageClick = onMessageClick,
+                onCheckClick = onCheckClick,
+                onQrGenerateClick = onQrGenerateClick,
+                onModifyClick = onModifyClick,
+                onProgramClick = onProgramClick
+            )
+        }
     }
 }
 
 fun NavGraphBuilder.expoModifyScreen(
     onBackClick: () -> Unit,
-    onModifyClick: () -> Unit
+    onErrorToast: (throwable: Throwable?, message: Int?) -> Unit
 ) {
-    composable(route = expoModifyRoute) {
-        ExpoModifyRoute(
-            onBackClick = onBackClick,
-            onModifyClick = onModifyClick
-        )
+    composable(route = "$expoModifyRoute/{id}") { backStackEntry ->
+        val id = backStackEntry.arguments?.getString("id")?.toLongOrNull()
+        if (id != null) {
+            ExpoModifyRoute(
+                id = id,
+                onBackClick = onBackClick,
+                onErrorToast = onErrorToast
+            )
+        }
     }
 }
 
 fun NavGraphBuilder.expoCreateScreen(
-    onExpoCreateClick: () -> Unit
+    onErrorToast: (throwable: Throwable?, message: Int?) -> Unit
 ) {
     composable(route = expoCreateRoute) {
         ExpoCreateRoute(
-            onExpoCreateClick = onExpoCreateClick
+            onErrorToast = onErrorToast
         )
     }
 }

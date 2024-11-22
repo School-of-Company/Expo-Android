@@ -1,12 +1,15 @@
 package com.school_of_company.expo.view.component
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -16,15 +19,17 @@ import androidx.compose.ui.unit.dp
 import com.school_of_company.design_system.component.modifier.padding.paddingHorizontal
 import com.school_of_company.design_system.icon.ExpoIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
+import com.school_of_company.model.entity.expo.ExpoListResponseEntity
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
-fun HomeList(
+fun ExpoList(
     modifier: Modifier = Modifier,
     emptyList: Boolean = false,
-    item: ImmutableList<HomeTempData> = persistentListOf(),
-    navigateToHomeDetail: () -> Unit
+    item: ImmutableList<ExpoListResponseEntity> = persistentListOf(),
+    navigateToExpoDetail: (Long) -> Unit,
+    scrollState: ScrollState = rememberScrollState()
 ) {
     ExpoAndroidTheme { colors, typography ->
         if (emptyList) {
@@ -33,9 +38,13 @@ fun HomeList(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxSize()
+                    .verticalScroll(scrollState)
                     .background(color = colors.white)
             ) {
-                ExpoIcon(modifier = Modifier.size(100.dp))
+                ExpoIcon(
+                    tint = colors.black,
+                    modifier = Modifier.size(100.dp)
+                )
                 Text(
                     text = "아직 박람회가 등장하지 않았아요.",
                     style = typography.bodyRegular2,
@@ -49,10 +58,10 @@ fun HomeList(
                     .background(color = colors.white)
                     .paddingHorizontal(bottom = 8.dp)
             ) {
-                itemsIndexed(item) { _, item ->
-                    HomeListItem(
+                items(item) { item ->
+                    ExpoListItem(
                         data = item,
-                        navigateToHomeDetail = navigateToHomeDetail
+                        navigateToExpoDetail = navigateToExpoDetail
                     )
                 }
             }
@@ -63,17 +72,18 @@ fun HomeList(
 @Preview
 @Composable
 private fun HomeListPreview() {
-    HomeList(
+    ExpoList(
         item = persistentListOf(
-            HomeTempData(
-                image = "https://image.dongascience.com/Photo/2019/12/fb4f7da04758d289a466f81478f5f488.jpg",
-                started_at = "09-01",
-                ended_at = "09-30",
+            ExpoListResponseEntity(
+                id = 0,
+                coverImage = "https://image.dongascience.com/Photo/2019/12/fb4f7da04758d289a466f81478f5f488.jpg",
+                startedDay = "09-01",
+                finishedDay = "09-30",
                 title = "2024 AI 광주 미래교육 2024 AI 광주 미래교육",
-                content = "2024 AI 광주 미래교육 2024 AI 광주 미래교육2024 AI 광주 미래교육 2024 AI 광주 미래교육2024 AI 광주 미래교육"
+                description = "2024 AI 광주 미래교육 2024 AI 광주 미래교육2024 AI 광주 미래교육 2024 AI 광주 미래교육2024 AI 광주 미래교육"
             ),
         ),
         emptyList = true,
-        navigateToHomeDetail = {}
+        navigateToExpoDetail = {}
     )
 }

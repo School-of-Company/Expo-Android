@@ -29,7 +29,6 @@ import com.school_of_company.home.viewmodel.HomeViewModel
 
 @Composable
 internal fun SendMessageRoute(
-    onSendClick: () -> Unit,
     onBackClick: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
@@ -37,7 +36,6 @@ internal fun SendMessageRoute(
     val content by viewModel.content.collectAsStateWithLifecycle()
 
     SendMessageScreen(
-        onSendClick = onSendClick,
         onBackClick = onBackClick,
         title = title,
         content = content,
@@ -49,7 +47,6 @@ internal fun SendMessageRoute(
 @Composable
 internal fun SendMessageScreen(
     modifier: Modifier = Modifier,
-    onSendClick: () -> Unit,
     onBackClick: () -> Unit,
     title: String,
     content: String,
@@ -114,7 +111,7 @@ internal fun SendMessageScreen(
             ExpoStateButton(
                 text = "보내기",
                 state = if (title.isNotEmpty() && content.isNotEmpty()) ButtonState.Enable else ButtonState.Disable,
-                onClick = onSendClick, // Temporary Code
+                onClick = onBackClick, // Temporary Code
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 48.dp)
@@ -129,7 +126,6 @@ internal fun SendMessageScreen(
 @Composable
 private fun SendMessageScreenPreview() {
     SendMessageScreen(
-        onSendClick = { /*TODO*/ },
         onBackClick = { /*TODO*/ },
         title = "",
         content = "",

@@ -14,6 +14,7 @@ import com.school_of_company.domain.usecase.expo.DeleteExpoInformationUseCase
 import com.school_of_company.domain.usecase.expo.GetExpoInformationUseCase
 import com.school_of_company.domain.usecase.expo.GetExpoListUseCase
 import com.school_of_company.domain.usecase.expo.ModifyExpoInformationUseCase
+import com.school_of_company.domain.usecase.expo.ModifyExpoInformationUseCase_Factory
 import com.school_of_company.domain.usecase.expo.RegisterExpoInformationUseCase
 import com.school_of_company.expo.util.getMultipartFile
 import com.school_of_company.expo.viewmodel.uistate.DeleteExpoInformationUiState
@@ -149,6 +150,10 @@ class ExpoViewModel @Inject constructor(
             .onFailure { error ->
                 _modifyExpoInformationUiState.value = ModifyExpoInformationUiState.Error(error)
             }
+    }
+
+    internal fun initModifyExpo() {
+        _modifyExpoInformationUiState.value = ModifyExpoInformationUiState.Loading
     }
 
     internal fun resetExpoInformation() {

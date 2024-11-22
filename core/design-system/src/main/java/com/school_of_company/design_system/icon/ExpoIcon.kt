@@ -72,11 +72,15 @@ fun XIcon(
 }
 
 @Composable
-fun ExpoIcon(modifier: Modifier = Modifier) {
+fun ExpoIcon(
+    modifier: Modifier = Modifier,
+    tint: Color = Color.Unspecified
+) {
     Icon(
         painter = painterResource(id = R.drawable.ic_expo),
         contentDescription = stringResource(id = R.string.expo_description),
-        modifier = modifier
+        modifier = modifier,
+        tint = tint
     )
 }
 

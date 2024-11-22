@@ -24,6 +24,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -62,6 +63,7 @@ import com.school_of_company.design_system.icon.ImageIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.expo.viewmodel.ExpoViewModel
+import com.school_of_company.expo.viewmodel.uistate.ImageUpLoadUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterExpoInformationUiState
 import com.school_of_company.model.model.expo.ExpoRequestAndResponseModel
 import com.school_of_company.ui.toast.makeToast
@@ -72,6 +74,8 @@ internal fun ExpoCreateRoute(
     viewModel: ExpoViewModel = hiltViewModel()
 ) {
     val registerExpoInformationUiState by viewModel.registerExpoInformationUiState.collectAsStateWithLifecycle()
+    val imageUpLoadUiState by viewModel.imageUpLoadUiState.collectAsStateWithLifecycle()
+
     val modifyTitleState by viewModel.modify_title.collectAsStateWithLifecycle()
     val startedDateState by viewModel.started_date.collectAsStateWithLifecycle()
     val endedDateState by viewModel.ended_date.collectAsStateWithLifecycle()
@@ -83,8 +87,7 @@ internal fun ExpoCreateRoute(
 
     val context = LocalContext.current
 
-    val galleryLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+    val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             if (uri != null) {
                 val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
                 context.contentResolver.openInputStream(uri)?.use { inputStream ->
@@ -104,18 +107,43 @@ internal fun ExpoCreateRoute(
         }
     }
 
-    DisposableEffect(registerExpoInformationUiState) {
+    LaunchedEffect(imageUpLoadUiState) {
+        when (imageUpLoadUiState) {
+            is ImageUpLoadUiState.Loading -> Unit
+            is ImageUpLoadUiState.Success -> {
+                viewModel.registerExpoInformation(
+                    body = ExpoRequestAndResponseModel(
+                        title = viewModel.modify_title.value,
+                        startedDay = viewModel.started_date.value,
+                        finishedDay = viewModel.ended_date.value,
+                        description = viewModel.introduce_title.value,
+                        location = viewModel.location.value,
+                        coverImage = (imageUpLoadUiState as ImageUpLoadUiState.Success).data.imageURL,
+                        x = 35.14308f,
+                        y = 126.80043f
+                    )
+                )
+                viewModel.initRegisterExpo()
+            }
+
+            is ImageUpLoadUiState.Error -> {
+                onErrorToast(null, R.string.expo_image_fail)
+            }
+        }
+    }
+
+    LaunchedEffect(registerExpoInformationUiState) {
         when (registerExpoInformationUiState) {
             is RegisterExpoInformationUiState.Loading -> Unit
             is RegisterExpoInformationUiState.Success -> {
                 viewModel.resetExpoInformation()
                 makeToast(context, "박람회 등록을 완료하였습니다.")
             }
+
             is RegisterExpoInformationUiState.Error -> {
                 onErrorToast(null, R.string.expo_register_fail)
             }
         }
-        onDispose {  }
     }
 
     ExpoCreateScreen(
@@ -134,19 +162,12 @@ internal fun ExpoCreateRoute(
         onAddressChange = viewModel::onAddressChange,
         onLocationChange = viewModel::onLocationChange,
         onExpoCreateCallBack = {
-            viewModel.registerExpoInformation(
-                body = ExpoRequestAndResponseModel(
-                    title = viewModel.modify_title.value,
-                    startedDay = viewModel.started_date.value,
-                    finishedDay = viewModel.ended_date.value,
-                    description = viewModel.introduce_title.value,
-                    location = viewModel.location.value,
-                    coverImage = selectedImageUri.toString(),
-                    x = 35.14308f,
-                    y = 126.80043f
-                )
-            )
-        }
+            if (selectedImageUri != null) {
+                viewModel.imageUpLoad(context, selectedImageUri!!)
+            } else {
+                onErrorToast(null, R.string.expo_image_fail)
+            }
+        },
     )
 }
 
@@ -169,7 +190,7 @@ internal fun ExpoCreateScreen(
     onIntroduceTitleChange: (String) -> Unit,
     onAddressChange: (String) -> Unit,
     onLocationChange: (String) -> Unit,
-    onExpoCreateCallBack: () -> Unit
+    onExpoCreateCallBack: () -> Unit,
 ) {
     var trainingTextState by rememberSaveable { mutableStateOf(listOf("")) }
 
@@ -403,14 +424,16 @@ internal fun ExpoCreateScreen(
                     Spacer(modifier = Modifier.height(28.dp))
 
                     ExpoStateButton(
-                        text = "수정완료",
-                        state = if (modifyTitleState.isNotEmpty() &&
+                        text = "생성하기",
+                        state = if (
+                            modifyTitleState.isNotEmpty() &&
                             startedDateState.isNotEmpty() &&
                             endedDateState.isNotEmpty() &&
                             introduceTitleState.isNotEmpty() &&
                             addressState.isNotEmpty() &&
                             locationState.isNotEmpty() &&
-                            trainingTextState.isNotEmpty()) {
+                            trainingTextState.isNotEmpty()
+                        ) {
                             ButtonState.Enable
                         } else {
                             ButtonState.Disable
@@ -445,6 +468,6 @@ private fun ExpoCreateScreenPreview() {
         onStartedDateChange = {},
         onEndedDateChange = {},
         onIntroduceTitleChange = {},
-        onExpoCreateCallBack = {}
+        onExpoCreateCallBack = {},
     )
 }

@@ -14,7 +14,7 @@ class AuthInterceptor @Inject constructor(
     private val authTokenDataSource: AuthTokenDataSource
 ) : Interceptor {
     // 인증 없이 접근할 수 있도록 하는 경로입니다.
-    val ignorePath = listOf("/auth", "/sms")
+    private val ignorePath = listOf("/auth", "/sms")
 
     private companion object {
         const val POST = "POST"

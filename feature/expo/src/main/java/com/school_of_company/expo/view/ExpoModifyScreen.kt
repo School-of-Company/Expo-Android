@@ -66,6 +66,7 @@ import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.expo.viewmodel.ExpoViewModel
+import com.school_of_company.expo.viewmodel.uistate.ImageUpLoadUiState
 import com.school_of_company.expo.viewmodel.uistate.ModifyExpoInformationUiState
 import com.school_of_company.model.model.expo.ExpoRequestAndResponseModel
 import com.school_of_company.ui.toast.makeToast
@@ -78,6 +79,8 @@ internal fun ExpoModifyRoute(
     viewModel: ExpoViewModel = hiltViewModel()
 ) {
     val modifyExpoInformationUiState by viewModel.modifyExpoInformationUiState.collectAsStateWithLifecycle()
+    val imageUpLoadUiState by viewModel.imageUpLoadUiState.collectAsStateWithLifecycle()
+
     val modifyTitleState by viewModel.modify_title.collectAsStateWithLifecycle()
     val startedDateState by viewModel.started_date.collectAsStateWithLifecycle()
     val endedDateState by viewModel.ended_date.collectAsStateWithLifecycle()
@@ -107,6 +110,37 @@ internal fun ExpoModifyRoute(
 
     LaunchedEffect(id) {
         viewModel.getExpoInformation(id)
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            viewModel.initModifyExpo()
+        }
+    }
+
+    LaunchedEffect(imageUpLoadUiState) {
+        when (imageUpLoadUiState) {
+            is ImageUpLoadUiState.Loading -> Unit
+            is ImageUpLoadUiState.Success -> {
+                viewModel.modifyExpoInformation(
+                    expoId = id,
+                    body = ExpoRequestAndResponseModel(
+                        title = viewModel.modify_title.value,
+                        startedDay = viewModel.started_date.value,
+                        finishedDay = viewModel.ended_date.value,
+                        description = viewModel.introduce_title.value,
+                        location = viewModel.location.value,
+                        coverImage = (imageUpLoadUiState as ImageUpLoadUiState.Success).data.imageURL,
+                        x = 35.14308f,
+                        y = 126.80043f
+                    )
+                )
+                viewModel.initModifyExpo()
+            }
+            is ImageUpLoadUiState.Error -> {
+                onErrorToast(null, R.string.expo_image_fail)
+            }
+        }
     }
 
     LaunchedEffect(modifyExpoInformationUiState) {
@@ -143,22 +177,8 @@ internal fun ExpoModifyRoute(
             if (selectedImageUri != null) {
                 viewModel.imageUpLoad(context, selectedImageUri!!)
             } else {
-                onErrorToast(null, R.string.expo_image_fail)
+                onErrorToast(null, R.string.expo_image_size_fail)
             }
-
-            viewModel.modifyExpoInformation(
-                expoId = id,
-                body = ExpoRequestAndResponseModel(
-                    title = viewModel.modify_title.value,
-                    startedDay = viewModel.started_date.value,
-                    finishedDay = viewModel.ended_date.value,
-                    description = viewModel.introduce_title.value,
-                    location = viewModel.location.value,
-                    coverImage = selectedImageUri?.toString() ?: coverImageState,
-                    x = 35.14308f,
-                    y = 126.80043f
-                )
-            )
         }
     )
 }

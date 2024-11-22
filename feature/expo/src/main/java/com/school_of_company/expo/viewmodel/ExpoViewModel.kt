@@ -19,6 +19,7 @@ import com.school_of_company.expo.viewmodel.uistate.DeleteExpoInformationUiState
 import com.school_of_company.expo.viewmodel.uistate.GetExpoInformationUiState
 import com.school_of_company.expo.viewmodel.uistate.GetExpoListUiState
 import com.school_of_company.expo.viewmodel.uistate.ImageUpLoadUiState
+import com.school_of_company.expo.viewmodel.uistate.ModifyExpoInformationUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterExpoInformationUiState
 import com.school_of_company.model.entity.expo.ExpoListResponseEntity
 import com.school_of_company.model.model.expo.ExpoRequestAndResponseModel
@@ -59,8 +60,7 @@ class ExpoViewModel @Inject constructor(
     private val _registerExpoInformationUiState = MutableStateFlow<RegisterExpoInformationUiState>(RegisterExpoInformationUiState.Loading)
     internal val registerExpoInformationUiState = _registerExpoInformationUiState.asStateFlow()
 
-    private val _modifyExpoInformationUiState = MutableStateFlow<com.school_of_company.expo.viewmodel.uistate.ModifyExpoInformationUiState>(
-        com.school_of_company.expo.viewmodel.uistate.ModifyExpoInformationUiState.Loading)
+    private val _modifyExpoInformationUiState = MutableStateFlow<ModifyExpoInformationUiState>(ModifyExpoInformationUiState.Loading)
     internal val modifyExpoInformationUiState = _modifyExpoInformationUiState.asStateFlow()
 
     private val _deleteExpoInformationUiState = MutableStateFlow<DeleteExpoInformationUiState>(DeleteExpoInformationUiState.Loading)
@@ -133,21 +133,20 @@ class ExpoViewModel @Inject constructor(
         expoId: Long,
         body: ExpoRequestAndResponseModel
     ) = viewModelScope.launch {
-        _modifyExpoInformationUiState.value = com.school_of_company.expo.viewmodel.uistate.ModifyExpoInformationUiState.Loading
+        _modifyExpoInformationUiState.value = ModifyExpoInformationUiState.Loading
         modifyExpoInformationUseCase(
             expoId = expoId,
             body = body
         )
             .onSuccess {
                 it.catch { remoteError ->
-                    _modifyExpoInformationUiState.value =
-                        com.school_of_company.expo.viewmodel.uistate.ModifyExpoInformationUiState.Error(remoteError)
+                    _modifyExpoInformationUiState.value = ModifyExpoInformationUiState.Error(remoteError)
                 }.collect {
-                    _modifyExpoInformationUiState.value = com.school_of_company.expo.viewmodel.uistate.ModifyExpoInformationUiState.Success
+                    _modifyExpoInformationUiState.value = ModifyExpoInformationUiState.Success
                 }
             }
             .onFailure { error ->
-                _modifyExpoInformationUiState.value = com.school_of_company.expo.viewmodel.uistate.ModifyExpoInformationUiState.Error(error)
+                _modifyExpoInformationUiState.value = ModifyExpoInformationUiState.Error(error)
             }
     }
 

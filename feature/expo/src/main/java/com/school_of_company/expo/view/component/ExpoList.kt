@@ -41,7 +41,10 @@ fun ExpoList(
                     .verticalScroll(scrollState)
                     .background(color = colors.white)
             ) {
-                ExpoIcon(modifier = Modifier.size(100.dp))
+                ExpoIcon(
+                    tint = colors.black,
+                    modifier = Modifier.size(100.dp)
+                )
                 Text(
                     text = "아직 박람회가 등장하지 않았아요.",
                     style = typography.bodyRegular2,

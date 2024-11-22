@@ -82,6 +82,7 @@ internal fun ExpoCreateRoute(
     val introduceTitleState by viewModel.introduce_title.collectAsStateWithLifecycle()
     val addressState by viewModel.address.collectAsStateWithLifecycle()
     val locationState by viewModel.location.collectAsStateWithLifecycle()
+    val coverImageState by viewModel.cover_image.collectAsStateWithLifecycle()
 
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
@@ -146,7 +147,7 @@ internal fun ExpoCreateRoute(
 
     ExpoCreateScreen(
         onImageClick = { galleryLauncher.launch("image/*") },
-        imageUri = selectedImageUri?.toString() ?: "",
+        imageUri = selectedImageUri?.toString() ?: coverImageState,
         modifyTitleState = modifyTitleState,
         startedDateState = startedDateState,
         endedDateState = endedDateState,

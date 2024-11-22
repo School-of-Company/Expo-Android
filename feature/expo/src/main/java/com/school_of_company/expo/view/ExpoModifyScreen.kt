@@ -109,7 +109,7 @@ internal fun ExpoModifyRoute(
         viewModel.getExpoInformation(id)
     }
 
-    DisposableEffect(modifyExpoInformationUiState) {
+    LaunchedEffect(modifyExpoInformationUiState) {
         when (modifyExpoInformationUiState) {
             is ModifyExpoInformationUiState.Loading -> Unit
             is ModifyExpoInformationUiState.Success -> {
@@ -121,7 +121,6 @@ internal fun ExpoModifyRoute(
                 onErrorToast(null, R.string.expo_modify_fail)
             }
         }
-        onDispose {  }
     }
 
     ExpoModifyScreen(
@@ -141,6 +140,12 @@ internal fun ExpoModifyRoute(
         onAddressChange = viewModel::onAddressChange,
         onLocationChange = viewModel::onLocationChange,
         modifyCallBack = {
+            if (selectedImageUri != null) {
+                viewModel.imageUpLoad(context, selectedImageUri!!)
+            } else {
+                onErrorToast(null, R.string.expo_image_fail)
+            }
+
             viewModel.modifyExpoInformation(
                 expoId = id,
                 body = ExpoRequestAndResponseModel(
@@ -149,7 +154,7 @@ internal fun ExpoModifyRoute(
                     finishedDay = viewModel.ended_date.value,
                     description = viewModel.introduce_title.value,
                     location = viewModel.location.value,
-                    coverImage = selectedImageUri.toString(),
+                    coverImage = selectedImageUri?.toString() ?: coverImageState,
                     x = 35.14308f,
                     y = 126.80043f
                 )
@@ -453,7 +458,7 @@ internal fun ExpoModifyScreen(
                            introduceTitleState.isNotEmpty() &&
                            addressState.isNotEmpty() &&
                            locationState.isNotEmpty() &&
-                           trainingTextState.isNotEmpty()) {
+                           trainingTextState.all { it.isNotEmpty() }) {
                            ButtonState.Enable
                        } else {
                            ButtonState.Disable

@@ -3,6 +3,7 @@ package com.school_of_company.expo.viewmodel
 import android.content.Context
 import android.net.Uri
 import android.util.Log
+import androidx.compose.runtime.internal.illegalDecoyCallException
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -208,7 +209,12 @@ class ExpoViewModel @Inject constructor(
     ) = viewModelScope.launch {
         val multipartFile = getMultipartFile(context, image)
 
-        imageUpLoadUseCase(multipartFile!!)
+        if (multipartFile == null) {
+            _imageUpLoadUiState.value = ImageUpLoadUiState.Error(IllegalStateException("이미지 파일 변환 실패"))
+            return@launch
+        }
+
+        imageUpLoadUseCase(multipartFile)
             .asResult()
             .collectLatest { result ->
                 when (result) {

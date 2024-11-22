@@ -80,6 +80,8 @@
 
     <string name="expo_image_fail">박람회 이미지가 유효하지 않습니다.</string>
 
+    <string name="expo_image_size_fail">박람회 이미지를 다시 업로드 해주세요.</string>
+
     <string name="write_certification">인증 번호 입력</string>
     <string name="valid_certification">인증번호가 올바르지 않습니다.</string>
     <string name="fail_certification">인증에 실패하셨습니다.</string>

@@ -2,6 +2,7 @@ package com.school_of_company.expo.viewmodel
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -124,6 +125,7 @@ class ExpoViewModel @Inject constructor(
     }
 
     internal fun initRegisterExpo() {
+        _imageUpLoadUiState.value = ImageUpLoadUiState.Loading
         _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Loading
     }
 
@@ -150,13 +152,15 @@ class ExpoViewModel @Inject constructor(
     }
 
     internal fun resetExpoInformation() {
-        onStartedDateChange("")
-        onEndedDateChange("")
-        onIntroduceTitleChange("")
-        onAddressChange("")
-        onLocationChange("")
-        onCoverImageChange(null)
-        onModifyTitleChange("")
+        if (_registerExpoInformationUiState.value is RegisterExpoInformationUiState.Success) {
+            onStartedDateChange("")
+            onEndedDateChange("")
+            onIntroduceTitleChange("")
+            onAddressChange("")
+            onLocationChange("")
+            onCoverImageChange(null)
+            onModifyTitleChange("")
+        }
     }
 
     internal fun deleteExpoInformation(expoId: Long) = viewModelScope.launch {

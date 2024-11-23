@@ -77,6 +77,8 @@ internal fun ExpoScreen(
     getExpoList: () -> Unit,
     navigationToDetail: (Long) -> Unit
 ) {
+    var filterButtonText by rememberSaveable { mutableStateOf("최신순") }
+
     val (openBottomSheet, isOpenBottomSheet) = rememberSaveable { mutableStateOf(false) }
     var arrayList by rememberSaveable { mutableStateOf(ArrayHomeListEnum.RECENT) }
 
@@ -120,7 +122,9 @@ internal fun ExpoScreen(
                     color = colors.black
                 )
 
-                HomeFilterButton { isOpenBottomSheet(true) }
+                HomeFilterButton(
+                    text = filterButtonText
+                ) { isOpenBottomSheet(true) }
             }
 
             SwipeRefresh(
@@ -209,10 +213,12 @@ internal fun ExpoScreen(
         HomeBottomSheet(
             onRecentClick = {
                 arrayList = ArrayHomeListEnum.RECENT
+                filterButtonText = "최신순"
                 isOpenBottomSheet(false)
             },
             onOldClick = {
                 arrayList = ArrayHomeListEnum.OLDER
+                filterButtonText = "오래된 순"
                 isOpenBottomSheet(false)
             },
             onCancelClick = { isOpenBottomSheet(false) }
@@ -228,6 +234,6 @@ private fun HomeScreenPreview() {
         navigationToDetail = {},
         swipeRefreshState = rememberSwipeRefreshState(isRefreshing = false),
         getExpoListData = GetExpoListUiState.Loading,
-        getExpoList = {},
+        getExpoList = {}
     )
 }

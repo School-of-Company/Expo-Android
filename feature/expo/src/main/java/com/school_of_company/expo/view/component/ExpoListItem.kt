@@ -154,7 +154,7 @@ fun ExpoListItem(
                             Text(
                                 text = stringResource(id = R.string.register_temp),
                                 style = typography.captionRegular2,
-                                color = colors.gray600
+                                color = colors.main400
                             )
 
                             Text(
@@ -164,7 +164,7 @@ fun ExpoListItem(
                                     data.finishedDay.formatServerDate()
                                 ),
                                 style = typography.captionRegular2,
-                                color = colors.gray600,
+                                color = colors.main400,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
                             )

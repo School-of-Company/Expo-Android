@@ -121,9 +121,7 @@ internal fun ExpoScreen(
                     color = colors.black
                 )
 
-                HomeFilterButton(
-                    text = filterButtonText
-                ) { isOpenBottomSheet(true) }
+                HomeFilterButton(text = filterButtonText) { isOpenBottomSheet(true) }
             }
 
             Spacer(modifier = Modifier.padding(bottom = 24.dp))

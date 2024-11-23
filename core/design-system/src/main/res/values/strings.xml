@@ -105,4 +105,6 @@
     <string name="slash">/</string>
 
     <string name="string_type">%s</string>
+
+    <string name="image_size_error">이미지 크기는 328 × 178이어야 합니다.</string>
 </resources>

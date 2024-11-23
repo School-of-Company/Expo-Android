@@ -96,7 +96,7 @@ internal fun ExpoCreateRoute(
                     if (options.outWidth == 328 && options.outHeight == 178) {
                         selectedImageUri = uri
                     } else {
-                        makeToast(context, "이미지 크기는 328 × 178이어야 합니다.")
+                        onErrorToast(null, R.string.image_size_error)
                     }
                 }
             }

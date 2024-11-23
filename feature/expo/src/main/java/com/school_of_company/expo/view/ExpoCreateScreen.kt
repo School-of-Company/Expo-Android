@@ -352,7 +352,7 @@ internal fun ExpoCreateScreen(
                     )
 
                     Text(
-                        text = "시작일과 마감일 입력시 ‘ yyyy.mm.dd ‘ 형식으로 입력해주세요.",
+                        text = "시작일과 마감일 입력시 ‘ yyyy-mm-dd ‘ 형식으로 입력해주세요.",
                         style = typography.captionRegular2,
                         color = colors.gray300
                     )

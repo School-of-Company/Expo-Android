@@ -4,23 +4,23 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.school_of_company.design_system.R
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
-import com.school_of_company.design_system.icon.FilterIcon
+import com.school_of_company.design_system.icon.DownArrowIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 
 @Composable
 fun HomeFilterButton(
     modifier: Modifier = Modifier,
+    text: String,
     onClick: () -> Unit
 ) {
     ExpoAndroidTheme { colors, typography ->
@@ -31,7 +31,7 @@ fun HomeFilterButton(
             modifier = modifier
                 .background(
                     color = colors.main,
-                    shape = RoundedCornerShape(6.dp),
+                    shape = RoundedCornerShape(10.dp),
                 )
                 .expoClickable(
                     onClick = onClick,
@@ -47,12 +47,13 @@ fun HomeFilterButton(
                 )
             ) {
                 Text(
-                    text = stringResource(id = R.string.filter),
+                    text = text,
                     style = typography.bodyBold2,
                     fontWeight = FontWeight.SemiBold,
-                    color = colors.white
+                    color = colors.white,
                 )
-                FilterIcon(tint = colors.white)
+
+                DownArrowIcon(tint = colors.white)
             }
         }
     }
@@ -61,7 +62,7 @@ fun HomeFilterButton(
 @Preview
 @Composable
 private fun HomeFilerButtonPreview() {
-    HomeFilterButton {
-
-    }
+    HomeFilterButton(
+        text = "오래된 순"
+    ) {}
 }

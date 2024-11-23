@@ -19,11 +19,15 @@ fun ExpoMainLogo(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun DownIcon(modifier: Modifier = Modifier) {
+fun DownArrowIcon(
+    modifier: Modifier = Modifier,
+    tint: Color = Color.Unspecified
+) {
     Icon(
-        painter = painterResource(id = R.drawable.ic_down_arrow),
+        painter = painterResource(id = R.drawable.ic_downarrowicon),
         contentDescription = stringResource(id = R.string.down_arrow_description),
-        modifier = modifier
+        modifier = modifier,
+        tint = tint
     )
 }
 

@@ -1,6 +1,5 @@
 package com.school_of_company.expo.view
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
@@ -49,7 +48,6 @@ import com.school_of_company.expo.view.component.HomeKakaoMap
 import com.school_of_company.expo.view.component.QrCode
 import com.school_of_company.expo.viewmodel.ExpoViewModel
 import com.school_of_company.expo.viewmodel.uistate.GetExpoInformationUiState
-import com.school_of_company.expo.viewmodel.uistate.GetExpoListUiState
 import com.school_of_company.ui.util.formatServerDate
 
 @Composable

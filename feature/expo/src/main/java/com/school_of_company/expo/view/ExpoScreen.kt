@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -77,6 +76,8 @@ internal fun ExpoScreen(
     getExpoList: () -> Unit,
     navigationToDetail: (Long) -> Unit
 ) {
+    var filterButtonText by rememberSaveable { mutableStateOf("최신순") }
+
     val (openBottomSheet, isOpenBottomSheet) = rememberSaveable { mutableStateOf(false) }
     var arrayList by rememberSaveable { mutableStateOf(ArrayHomeListEnum.RECENT) }
 
@@ -120,8 +121,10 @@ internal fun ExpoScreen(
                     color = colors.black
                 )
 
-                HomeFilterButton { isOpenBottomSheet(true) }
+                HomeFilterButton(text = filterButtonText) { isOpenBottomSheet(true) }
             }
+
+            Spacer(modifier = Modifier.padding(bottom = 24.dp))
 
             SwipeRefresh(
                 state = swipeRefreshState,
@@ -209,10 +212,12 @@ internal fun ExpoScreen(
         HomeBottomSheet(
             onRecentClick = {
                 arrayList = ArrayHomeListEnum.RECENT
+                filterButtonText = "최신순"
                 isOpenBottomSheet(false)
             },
             onOldClick = {
                 arrayList = ArrayHomeListEnum.OLDER
+                filterButtonText = "오래된 순"
                 isOpenBottomSheet(false)
             },
             onCancelClick = { isOpenBottomSheet(false) }
@@ -228,6 +233,6 @@ private fun HomeScreenPreview() {
         navigationToDetail = {},
         swipeRefreshState = rememberSwipeRefreshState(isRefreshing = false),
         getExpoListData = GetExpoListUiState.Loading,
-        getExpoList = {},
+        getExpoList = {}
     )
 }

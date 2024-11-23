@@ -96,7 +96,7 @@ internal fun ExpoCreateRoute(
                     if (options.outWidth == 328 && options.outHeight == 178) {
                         selectedImageUri = uri
                     } else {
-                        makeToast(context, "이미지 크기는 328 × 178이어야 합니다.")
+                        onErrorToast(null, R.string.image_size_error)
                     }
                 }
             }
@@ -352,7 +352,7 @@ internal fun ExpoCreateScreen(
                     )
 
                     Text(
-                        text = "시작일과 마감일 입력시 ‘ yyyy.mm.dd ‘ 형식으로 입력해주세요.",
+                        text = "시작일과 마감일 입력시 ‘ yyyy-mm-dd ‘ 형식으로 입력해주세요.",
                         style = typography.captionRegular2,
                         color = colors.gray300
                     )

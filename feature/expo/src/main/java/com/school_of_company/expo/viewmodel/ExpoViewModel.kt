@@ -2,8 +2,6 @@ package com.school_of_company.expo.viewmodel
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
-import androidx.compose.runtime.internal.illegalDecoyCallException
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

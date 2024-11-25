@@ -8,6 +8,7 @@ import com.school_of_company.network.api.AuthAPI
 import com.school_of_company.network.api.ExpoAPI
 import com.school_of_company.network.api.ImageAPI
 import com.school_of_company.network.api.SmsAPI
+import com.school_of_company.network.api.TrainingAPI
 import com.school_of_company.network.util.AuthInterceptor
 import com.school_of_company.network.util.TokenAuthenticator
 import com.squareup.moshi.Moshi
@@ -104,4 +105,7 @@ object NetworkModule {
     fun provideImageAPI(retrofit: Retrofit) : ImageAPI =
         retrofit.create(ImageAPI::class.java)
 
+    @Provides
+    fun provideTrainingAPI(retrofit: Retrofit) : TrainingAPI =
+        retrofit.create(TrainingAPI::class.java)
 }

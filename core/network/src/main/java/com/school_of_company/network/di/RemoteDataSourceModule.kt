@@ -8,6 +8,8 @@ import com.school_of_company.network.datasource.image.ImageDataSource
 import com.school_of_company.network.datasource.image.ImageDataSourceImpl
 import com.school_of_company.network.datasource.sms.SmsDataSource
 import com.school_of_company.network.datasource.sms.SmsDataSourceImpl
+import com.school_of_company.network.datasource.training.TrainingDataSource
+import com.school_of_company.network.datasource.training.TrainingDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -36,4 +38,9 @@ abstract class RemoteDataSourceModule {
     abstract fun bindImageRemoteDataSource(
         imageDataSourceImpl: ImageDataSourceImpl
     ) : ImageDataSource
+
+    @Binds
+    abstract fun bindTrainingRemoteDataSource(
+        trainingDataSourceImpl: TrainingDataSourceImpl
+    ) : TrainingDataSource
 }

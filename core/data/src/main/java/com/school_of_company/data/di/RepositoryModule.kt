@@ -8,6 +8,8 @@ import com.school_of_company.data.repository.image.ImageRepository
 import com.school_of_company.data.repository.image.ImageRepositoryImpl
 import com.school_of_company.data.repository.sms.SmsRepository
 import com.school_of_company.data.repository.sms.SmsRepositoryImpl
+import com.school_of_company.data.repository.training.TrainingRepository
+import com.school_of_company.data.repository.training.TrainingRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -36,4 +38,9 @@ abstract class RepositoryModule {
     abstract fun bindImageRepository(
         imageRepositoryImpl: ImageRepositoryImpl
     ) : ImageRepository
+
+    @Binds
+    abstract fun bindTrainingRepository(
+        trainingRepositoryImpl: TrainingRepositoryImpl
+    ) : TrainingRepository
 }

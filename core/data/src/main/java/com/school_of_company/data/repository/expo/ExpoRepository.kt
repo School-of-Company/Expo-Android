@@ -6,8 +6,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface ExpoRepository {
     fun getExpoList() : Flow<List<ExpoListResponseEntity>>
-    fun getExpoInformation(expoId: Long) : Flow<ExpoRequestAndResponseModel>
+    fun getExpoInformation(expoId: String) : Flow<ExpoRequestAndResponseModel>
     fun registerExpoInformation(body: ExpoRequestAndResponseModel) : Flow<Unit>
-    fun modifyExpoInformation(expoId: Long, body: ExpoRequestAndResponseModel) : Flow<Unit>
-    fun deleteExpoInformation(expoId: Long) : Flow<Unit>
+    fun modifyExpoInformation(expoId: String, body: ExpoRequestAndResponseModel) : Flow<Unit>
+    fun deleteExpoInformation(expoId: String) : Flow<Unit>
 }

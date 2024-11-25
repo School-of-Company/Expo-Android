@@ -19,7 +19,7 @@ class ExpoRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getExpoInformation(expoId: Long): Flow<ExpoRequestAndResponseModel> {
+    override fun getExpoInformation(expoId: String): Flow<ExpoRequestAndResponseModel> {
         return dataSource.getExpoInformation(expoId = expoId).transform { response ->
             emit(response.toModel())
         }
@@ -30,7 +30,7 @@ class ExpoRepositoryImpl @Inject constructor(
     }
 
     override fun modifyExpoInformation(
-        expoId: Long,
+        expoId: String,
         body: ExpoRequestAndResponseModel
     ): Flow<Unit> {
         return dataSource.modifyExpoInformation(
@@ -39,7 +39,7 @@ class ExpoRepositoryImpl @Inject constructor(
         )
     }
 
-    override fun deleteExpoInformation(expoId: Long): Flow<Unit> {
+    override fun deleteExpoInformation(expoId: String): Flow<Unit> {
         return dataSource.deleteExpoInformation(expoId = expoId)
     }
 }

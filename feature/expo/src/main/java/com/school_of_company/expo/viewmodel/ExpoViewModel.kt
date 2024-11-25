@@ -14,15 +14,22 @@ import com.school_of_company.domain.usecase.expo.GetExpoListUseCase
 import com.school_of_company.domain.usecase.expo.ModifyExpoInformationUseCase
 import com.school_of_company.domain.usecase.expo.ModifyExpoInformationUseCase_Factory
 import com.school_of_company.domain.usecase.expo.RegisterExpoInformationUseCase
+import com.school_of_company.domain.usecase.training.ModifyTrainingProgramUseCase
+import com.school_of_company.domain.usecase.training.RegisterTrainingProgramListUseCase
+import com.school_of_company.domain.usecase.training.RegisterTrainingProgramUseCase
 import com.school_of_company.expo.util.getMultipartFile
 import com.school_of_company.expo.viewmodel.uistate.DeleteExpoInformationUiState
 import com.school_of_company.expo.viewmodel.uistate.GetExpoInformationUiState
 import com.school_of_company.expo.viewmodel.uistate.GetExpoListUiState
 import com.school_of_company.expo.viewmodel.uistate.ImageUpLoadUiState
 import com.school_of_company.expo.viewmodel.uistate.ModifyExpoInformationUiState
+import com.school_of_company.expo.viewmodel.uistate.ModifyTrainingProgramUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterExpoInformationUiState
+import com.school_of_company.expo.viewmodel.uistate.RegisterTrainingProgramListUiState
+import com.school_of_company.expo.viewmodel.uistate.RegisterTrainingProgramUiState
 import com.school_of_company.model.entity.expo.ExpoListResponseEntity
 import com.school_of_company.model.model.expo.ExpoRequestAndResponseModel
+import com.school_of_company.model.model.training.TrainingDtoModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,6 +47,9 @@ class ExpoViewModel @Inject constructor(
     private val deleteExpoInformationUseCase: DeleteExpoInformationUseCase,
     private val getExpoListUseCase: GetExpoListUseCase,
     private val imageUpLoadUseCase: ImageUpLoadUseCase,
+    private val registerTrainingProgramUseCase: RegisterTrainingProgramUseCase,
+    private val registerTrainingProgramListUseCase: RegisterTrainingProgramListUseCase,
+    private val modifyTrainingProgramUseCase: ModifyTrainingProgramUseCase,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     companion object {
@@ -51,6 +61,7 @@ class ExpoViewModel @Inject constructor(
         private const val LOCATION = "location"
         private const val COVER_IMAGE = "cover_image"
     }
+
     private val _swipeRefreshLoading = MutableStateFlow(false)
     val swipeRefreshLoading = _swipeRefreshLoading.asStateFlow()
 
@@ -71,6 +82,15 @@ class ExpoViewModel @Inject constructor(
 
     private val _imageUpLoadUiState = MutableStateFlow<ImageUpLoadUiState>(ImageUpLoadUiState.Loading)
     internal val imageUpLoadUiState = _imageUpLoadUiState.asStateFlow()
+
+    private val _registerTrainingProgramUiState = MutableStateFlow<RegisterTrainingProgramUiState>(RegisterTrainingProgramUiState.Loading)
+    internal val registerTrainingProgramUiState = _registerTrainingProgramUiState.asStateFlow()
+
+    private val _registerTrainingProgramListUiState = MutableStateFlow<RegisterTrainingProgramListUiState>(RegisterTrainingProgramListUiState.Loading)
+    internal val registerTrainingProgramListUiState = _registerTrainingProgramListUiState.asStateFlow()
+
+    private val _modifyTrainingProgramUiState = MutableStateFlow<ModifyTrainingProgramUiState>(ModifyTrainingProgramUiState.Loading)
+    internal val modifyTrainingProgramUiState = _modifyTrainingProgramUiState.asStateFlow()
 
     internal var modify_title = savedStateHandle.getStateFlow(key = MODIFY_TITLE, initialValue = "")
 
@@ -109,18 +129,19 @@ class ExpoViewModel @Inject constructor(
             }
     }
 
-    internal fun registerExpoInformation(body: ExpoRequestAndResponseModel) = viewModelScope.launch {
-        _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Loading
-        registerExpoInformationUseCase(body = body)
-            .asResult()
-            .collectLatest { result ->
-                when (result) {
-                    Result.Loading -> _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Loading
-                    is Result.Success -> _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Success(result.data)
-                    is Result.Error -> _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Error(result.exception)
+    internal fun registerExpoInformation(body: ExpoRequestAndResponseModel) =
+        viewModelScope.launch {
+            _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Loading
+            registerExpoInformationUseCase(body = body)
+                .asResult()
+                .collectLatest { result ->
+                    when (result) {
+                        Result.Loading -> _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Loading
+                        is Result.Success -> _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Success(result.data)
+                        is Result.Error -> _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Error(result.exception)
+                    }
                 }
-            }
-    }
+        }
 
     internal fun initRegisterExpo() {
         _imageUpLoadUiState.value = ImageUpLoadUiState.Loading
@@ -172,7 +193,6 @@ class ExpoViewModel @Inject constructor(
                     _deleteExpoInformationUiState.value = DeleteExpoInformationUiState.Error(remoteError)
                 }.collect {
                     _deleteExpoInformationUiState.value = DeleteExpoInformationUiState.Success
-
                 }
             }
             .onFailure { error ->
@@ -223,6 +243,69 @@ class ExpoViewModel @Inject constructor(
                     is Result.Success -> _imageUpLoadUiState.value = ImageUpLoadUiState.Success(result.data)
                     is Result.Error -> _imageUpLoadUiState.value = ImageUpLoadUiState.Error(result.exception)
                 }
+            }
+    }
+
+    internal fun registerTrainingProgram(
+        expoId: String,
+        body: TrainingDtoModel
+    ) = viewModelScope.launch {
+        _registerTrainingProgramUiState.value = RegisterTrainingProgramUiState.Loading
+        registerTrainingProgramUseCase(
+            expoId = expoId,
+            body = body
+        )
+            .onSuccess {
+                it.catch { remoteError ->
+                    _registerTrainingProgramUiState.value = RegisterTrainingProgramUiState.Error(remoteError)
+                }.collect {
+                    _registerTrainingProgramUiState.value = RegisterTrainingProgramUiState.Success
+                }
+            }
+            .onFailure { error ->
+                _registerTrainingProgramUiState.value = RegisterTrainingProgramUiState.Error(error)
+            }
+    }
+
+    internal fun registerTrainingProgramList(
+        expoId: String,
+        body: List<TrainingDtoModel>
+    ) = viewModelScope.launch {
+        _registerTrainingProgramListUiState.value = RegisterTrainingProgramListUiState.Loading
+        registerTrainingProgramListUseCase(
+            expoId = expoId,
+            body = body
+        )
+            .onSuccess {
+                it.catch { remoteError ->
+                    _registerTrainingProgramListUiState.value = RegisterTrainingProgramListUiState.Error(remoteError)
+                }.collect {
+                    _registerTrainingProgramListUiState.value = RegisterTrainingProgramListUiState.Success
+                }
+            }
+            .onFailure { error ->
+                _registerTrainingProgramListUiState.value = RegisterTrainingProgramListUiState.Error(error)
+            }
+    }
+
+    internal fun modifyTrainingProgram(
+        trainingProId: Long,
+        body: TrainingDtoModel
+    ) = viewModelScope.launch {
+        _modifyTrainingProgramUiState.value = ModifyTrainingProgramUiState.Loading
+        modifyTrainingProgramUseCase(
+            trainingProId = trainingProId,
+            body = body
+        )
+            .onSuccess {
+                it.catch { remoteError ->
+                    _modifyTrainingProgramUiState.value = ModifyTrainingProgramUiState.Error(remoteError)
+                }.collect {
+                    _modifyTrainingProgramUiState.value = ModifyTrainingProgramUiState.Success
+                }
+            }
+            .onFailure { error ->
+                _modifyTrainingProgramUiState.value = ModifyTrainingProgramUiState.Error(error)
             }
     }
 

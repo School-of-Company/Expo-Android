@@ -88,7 +88,7 @@ class ExpoViewModel @Inject constructor(
 
     internal var cover_image = savedStateHandle.getStateFlow(key = COVER_IMAGE, initialValue = "")
 
-    internal fun getExpoInformation(expoId: Long) = viewModelScope.launch {
+    internal fun getExpoInformation(expoId: String) = viewModelScope.launch {
         getExpoInformationUseCase(expoId = expoId)
             .asResult()
             .collectLatest { result ->
@@ -132,7 +132,7 @@ class ExpoViewModel @Inject constructor(
     }
 
     internal fun modifyExpoInformation(
-        expoId: Long,
+        expoId: String,
         body: ExpoRequestAndResponseModel
     ) = viewModelScope.launch {
         _modifyExpoInformationUiState.value = ModifyExpoInformationUiState.Loading
@@ -168,7 +168,7 @@ class ExpoViewModel @Inject constructor(
         }
     }
 
-    internal fun deleteExpoInformation(expoId: Long) = viewModelScope.launch {
+    internal fun deleteExpoInformation(expoId: String) = viewModelScope.launch {
         _deleteExpoInformationUiState.value = DeleteExpoInformationUiState.Loading
         deleteExpoInformationUseCase(expoId = expoId)
             .onSuccess {

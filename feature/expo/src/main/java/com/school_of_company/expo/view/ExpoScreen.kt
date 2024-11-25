@@ -48,7 +48,7 @@ import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 internal fun ExpoRoute(
-    navigationToDetail: (Long) -> Unit,
+    navigationToDetail: (String) -> Unit,
     viewModel: ExpoViewModel = hiltViewModel()
 ) {
     val swipeRefreshLoading by viewModel.swipeRefreshLoading.collectAsStateWithLifecycle()
@@ -74,7 +74,7 @@ internal fun ExpoScreen(
     swipeRefreshState: SwipeRefreshState,
     getExpoListData: GetExpoListUiState,
     getExpoList: () -> Unit,
-    navigationToDetail: (Long) -> Unit
+    navigationToDetail: (String) -> Unit
 ) {
     var filterButtonText by rememberSaveable { mutableStateOf("최신순") }
 

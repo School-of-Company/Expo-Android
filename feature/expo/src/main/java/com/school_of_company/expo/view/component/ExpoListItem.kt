@@ -36,7 +36,7 @@ import com.school_of_company.ui.util.formatServerDate
 fun ExpoListItem(
     modifier: Modifier = Modifier,
     data: ExpoListResponseEntity,
-    navigateToExpoDetail: (Long) -> Unit
+    navigateToExpoDetail: (String) -> Unit
 ) {
     ExpoAndroidTheme { colors, typography ->
 
@@ -197,7 +197,7 @@ fun ExpoListItem(
 private fun HomeListItemPreview() {
     ExpoListItem(
         data = ExpoListResponseEntity(
-            id = 0,
+            id = "",
             coverImage = "https://image.dongascience.com/Photo/2019/12/fb4f7da04758d289a466f81478f5f488.jpg",
             startedDay = "09-01",
             finishedDay = "09-30",

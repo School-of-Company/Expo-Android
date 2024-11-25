@@ -1,5 +1,6 @@
 package com.school_of_company.data.repository.expo
 
+import com.school_of_company.model.entity.expo.ExpoIdResponseEntity
 import com.school_of_company.model.entity.expo.ExpoListResponseEntity
 import com.school_of_company.model.model.expo.ExpoRequestAndResponseModel
 import com.school_of_company.network.datasource.expo.ExpoDataSource
@@ -25,8 +26,10 @@ class ExpoRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun registerExpoInformation(body: ExpoRequestAndResponseModel): Flow<Unit> {
-        return dataSource.registerExpoInformation(body = body.toDto())
+    override fun registerExpoInformation(body: ExpoRequestAndResponseModel): Flow<ExpoIdResponseEntity> {
+        return dataSource.registerExpoInformation(body = body.toDto()).transform { response ->
+            emit(response.toEntity())
+        }
     }
 
     override fun modifyExpoInformation(

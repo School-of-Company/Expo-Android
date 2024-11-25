@@ -114,15 +114,13 @@ class ExpoViewModel @Inject constructor(
     internal fun registerExpoInformation(body: ExpoRequestAndResponseModel) = viewModelScope.launch {
         _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Loading
         registerExpoInformationUseCase(body = body)
-            .onSuccess {
-                it.catch { remoteError ->
-                    _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Error(remoteError)
-                }.collect {
-                    _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Success
+            .asResult()
+            .collectLatest { result ->
+                when (result) {
+                    Result.Loading -> _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Loading
+                    is Result.Success -> _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Success(result.data)
+                    is Result.Error -> _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Error(result.exception)
                 }
-            }
-            .onFailure { error ->
-                _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Error(error)
             }
     }
 

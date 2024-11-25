@@ -1,6 +1,6 @@
 package com.school_of_company.network.datasource.expo
 
-import com.school_of_company.network.dto.expo.request_response.ExpoRequestAndResponse
+import com.school_of_company.network.dto.expo.all.ExpoRequestAndResponse
 import com.school_of_company.network.dto.expo.response.ExpoIdResponse
 import com.school_of_company.network.dto.expo.response.ExpoListResponse
 import kotlinx.coroutines.flow.Flow

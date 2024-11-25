@@ -6,7 +6,7 @@ import javax.inject.Inject
 class DeleteExpoInformationUseCase @Inject constructor(
     private val repository: ExpoRepository
 ) {
-    operator fun invoke(expoId: Long) = runCatching {
+    operator fun invoke(expoId: String) = runCatching {
         repository.deleteExpoInformation(expoId = expoId)
     }
 }

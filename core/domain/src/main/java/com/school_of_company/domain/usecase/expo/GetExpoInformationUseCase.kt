@@ -8,6 +8,6 @@ import javax.inject.Inject
 class GetExpoInformationUseCase @Inject constructor(
     private val repository: ExpoRepository
 ) {
-    operator fun invoke(expoId: Long) : Flow<ExpoRequestAndResponseModel> =
+    operator fun invoke(expoId: String) : Flow<ExpoRequestAndResponseModel> =
         repository.getExpoInformation(expoId = expoId)
 }

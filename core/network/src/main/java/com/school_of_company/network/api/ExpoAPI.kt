@@ -11,7 +11,7 @@ interface ExpoAPI {
 
     @GET("/expo/{expo_id}")
     suspend fun getExpoInformation(
-        @Path("expo_id") expoId: Long
+        @Path("expo_id") expoId: String
     ) : ExpoRequestAndResponse
 
     @POST("/expo")
@@ -21,12 +21,12 @@ interface ExpoAPI {
 
     @PATCH("/expo/{expo_id}")
     suspend fun modifyExpoInformation(
-        @Path("expo_id") expoId: Long,
+        @Path("expo_id") expoId: String,
         @Body body: ExpoRequestAndResponse
     )
 
     @DELETE("/expo/{expo_id}")
     suspend fun deleteExpoInformation(
-        @Path("expo_id") expoId: Long
+        @Path("expo_id") expoId: String
     )
 }

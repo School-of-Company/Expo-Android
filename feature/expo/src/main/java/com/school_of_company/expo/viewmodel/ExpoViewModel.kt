@@ -2,8 +2,6 @@ package com.school_of_company.expo.viewmodel
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
-import androidx.compose.runtime.internal.illegalDecoyCallException
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -88,7 +86,7 @@ class ExpoViewModel @Inject constructor(
 
     internal var cover_image = savedStateHandle.getStateFlow(key = COVER_IMAGE, initialValue = "")
 
-    internal fun getExpoInformation(expoId: Long) = viewModelScope.launch {
+    internal fun getExpoInformation(expoId: String) = viewModelScope.launch {
         getExpoInformationUseCase(expoId = expoId)
             .asResult()
             .collectLatest { result ->
@@ -114,15 +112,13 @@ class ExpoViewModel @Inject constructor(
     internal fun registerExpoInformation(body: ExpoRequestAndResponseModel) = viewModelScope.launch {
         _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Loading
         registerExpoInformationUseCase(body = body)
-            .onSuccess {
-                it.catch { remoteError ->
-                    _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Error(remoteError)
-                }.collect {
-                    _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Success
+            .asResult()
+            .collectLatest { result ->
+                when (result) {
+                    Result.Loading -> _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Loading
+                    is Result.Success -> _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Success(result.data)
+                    is Result.Error -> _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Error(result.exception)
                 }
-            }
-            .onFailure { error ->
-                _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Error(error)
             }
     }
 
@@ -132,7 +128,7 @@ class ExpoViewModel @Inject constructor(
     }
 
     internal fun modifyExpoInformation(
-        expoId: Long,
+        expoId: String,
         body: ExpoRequestAndResponseModel
     ) = viewModelScope.launch {
         _modifyExpoInformationUiState.value = ModifyExpoInformationUiState.Loading
@@ -168,7 +164,7 @@ class ExpoViewModel @Inject constructor(
         }
     }
 
-    internal fun deleteExpoInformation(expoId: Long) = viewModelScope.launch {
+    internal fun deleteExpoInformation(expoId: String) = viewModelScope.launch {
         _deleteExpoInformationUiState.value = DeleteExpoInformationUiState.Loading
         deleteExpoInformationUseCase(expoId = expoId)
             .onSuccess {

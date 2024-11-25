@@ -74,7 +74,7 @@ import com.school_of_company.ui.toast.makeToast
 @Composable
 internal fun ExpoModifyRoute(
     onBackClick: () -> Unit,
-    id: Long,
+    id: String,
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
     viewModel: ExpoViewModel = hiltViewModel()
 ) {

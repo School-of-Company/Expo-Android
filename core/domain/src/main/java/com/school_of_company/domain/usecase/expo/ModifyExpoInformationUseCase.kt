@@ -8,7 +8,7 @@ class ModifyExpoInformationUseCase @Inject constructor(
     private val repository: ExpoRepository
 ) {
     operator fun invoke(
-        expoId: Long,
+        expoId: String,
         body: ExpoRequestAndResponseModel
     ) = runCatching {
         repository.modifyExpoInformation(

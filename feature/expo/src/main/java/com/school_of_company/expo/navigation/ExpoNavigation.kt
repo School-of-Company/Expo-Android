@@ -19,7 +19,7 @@ fun NavController.navigateToHome(navOptions: NavOptions? = null) {
 }
 
 fun NavController.navigateToExpoDetail(
-    id: Long,
+    id: String,
     navOptions: NavOptions? = null
 ) {
     this.navigate(
@@ -29,7 +29,7 @@ fun NavController.navigateToExpoDetail(
 }
 
 fun NavController.navigateToExpoModify(
-    id: Long,
+    id: String,
     navOptions: NavOptions? = null
 ) {
     this.navigate(
@@ -43,7 +43,7 @@ fun NavController.navigateToExpoCreate(navOptions: NavOptions? = null) {
 }
 
 fun NavGraphBuilder.expoScreen(
-    navigationToDetail: (Long) -> Unit
+    navigationToDetail: (String) -> Unit
 ) {
     composable(route = homeRoute) {
         ExpoRoute(
@@ -57,22 +57,20 @@ fun NavGraphBuilder.expoDetailScreen(
     onMessageClick: () -> Unit,
     onCheckClick: () -> Unit,
     onQrGenerateClick: () -> Unit,
-    onModifyClick: (Long) -> Unit,
+    onModifyClick: (String) -> Unit,
     onProgramClick: () -> Unit
 ) {
     composable(route = "$expoDetailRoute/{id}") { backStackEntry ->
-        val id = backStackEntry.arguments?.getString("id")?.toLongOrNull()
-        if (id != null) {
-            ExpoDetailRoute(
-                id = id,
-                onBackClick = onBackClick,
-                onMessageClick = onMessageClick,
-                onCheckClick = onCheckClick,
-                onQrGenerateClick = onQrGenerateClick,
-                onModifyClick = onModifyClick,
-                onProgramClick = onProgramClick
-            )
-        }
+        val id = backStackEntry.arguments?.getString("id") ?: ""
+        ExpoDetailRoute(
+            id = id,
+            onBackClick = onBackClick,
+            onMessageClick = onMessageClick,
+            onCheckClick = onCheckClick,
+            onQrGenerateClick = onQrGenerateClick,
+            onModifyClick = onModifyClick,
+            onProgramClick = onProgramClick
+        )
     }
 }
 
@@ -81,14 +79,12 @@ fun NavGraphBuilder.expoModifyScreen(
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit
 ) {
     composable(route = "$expoModifyRoute/{id}") { backStackEntry ->
-        val id = backStackEntry.arguments?.getString("id")?.toLongOrNull()
-        if (id != null) {
-            ExpoModifyRoute(
-                id = id,
-                onBackClick = onBackClick,
-                onErrorToast = onErrorToast
-            )
-        }
+        val id = backStackEntry.arguments?.getString("id") ?: ""
+        ExpoModifyRoute(
+            id = id,
+            onBackClick = onBackClick,
+            onErrorToast = onErrorToast
+        )
     }
 }
 

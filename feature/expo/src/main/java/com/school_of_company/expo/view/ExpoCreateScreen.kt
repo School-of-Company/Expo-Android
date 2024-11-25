@@ -137,6 +137,7 @@ internal fun ExpoCreateRoute(
             is RegisterExpoInformationUiState.Loading -> Unit
             is RegisterExpoInformationUiState.Success -> {
                 viewModel.resetExpoInformation()
+                selectedImageUri = null
                 makeToast(context, "박람회 등록을 완료하였습니다.")
             }
             is RegisterExpoInformationUiState.Error -> {

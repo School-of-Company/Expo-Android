@@ -52,12 +52,12 @@ import com.school_of_company.ui.util.formatServerDate
 
 @Composable
 internal fun ExpoDetailRoute(
-    id: Long,
+    id: String,
     onBackClick: () -> Unit,
     onMessageClick: () -> Unit,
     onCheckClick: () -> Unit,
     onQrGenerateClick: () -> Unit,
-    onModifyClick: (Long) -> Unit,
+    onModifyClick: (String) -> Unit,
     onProgramClick: () -> Unit,
     viewModel: ExpoViewModel = hiltViewModel()
 ) {
@@ -82,7 +82,7 @@ internal fun ExpoDetailRoute(
 
 @Composable
 internal fun ExpoDetailScreen(
-    id: Long,
+    id: String,
     modifier: Modifier = Modifier,
     scrollState: ScrollState = rememberScrollState(),
     getExpoInformationUiState: GetExpoInformationUiState,
@@ -91,7 +91,7 @@ internal fun ExpoDetailScreen(
     onMessageClick: () -> Unit,
     onCheckClick: () -> Unit,
     onQrGenerateClick: () -> Unit,
-    onModifyClick: (Long) -> Unit,
+    onModifyClick: (String) -> Unit,
     onProgramClick: () -> Unit
 ) {
     val (openDialog, isOpenDialog) = rememberSaveable { mutableStateOf(false) }
@@ -421,6 +421,6 @@ private fun HomeDetailScreenPreview() {
         onProgramClick = {},
         qrData = QrCode(content = "121231342352"),
         getExpoInformationUiState = GetExpoInformationUiState.Loading,
-        id = 0
+        id = ""
     )
 }

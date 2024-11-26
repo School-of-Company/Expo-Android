@@ -173,21 +173,13 @@ internal fun ExpoCreateRoute(
             }
         },
         trainingProgramTextState = trainingProgramTextState,
-        onTrainingProgramChange = { index, text ->
-            viewModel.updateTrainingProgramText(index, text)
-        },
-        onAddTrainingProgram = { viewModel.addTrainingProgramText() },
-        onRemoveTrainingProgram = { index ->
-            viewModel.removeTrainingProgramText(index)
-        },
+        onTrainingProgramChange = viewModel::updateTrainingProgramText,
+        onAddTrainingProgram = viewModel::addTrainingProgramText,
+        onRemoveTrainingProgram = viewModel::removeTrainingProgramText,
         standardProgramTextState = standardProgramTextState,
-        onStandardProgramChange = { index, text ->
-            viewModel.updateStandardProgramText(index, text)
-        },
-        onAddStandardProgram = { viewModel.addStandardProgramText() },
-        onRemoveStandardProgram = { index ->
-            viewModel.removeStandardProgramText(index)
-        }
+        onStandardProgramChange = viewModel::updateStandardProgramText,
+        onAddStandardProgram = viewModel::addStandardProgramText,
+        onRemoveStandardProgram = viewModel::removeStandardProgramText
     )
 }
 

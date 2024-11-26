@@ -90,8 +90,8 @@ internal fun ExpoModifyRoute(
     val addressState by viewModel.address.collectAsStateWithLifecycle()
     val locationState by viewModel.location.collectAsStateWithLifecycle()
     val coverImageState by viewModel.cover_image.collectAsStateWithLifecycle()
-    var trainingTextState by rememberSaveable { mutableStateOf(viewModel.trainingProgramTextState.value) }
-    var standardTextState by rememberSaveable { mutableStateOf(viewModel.standardProgramTextState.value) }
+    val trainingProgramTextState by rememberSaveable { mutableStateOf(viewModel.trainingProgramTextState.value) }
+    val standardProgramTextState by rememberSaveable { mutableStateOf(viewModel.standardProgramTextState.value) }
 
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
@@ -184,22 +184,14 @@ internal fun ExpoModifyRoute(
                 onErrorToast(null, R.string.expo_image_size_fail)
             }
         },
-        trainingProgramTextState = trainingTextState,
-        onTrainingProgramChange = { index, text ->
-            viewModel.updateTrainingProgramText(index, text)
-        },
-        onAddTrainingProgram = { viewModel.addTrainingProgramText() },
-        onRemoveTrainingProgram = { index ->
-            viewModel.removeTrainingProgramText(index)
-        },
-        standardProgramTextState = standardTextState,
-        onStandardProgramChange = { index, text ->
-            viewModel.updateStandardProgramText(index, text)
-        },
-        onAddStandardProgram = { viewModel.addStandardProgramText() },
-        onRemoveStandardProgram = { index ->
-            viewModel.removeStandardProgramText(index)
-        }
+        trainingProgramTextState = trainingProgramTextState,
+        onTrainingProgramChange = viewModel::updateTrainingProgramText,
+        onAddTrainingProgram = viewModel::addTrainingProgramText,
+        onRemoveTrainingProgram = viewModel::removeTrainingProgramText,
+        standardProgramTextState = standardProgramTextState,
+        onStandardProgramChange = viewModel::updateStandardProgramText,
+        onAddStandardProgram = viewModel::addStandardProgramText,
+        onRemoveStandardProgram = viewModel::removeStandardProgramText
     )
 }
 

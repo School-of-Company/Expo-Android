@@ -47,6 +47,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
@@ -55,13 +56,14 @@ import com.school_of_company.design_system.component.button.ExpoStateButton
 import com.school_of_company.design_system.component.button.state.ButtonState
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.component.modifier.padding.paddingHorizontal
-import com.school_of_company.design_system.component.textfield.ExpoAddTextField
 import com.school_of_company.design_system.component.textfield.ExpoLocationIconTextField
 import com.school_of_company.design_system.component.textfield.LimitedLengthTextField
 import com.school_of_company.design_system.component.textfield.NoneLimitedLengthTextField
 import com.school_of_company.design_system.icon.ImageIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
+import com.school_of_company.expo.view.component.ExpoAddTextField
+import com.school_of_company.expo.view.component.ExpoTrainingSettingBottomSheet
 import com.school_of_company.expo.viewmodel.ExpoViewModel
 import com.school_of_company.expo.viewmodel.uistate.ImageUpLoadUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterExpoInformationUiState
@@ -83,6 +85,8 @@ internal fun ExpoCreateRoute(
     val addressState by viewModel.address.collectAsStateWithLifecycle()
     val locationState by viewModel.location.collectAsStateWithLifecycle()
     val coverImageState by viewModel.cover_image.collectAsStateWithLifecycle()
+    val trainingProgramTextState by viewModel.trainingProgramTextState.collectAsStateWithLifecycle()
+    val standardProgramTextState by viewModel.standardProgramTextState.collectAsStateWithLifecycle()
 
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
@@ -168,6 +172,22 @@ internal fun ExpoCreateRoute(
                 onErrorToast(null, R.string.expo_image_fail)
             }
         },
+        trainingProgramTextState = trainingProgramTextState,
+        onTrainingProgramChange = { index, text ->
+            viewModel.updateTrainingProgramText(index, text)
+        },
+        onAddTrainingProgram = { viewModel.addTrainingProgramText() },
+        onRemoveTrainingProgram = { index ->
+            viewModel.removeTrainingProgramText(index)
+        },
+        standardProgramTextState = standardProgramTextState,
+        onStandardProgramChange = { index, text ->
+            viewModel.updateStandardProgramText(index, text)
+        },
+        onAddStandardProgram = { viewModel.addStandardProgramText() },
+        onRemoveStandardProgram = { index ->
+            viewModel.removeStandardProgramText(index)
+        }
     )
 }
 
@@ -191,8 +211,16 @@ internal fun ExpoCreateScreen(
     onAddressChange: (String) -> Unit,
     onLocationChange: (String) -> Unit,
     onExpoCreateCallBack: () -> Unit,
+    trainingProgramTextState: List<String>,
+    onTrainingProgramChange: (Int, String) -> Unit,
+    onAddTrainingProgram: () -> Unit,
+    onRemoveTrainingProgram: (Int) -> Unit,
+    standardProgramTextState: List<String>,
+    onStandardProgramChange: (Int, String) -> Unit,
+    onAddStandardProgram: () -> Unit,
+    onRemoveStandardProgram: (Int) -> Unit
 ) {
-    var trainingTextState by rememberSaveable { mutableStateOf(listOf("")) }
+    val (openTrainingSettingBottomSheet, isOpenTrainingSettingBottomSheet) = rememberSaveable { mutableStateOf(false) }
 
     ExpoAndroidTheme { colors, typography ->
         Column(
@@ -375,27 +403,45 @@ internal fun ExpoCreateScreen(
 
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top)) {
                     Text(
-                        text = "연수 종류",
+                        text = "참가자 연수 종류",
                         style = typography.bodyBold2,
                         color = colors.black,
                     )
 
                     ExpoAddTextField(
-                        trainingTextFieldList = trainingTextState,
+                        trainingTextFieldList = standardProgramTextState,
                         onValueChange = { index, newState ->
-                            trainingTextState = trainingTextState.toMutableList().apply {
-                                set(index, newState)
-                            }
+                            onStandardProgramChange(index, newState)
                         },
-                        onAddTextField = {
-                            trainingTextState = trainingTextState.toMutableList().apply {
-                                add("")
-                            }
+                        onAddTextField = { onAddStandardProgram() },
+                        onRemoveTextField = { index ->
+                            onRemoveStandardProgram(index)
                         },
-                        onRemoveTextField = {
-                            trainingTextState = trainingTextState.toMutableList().apply {
-                                removeAt(it)
-                            }
+                        onTrainingSetting = {
+                            isOpenTrainingSettingBottomSheet(true)
+                        },
+                        placeHolder = "연수 종류를 입력해주세요."
+                    )
+
+                    Spacer(modifier = Modifier.padding(top = 28.dp))
+
+                    Text(
+                        text = "연수자 연수 종류",
+                        style = typography.bodyBold2,
+                        color = colors.black,
+                    )
+
+                    ExpoAddTextField(
+                        trainingTextFieldList = trainingProgramTextState,
+                        onValueChange = { index, newState ->
+                            onTrainingProgramChange(index, newState)
+                        },
+                        onAddTextField = { onAddTrainingProgram() },
+                        onRemoveTextField = { index ->
+                            onRemoveTrainingProgram(index)
+                        },
+                        onTrainingSetting = {
+                            isOpenTrainingSettingBottomSheet(true)
                         },
                         placeHolder = "연수 종류를 입력해주세요."
                     )
@@ -432,7 +478,8 @@ internal fun ExpoCreateScreen(
                             introduceTitleState.isNotEmpty() &&
                             addressState.isNotEmpty() &&
                             locationState.isNotEmpty() &&
-                            trainingTextState.isNotEmpty()
+                            trainingProgramTextState.isNotEmpty() &&
+                            standardProgramTextState.isNotEmpty()
                         ) {
                             ButtonState.Enable
                         } else {
@@ -446,6 +493,20 @@ internal fun ExpoCreateScreen(
                     Spacer(modifier = Modifier.height(48.dp))
                 }
             }
+        }
+    }
+
+    if (openTrainingSettingBottomSheet) {
+        Dialog(onDismissRequest = { isOpenTrainingSettingBottomSheet(false) }) {
+            ExpoTrainingSettingBottomSheet(
+                onCancelClick = { isOpenTrainingSettingBottomSheet(false) },
+                startedTextState = "",
+                endedTextState = "",
+                onStartedTextChange = {},
+                onEndedTextChange = {},
+                onCategoryChange = {},
+                onButtonClick = { /*TODO*/ }
+            )
         }
     }
 }
@@ -469,5 +530,13 @@ private fun ExpoCreateScreenPreview() {
         onEndedDateChange = {},
         onIntroduceTitleChange = {},
         onExpoCreateCallBack = {},
+        trainingProgramTextState = emptyList(),
+        onTrainingProgramChange = { _, _ -> },
+        onAddTrainingProgram = {},
+        onRemoveTrainingProgram = {},
+        standardProgramTextState = emptyList(),
+        onStandardProgramChange = { _, _ -> },
+        onAddStandardProgram = {},
+        onRemoveStandardProgram = {}
     )
 }

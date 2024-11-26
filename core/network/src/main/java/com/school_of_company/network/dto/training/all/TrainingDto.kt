@@ -7,6 +7,6 @@ import com.squareup.moshi.JsonClass
 data class TrainingDto(
     @Json(name = "title") val title: String,
     @Json(name = "startedAt") val startedAt: String,
-    @Json(name = "finishedAt") val finishedAt: String,
+    @Json(name = "endedAt") val endedAt: String,
     @Json(name = "category") val category: String,
 )

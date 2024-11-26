@@ -115,11 +115,15 @@ fun ImageIcon(
 }
 
 @Composable
-fun CheckIcon(modifier: Modifier = Modifier) {
+fun CheckIcon(
+    modifier: Modifier = Modifier,
+    tint: Color = Color.Unspecified
+) {
     Icon(
         painter = painterResource(id = R.drawable.ic_check),
         contentDescription = stringResource(id = R.string.check_description),
-        modifier = modifier
+        modifier = modifier,
+        tint = tint
     )
 }
 

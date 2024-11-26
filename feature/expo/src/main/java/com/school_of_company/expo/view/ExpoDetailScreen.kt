@@ -380,6 +380,7 @@ internal fun ExpoDetailScreen(
             }
         }
     }
+    
     if (openDialog) {
         Dialog(onDismissRequest = { isOpenDialog(false) }) {
             com.school_of_company.expo.view.component.MessageDialog(

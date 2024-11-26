@@ -1,4 +1,4 @@
-package com.school_of_company.design_system.component.textfield
+package com.school_of_company.expo.view.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.icon.PlusIcon
@@ -32,7 +33,8 @@ fun ExpoAddTextField(
     trainingTextFieldList: List<String>,
     onValueChange: (Int, String) -> Unit,
     onAddTextField: () -> Unit,
-    onRemoveTextField: (Int) -> Unit
+    onRemoveTextField: (Int) -> Unit,
+    onTrainingSetting: () -> Unit
 ) {
 
     ExpoAndroidTheme { colors, typography ->
@@ -91,14 +93,19 @@ fun ExpoAddTextField(
                                 .padding(end = 8.dp)
                         )
 
+                        TrainingSettingButton(
+                            text = "연수설정",
+                            onClick = onTrainingSetting
+                        )
+
                         IconButton(onClick = { onRemoveTextField(index) }) {
-                            XIcon(tint = colors.gray500)
+                            XIcon(tint = colors.black)
                         }
+
+
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                 }
-
-                Spacer(modifier = Modifier.height(34.dp))
 
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
@@ -118,4 +125,18 @@ fun ExpoAddTextField(
             }
         }
     }
+}
+
+@Preview
+@Composable
+private fun ExpoAddTextFieldPreview() {
+    ExpoAddTextField(
+        placeHolder = "연수를 입력하세요.",
+        trainingTextFieldList = listOf(""),
+        onValueChange = { _, _ ->},
+        onAddTextField = { /*TODO*/ },
+        onRemoveTextField = { /*TODO*/ },
+        onTrainingSetting = { /*TODO*/ }
+
+    )
 }

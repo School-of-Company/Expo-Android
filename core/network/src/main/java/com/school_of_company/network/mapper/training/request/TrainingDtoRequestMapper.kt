@@ -7,6 +7,6 @@ fun TrainingDtoModel.toDto(): TrainingDto =
     TrainingDto(
         title = this.title,
         startedAt = this.startedAt,
-        finishedAt = this.finishedAt,
+        endedAt = this.endedAt,
         category = this.category,
     )

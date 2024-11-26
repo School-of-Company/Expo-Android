@@ -65,6 +65,12 @@ class ExpoViewModel @Inject constructor(
     private val _swipeRefreshLoading = MutableStateFlow(false)
     val swipeRefreshLoading = _swipeRefreshLoading.asStateFlow()
 
+    private val _trainingProgramTextState = MutableStateFlow<List<String>>(emptyList())
+    internal val trainingProgramTextState = _trainingProgramTextState.asStateFlow()
+
+    private val _standardProgramTextState = MutableStateFlow<List<String>>(emptyList())
+    internal val standardProgramTextState = _standardProgramTextState.asStateFlow()
+
     private val _getExpoInformationUiState = MutableStateFlow<GetExpoInformationUiState>(GetExpoInformationUiState.Loading)
     internal val getExpoInformationUiState = _getExpoInformationUiState.asStateFlow()
 
@@ -307,6 +313,42 @@ class ExpoViewModel @Inject constructor(
             .onFailure { error ->
                 _modifyTrainingProgramUiState.value = ModifyTrainingProgramUiState.Error(error)
             }
+    }
+
+    internal fun updateTrainingProgramText(index: Int, newText: String) {
+        _trainingProgramTextState.value = _trainingProgramTextState.value.toMutableList().apply {
+            set(index, newText)
+        }
+    }
+
+    internal fun addTrainingProgramText() {
+        _trainingProgramTextState.value = _trainingProgramTextState.value.toMutableList().apply {
+            add("")
+        }
+    }
+
+    internal fun removeTrainingProgramText(index: Int) {
+        _trainingProgramTextState.value = _trainingProgramTextState.value.toMutableList().apply {
+            removeAt(index)
+        }
+    }
+
+    internal fun updateStandardProgramText(index: Int, newText: String) {
+        _standardProgramTextState.value = _standardProgramTextState.value.toMutableList().apply {
+            set(index, newText)
+        }
+    }
+
+    internal fun addStandardProgramText() {
+        _standardProgramTextState.value = _standardProgramTextState.value.toMutableList().apply {
+            add("")
+        }
+    }
+
+    internal fun removeStandardProgramText(index: Int) {
+        _standardProgramTextState.value = _standardProgramTextState.value.toMutableList().apply {
+            removeAt(index)
+        }
     }
 
     internal fun onModifyTitleChange(value: String) {

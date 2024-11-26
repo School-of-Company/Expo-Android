@@ -17,6 +17,7 @@ import com.school_of_company.domain.usecase.expo.RegisterExpoInformationUseCase
 import com.school_of_company.domain.usecase.training.ModifyTrainingProgramUseCase
 import com.school_of_company.domain.usecase.training.RegisterTrainingProgramListUseCase
 import com.school_of_company.domain.usecase.training.RegisterTrainingProgramUseCase
+import com.school_of_company.expo.enum.TrainingCategory
 import com.school_of_company.expo.util.getMultipartFile
 import com.school_of_company.expo.viewmodel.uistate.DeleteExpoInformationUiState
 import com.school_of_company.expo.viewmodel.uistate.GetExpoInformationUiState
@@ -70,6 +71,15 @@ class ExpoViewModel @Inject constructor(
 
     private val _standardProgramTextState = MutableStateFlow<List<String>>(emptyList())
     internal val standardProgramTextState = _standardProgramTextState.asStateFlow()
+
+    private val _startedTextState = MutableStateFlow<List<String>>(emptyList())
+    internal val startedTextState = _startedTextState.asStateFlow()
+
+    private val _endedTextState = MutableStateFlow<List<String>>(emptyList())
+    internal val endedTextState = _endedTextState.asStateFlow()
+
+    private val _categoryState = MutableStateFlow(TrainingCategory.CHOICE)
+    val categoryState = _categoryState.asStateFlow()
 
     private val _getExpoInformationUiState = MutableStateFlow<GetExpoInformationUiState>(GetExpoInformationUiState.Loading)
     internal val getExpoInformationUiState = _getExpoInformationUiState.asStateFlow()
@@ -349,6 +359,22 @@ class ExpoViewModel @Inject constructor(
         _standardProgramTextState.value = _standardProgramTextState.value.toMutableList().apply {
             removeAt(index)
         }
+    }
+
+    internal fun updateStartedText(index: Int, newText: String) {
+        _startedTextState.value = _startedTextState.value.toMutableList().apply {
+            set(index, newText)
+        }
+    }
+
+    internal fun updateEndedText(index: Int, newText: String) {
+        _endedTextState.value = _endedTextState.value.toMutableList().apply {
+            set(index, newText)
+        }
+    }
+
+    internal fun updateCategory(newCategory: TrainingCategory) {
+        _categoryState.value = newCategory
     }
 
     internal fun onModifyTitleChange(value: String) {

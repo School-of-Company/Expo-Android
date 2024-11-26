@@ -51,10 +51,10 @@ import com.school_of_company.expo.enum.TrainingCategory
 fun ExpoTrainingSettingBottomSheet(
     modifier: Modifier = Modifier,
     onCancelClick: () -> Unit,
-    startedTextState: String,
-    endedTextState: String,
-    onStartedTextChange: (String) -> Unit,
-    onEndedTextChange: (String) -> Unit,
+    startedTextState: List<String>,
+    endedTextState: List<String>,
+    onStartedTextChange: (Int, String) -> Unit,
+    onEndedTextChange: (Int, String) -> Unit,
     onButtonClick: () -> Unit,
     categoryState: TrainingCategory = TrainingCategory.CHOICE,
     onCategoryChange: (TrainingCategory) -> Unit,
@@ -113,37 +113,45 @@ fun ExpoTrainingSettingBottomSheet(
                     )
                 }
 
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Top),
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        ExpoNoneLineTextField(
-                            textState = startedTextState,
-                            placeHolder = {
-                                Text(
-                                    text = "yyyy-MM-dd HH:mm",
-                                    style = typography.titleBold2,
-                                    color = colors.gray300
-                                )
-                            },
-                            onTextChange = onStartedTextChange
-                        )
+                startedTextState.forEachIndexed { index, startedText ->
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Top),
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            ExpoNoneLineTextField(
+                                textState = startedText,
+                                placeHolder = {
+                                    Text(
+                                        text = "yyyy-MM-dd HH:mm",
+                                        style = typography.titleBold2,
+                                        color = colors.gray300
+                                    )
+                                },
+                                onTextChange = { newText ->
+                                    onStartedTextChange(index, newText)
+                                }
+                            )
 
-                        ExpoNoneLineTextField(
-                            textState = endedTextState,
-                            placeHolder = {
-                                Text(
-                                    text = "yyyy-MM-dd HH:mm",
-                                    style = typography.titleBold2,
-                                    color = colors.gray300
-                                )
-                            },
-                            onTextChange = onEndedTextChange
-                        )
+                            ExpoNoneLineTextField(
+                                textState = endedTextState[index],
+                                placeHolder = {
+                                    Text(
+                                        text = "yyyy-MM-dd HH:mm",
+                                        style = typography.titleBold2,
+                                        color = colors.gray300
+                                    )
+                                },
+                                onTextChange = { newText ->
+                                    onEndedTextChange(index, newText)
+                                }
+                            )
+                        }
                     }
+                }
 
-                    Row(
+
+                Row(
                         horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.Start),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
@@ -158,7 +166,7 @@ fun ExpoTrainingSettingBottomSheet(
                             onCategoryChange = onCategoryChange
                         )
                     }
-                }
+
 
                 Spacer(modifier = Modifier.padding(top = 10.dp))
 
@@ -222,10 +230,10 @@ fun CustomCheckBox(
 private fun ExpoTrainingSettingBottomSheetPreview() {
     ExpoTrainingSettingBottomSheet(
         onCancelClick = {},
-        startedTextState = "",
-        endedTextState = "",
-        onStartedTextChange = {},
-        onEndedTextChange = {},
+        startedTextState = listOf(),
+        endedTextState = listOf(),
+        onStartedTextChange = { _, _ -> },
+        onEndedTextChange = { _, _ -> },
         onButtonClick = {},
         categoryState = TrainingCategory.ESSENTIAL,
         onCategoryChange = {}

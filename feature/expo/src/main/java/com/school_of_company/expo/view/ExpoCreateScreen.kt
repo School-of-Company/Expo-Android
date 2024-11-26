@@ -62,12 +62,15 @@ import com.school_of_company.design_system.component.textfield.NoneLimitedLength
 import com.school_of_company.design_system.icon.ImageIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
+import com.school_of_company.expo.enum.TrainingCategory
 import com.school_of_company.expo.view.component.ExpoAddTextField
 import com.school_of_company.expo.view.component.ExpoTrainingSettingBottomSheet
 import com.school_of_company.expo.viewmodel.ExpoViewModel
 import com.school_of_company.expo.viewmodel.uistate.ImageUpLoadUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterExpoInformationUiState
+import com.school_of_company.expo.viewmodel.uistate.RegisterTrainingProgramListUiState
 import com.school_of_company.model.model.expo.ExpoRequestAndResponseModel
+import com.school_of_company.model.model.training.TrainingDtoModel
 import com.school_of_company.ui.toast.makeToast
 
 @Composable
@@ -77,6 +80,7 @@ internal fun ExpoCreateRoute(
 ) {
     val registerExpoInformationUiState by viewModel.registerExpoInformationUiState.collectAsStateWithLifecycle()
     val imageUpLoadUiState by viewModel.imageUpLoadUiState.collectAsStateWithLifecycle()
+    val registerTrainingProgramListUiState by viewModel.registerTrainingProgramListUiState.collectAsStateWithLifecycle()
 
     val modifyTitleState by viewModel.modify_title.collectAsStateWithLifecycle()
     val startedDateState by viewModel.started_date.collectAsStateWithLifecycle()
@@ -87,6 +91,8 @@ internal fun ExpoCreateRoute(
     val coverImageState by viewModel.cover_image.collectAsStateWithLifecycle()
     val trainingProgramTextState by viewModel.trainingProgramTextState.collectAsStateWithLifecycle()
     val standardProgramTextState by viewModel.standardProgramTextState.collectAsStateWithLifecycle()
+    val startedTextState by viewModel.startedTextState.collectAsStateWithLifecycle()
+    val endedTextState by viewModel.endedTextState.collectAsStateWithLifecycle()
 
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
@@ -136,15 +142,40 @@ internal fun ExpoCreateRoute(
         }
     }
 
+
+
     LaunchedEffect(registerExpoInformationUiState) {
         when (registerExpoInformationUiState) {
             is RegisterExpoInformationUiState.Loading -> Unit
             is RegisterExpoInformationUiState.Success -> {
+                viewModel.registerTrainingProgramList(
+                    expoId = (registerExpoInformationUiState as RegisterExpoInformationUiState.Success).data.expoId,
+                    body = listOf(
+                        TrainingDtoModel(
+                            title = viewModel.trainingProgramTextState.toString(),
+                            startedAt = viewModel.startedTextState.toString(),
+                            endedAt = viewModel.endedTextState.toString(),
+                            category = viewModel.categoryState.toString()
+                        )
+                    )
+                )
+            }
+            is RegisterExpoInformationUiState.Error -> {
+                onErrorToast(null, R.string.expo_register_fail)
+            }
+        }
+    }
+
+    LaunchedEffect(registerTrainingProgramListUiState) {
+        when (registerTrainingProgramListUiState) {
+            is RegisterTrainingProgramListUiState.Loading -> Unit
+            is RegisterTrainingProgramListUiState.Success -> {
                 viewModel.resetExpoInformation()
                 selectedImageUri = null
                 makeToast(context, "박람회 등록을 완료하였습니다.")
             }
-            is RegisterExpoInformationUiState.Error -> {
+
+            is RegisterTrainingProgramListUiState.Error -> {
                 onErrorToast(null, R.string.expo_register_fail)
             }
         }
@@ -179,7 +210,12 @@ internal fun ExpoCreateRoute(
         standardProgramTextState = standardProgramTextState,
         onStandardProgramChange = viewModel::updateStandardProgramText,
         onAddStandardProgram = viewModel::addStandardProgramText,
-        onRemoveStandardProgram = viewModel::removeStandardProgramText
+        onRemoveStandardProgram = viewModel::removeStandardProgramText,
+        startedTextState = startedTextState,
+        endedTextState = endedTextState,
+        onStartedChange = viewModel::updateStartedText,
+        onEndedChange = viewModel::updateEndedText,
+        onTrainingCategoryChange = viewModel::updateCategory
     )
 }
 
@@ -210,7 +246,12 @@ internal fun ExpoCreateScreen(
     standardProgramTextState: List<String>,
     onStandardProgramChange: (Int, String) -> Unit,
     onAddStandardProgram: () -> Unit,
-    onRemoveStandardProgram: (Int) -> Unit
+    onRemoveStandardProgram: (Int) -> Unit,
+    startedTextState: List<String>,
+    endedTextState: List<String>,
+    onStartedChange: (Int, String) -> Unit,
+    onEndedChange: (Int, String) -> Unit,
+    onTrainingCategoryChange: (TrainingCategory) -> Unit
 ) {
     val (openTrainingSettingBottomSheet, isOpenTrainingSettingBottomSheet) = rememberSaveable { mutableStateOf(false) }
 
@@ -492,11 +533,11 @@ internal fun ExpoCreateScreen(
         Dialog(onDismissRequest = { isOpenTrainingSettingBottomSheet(false) }) {
             ExpoTrainingSettingBottomSheet(
                 onCancelClick = { isOpenTrainingSettingBottomSheet(false) },
-                startedTextState = "",
-                endedTextState = "",
-                onStartedTextChange = {},
-                onEndedTextChange = {},
-                onCategoryChange = {},
+                startedTextState = startedTextState,
+                endedTextState = endedTextState,
+                onStartedTextChange = onStartedChange,
+                onEndedTextChange = onEndedChange,
+                onCategoryChange = onTrainingCategoryChange,
                 onButtonClick = { /*TODO*/ }
             )
         }
@@ -529,6 +570,11 @@ private fun ExpoCreateScreenPreview() {
         standardProgramTextState = emptyList(),
         onStandardProgramChange = { _, _ -> },
         onAddStandardProgram = {},
-        onRemoveStandardProgram = {}
+        onRemoveStandardProgram = {},
+        startedTextState = emptyList(),
+        endedTextState = emptyList(),
+        onStartedChange = {_, _ -> },
+        onEndedChange = {_, _ -> },
+        onTrainingCategoryChange = {}
     )
 }

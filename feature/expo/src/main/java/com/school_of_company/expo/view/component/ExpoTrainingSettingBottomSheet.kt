@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
@@ -57,7 +58,7 @@ fun ExpoTrainingSettingBottomSheet(
     onEndedTextChange: (Int, String) -> Unit,
     onButtonClick: () -> Unit,
     categoryState: TrainingCategory = TrainingCategory.CHOICE,
-    onCategoryChange: (TrainingCategory) -> Unit,
+    onCategoryChange: (Int, TrainingCategory) -> Unit,
     focusManager: FocusManager = LocalFocusManager.current
 ) {
     val sheetState = rememberModalBottomSheetState()
@@ -85,10 +86,9 @@ fun ExpoTrainingSettingBottomSheet(
                             topEnd = 6.dp
                         )
                     )
-                    .paddingHorizontal(
+                    .padding(
                         horizontal = 18.dp,
-                        bottom = 24.dp,
-                        top = 24.dp
+                        vertical = 24.dp
                     )
                     .pointerInput(Unit) {
                         detectTapGestures(
@@ -99,7 +99,7 @@ fun ExpoTrainingSettingBottomSheet(
                     }
                     .imePadding()
             ) {
-                Row {
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = "연수 설정",
                         style = typography.titleBold3,
@@ -113,19 +113,20 @@ fun ExpoTrainingSettingBottomSheet(
                     )
                 }
 
-                startedTextState.forEachIndexed { index, startedText ->
+                startedTextState.forEachIndexed { index, startedTextState ->
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Column(
                             verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Top),
                             modifier = Modifier.weight(1f)
                         ) {
                             ExpoNoneLineTextField(
-                                textState = startedText,
+                                textState = startedTextState,
                                 placeHolder = {
                                     Text(
                                         text = "yyyy-MM-dd HH:mm",
                                         style = typography.titleBold2,
-                                        color = colors.gray300
+                                        color = colors.gray300,
+                                        maxLines = 1
                                     )
                                 },
                                 onTextChange = { newText ->
@@ -139,7 +140,8 @@ fun ExpoTrainingSettingBottomSheet(
                                     Text(
                                         text = "yyyy-MM-dd HH:mm",
                                         style = typography.titleBold2,
-                                        color = colors.gray300
+                                        color = colors.gray300,
+                                        maxLines = 1
                                     )
                                 },
                                 onTextChange = { newText ->
@@ -147,26 +149,26 @@ fun ExpoTrainingSettingBottomSheet(
                                 }
                             )
                         }
+
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.Start),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "필수",
+                                style = typography.bodyRegular2,
+                                color = colors.gray500
+                            )
+
+                            CustomCheckBox(
+                                categoryState = categoryState,
+                                onCategoryChange = { newCategory ->
+                                    onCategoryChange(index, newCategory)
+                                }
+                            )
+                        }
                     }
                 }
-
-
-                Row(
-                        horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.Start),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Text(
-                            text = "필수",
-                            style = typography.bodyRegular2,
-                            color = colors.gray500
-                        )
-
-                        CustomCheckBox(
-                            categoryState = categoryState,
-                            onCategoryChange = onCategoryChange
-                        )
-                    }
-
 
                 Spacer(modifier = Modifier.padding(top = 10.dp))
 
@@ -232,11 +234,11 @@ private fun ExpoTrainingSettingBottomSheetPreview() {
         onCancelClick = {},
         startedTextState = listOf(),
         endedTextState = listOf(),
-        onStartedTextChange = { _, _ -> },
-        onEndedTextChange = { _, _ -> },
+        onStartedTextChange = {_, _ ->},
+        onEndedTextChange = {_, _ ->},
         onButtonClick = {},
         categoryState = TrainingCategory.ESSENTIAL,
-        onCategoryChange = {}
+        onCategoryChange = {_, _ ->}
     )
 }
 

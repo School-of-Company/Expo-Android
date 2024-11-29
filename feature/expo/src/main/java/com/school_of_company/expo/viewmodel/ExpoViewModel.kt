@@ -12,7 +12,6 @@ import com.school_of_company.domain.usecase.expo.DeleteExpoInformationUseCase
 import com.school_of_company.domain.usecase.expo.GetExpoInformationUseCase
 import com.school_of_company.domain.usecase.expo.GetExpoListUseCase
 import com.school_of_company.domain.usecase.expo.ModifyExpoInformationUseCase
-import com.school_of_company.domain.usecase.expo.ModifyExpoInformationUseCase_Factory
 import com.school_of_company.domain.usecase.expo.RegisterExpoInformationUseCase
 import com.school_of_company.domain.usecase.training.ModifyTrainingProgramUseCase
 import com.school_of_company.domain.usecase.training.RegisterTrainingProgramListUseCase
@@ -28,12 +27,11 @@ import com.school_of_company.expo.viewmodel.uistate.ModifyTrainingProgramUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterExpoInformationUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterTrainingProgramListUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterTrainingProgramUiState
-import com.school_of_company.model.entity.expo.ExpoListResponseEntity
 import com.school_of_company.model.model.expo.ExpoRequestAndResponseModel
 import com.school_of_company.model.model.training.TrainingDtoModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
@@ -61,6 +59,8 @@ class ExpoViewModel @Inject constructor(
         private const val ADDRESS = "address"
         private const val LOCATION = "location"
         private const val COVER_IMAGE = "cover_image"
+        private const val STARTED = "started"
+        private const val ENDED = "ended"
     }
 
     private val _swipeRefreshLoading = MutableStateFlow(false)
@@ -71,12 +71,6 @@ class ExpoViewModel @Inject constructor(
 
     private val _standardProgramTextState = MutableStateFlow<List<String>>(emptyList())
     internal val standardProgramTextState = _standardProgramTextState.asStateFlow()
-
-    private val _startedTextState = MutableStateFlow<List<String>>(emptyList())
-    internal val startedTextState = _startedTextState.asStateFlow()
-
-    private val _endedTextState = MutableStateFlow<List<String>>(emptyList())
-    internal val endedTextState = _endedTextState.asStateFlow()
 
     private val _categoryState = MutableStateFlow(TrainingCategory.CHOICE)
     val categoryState = _categoryState.asStateFlow()
@@ -121,6 +115,37 @@ class ExpoViewModel @Inject constructor(
     internal var location = savedStateHandle.getStateFlow(key = LOCATION, initialValue = "")
 
     internal var cover_image = savedStateHandle.getStateFlow(key = COVER_IMAGE, initialValue = "")
+
+    internal var started = savedStateHandle.getStateFlow(key = STARTED, initialValue = "")
+
+    internal var ended = savedStateHandle.getStateFlow(key = ENDED, initialValue = "")
+
+    private val _trainingStartedList = MutableStateFlow<List<String>>(emptyList())
+    val trainingStartedList: StateFlow<List<String>> = _trainingStartedList
+
+    private val _trainingEndedList = MutableStateFlow<List<String>>(emptyList())
+    val trainingEndedList: StateFlow<List<String>> = _trainingEndedList
+
+    private val _trainingCategoryList = MutableStateFlow<List<TrainingCategory>>(emptyList())
+    val trainingCategoryList: StateFlow<List<TrainingCategory>> = _trainingCategoryList
+
+    fun updateTrainingStarted(index: Int, value: String) {
+        _trainingStartedList.value = _trainingStartedList.value.toMutableList().apply { this[index] = value }
+    }
+
+    fun updateTrainingEnded(index: Int, value: String) {
+        _trainingEndedList.value = _trainingEndedList.value.toMutableList().apply { this[index] = value }
+    }
+
+    fun updateTrainingCategory(index: Int, value: TrainingCategory) {
+        _trainingCategoryList.value = _trainingCategoryList.value.toMutableList().apply { this[index] = value }
+    }
+
+    fun addTrainingProgram() {
+        _trainingStartedList.value += ""
+        _trainingEndedList.value += ""
+        _trainingCategoryList.value += TrainingCategory.CHOICE
+    }
 
     internal fun getExpoInformation(expoId: String) = viewModelScope.launch {
         getExpoInformationUseCase(expoId = expoId)
@@ -361,18 +386,6 @@ class ExpoViewModel @Inject constructor(
         }
     }
 
-    internal fun updateStartedText(index: Int, newText: String) {
-        _startedTextState.value = _startedTextState.value.toMutableList().apply {
-            set(index, newText)
-        }
-    }
-
-    internal fun updateEndedText(index: Int, newText: String) {
-        _endedTextState.value = _endedTextState.value.toMutableList().apply {
-            set(index, newText)
-        }
-    }
-
     internal fun updateCategory(newCategory: TrainingCategory) {
         _categoryState.value = newCategory
     }
@@ -403,5 +416,13 @@ class ExpoViewModel @Inject constructor(
 
     internal fun onCoverImageChange(value: String?) {
         savedStateHandle[COVER_IMAGE] = value
+    }
+
+    internal fun onStartedChange(value: String) {
+        savedStateHandle[STARTED] = value
+    }
+
+    internal fun onEndedChange(value: String) {
+        savedStateHandle[ENDED] = value
     }
 }

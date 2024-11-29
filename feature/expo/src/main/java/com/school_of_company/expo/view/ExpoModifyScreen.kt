@@ -540,9 +540,9 @@ internal fun ExpoModifyScreen(
                 onCancelClick = { isOpenTrainingSettingBottomSheet(false) },
                 startedTextState = listOf(),
                 endedTextState = listOf(),
-                onStartedTextChange = { _, _ -> },
-                onEndedTextChange = { _, _ -> },
-                onCategoryChange = {},
+                onStartedTextChange = {_, _ -> },
+                onEndedTextChange = {_, _ ->},
+                onCategoryChange = {_, _ ->},
                 onButtonClick = { /*TODO*/ }
             )
         }

@@ -91,8 +91,9 @@ internal fun ExpoCreateRoute(
     val coverImageState by viewModel.cover_image.collectAsStateWithLifecycle()
     val trainingProgramTextState by viewModel.trainingProgramTextState.collectAsStateWithLifecycle()
     val standardProgramTextState by viewModel.standardProgramTextState.collectAsStateWithLifecycle()
-    val startedTextState by viewModel.startedTextState.collectAsStateWithLifecycle()
-    val endedTextState by viewModel.endedTextState.collectAsStateWithLifecycle()
+    val startedTextState by viewModel.trainingStartedList.collectAsStateWithLifecycle()
+    val endedTextState by viewModel.trainingEndedList.collectAsStateWithLifecycle()
+    val categoryList by viewModel.trainingCategoryList.collectAsStateWithLifecycle()
 
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
@@ -116,6 +117,10 @@ internal fun ExpoCreateRoute(
         onDispose {
             viewModel.initRegisterExpo()
         }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.addTrainingProgram()
     }
 
     LaunchedEffect(imageUpLoadUiState) {
@@ -150,14 +155,14 @@ internal fun ExpoCreateRoute(
             is RegisterExpoInformationUiState.Success -> {
                 viewModel.registerTrainingProgramList(
                     expoId = (registerExpoInformationUiState as RegisterExpoInformationUiState.Success).data.expoId,
-                    body = listOf(
+                    body = viewModel.trainingProgramTextState.value.mapIndexed { index, title ->
                         TrainingDtoModel(
-                            title = viewModel.trainingProgramTextState.toString(),
-                            startedAt = viewModel.startedTextState.toString(),
-                            endedAt = viewModel.endedTextState.toString(),
-                            category = viewModel.categoryState.toString()
+                            title = title,
+                            startedAt = startedTextState[index],
+                            endedAt = endedTextState[index],
+                            category = categoryList[index].toString()
                         )
-                    )
+                    }
                 )
             }
             is RegisterExpoInformationUiState.Error -> {
@@ -213,9 +218,15 @@ internal fun ExpoCreateRoute(
         onRemoveStandardProgram = viewModel::removeStandardProgramText,
         startedTextState = startedTextState,
         endedTextState = endedTextState,
-        onStartedChange = viewModel::updateStartedText,
-        onEndedChange = viewModel::updateEndedText,
-        onTrainingCategoryChange = viewModel::updateCategory
+        onStartedChange = { index, value ->
+            viewModel.updateTrainingStarted(index, value)
+        },
+        onEndedChange = { index, value ->
+            viewModel.updateTrainingEnded(index, value)
+        },
+        onTrainingCategoryChange = { index, value ->
+            viewModel.updateTrainingCategory(index, value)
+        }
     )
 }
 
@@ -251,7 +262,7 @@ internal fun ExpoCreateScreen(
     endedTextState: List<String>,
     onStartedChange: (Int, String) -> Unit,
     onEndedChange: (Int, String) -> Unit,
-    onTrainingCategoryChange: (TrainingCategory) -> Unit
+    onTrainingCategoryChange: (Int, TrainingCategory) -> Unit
 ) {
     val (openTrainingSettingBottomSheet, isOpenTrainingSettingBottomSheet) = rememberSaveable { mutableStateOf(false) }
 
@@ -272,9 +283,7 @@ internal fun ExpoCreateScreen(
                     )
                 }
         ) {
-            Column(
-                modifier = Modifier.verticalScroll(scrollState)
-            ) {
+            Column(modifier = Modifier.verticalScroll(scrollState)) {
                 Text(
                     text = "사진",
                     style = typography.bodyBold2,
@@ -538,7 +547,7 @@ internal fun ExpoCreateScreen(
                 onStartedTextChange = onStartedChange,
                 onEndedTextChange = onEndedChange,
                 onCategoryChange = onTrainingCategoryChange,
-                onButtonClick = { /*TODO*/ }
+                onButtonClick = { isOpenTrainingSettingBottomSheet(false) }
             )
         }
     }
@@ -571,10 +580,10 @@ private fun ExpoCreateScreenPreview() {
         onStandardProgramChange = { _, _ -> },
         onAddStandardProgram = {},
         onRemoveStandardProgram = {},
-        startedTextState = emptyList(),
-        endedTextState = emptyList(),
-        onStartedChange = {_, _ -> },
-        onEndedChange = {_, _ -> },
-        onTrainingCategoryChange = {}
+        startedTextState = listOf(),
+        endedTextState = listOf(),
+        onStartedChange = {_, _ ->},
+        onEndedChange = {_, _ ->},
+        onTrainingCategoryChange = {_, _ ->}
     )
 }

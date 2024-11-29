@@ -538,11 +538,11 @@ internal fun ExpoModifyScreen(
         Dialog(onDismissRequest = { isOpenTrainingSettingBottomSheet(false) }) {
             ExpoTrainingSettingBottomSheet(
                 onCancelClick = { isOpenTrainingSettingBottomSheet(false) },
-                startedTextState = listOf(),
-                endedTextState = listOf(),
-                onStartedTextChange = {_, _ -> },
-                onEndedTextChange = {_, _ ->},
-                onCategoryChange = {_, _ ->},
+                startedTextState = "",
+                endedTextState = "",
+                onStartedTextChange = {},
+                onEndedTextChange = {},
+                onCategoryChange = {},
                 onButtonClick = { /*TODO*/ }
             )
         }

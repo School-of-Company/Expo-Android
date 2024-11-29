@@ -91,9 +91,8 @@ internal fun ExpoCreateRoute(
     val coverImageState by viewModel.cover_image.collectAsStateWithLifecycle()
     val trainingProgramTextState by viewModel.trainingProgramTextState.collectAsStateWithLifecycle()
     val standardProgramTextState by viewModel.standardProgramTextState.collectAsStateWithLifecycle()
-    val startedTextState by viewModel.trainingStartedList.collectAsStateWithLifecycle()
-    val endedTextState by viewModel.trainingEndedList.collectAsStateWithLifecycle()
-    val categoryList by viewModel.trainingCategoryList.collectAsStateWithLifecycle()
+    val startedTextState by viewModel.started.collectAsStateWithLifecycle()
+    val endedTextState by viewModel.ended.collectAsStateWithLifecycle()
 
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
@@ -117,10 +116,6 @@ internal fun ExpoCreateRoute(
         onDispose {
             viewModel.initRegisterExpo()
         }
-    }
-
-    LaunchedEffect(Unit) {
-        viewModel.addTrainingProgram()
     }
 
     LaunchedEffect(imageUpLoadUiState) {
@@ -155,12 +150,12 @@ internal fun ExpoCreateRoute(
             is RegisterExpoInformationUiState.Success -> {
                 viewModel.registerTrainingProgramList(
                     expoId = (registerExpoInformationUiState as RegisterExpoInformationUiState.Success).data.expoId,
-                    body = viewModel.trainingProgramTextState.value.mapIndexed { index, title ->
+                    body = viewModel.trainingProgramTextState.value.map { title ->
                         TrainingDtoModel(
                             title = title,
-                            startedAt = startedTextState[index],
-                            endedAt = endedTextState[index],
-                            category = categoryList[index].toString()
+                            startedAt = viewModel.started.value,
+                            endedAt = viewModel.ended.value,
+                            category = viewModel.categoryState.value.toString()
                         )
                     }
                 )
@@ -218,15 +213,9 @@ internal fun ExpoCreateRoute(
         onRemoveStandardProgram = viewModel::removeStandardProgramText,
         startedTextState = startedTextState,
         endedTextState = endedTextState,
-        onStartedChange = { index, value ->
-            viewModel.updateTrainingStarted(index, value)
-        },
-        onEndedChange = { index, value ->
-            viewModel.updateTrainingEnded(index, value)
-        },
-        onTrainingCategoryChange = { index, value ->
-            viewModel.updateTrainingCategory(index, value)
-        }
+        onStartedChange = viewModel::onStartedChange,
+        onEndedChange = viewModel::onEndedChange,
+        onTrainingCategoryChange = viewModel::updateCategory
     )
 }
 
@@ -258,11 +247,11 @@ internal fun ExpoCreateScreen(
     onStandardProgramChange: (Int, String) -> Unit,
     onAddStandardProgram: () -> Unit,
     onRemoveStandardProgram: (Int) -> Unit,
-    startedTextState: List<String>,
-    endedTextState: List<String>,
-    onStartedChange: (Int, String) -> Unit,
-    onEndedChange: (Int, String) -> Unit,
-    onTrainingCategoryChange: (Int, TrainingCategory) -> Unit
+    startedTextState: String,
+    endedTextState: String,
+    onStartedChange: (String) -> Unit,
+    onEndedChange: (String) -> Unit,
+    onTrainingCategoryChange: (TrainingCategory) -> Unit
 ) {
     val (openTrainingSettingBottomSheet, isOpenTrainingSettingBottomSheet) = rememberSaveable { mutableStateOf(false) }
 
@@ -580,10 +569,10 @@ private fun ExpoCreateScreenPreview() {
         onStandardProgramChange = { _, _ -> },
         onAddStandardProgram = {},
         onRemoveStandardProgram = {},
-        startedTextState = listOf(),
-        endedTextState = listOf(),
-        onStartedChange = {_, _ ->},
-        onEndedChange = {_, _ ->},
-        onTrainingCategoryChange = {_, _ ->}
+        startedTextState = "",
+        endedTextState = "",
+        onStartedChange = {},
+        onEndedChange = {},
+        onTrainingCategoryChange = {}
     )
 }

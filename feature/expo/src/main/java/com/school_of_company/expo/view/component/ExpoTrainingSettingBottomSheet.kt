@@ -52,13 +52,13 @@ import com.school_of_company.expo.enum.TrainingCategory
 fun ExpoTrainingSettingBottomSheet(
     modifier: Modifier = Modifier,
     onCancelClick: () -> Unit,
-    startedTextState: List<String>,
-    endedTextState: List<String>,
-    onStartedTextChange: (Int, String) -> Unit,
-    onEndedTextChange: (Int, String) -> Unit,
+    startedTextState: String,
+    endedTextState: String,
+    onStartedTextChange: (String) -> Unit,
+    onEndedTextChange: (String) -> Unit,
     onButtonClick: () -> Unit,
     categoryState: TrainingCategory = TrainingCategory.CHOICE,
-    onCategoryChange: (Int, TrainingCategory) -> Unit,
+    onCategoryChange: (TrainingCategory) -> Unit,
     focusManager: FocusManager = LocalFocusManager.current
 ) {
     val sheetState = rememberModalBottomSheetState()
@@ -113,60 +113,56 @@ fun ExpoTrainingSettingBottomSheet(
                     )
                 }
 
-                startedTextState.forEachIndexed { index, startedTextState ->
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Column(
-                            verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Top),
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            ExpoNoneLineTextField(
-                                textState = startedTextState,
-                                placeHolder = {
-                                    Text(
-                                        text = "yyyy-MM-dd HH:mm",
-                                        style = typography.titleBold2,
-                                        color = colors.gray300,
-                                        maxLines = 1
-                                    )
-                                },
-                                onTextChange = { newText ->
-                                    onStartedTextChange(index, newText)
-                                }
-                            )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Top),
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        ExpoNoneLineTextField(
+                            textState = startedTextState,
+                            placeHolder = {
+                                Text(
+                                    text = "yyyy-MM-dd HH:mm",
+                                    style = typography.titleBold2,
+                                    color = colors.gray300,
+                                    maxLines = 1
+                                )
+                            },
+                            onTextChange = { newText ->
+                                onStartedTextChange(newText)
+                            }
+                        )
 
-                            ExpoNoneLineTextField(
-                                textState = endedTextState[index],
-                                placeHolder = {
-                                    Text(
-                                        text = "yyyy-MM-dd HH:mm",
-                                        style = typography.titleBold2,
-                                        color = colors.gray300,
-                                        maxLines = 1
-                                    )
-                                },
-                                onTextChange = { newText ->
-                                    onEndedTextChange(index, newText)
-                                }
-                            )
-                        }
+                        ExpoNoneLineTextField(
+                            textState = endedTextState,
+                            placeHolder = {
+                                Text(
+                                    text = "yyyy-MM-dd HH:mm",
+                                    style = typography.titleBold2,
+                                    color = colors.gray300,
+                                    maxLines = 1
+                                )
+                            },
+                            onTextChange = { newText ->
+                                onEndedTextChange(newText)
+                            }
+                        )
+                    }
 
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.Start),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = "필수",
-                                style = typography.bodyRegular2,
-                                color = colors.gray500
-                            )
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.Start),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "필수",
+                            style = typography.bodyRegular2,
+                            color = colors.gray500
+                        )
 
-                            CustomCheckBox(
-                                categoryState = categoryState,
-                                onCategoryChange = { newCategory ->
-                                    onCategoryChange(index, newCategory)
-                                }
-                            )
-                        }
+                        CustomCheckBox(
+                            categoryState = categoryState,
+                            onCategoryChange = onCategoryChange
+                        )
                     }
                 }
 
@@ -232,13 +228,13 @@ fun CustomCheckBox(
 private fun ExpoTrainingSettingBottomSheetPreview() {
     ExpoTrainingSettingBottomSheet(
         onCancelClick = {},
-        startedTextState = listOf(),
-        endedTextState = listOf(),
-        onStartedTextChange = {_, _ ->},
-        onEndedTextChange = {_, _ ->},
+        startedTextState = "",
+        endedTextState = "",
+        onStartedTextChange = {},
+        onEndedTextChange = {},
         onButtonClick = {},
         categoryState = TrainingCategory.ESSENTIAL,
-        onCategoryChange = {_, _ ->}
+        onCategoryChange = {}
     )
 }
 

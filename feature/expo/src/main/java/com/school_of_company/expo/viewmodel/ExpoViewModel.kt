@@ -75,6 +75,7 @@ class ExpoViewModel @Inject constructor(
     private val _categoryState = MutableStateFlow(TrainingCategory.CHOICE)
     val categoryState = _categoryState.asStateFlow()
 
+
     private val _getExpoInformationUiState = MutableStateFlow<GetExpoInformationUiState>(GetExpoInformationUiState.Loading)
     internal val getExpoInformationUiState = _getExpoInformationUiState.asStateFlow()
 
@@ -119,33 +120,6 @@ class ExpoViewModel @Inject constructor(
     internal var started = savedStateHandle.getStateFlow(key = STARTED, initialValue = "")
 
     internal var ended = savedStateHandle.getStateFlow(key = ENDED, initialValue = "")
-
-    private val _trainingStartedList = MutableStateFlow<List<String>>(emptyList())
-    val trainingStartedList: StateFlow<List<String>> = _trainingStartedList
-
-    private val _trainingEndedList = MutableStateFlow<List<String>>(emptyList())
-    val trainingEndedList: StateFlow<List<String>> = _trainingEndedList
-
-    private val _trainingCategoryList = MutableStateFlow<List<TrainingCategory>>(emptyList())
-    val trainingCategoryList: StateFlow<List<TrainingCategory>> = _trainingCategoryList
-
-    fun updateTrainingStarted(index: Int, value: String) {
-        _trainingStartedList.value = _trainingStartedList.value.toMutableList().apply { this[index] = value }
-    }
-
-    fun updateTrainingEnded(index: Int, value: String) {
-        _trainingEndedList.value = _trainingEndedList.value.toMutableList().apply { this[index] = value }
-    }
-
-    fun updateTrainingCategory(index: Int, value: TrainingCategory) {
-        _trainingCategoryList.value = _trainingCategoryList.value.toMutableList().apply { this[index] = value }
-    }
-
-    fun addTrainingProgram() {
-        _trainingStartedList.value += ""
-        _trainingEndedList.value += ""
-        _trainingCategoryList.value += TrainingCategory.CHOICE
-    }
 
     internal fun getExpoInformation(expoId: String) = viewModelScope.launch {
         getExpoInformationUseCase(expoId = expoId)

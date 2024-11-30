@@ -134,7 +134,6 @@ internal fun ExpoCreateRoute(
                         y = 126.80043f
                     )
                 )
-                viewModel.initRegisterExpo()
             }
             is ImageUpLoadUiState.Error -> {
                 onErrorToast(null, R.string.expo_image_fail)
@@ -173,8 +172,8 @@ internal fun ExpoCreateRoute(
                 viewModel.resetExpoInformation()
                 selectedImageUri = null
                 makeToast(context, "박람회 등록을 완료하였습니다.")
+                viewModel.initRegisterExpo()
             }
-
             is RegisterTrainingProgramListUiState.Error -> {
                 onErrorToast(null, R.string.expo_register_fail)
             }

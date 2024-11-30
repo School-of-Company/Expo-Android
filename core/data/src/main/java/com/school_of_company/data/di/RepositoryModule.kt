@@ -8,6 +8,8 @@ import com.school_of_company.data.repository.image.ImageRepository
 import com.school_of_company.data.repository.image.ImageRepositoryImpl
 import com.school_of_company.data.repository.sms.SmsRepository
 import com.school_of_company.data.repository.sms.SmsRepositoryImpl
+import com.school_of_company.data.repository.standard.StandardRepository
+import com.school_of_company.data.repository.standard.StandardRepositoryImpl
 import com.school_of_company.data.repository.training.TrainingRepository
 import com.school_of_company.data.repository.training.TrainingRepositoryImpl
 import dagger.Binds
@@ -43,4 +45,9 @@ abstract class RepositoryModule {
     abstract fun bindTrainingRepository(
         trainingRepositoryImpl: TrainingRepositoryImpl
     ) : TrainingRepository
+
+    @Binds
+    abstract fun bindStandardRepository(
+        standardRepositoryImpl: StandardRepositoryImpl
+    ) : StandardRepository
 }

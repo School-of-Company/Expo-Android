@@ -8,6 +8,7 @@ import com.school_of_company.network.api.AuthAPI
 import com.school_of_company.network.api.ExpoAPI
 import com.school_of_company.network.api.ImageAPI
 import com.school_of_company.network.api.SmsAPI
+import com.school_of_company.network.api.StandardAPI
 import com.school_of_company.network.api.TrainingAPI
 import com.school_of_company.network.util.AuthInterceptor
 import com.school_of_company.network.util.TokenAuthenticator
@@ -108,4 +109,9 @@ object NetworkModule {
     @Provides
     fun provideTrainingAPI(retrofit: Retrofit) : TrainingAPI =
         retrofit.create(TrainingAPI::class.java)
+
+    @Provides
+    fun provideStandardAPI(retrofit: Retrofit) : StandardAPI =
+        retrofit.create(StandardAPI::class.java)
+
 }

@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -59,7 +60,8 @@ fun ExpoTrainingSettingBottomSheet(
     onButtonClick: () -> Unit,
     categoryState: TrainingCategory = TrainingCategory.CHOICE,
     onCategoryChange: (TrainingCategory) -> Unit,
-    focusManager: FocusManager = LocalFocusManager.current
+    focusManager: FocusManager = LocalFocusManager.current,
+    isTraining: Boolean = true
 ) {
     val sheetState = rememberModalBottomSheetState()
 
@@ -149,20 +151,24 @@ fun ExpoTrainingSettingBottomSheet(
                         )
                     }
 
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.Start),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "필수",
-                            style = typography.bodyRegular2,
-                            color = colors.gray500
-                        )
+                    if (isTraining) {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.Start),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "필수",
+                                style = typography.bodyRegular2,
+                                color = colors.gray500
+                            )
 
-                        CustomCheckBox(
-                            categoryState = categoryState,
-                            onCategoryChange = onCategoryChange
-                        )
+                            CustomCheckBox(
+                                categoryState = categoryState,
+                                onCategoryChange = onCategoryChange
+                            )
+                        }
+                    } else {
+                        Spacer(modifier = Modifier.size(1.dp))
                     }
                 }
 

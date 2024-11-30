@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
@@ -85,10 +86,9 @@ fun ExpoTrainingSettingBottomSheet(
                             topEnd = 6.dp
                         )
                     )
-                    .paddingHorizontal(
+                    .padding(
                         horizontal = 18.dp,
-                        bottom = 24.dp,
-                        top = 24.dp
+                        vertical = 24.dp
                     )
                     .pointerInput(Unit) {
                         detectTapGestures(
@@ -99,7 +99,7 @@ fun ExpoTrainingSettingBottomSheet(
                     }
                     .imePadding()
             ) {
-                Row {
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = "연수 설정",
                         style = typography.titleBold3,
@@ -124,10 +124,13 @@ fun ExpoTrainingSettingBottomSheet(
                                 Text(
                                     text = "yyyy-MM-dd HH:mm",
                                     style = typography.titleBold2,
-                                    color = colors.gray300
+                                    color = colors.gray300,
+                                    maxLines = 1
                                 )
                             },
-                            onTextChange = onStartedTextChange
+                            onTextChange = { newText ->
+                                onStartedTextChange(newText)
+                            }
                         )
 
                         ExpoNoneLineTextField(
@@ -136,16 +139,19 @@ fun ExpoTrainingSettingBottomSheet(
                                 Text(
                                     text = "yyyy-MM-dd HH:mm",
                                     style = typography.titleBold2,
-                                    color = colors.gray300
+                                    color = colors.gray300,
+                                    maxLines = 1
                                 )
                             },
-                            onTextChange = onEndedTextChange
+                            onTextChange = { newText ->
+                                onEndedTextChange(newText)
+                            }
                         )
                     }
 
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.Start),
-                        verticalAlignment = Alignment.CenterVertically,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
                             text = "필수",

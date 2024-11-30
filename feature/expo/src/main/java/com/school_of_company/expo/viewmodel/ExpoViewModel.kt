@@ -12,11 +12,11 @@ import com.school_of_company.domain.usecase.expo.DeleteExpoInformationUseCase
 import com.school_of_company.domain.usecase.expo.GetExpoInformationUseCase
 import com.school_of_company.domain.usecase.expo.GetExpoListUseCase
 import com.school_of_company.domain.usecase.expo.ModifyExpoInformationUseCase
-import com.school_of_company.domain.usecase.expo.ModifyExpoInformationUseCase_Factory
 import com.school_of_company.domain.usecase.expo.RegisterExpoInformationUseCase
 import com.school_of_company.domain.usecase.training.ModifyTrainingProgramUseCase
 import com.school_of_company.domain.usecase.training.RegisterTrainingProgramListUseCase
 import com.school_of_company.domain.usecase.training.RegisterTrainingProgramUseCase
+import com.school_of_company.expo.enum.TrainingCategory
 import com.school_of_company.expo.util.getMultipartFile
 import com.school_of_company.expo.viewmodel.uistate.DeleteExpoInformationUiState
 import com.school_of_company.expo.viewmodel.uistate.GetExpoInformationUiState
@@ -27,12 +27,11 @@ import com.school_of_company.expo.viewmodel.uistate.ModifyTrainingProgramUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterExpoInformationUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterTrainingProgramListUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterTrainingProgramUiState
-import com.school_of_company.model.entity.expo.ExpoListResponseEntity
 import com.school_of_company.model.model.expo.ExpoRequestAndResponseModel
 import com.school_of_company.model.model.training.TrainingDtoModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
@@ -60,6 +59,8 @@ class ExpoViewModel @Inject constructor(
         private const val ADDRESS = "address"
         private const val LOCATION = "location"
         private const val COVER_IMAGE = "cover_image"
+        private const val STARTED = "started"
+        private const val ENDED = "ended"
     }
 
     private val _swipeRefreshLoading = MutableStateFlow(false)
@@ -70,6 +71,10 @@ class ExpoViewModel @Inject constructor(
 
     private val _standardProgramTextState = MutableStateFlow<List<String>>(emptyList())
     internal val standardProgramTextState = _standardProgramTextState.asStateFlow()
+
+    private val _categoryState = MutableStateFlow(TrainingCategory.CHOICE)
+    val categoryState = _categoryState.asStateFlow()
+
 
     private val _getExpoInformationUiState = MutableStateFlow<GetExpoInformationUiState>(GetExpoInformationUiState.Loading)
     internal val getExpoInformationUiState = _getExpoInformationUiState.asStateFlow()
@@ -112,6 +117,10 @@ class ExpoViewModel @Inject constructor(
 
     internal var cover_image = savedStateHandle.getStateFlow(key = COVER_IMAGE, initialValue = "")
 
+    internal var started = savedStateHandle.getStateFlow(key = STARTED, initialValue = "")
+
+    internal var ended = savedStateHandle.getStateFlow(key = ENDED, initialValue = "")
+
     internal fun getExpoInformation(expoId: String) = viewModelScope.launch {
         getExpoInformationUseCase(expoId = expoId)
             .asResult()
@@ -152,6 +161,7 @@ class ExpoViewModel @Inject constructor(
     internal fun initRegisterExpo() {
         _imageUpLoadUiState.value = ImageUpLoadUiState.Loading
         _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Loading
+        _registerTrainingProgramListUiState.value = RegisterTrainingProgramListUiState.Loading
     }
 
     internal fun modifyExpoInformation(
@@ -188,6 +198,10 @@ class ExpoViewModel @Inject constructor(
             onLocationChange("")
             onCoverImageChange(null)
             onModifyTitleChange("")
+            onStartedChange("")
+            onEndedChange("")
+            updateTrainingProgramText(-1, "")
+            updateStandardProgramText(-1, "")
         }
     }
 
@@ -351,6 +365,10 @@ class ExpoViewModel @Inject constructor(
         }
     }
 
+    internal fun updateCategory(newCategory: TrainingCategory) {
+        _categoryState.value = newCategory
+    }
+
     internal fun onModifyTitleChange(value: String) {
         savedStateHandle[MODIFY_TITLE] = value
     }
@@ -377,5 +395,13 @@ class ExpoViewModel @Inject constructor(
 
     internal fun onCoverImageChange(value: String?) {
         savedStateHandle[COVER_IMAGE] = value
+    }
+
+    internal fun onStartedChange(value: String) {
+        savedStateHandle[STARTED] = value
+    }
+
+    internal fun onEndedChange(value: String) {
+        savedStateHandle[ENDED] = value
     }
 }

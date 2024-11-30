@@ -51,7 +51,6 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
-import com.google.android.datatransport.cct.StringMerger
 import com.school_of_company.design_system.R
 import com.school_of_company.design_system.component.button.ExpoStateButton
 import com.school_of_company.design_system.component.button.state.ButtonState
@@ -65,7 +64,7 @@ import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.expo.enum.TrainingCategory
 import com.school_of_company.expo.view.component.ExpoAddTextField
-import com.school_of_company.expo.view.component.ExpoTrainingSettingBottomSheet
+import com.school_of_company.expo.view.component.ExpoSettingBottomSheet
 import com.school_of_company.expo.viewmodel.ExpoViewModel
 import com.school_of_company.expo.viewmodel.uistate.ImageUpLoadUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterExpoInformationUiState
@@ -550,7 +549,7 @@ internal fun ExpoCreateScreen(
 
     if (openTrainingSettingBottomSheet) {
         Dialog(onDismissRequest = { isOpenTrainingSettingBottomSheet(false) }) {
-            ExpoTrainingSettingBottomSheet(
+            ExpoSettingBottomSheet(
                 onCancelClick = { isOpenTrainingSettingBottomSheet(false) },
                 startedTextState = startedTextState,
                 endedTextState = endedTextState,
@@ -564,7 +563,7 @@ internal fun ExpoCreateScreen(
 
     if (openStandardSettingBottomSheet) {
         Dialog(onDismissRequest = { isOpenStandardSettingBottomSheet(false) }) {
-            ExpoTrainingSettingBottomSheet(
+            ExpoSettingBottomSheet(
                 onCancelClick = { isOpenStandardSettingBottomSheet(false) },
                 startedTextState = startedStandardTextState,
                 endedTextState = endedStandardTextState,

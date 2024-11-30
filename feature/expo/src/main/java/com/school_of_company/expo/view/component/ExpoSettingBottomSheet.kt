@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
@@ -41,7 +40,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.school_of_company.design_system.component.button.ExpoStateButton
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
-import com.school_of_company.design_system.component.modifier.padding.paddingHorizontal
 import com.school_of_company.design_system.icon.CheckIcon
 import com.school_of_company.design_system.icon.XIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
@@ -50,7 +48,7 @@ import com.school_of_company.expo.enum.TrainingCategory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ExpoTrainingSettingBottomSheet(
+fun ExpoSettingBottomSheet(
     modifier: Modifier = Modifier,
     onCancelClick: () -> Unit,
     startedTextState: String,
@@ -232,7 +230,7 @@ fun CustomCheckBox(
 @Preview
 @Composable
 private fun ExpoTrainingSettingBottomSheetPreview() {
-    ExpoTrainingSettingBottomSheet(
+    ExpoSettingBottomSheet(
         onCancelClick = {},
         startedTextState = "",
         endedTextState = "",

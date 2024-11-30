@@ -161,6 +161,7 @@ class ExpoViewModel @Inject constructor(
     internal fun initRegisterExpo() {
         _imageUpLoadUiState.value = ImageUpLoadUiState.Loading
         _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Loading
+        _registerTrainingProgramListUiState.value = RegisterTrainingProgramListUiState.Loading
     }
 
     internal fun modifyExpoInformation(
@@ -197,6 +198,10 @@ class ExpoViewModel @Inject constructor(
             onLocationChange("")
             onCoverImageChange(null)
             onModifyTitleChange("")
+            onStartedChange("")
+            onEndedChange("")
+            updateTrainingProgramText(-1, "")
+            updateStandardProgramText(-1, "")
         }
     }
 

@@ -13,6 +13,7 @@ import com.school_of_company.domain.usecase.expo.GetExpoInformationUseCase
 import com.school_of_company.domain.usecase.expo.GetExpoListUseCase
 import com.school_of_company.domain.usecase.expo.ModifyExpoInformationUseCase
 import com.school_of_company.domain.usecase.expo.RegisterExpoInformationUseCase
+import com.school_of_company.domain.usecase.standard.RegisterStandardListProgramUseCase
 import com.school_of_company.domain.usecase.training.ModifyTrainingProgramUseCase
 import com.school_of_company.domain.usecase.training.RegisterTrainingProgramListUseCase
 import com.school_of_company.domain.usecase.training.RegisterTrainingProgramUseCase
@@ -25,9 +26,11 @@ import com.school_of_company.expo.viewmodel.uistate.ImageUpLoadUiState
 import com.school_of_company.expo.viewmodel.uistate.ModifyExpoInformationUiState
 import com.school_of_company.expo.viewmodel.uistate.ModifyTrainingProgramUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterExpoInformationUiState
+import com.school_of_company.expo.viewmodel.uistate.RegisterStandardProgramListUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterTrainingProgramListUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterTrainingProgramUiState
 import com.school_of_company.model.model.expo.ExpoRequestAndResponseModel
+import com.school_of_company.model.model.standard.StandardRequestModel
 import com.school_of_company.model.model.training.TrainingDtoModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -49,6 +52,7 @@ class ExpoViewModel @Inject constructor(
     private val registerTrainingProgramUseCase: RegisterTrainingProgramUseCase,
     private val registerTrainingProgramListUseCase: RegisterTrainingProgramListUseCase,
     private val modifyTrainingProgramUseCase: ModifyTrainingProgramUseCase,
+    private val registerStandardProgramListUseCase: RegisterStandardListProgramUseCase,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     companion object {
@@ -102,6 +106,9 @@ class ExpoViewModel @Inject constructor(
 
     private val _modifyTrainingProgramUiState = MutableStateFlow<ModifyTrainingProgramUiState>(ModifyTrainingProgramUiState.Loading)
     internal val modifyTrainingProgramUiState = _modifyTrainingProgramUiState.asStateFlow()
+
+    private val _registerStandardProgramListUiState = MutableStateFlow<RegisterStandardProgramListUiState>(RegisterStandardProgramListUiState.Loading)
+    internal val registerStandardProgramListUiState = _registerStandardProgramListUiState.asStateFlow()
 
     internal var modify_title = savedStateHandle.getStateFlow(key = MODIFY_TITLE, initialValue = "")
 
@@ -326,6 +333,27 @@ class ExpoViewModel @Inject constructor(
             }
             .onFailure { error ->
                 _modifyTrainingProgramUiState.value = ModifyTrainingProgramUiState.Error(error)
+            }
+    }
+
+    internal fun registerStandardProgramList(
+        expoId: String,
+        body: List<StandardRequestModel>
+    ) = viewModelScope.launch {
+        _registerStandardProgramListUiState.value = RegisterStandardProgramListUiState.Loading
+        registerStandardProgramListUseCase(
+            expoId = expoId,
+            body = body
+        )
+            .onSuccess {
+                it.catch { remoteError ->
+                    _registerStandardProgramListUiState.value = RegisterStandardProgramListUiState.Error(remoteError)
+                }.collect {
+                    _registerStandardProgramListUiState.value = RegisterStandardProgramListUiState.Success
+                }
+            }
+            .onFailure { error ->
+                _registerStandardProgramListUiState.value = RegisterStandardProgramListUiState.Error(error)
             }
     }
 

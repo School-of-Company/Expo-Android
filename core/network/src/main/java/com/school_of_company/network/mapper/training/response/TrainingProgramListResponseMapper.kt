@@ -6,13 +6,9 @@ import com.squareup.moshi.Json
 
 fun TrainingProgramListResponse.toEntity(): TrainingProgramListResponseEntity =
     TrainingProgramListResponseEntity(
-        essential = this.essential.map { it.toEntity() },
-        choice = this.choice.map { it.toEntity() }
-    )
-
-fun TrainingProgramListResponse.Training.toEntity(): TrainingProgramListResponseEntity.Training =
-    TrainingProgramListResponseEntity.Training(
+        id = this.id,
         title = this.title,
         startedAt = this.startedAt,
-        endedAt = this.endedAt
+        endedAt = this.endedAt,
+        category = this.category
     )

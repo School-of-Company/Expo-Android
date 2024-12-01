@@ -65,20 +65,21 @@ class ExpoViewModel @Inject constructor(
         private const val COVER_IMAGE = "cover_image"
         private const val STARTED = "started"
         private const val ENDED = "ended"
+        private const val STANDARD_STARTED = "standard_started"
+        private const val STANDARD_ENDED = "standard_ended"
     }
 
     private val _swipeRefreshLoading = MutableStateFlow(false)
     val swipeRefreshLoading = _swipeRefreshLoading.asStateFlow()
 
-    private val _trainingProgramTextState = MutableStateFlow<List<String>>(emptyList())
+    private val _trainingProgramTextState = MutableStateFlow(listOf(""))
     internal val trainingProgramTextState = _trainingProgramTextState.asStateFlow()
 
-    private val _standardProgramTextState = MutableStateFlow<List<String>>(emptyList())
+    private val _standardProgramTextState = MutableStateFlow(listOf(""))
     internal val standardProgramTextState = _standardProgramTextState.asStateFlow()
 
     private val _categoryState = MutableStateFlow(TrainingCategory.CHOICE)
     val categoryState = _categoryState.asStateFlow()
-
 
     private val _getExpoInformationUiState = MutableStateFlow<GetExpoInformationUiState>(GetExpoInformationUiState.Loading)
     internal val getExpoInformationUiState = _getExpoInformationUiState.asStateFlow()
@@ -127,6 +128,10 @@ class ExpoViewModel @Inject constructor(
     internal var started = savedStateHandle.getStateFlow(key = STARTED, initialValue = "")
 
     internal var ended = savedStateHandle.getStateFlow(key = ENDED, initialValue = "")
+
+    internal var standardStarted = savedStateHandle.getStateFlow(key = STANDARD_STARTED, initialValue = "")
+
+    internal var standardEnded = savedStateHandle.getStateFlow(key = STANDARD_ENDED, initialValue = "")
 
     internal fun getExpoInformation(expoId: String) = viewModelScope.launch {
         getExpoInformationUseCase(expoId = expoId)
@@ -207,8 +212,8 @@ class ExpoViewModel @Inject constructor(
             onModifyTitleChange("")
             onStartedChange("")
             onEndedChange("")
-            updateTrainingProgramText(-1, "")
-            updateStandardProgramText(-1, "")
+            updateTrainingProgramText(0, "")
+            updateStandardProgramText(0, "")
         }
     }
 
@@ -431,5 +436,13 @@ class ExpoViewModel @Inject constructor(
 
     internal fun onEndedChange(value: String) {
         savedStateHandle[ENDED] = value
+    }
+
+    internal fun onStandardStartedChange(value: String) {
+        savedStateHandle[STANDARD_STARTED] = value
+    }
+
+    internal fun onStandardEndedChange(value: String) {
+        savedStateHandle[STANDARD_ENDED] = value
     }
 }

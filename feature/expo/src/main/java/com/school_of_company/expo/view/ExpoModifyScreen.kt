@@ -66,7 +66,7 @@ import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.expo.view.component.ExpoAddTextField
-import com.school_of_company.expo.view.component.ExpoTrainingSettingBottomSheet
+import com.school_of_company.expo.view.component.ExpoSettingBottomSheet
 import com.school_of_company.expo.viewmodel.ExpoViewModel
 import com.school_of_company.expo.viewmodel.uistate.ImageUpLoadUiState
 import com.school_of_company.expo.viewmodel.uistate.ModifyExpoInformationUiState
@@ -536,7 +536,7 @@ internal fun ExpoModifyScreen(
 
     if (openTrainingSettingBottomSheet) {
         Dialog(onDismissRequest = { isOpenTrainingSettingBottomSheet(false) }) {
-            ExpoTrainingSettingBottomSheet(
+            ExpoSettingBottomSheet(
                 onCancelClick = { isOpenTrainingSettingBottomSheet(false) },
                 startedTextState = "",
                 endedTextState = "",

@@ -64,12 +64,14 @@ import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.expo.enum.TrainingCategory
 import com.school_of_company.expo.view.component.ExpoAddTextField
-import com.school_of_company.expo.view.component.ExpoTrainingSettingBottomSheet
+import com.school_of_company.expo.view.component.ExpoSettingBottomSheet
 import com.school_of_company.expo.viewmodel.ExpoViewModel
 import com.school_of_company.expo.viewmodel.uistate.ImageUpLoadUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterExpoInformationUiState
+import com.school_of_company.expo.viewmodel.uistate.RegisterStandardProgramListUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterTrainingProgramListUiState
 import com.school_of_company.model.model.expo.ExpoRequestAndResponseModel
+import com.school_of_company.model.model.standard.StandardRequestModel
 import com.school_of_company.model.model.training.TrainingDtoModel
 import com.school_of_company.ui.toast.makeToast
 
@@ -81,6 +83,7 @@ internal fun ExpoCreateRoute(
     val registerExpoInformationUiState by viewModel.registerExpoInformationUiState.collectAsStateWithLifecycle()
     val imageUpLoadUiState by viewModel.imageUpLoadUiState.collectAsStateWithLifecycle()
     val registerTrainingProgramListUiState by viewModel.registerTrainingProgramListUiState.collectAsStateWithLifecycle()
+    val registerStandardProgramListUiState by viewModel.registerStandardProgramListUiState.collectAsStateWithLifecycle()
 
     val modifyTitleState by viewModel.modify_title.collectAsStateWithLifecycle()
     val startedDateState by viewModel.started_date.collectAsStateWithLifecycle()
@@ -93,6 +96,8 @@ internal fun ExpoCreateRoute(
     val standardProgramTextState by viewModel.standardProgramTextState.collectAsStateWithLifecycle()
     val startedTextState by viewModel.started.collectAsStateWithLifecycle()
     val endedTextState by viewModel.ended.collectAsStateWithLifecycle()
+    val startedStandardTextState by viewModel.standardStarted.collectAsStateWithLifecycle()
+    val endedStandardTextState by viewModel.standardEnded.collectAsStateWithLifecycle()
 
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
@@ -141,8 +146,6 @@ internal fun ExpoCreateRoute(
         }
     }
 
-
-
     LaunchedEffect(registerExpoInformationUiState) {
         when (registerExpoInformationUiState) {
             is RegisterExpoInformationUiState.Loading -> Unit
@@ -158,6 +161,17 @@ internal fun ExpoCreateRoute(
                         )
                     }
                 )
+
+                viewModel.registerStandardProgramList(
+                    expoId = (registerExpoInformationUiState as RegisterExpoInformationUiState.Success).data.expoId,
+                    body = viewModel.standardProgramTextState.value.map { title ->
+                        StandardRequestModel(
+                            title = title,
+                            startedAt = viewModel.standardStarted.value,
+                            endedAt = viewModel.standardEnded.value
+                        )
+                    }
+                )
             }
             is RegisterExpoInformationUiState.Error -> {
                 onErrorToast(null, R.string.expo_register_fail)
@@ -165,20 +179,18 @@ internal fun ExpoCreateRoute(
         }
     }
 
-    LaunchedEffect(registerTrainingProgramListUiState) {
-        when (registerTrainingProgramListUiState) {
-            is RegisterTrainingProgramListUiState.Loading -> Unit
-            is RegisterTrainingProgramListUiState.Success -> {
-                viewModel.resetExpoInformation()
-                selectedImageUri = null
-                makeToast(context, "박람회 등록을 완료하였습니다.")
-                viewModel.initRegisterExpo()
-            }
-            is RegisterTrainingProgramListUiState.Error -> {
-                onErrorToast(null, R.string.expo_register_fail)
-            }
+    LaunchedEffect(registerTrainingProgramListUiState, registerStandardProgramListUiState) {
+        if (registerTrainingProgramListUiState is RegisterTrainingProgramListUiState.Loading && registerStandardProgramListUiState is RegisterStandardProgramListUiState.Loading) { Unit }
+        if (registerTrainingProgramListUiState is RegisterTrainingProgramListUiState.Success && registerStandardProgramListUiState is RegisterStandardProgramListUiState.Success) {
+            viewModel.resetExpoInformation()
+            selectedImageUri = null
+            makeToast(context, "박람회 등록을 완료하였습니다.")
+            viewModel.initRegisterExpo()
+        } else if (registerTrainingProgramListUiState is RegisterTrainingProgramListUiState.Error && registerStandardProgramListUiState is RegisterStandardProgramListUiState.Error) {
+            onErrorToast(null, R.string.expo_register_fail)
         }
     }
+
 
     ExpoCreateScreen(
         onImageClick = { galleryLauncher.launch("image/*") },
@@ -214,7 +226,11 @@ internal fun ExpoCreateRoute(
         endedTextState = endedTextState,
         onStartedChange = viewModel::onStartedChange,
         onEndedChange = viewModel::onEndedChange,
-        onTrainingCategoryChange = viewModel::updateCategory
+        onTrainingCategoryChange = viewModel::updateCategory,
+        startedStandardTextState = startedStandardTextState,
+        endedStandardTextState = endedStandardTextState,
+        onStartedStandardChange = viewModel::onStandardStartedChange,
+        onEndedStandardChange = viewModel::onStandardEndedChange
     )
 }
 
@@ -250,9 +266,14 @@ internal fun ExpoCreateScreen(
     endedTextState: String,
     onStartedChange: (String) -> Unit,
     onEndedChange: (String) -> Unit,
-    onTrainingCategoryChange: (TrainingCategory) -> Unit
+    onTrainingCategoryChange: (TrainingCategory) -> Unit,
+    startedStandardTextState: String,
+    endedStandardTextState: String,
+    onStartedStandardChange: (String) -> Unit,
+    onEndedStandardChange: (String) -> Unit
 ) {
     val (openTrainingSettingBottomSheet, isOpenTrainingSettingBottomSheet) = rememberSaveable { mutableStateOf(false) }
+    val (openStandardSettingBottomSheet, isOpenStandardSettingBottomSheet) = rememberSaveable { mutableStateOf(false) }
 
     ExpoAndroidTheme { colors, typography ->
         Column(
@@ -448,7 +469,7 @@ internal fun ExpoCreateScreen(
                             onRemoveStandardProgram(index)
                         },
                         onTrainingSetting = {
-                            isOpenTrainingSettingBottomSheet(true)
+                            isOpenStandardSettingBottomSheet(true)
                         },
                         placeHolder = "연수 종류를 입력해주세요."
                     )
@@ -528,7 +549,7 @@ internal fun ExpoCreateScreen(
 
     if (openTrainingSettingBottomSheet) {
         Dialog(onDismissRequest = { isOpenTrainingSettingBottomSheet(false) }) {
-            ExpoTrainingSettingBottomSheet(
+            ExpoSettingBottomSheet(
                 onCancelClick = { isOpenTrainingSettingBottomSheet(false) },
                 startedTextState = startedTextState,
                 endedTextState = endedTextState,
@@ -536,6 +557,21 @@ internal fun ExpoCreateScreen(
                 onEndedTextChange = onEndedChange,
                 onCategoryChange = onTrainingCategoryChange,
                 onButtonClick = { isOpenTrainingSettingBottomSheet(false) }
+            )
+        }
+    }
+
+    if (openStandardSettingBottomSheet) {
+        Dialog(onDismissRequest = { isOpenStandardSettingBottomSheet(false) }) {
+            ExpoSettingBottomSheet(
+                onCancelClick = { isOpenStandardSettingBottomSheet(false) },
+                startedTextState = startedStandardTextState,
+                endedTextState = endedStandardTextState,
+                onStartedTextChange = onStartedStandardChange,
+                onEndedTextChange = onEndedStandardChange,
+                onButtonClick = { isOpenStandardSettingBottomSheet(false) },
+                onCategoryChange = {},
+                isTraining = false
             )
         }
     }
@@ -572,6 +608,10 @@ private fun ExpoCreateScreenPreview() {
         endedTextState = "",
         onStartedChange = {},
         onEndedChange = {},
-        onTrainingCategoryChange = {}
+        onTrainingCategoryChange = {},
+        startedStandardTextState = "",
+        endedStandardTextState = "",
+        onStartedStandardChange = {},
+        onEndedStandardChange = {}
     )
 }

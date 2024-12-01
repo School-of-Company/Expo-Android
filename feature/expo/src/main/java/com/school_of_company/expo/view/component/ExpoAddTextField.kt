@@ -101,8 +101,6 @@ fun ExpoAddTextField(
                         IconButton(onClick = { onRemoveTextField(index) }) {
                             XIcon(tint = colors.black)
                         }
-
-
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                 }

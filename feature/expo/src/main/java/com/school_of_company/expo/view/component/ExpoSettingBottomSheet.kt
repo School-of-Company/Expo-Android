@@ -16,8 +16,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
@@ -40,7 +40,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.school_of_company.design_system.component.button.ExpoStateButton
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
-import com.school_of_company.design_system.component.modifier.padding.paddingHorizontal
 import com.school_of_company.design_system.icon.CheckIcon
 import com.school_of_company.design_system.icon.XIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
@@ -49,7 +48,7 @@ import com.school_of_company.expo.enum.TrainingCategory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ExpoTrainingSettingBottomSheet(
+fun ExpoSettingBottomSheet(
     modifier: Modifier = Modifier,
     onCancelClick: () -> Unit,
     startedTextState: String,
@@ -59,7 +58,8 @@ fun ExpoTrainingSettingBottomSheet(
     onButtonClick: () -> Unit,
     categoryState: TrainingCategory = TrainingCategory.CHOICE,
     onCategoryChange: (TrainingCategory) -> Unit,
-    focusManager: FocusManager = LocalFocusManager.current
+    focusManager: FocusManager = LocalFocusManager.current,
+    isTraining: Boolean = true
 ) {
     val sheetState = rememberModalBottomSheetState()
 
@@ -149,20 +149,24 @@ fun ExpoTrainingSettingBottomSheet(
                         )
                     }
 
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.Start),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "필수",
-                            style = typography.bodyRegular2,
-                            color = colors.gray500
-                        )
+                    if (isTraining) {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.Start),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "필수",
+                                style = typography.bodyRegular2,
+                                color = colors.gray500
+                            )
 
-                        CustomCheckBox(
-                            categoryState = categoryState,
-                            onCategoryChange = onCategoryChange
-                        )
+                            CustomCheckBox(
+                                categoryState = categoryState,
+                                onCategoryChange = onCategoryChange
+                            )
+                        }
+                    } else {
+                        Spacer(modifier = Modifier.size(1.dp))
                     }
                 }
 
@@ -226,7 +230,7 @@ fun CustomCheckBox(
 @Preview
 @Composable
 private fun ExpoTrainingSettingBottomSheetPreview() {
-    ExpoTrainingSettingBottomSheet(
+    ExpoSettingBottomSheet(
         onCancelClick = {},
         startedTextState = "",
         endedTextState = "",

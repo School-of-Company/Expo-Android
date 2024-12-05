@@ -74,11 +74,6 @@ internal fun QrcodeScanView(
                                 if (isScanningEnabled) {
                                     isScanningEnabled = false
                                     onQrcodeScan(qrcodeData)
-
-                                    // 2초 후 스캔 활성화
-                                    Handler(Looper.getMainLooper()).postDelayed({
-                                        isScanningEnabled = true
-                                    }, 2000)
                                 }
                             })
                         }
@@ -86,7 +81,6 @@ internal fun QrcodeScanView(
                     val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
                     try {
-                        // 카메라 바인딩
                         cameraProvider.unbindAll()
 
                         val camera = cameraProvider.bindToLifecycle(

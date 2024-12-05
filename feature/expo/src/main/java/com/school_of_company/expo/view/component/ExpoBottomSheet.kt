@@ -96,6 +96,7 @@ private fun HomeBottomSheetOptions(
                 indication = ripple(color = rippleColor),
                 interactionSource = remember { MutableInteractionSource() }
             )
+            .padding(horizontal = 12.dp)
     ) {
         Text(
             text = text,

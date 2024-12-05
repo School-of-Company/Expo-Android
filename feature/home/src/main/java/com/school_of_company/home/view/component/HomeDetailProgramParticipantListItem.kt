@@ -17,20 +17,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
-
-data class HomeDetailProgramParticipantData(
-    val name: String,
-    val company: String,
-    val position: String,
-    val schoolSubject: String,
-    val phone: String
-)
+import com.school_of_company.model.entity.training.TeacherTrainingProgramResponseEntity
 
 @Composable
 fun HomeDetailProgramParticipantListItem(
     modifier: Modifier = Modifier,
     index: Int,
-    data: HomeDetailProgramParticipantData,
+    data: TeacherTrainingProgramResponseEntity,
     horizontalScrollState: ScrollState = rememberScrollState()
 ) {
     ExpoAndroidTheme { colors, typography ->
@@ -58,7 +51,7 @@ fun HomeDetailProgramParticipantListItem(
                 modifier = Modifier.width(80.dp)
             )
             Text(
-                text = data.company,
+                text = data.organization,
                 style = typography.captionRegular2,
                 color = colors.black,
                 modifier = Modifier.width(100.dp)
@@ -70,13 +63,13 @@ fun HomeDetailProgramParticipantListItem(
                 modifier = Modifier.width(80.dp)
             )
             Text(
-                text = data.schoolSubject,
+                text = "교사",
                 style = typography.captionRegular2,
                 color = colors.black,
                 modifier = Modifier.width(120.dp)
             )
             Text(
-                text = data.phone,
+                text = "010-3825-1716",
                 style = typography.captionRegular2,
                 color = colors.black,
                 modifier = Modifier.width(100.dp)
@@ -88,14 +81,4 @@ fun HomeDetailProgramParticipantListItem(
 @Preview
 @Composable
 private fun HomeDetailProgramParticipantListItemPreview() {
-    HomeDetailProgramParticipantListItem(
-        index = 1,
-        data = HomeDetailProgramParticipantData(
-            name = "이명훈",
-            company = "초등학교",
-            position = "교사",
-            schoolSubject = "컴퓨터공학",
-            phone = "010-1234-5678"
-        )
-    )
 }

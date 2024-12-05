@@ -1,5 +1,7 @@
 package com.school_of_company.data.di
 
+import com.school_of_company.data.repository.attendance.AttendanceRepository
+import com.school_of_company.data.repository.attendance.AttendanceRepositoryImpl
 import com.school_of_company.data.repository.auth.AuthRepository
 import com.school_of_company.data.repository.auth.AuthRepositoryImpl
 import com.school_of_company.data.repository.expo.ExpoRepository
@@ -50,4 +52,9 @@ abstract class RepositoryModule {
     abstract fun bindStandardRepository(
         standardRepositoryImpl: StandardRepositoryImpl
     ) : StandardRepository
+
+    @Binds
+    abstract fun bindAttendanceRepository(
+        attendanceRepositoryImpl: AttendanceRepositoryImpl
+    ) : AttendanceRepository
 }

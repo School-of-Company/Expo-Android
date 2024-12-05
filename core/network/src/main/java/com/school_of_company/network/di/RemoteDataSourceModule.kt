@@ -1,5 +1,7 @@
 package com.school_of_company.network.di
 
+import com.school_of_company.network.datasource.attendance.AttendanceDataSource
+import com.school_of_company.network.datasource.attendance.AttendanceDataSourceImpl
 import com.school_of_company.network.datasource.auth.AuthDataSource
 import com.school_of_company.network.datasource.auth.AuthDataSourceImpl
 import com.school_of_company.network.datasource.expo.ExpoDataSource
@@ -50,4 +52,9 @@ abstract class RemoteDataSourceModule {
     abstract fun bindStandardRemoteDataSource(
         standardDataSourceImpl: StandardDataSourceImpl
     ) : StandardDataSource
+
+    @Binds
+    abstract fun bindAttendanceRemoteDataSource(
+        attendanceDataSourceImpl: AttendanceDataSourceImpl
+    ) : AttendanceDataSource
 }

@@ -58,7 +58,7 @@ internal fun ExpoDetailRoute(
     onCheckClick: () -> Unit,
     onQrGenerateClick: () -> Unit,
     onModifyClick: (String) -> Unit,
-    onProgramClick: () -> Unit,
+    onProgramClick: (String) -> Unit,
     viewModel: ExpoViewModel = hiltViewModel()
 ) {
     val getExpoInformationUiState by viewModel.getExpoInformationUiState.collectAsStateWithLifecycle()
@@ -92,7 +92,7 @@ internal fun ExpoDetailScreen(
     onCheckClick: () -> Unit,
     onQrGenerateClick: () -> Unit,
     onModifyClick: (String) -> Unit,
-    onProgramClick: () -> Unit
+    onProgramClick: (String) -> Unit
 ) {
     val (openDialog, isOpenDialog) = rememberSaveable { mutableStateOf(false) }
     val (openQrDialog, isOpenQrDialog) = rememberSaveable { mutableStateOf(false) }
@@ -296,7 +296,7 @@ internal fun ExpoDetailScreen(
 
                             ExpoEnableDetailButton(
                                 text = "프로그램",
-                                onClick = onProgramClick,
+                                onClick = { onProgramClick(id) },
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .border(

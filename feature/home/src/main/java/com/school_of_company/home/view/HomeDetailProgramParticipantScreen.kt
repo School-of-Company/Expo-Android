@@ -17,46 +17,74 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
+import com.google.accompanist.swiperefresh.SwipeRefreshState
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.component.topbar.ExpoTopBar
 import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
-import com.school_of_company.home.view.component.HomeDetailProgramParticipantData
 import com.school_of_company.home.view.component.HomeDetailProgramParticipantList
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toPersistentList
-
-fun generateParticipantSampleData(): ImmutableList<HomeDetailProgramParticipantData> {
-    return List(20) {
-        HomeDetailProgramParticipantData(
-            name = "이명훈",
-            company = "초등학교",
-            position = "교사",
-            schoolSubject = "컴퓨터공학",
-            phone = "010-1234-5678"
-        )
-    }.toPersistentList()
-}
+import com.school_of_company.home.view.component.QrButton
+import com.school_of_company.home.viewmodel.HomeViewModel
+import com.school_of_company.home.viewmodel.uistate.TeacherTrainingProgramListUiState
+import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 internal fun HomeDetailProgramParticipantRoute(
-    onBackClick: () -> Unit
+    id: Long,
+    onBackClick: () -> Unit,
+    navigateToQrScanner: (Long, Long) -> Unit,
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
+    val swipeRefreshLoading by viewModel.swipeRefreshLoading.collectAsStateWithLifecycle()
+    val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = swipeRefreshLoading)
+
+    val teacherTrainingProgramListUiState by viewModel.teacherTrainingProgramListUiState.collectAsStateWithLifecycle()
+
+    val traineeId: Long = when (teacherTrainingProgramListUiState) {
+        is TeacherTrainingProgramListUiState.Success -> {
+            (teacherTrainingProgramListUiState as TeacherTrainingProgramListUiState.Success).data.firstOrNull()?.id
+                ?: -1L
+        }
+
+        else -> -1L
+    }
+
     HomeDetailProgramParticipantScreen(
+        id = id,
         onBackClick = onBackClick,
-        participantData = generateParticipantSampleData()
+        teacherTrainingProgramListUiState = teacherTrainingProgramListUiState,
+        swipeRefreshState = swipeRefreshState,
+        getTeacherTrainingProgramList = { viewModel.teacherTrainingProgramList(id) },
+        navigateToQrScanner = navigateToQrScanner,
+        traineeId = traineeId
     )
+
+    LaunchedEffect(Unit) {
+        viewModel.teacherTrainingProgramList(id)
+    }
 }
 
 @Composable
 internal fun HomeDetailProgramParticipantScreen(
+    id: Long,
     modifier: Modifier = Modifier,
-    participantData: ImmutableList<HomeDetailProgramParticipantData>,
+    swipeRefreshState: SwipeRefreshState,
+    teacherTrainingProgramListUiState: TeacherTrainingProgramListUiState,
+    getTeacherTrainingProgramList: () -> Unit,
+    traineeId: Long,
+    navigateToQrScanner: (Long, Long) -> Unit,
     onBackClick: () -> Unit
 ) {
     ExpoAndroidTheme { colors, typography ->
@@ -79,17 +107,28 @@ internal fun HomeDetailProgramParticipantScreen(
 
             Spacer(modifier = Modifier.height(28.dp))
 
-            Text(
-                text = "프로그램",
-                style = typography.bodyBold2,
-                color = colors.black,
-                modifier = Modifier.padding(start = 16.dp)
-            )
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = "프로그램",
+                    style = typography.bodyBold2,
+                    color = colors.black,
+                    modifier = Modifier.padding(start = 16.dp)
+                )
+
+                QrButton(
+                    onClick = { navigateToQrScanner(id, traineeId) },
+                    modifier = Modifier.padding(end = 16.dp)
+                )
+            }
 
             Spacer(modifier = Modifier.height(12.dp))
 
             Row(modifier = Modifier.padding(horizontal = 16.dp)) {
-                Row(horizontalArrangement = Arrangement.spacedBy(10.dp, Alignment.Start),) {
+                Row(horizontalArrangement = Arrangement.spacedBy(10.dp, Alignment.Start)) {
                     WarnIcon(
                         tint = colors.gray300,
                         modifier = Modifier.size(16.dp)
@@ -120,12 +159,19 @@ internal fun HomeDetailProgramParticipantScreen(
                         style = typography.captionRegular2,
                         color = colors.gray500
                     )
+                    when (teacherTrainingProgramListUiState) {
+                        is TeacherTrainingProgramListUiState.Loading -> Unit
+                        is TeacherTrainingProgramListUiState.Success -> {
+                            Text(
+                                text = "${teacherTrainingProgramListUiState.data.size}명",
+                                style = typography.captionRegular2,
+                                color = colors.main
+                            )
+                        }
 
-                    Text(
-                        text = "${participantData.size}명",
-                        style = typography.captionRegular2,
-                        color = colors.main
-                    )
+                        is TeacherTrainingProgramListUiState.Error -> Unit
+                        is TeacherTrainingProgramListUiState.Empty -> Unit
+                    }
                 }
             }
 
@@ -138,9 +184,7 @@ internal fun HomeDetailProgramParticipantScreen(
                         color = colors.gray200
                     )
                     .fillMaxWidth()
-                    .padding(
-                        vertical = 16.dp
-                    )
+                    .padding(vertical = 16.dp)
             ) {
                 Row(
                     modifier = Modifier
@@ -150,7 +194,7 @@ internal fun HomeDetailProgramParticipantScreen(
                     horizontalArrangement = Arrangement.spacedBy(20.dp)
                 ) {
                     Spacer(modifier = Modifier.width(20.dp))
-                    
+
                     Text(
                         text = "성명",
                         style = typography.captionBold1,
@@ -184,7 +228,27 @@ internal fun HomeDetailProgramParticipantScreen(
                 }
             }
 
-            HomeDetailProgramParticipantList(item = participantData)
+            SwipeRefresh(
+                state = swipeRefreshState,
+                onRefresh = { getTeacherTrainingProgramList() },
+                indicator = { state, refreshTrigger ->
+                    SwipeRefreshIndicator(
+                        state = state,
+                        refreshTriggerDistance = refreshTrigger,
+                        contentColor = colors.main
+                    )
+                }
+            ) {
+                when (teacherTrainingProgramListUiState) {
+                    is TeacherTrainingProgramListUiState.Loading -> Unit
+                    is TeacherTrainingProgramListUiState.Success -> HomeDetailProgramParticipantList(
+                        item = teacherTrainingProgramListUiState.data.toImmutableList()
+                    )
+
+                    is TeacherTrainingProgramListUiState.Error -> Unit
+                    is TeacherTrainingProgramListUiState.Empty -> Unit
+                }
+            }
         }
     }
 }
@@ -192,8 +256,5 @@ internal fun HomeDetailProgramParticipantScreen(
 @Preview
 @Composable
 private fun HomeDetailProgramParticipantScreenPreview() {
-    HomeDetailProgramParticipantScreen(
-        onBackClick = {},
-        participantData = generateParticipantSampleData()
-    )
+
 }

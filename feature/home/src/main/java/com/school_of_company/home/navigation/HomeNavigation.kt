@@ -7,23 +7,37 @@ import androidx.navigation.compose.composable
 import com.school_of_company.home.view.HomeDetailParticipantManagementRoute
 import com.school_of_company.home.view.HomeDetailProgramParticipantRoute
 import com.school_of_company.home.view.HomeDetailProgramRoute
+import com.school_of_company.home.view.QrScannerRoute
 import com.school_of_company.home.view.SendMessageRoute
 
 const val homeSendMessageRoute = "home_send_message_route"
 const val homeDetailProgramRoute = "home_detail_program_route"
 const val homeDetailProgramParticipantRoute = "home_detail_program_participant_route"
 const val homeDetailParticipantManagementRoute = "home_detail_participant_management_route"
+const val qrScannerRoute = "qr_scanner_route"
 
 fun NavController.navigateToHomeSendMessage(navOptions: NavOptions? = null) {
     this.navigate(homeSendMessageRoute, navOptions)
 }
 
-fun NavController.navigateToHomeDetailProgram(navOptions: NavOptions? = null) {
-    this.navigate(homeDetailProgramRoute, navOptions)
+fun NavController.navigateToHomeDetailProgram(
+    id: String,
+    navOptions: NavOptions? = null
+) {
+    this.navigate(
+        route = "$homeDetailProgramRoute/${id}",
+        navOptions
+    )
 }
 
-fun NavController.navigateToHomeDetailProgramParticipant(navOptions: NavOptions? = null) {
-    this.navigate(homeDetailProgramParticipantRoute, navOptions)
+fun NavController.navigateToHomeDetailProgramParticipant(
+    id: Long,
+    navOptions: NavOptions? = null
+) {
+    this.navigate(
+        route = "$homeDetailProgramParticipantRoute/${id}",
+        navOptions
+    )
 }
 
 fun NavController.navigateToHomeDetailParticipantManagement(navOptions: NavOptions? = null) {
@@ -40,12 +54,25 @@ fun NavGraphBuilder.homeSendMessageScreen(
     }
 }
 
+fun NavController.navigateQrScanner(
+    id: Long,
+    traineeId: Long,
+    navOptions: NavOptions? = null
+) {
+    this.navigate(
+        route = "$qrScannerRoute/${id}/${traineeId}",
+        navOptions
+    )
+}
+
 fun NavGraphBuilder.homeDetailProgramScreen(
     onBackClick: () -> Unit,
-    navigateToProgramDetail: () -> Unit
+    navigateToProgramDetail: (Long) -> Unit
 ) {
-    composable(route = homeDetailProgramRoute) {
+    composable(route = "$homeDetailProgramRoute/{id}") { backStackEntry ->
+        val id = backStackEntry.arguments?.getString("id") ?: ""
         HomeDetailProgramRoute(
+            id = id,
             onBackClick = onBackClick,
             navigateToProgramDetail = navigateToProgramDetail
         )
@@ -53,12 +80,18 @@ fun NavGraphBuilder.homeDetailProgramScreen(
 }
 
 fun NavGraphBuilder.homeDetailProgramParticipantScreen(
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    navigateToQrScanner: (Long, Long) -> Unit
 ) {
-    composable(route = homeDetailProgramParticipantRoute) {
-        HomeDetailProgramParticipantRoute(
-            onBackClick = onBackClick
-        )
+    composable(route = "$homeDetailProgramParticipantRoute/{id}") { backStackEntry ->
+        val id = backStackEntry.arguments?.getString("id")?.toLongOrNull()
+        if (id != null) {
+            HomeDetailProgramParticipantRoute(
+                id = id,
+                onBackClick = onBackClick,
+                navigateToQrScanner = navigateToQrScanner
+            )
+        }
     }
 }
 
@@ -69,5 +102,23 @@ fun NavGraphBuilder.homeDetailParticipantManagementScreen(
         HomeDetailParticipantManagementRoute(
             onBackClick = onBackClick
         )
+    }
+}
+
+fun NavGraphBuilder.qrScannerScreen(
+    onBackClick: () -> Unit,
+    onPermissionBlock: () -> Unit
+) {
+    composable(route = "$qrScannerRoute/{id}/{traineeId}") { backStackEntry ->
+        val id = backStackEntry.arguments?.getString("id")?.toLongOrNull()
+        val traineeId = backStackEntry.arguments?.getString("traineeId")?.toLongOrNull()
+        if (id != null && traineeId != null) {
+            QrScannerRoute(
+                id = id,
+                traineeId = traineeId,
+                onBackClick = onBackClick,
+                onPermissionBlock = onPermissionBlock
+            )
+        }
     }
 }

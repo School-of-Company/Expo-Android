@@ -18,19 +18,15 @@ import com.school_of_company.design_system.component.modifier.clickable.expoClic
 import com.school_of_company.design_system.icon.CircleIcon
 import com.school_of_company.design_system.icon.XIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
-
-data class ProgramTempList(
-    val programName: String,
-    val check: Boolean,
-    val must: Boolean
-)
+import com.school_of_company.home.enum.ProgramEnum
+import com.school_of_company.model.entity.training.TrainingProgramListResponseEntity
 
 @Composable
 fun ProgramListItem(
     modifier: Modifier = Modifier,
     index: Int,
-    data: ProgramTempList,
-    navigateToProgramDetail: () -> Unit
+    data: TrainingProgramListResponseEntity,
+    navigateToProgramDetail: (Long) -> Unit
 ) {
     ExpoAndroidTheme { colors, typography ->
 
@@ -42,7 +38,7 @@ fun ProgramListItem(
                 .fillMaxWidth()
                 .background(color = colors.white)
                 .padding(vertical = 10.dp)
-                .expoClickable { navigateToProgramDetail() }
+                .expoClickable { navigateToProgramDetail(data.id) }
         ) {
 
             Text(
@@ -54,7 +50,7 @@ fun ProgramListItem(
 
 
             Text(
-                text = data.programName,
+                text = data.title,
                 style = typography.captionRegular2,
                 color = colors.black,
                 maxLines = 1,
@@ -63,38 +59,42 @@ fun ProgramListItem(
             )
 
 
-            if (data.check) {
-                CircleIcon(
-                    tint = colors.black,
-                    modifier = Modifier
-                        .size(16.dp)
-                        .weight(1f)
-                )
-            } else {
-                XIcon(
-                    tint = colors.error,
-                    modifier = Modifier
-                        .size(16.dp)
-                        .weight(1f)
-                )
-            }
-            
+            when (data.category) {
+                "ESSENTIAL" -> {
+                    CircleIcon(
+                        tint = colors.black,
+                        modifier = Modifier
+                            .size(16.dp)
+                            .weight(1f)
+                    )
+                    XIcon(
+                        tint = colors.error,
+                        modifier = Modifier
+                            .size(16.dp)
+                            .weight(1f)
+                    )
+                }
 
-            if (data.must) {
-                CircleIcon(
-                    tint = colors.black,
-                    modifier = Modifier
-                        .size(16.dp)
-                        .weight(1f)
-                )
-            } else {
-                XIcon(
-                    tint = colors.error,
-                    modifier = Modifier
-                        .size(16.dp)
-                        .weight(1f)
-                )
+                "CHOICE" -> {
+                    XIcon(
+                        tint = colors.error,
+                        modifier = Modifier
+                            .size(16.dp)
+                            .weight(1f)
+                    )
+                    CircleIcon(
+                        tint = colors.black,
+                        modifier = Modifier
+                            .size(16.dp)
+                            .weight(1f)
+                    )
+                }
+
+                else -> {
+                    // 기본적으로 보여줄 UI가 있다면 여기에 작성
+                }
             }
+
         }
     }
 }
@@ -102,13 +102,4 @@ fun ProgramListItem(
 @Preview
 @Composable
 private fun ProgramListItemPreview() {
-    ProgramListItem(
-        index = 1,
-        data = ProgramTempList(
-            programName = "프로그램 이름",
-            check = true,
-            must = false
-        ),
-        navigateToProgramDetail = {}
-    )
 }

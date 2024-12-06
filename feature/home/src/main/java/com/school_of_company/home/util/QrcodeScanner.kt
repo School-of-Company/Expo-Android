@@ -1,6 +1,5 @@
 package com.school_of_company.home.util
 
-import android.graphics.Bitmap
 import android.util.Log
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
@@ -29,10 +28,9 @@ class QrcodeScanner(
 
     @androidx.annotation.OptIn(androidx.camera.core.ExperimentalGetImage::class)
     override fun analyze(imageProxy: ImageProxy) {
-        val bitmap = imageProxy.toBitmap()
-        bitmap.let {
-            val image = InputImage.fromBitmap(bitmap, imageProxy.imageInfo.rotationDegrees)
-
+        val mediaImage = imageProxy.image
+        if (mediaImage != null) {
+            val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
             CoroutineScope(Dispatchers.IO).launch {
                 try {
                     val barcodes = scanner.process(image).await()
@@ -50,33 +48,8 @@ class QrcodeScanner(
                     imageProxy.close()
                 }
             }
+        } else {
+            imageProxy.close()
         }
-    }
-
-    private fun ImageProxy.toBitmap(): Bitmap? {
-        val nv21 = yuv420888ToNv21(this)
-        val yuvImage = android.graphics.YuvImage(nv21, android.graphics.ImageFormat.NV21, width, height, null)
-        val out = java.io.ByteArrayOutputStream()
-        yuvImage.compressToJpeg(android.graphics.Rect(0, 0, width, height), 100, out)
-        val byteArray = out.toByteArray()
-        return android.graphics.BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
-    }
-
-    private fun yuv420888ToNv21(image: ImageProxy): ByteArray {
-        val yBuffer = image.planes[0].buffer
-        val uBuffer = image.planes[1].buffer
-        val vBuffer = image.planes[2].buffer
-
-        val ySize = yBuffer.remaining()
-        val uSize = uBuffer.remaining()
-        val vSize = vBuffer.remaining()
-
-        val nv21 = ByteArray(ySize + uSize + vSize)
-
-        yBuffer.get(nv21, 0, ySize)
-        vBuffer.get(nv21, ySize, vSize)
-        uBuffer.get(nv21, ySize + vSize, uSize)
-
-        return nv21
     }
 }

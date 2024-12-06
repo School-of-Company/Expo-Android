@@ -87,11 +87,9 @@ internal fun QrScannerScreen(
     onBackClick: () -> Unit,
     onQrcodeScan: (Long) -> Unit,
 ) {
-    ExpoAndroidTheme { colors, typography ->
+    ExpoAndroidTheme { colors, _ ->
 
-        QrcodeScanView(
-            onQrcodeScan = onQrcodeScan
-        )
+        QrcodeScanView(onQrcodeScan = onQrcodeScan)
 
         Column(
             modifier = modifier

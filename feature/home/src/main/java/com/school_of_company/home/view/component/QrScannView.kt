@@ -1,7 +1,5 @@
 package com.school_of_company.home.view.component
 
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.FocusMeteringAction
@@ -27,10 +25,11 @@ import java.util.concurrent.Executors
 @androidx.camera.core.ExperimentalGetImage
 @Composable
 internal fun QrcodeScanView(
+    modifier: Modifier = Modifier,
     onQrcodeScan: (Long) -> Unit
 ) {
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
     ) { innerPadding: PaddingValues ->
         AndroidView(
             factory = { context ->
@@ -46,17 +45,14 @@ internal fun QrcodeScanView(
                 cameraProviderFuture.addListener({
                     val cameraProvider = cameraProviderFuture.get()
 
-                    // Preview 설정
                     val preview = Preview.Builder()
                         .build()
                         .apply {
-                            setSurfaceProvider(previewView.surfaceProvider)
+                            surfaceProvider = previewView.surfaceProvider
                         }
 
-                    // ImageCapture 설정
                     val imageCapture = ImageCapture.Builder().build()
 
-                    // ImageAnalysis 설정
                     val imageAnalyzer = ImageAnalysis.Builder()
                         .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                         .setResolutionSelector(
@@ -93,7 +89,6 @@ internal fun QrcodeScanView(
 
                         val cameraControl = camera.cameraControl
 
-                        // FocusMeteringAction으로 초점 및 노출 조정
                         val meteringPointFactory = previewView.meteringPointFactory
                         val meteringPoint = meteringPointFactory.createPoint(
                             previewView.width / 2f,

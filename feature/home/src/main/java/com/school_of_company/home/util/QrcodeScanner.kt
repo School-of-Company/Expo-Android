@@ -36,10 +36,16 @@ class QrcodeScanner(
                     val barcodes = scanner.process(image).await()
                     for (barcode in barcodes) {
                         val rawValue = barcode.displayValue
-                        val qrCodeValue = rawValue?.toLongOrNull()
-                        if (qrCodeValue != null) {
-                            qrcodeData(qrCodeValue)
-                            Log.d("qrcode", "QR code scan succeeded: $qrCodeValue")
+                        Log.d("qrcode", "Raw QR code value: $rawValue")
+
+                        if (rawValue != null) {
+                            try {
+                                val qrCodeValue = rawValue.toLong()
+                                qrcodeData(qrCodeValue)
+                                Log.d("qrcode", "QR code scan succeeded: $qrCodeValue")
+                            } catch (e: NumberFormatException) {
+                                Log.d("qrcode", "QR code contains non-numeric value: $rawValue")
+                            }
                         }
                     }
                 } catch (e: Exception) {

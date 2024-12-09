@@ -74,7 +74,7 @@ internal fun HomeDetailProgramRoute(
         getStandardProgramList = { viewModel.standardProgramList(id) }
     )
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(id) {
         viewModel.trainingProgramList(id)
         viewModel.standardProgramList(id)
     }

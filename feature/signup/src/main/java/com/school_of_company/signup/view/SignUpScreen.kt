@@ -275,7 +275,7 @@ internal fun SignUpScreen(
                         .height(50.dp),
                     value = password,
                     label = stringResource(id = R.string.password_label),
-                    placeholder = stringResource(id = R.string.password_hint),
+                    placeholder = "(8~24자 영어(대소문자)/숫자 특수문자 1개이상)",
                     isError = isPasswordValidError,
                     isDisabled = false,
                     errorText = if (isPasswordValidError) stringResource(id = R.string.expection_password_validdd) else stringResource(id = R.string.wrong_password),
@@ -296,19 +296,32 @@ internal fun SignUpScreen(
                     visualTransformationState = true
                 )
 
-                ExpoDefaultTextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp),
-                    value = phoneNumber,
-                    label = stringResource(id = R.string.number),
-                    placeholder = stringResource(id = R.string.write_number),
-                    isError = false,
-                    isDisabled = false,
-                    errorText = "",
-                    onValueChange = onPhoneNumberChange,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-                )
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.Start),
+                    verticalAlignment = Alignment.Bottom
+                ) {
+                    ExpoDefaultTextField(
+                        modifier = Modifier
+                            .height(50.dp)
+                            .width(242.dp),
+                        value = phoneNumber,
+                        label = stringResource(id = R.string.number),
+                        placeholder = "연락처는 \" - \" 빼고 입력해주세요",
+                        isError = false,
+                        isDisabled = false,
+                        errorText = "",
+                        onValueChange = onPhoneNumberChange,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                    )
+
+                    ExpoStateButton(
+                        text = "인증번호",
+                        state = if (phoneNumber.isNotBlank()) ButtonState.Enable else ButtonState.Disable,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        sendCertificationCodeCallBack()
+                    }
+                }
 
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.Start),
@@ -336,16 +349,6 @@ internal fun SignUpScreen(
                     }
                 }
             }
-
-            Text(
-                text = if (isCertificationResent) stringResource(id = R.string.re_certificationCode) else stringResource(id = R.string.certificationCode),
-                style = typography.captionRegular2,
-                color = colors.gray300,
-                modifier = Modifier
-                    .expoClickable { sendCertificationCodeCallBack() }
-                    .align(Alignment.Start)
-                    .padding(start = 16.dp, top = 6.dp)
-            )
 
             Spacer(modifier = Modifier.weight(1f))
 

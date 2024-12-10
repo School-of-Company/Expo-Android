@@ -58,7 +58,7 @@ fun NavGraphBuilder.expoDetailScreen(
     onCheckClick: () -> Unit,
     onQrGenerateClick: () -> Unit,
     onModifyClick: (String) -> Unit,
-    onProgramClick: () -> Unit
+    onProgramClick: (String) -> Unit
 ) {
     composable(route = "$expoDetailRoute/{id}") { backStackEntry ->
         val id = backStackEntry.arguments?.getString("id") ?: ""

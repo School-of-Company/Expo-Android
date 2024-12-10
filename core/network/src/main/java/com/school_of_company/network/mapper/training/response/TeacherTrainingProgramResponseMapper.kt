@@ -5,6 +5,7 @@ import com.school_of_company.network.dto.training.response.TeacherTrainingProgra
 
 fun TeacherTrainingProgramResponse.toEntity(): TeacherTrainingProgramResponseEntity =
     TeacherTrainingProgramResponseEntity(
+        id = this.id,
         name = this.name,
         organization = this.organization,
         position = this.position,

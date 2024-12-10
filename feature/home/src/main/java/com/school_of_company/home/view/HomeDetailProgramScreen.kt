@@ -19,6 +19,8 @@ import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,49 +28,71 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
+import com.google.accompanist.swiperefresh.SwipeRefreshState
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.component.topbar.ExpoTopBar
 import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.home.view.component.ProgramList
 import com.school_of_company.home.view.component.ProgramTabRowItem
-import com.school_of_company.home.view.component.ProgramTempList
-import kotlinx.collections.immutable.ImmutableList
+import com.school_of_company.home.view.component.StandardProgramList
+import com.school_of_company.home.viewmodel.HomeViewModel
+import com.school_of_company.home.viewmodel.uistate.StandardProgramListUiState
+import com.school_of_company.home.viewmodel.uistate.TrainingProgramListUiState
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-fun generateProgramSampleData(): ImmutableList<ProgramTempList> {
-    return List(20) {
-        ProgramTempList(
-            programName = "프로그램 이름",
-            check = true,
-            must = false
-        )
-    }.toPersistentList()
-}
-
 @Composable
 internal fun HomeDetailProgramRoute(
+    id: String,
     onBackClick: () -> Unit,
-    navigateToProgramDetail: () -> Unit
+    navigateToProgramDetail: (Long) -> Unit,
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
+    val swipeRefreshLoading by viewModel.swipeRefreshLoading.collectAsStateWithLifecycle()
+    val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = swipeRefreshLoading)
+
+    val trainingProgramListUiState by viewModel.trainingProgramListUiState.collectAsStateWithLifecycle()
+    val standardProgramListUiState by viewModel.standardProgramListUiState.collectAsStateWithLifecycle()
+
+
     HomeDetailProgramScreen(
-        programItem = generateProgramSampleData(),
+        id = id,
         onBackClick = onBackClick,
-        navigateToProgramDetail = navigateToProgramDetail
+        navigateToProgramDetail = navigateToProgramDetail,
+        trainingProgramUiState = trainingProgramListUiState,
+        standardProgramListUiState = standardProgramListUiState,
+        swipeRefreshState = swipeRefreshState,
+        getTrainingProgramList = { viewModel.trainingProgramList(id) },
+        getStandardProgramList = { viewModel.standardProgramList(id) }
     )
+
+    LaunchedEffect(id) {
+        viewModel.trainingProgramList(id)
+        viewModel.standardProgramList(id)
+    }
 }
 
 @Composable
 internal fun HomeDetailProgramScreen(
+    id: String,
     modifier: Modifier = Modifier,
+    swipeRefreshState: SwipeRefreshState,
+    trainingProgramUiState: TrainingProgramListUiState,
+    standardProgramListUiState: StandardProgramListUiState,
     pagerState: PagerState = rememberPagerState(pageCount = { 2 }),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
-    programItem: ImmutableList<ProgramTempList>,
     onBackClick: () -> Unit,
-    navigateToProgramDetail: () -> Unit,
+    navigateToProgramDetail: (Long) -> Unit,
+    getTrainingProgramList: () -> Unit,
+    getStandardProgramList: () -> Unit
 ) {
     ExpoAndroidTheme { colors, typography ->
         Column(
@@ -80,10 +104,12 @@ internal fun HomeDetailProgramScreen(
         ) {
 
             ExpoTopBar(
-                startIcon = { LeftArrowIcon(
+                startIcon = {
+                    LeftArrowIcon(
                         tint = colors.black,
                         modifier = Modifier.expoClickable { onBackClick() }
-                    ) },
+                    )
+                },
                 betweenText = "프로그램",
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
@@ -99,7 +125,7 @@ internal fun HomeDetailProgramScreen(
                         modifier = modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
                     )
                 },
-                modifier = Modifier.width(230.dp)
+                modifier = Modifier.width(280.dp)
             ) {
                 persistentListOf(
                     "일반 프로그램",
@@ -160,20 +186,50 @@ internal fun HomeDetailProgramScreen(
                 }
             }
 
-            HorizontalPager(state = pagerState) { page ->
-                when (page) {
-                    0 -> {
-                        ProgramList(
-                            item = programItem,
-                            navigateToProgramDetail = navigateToProgramDetail
-                        )
-                    }
+            SwipeRefresh(
+                state = swipeRefreshState,
+                onRefresh = {
+                    getTrainingProgramList()
+                    getStandardProgramList()
+                },
+                indicator = { state, refreshTrigger ->
+                    SwipeRefreshIndicator(
+                        state = state,
+                        refreshTriggerDistance = refreshTrigger,
+                        contentColor = colors.main
+                    )
+                }
+            ) {
+                HorizontalPager(state = pagerState) { page ->
+                    when (page) {
+                        0 -> {
+                            when (standardProgramListUiState) {
+                                is StandardProgramListUiState.Loading -> Unit
+                                is StandardProgramListUiState.Success -> {
+                                    StandardProgramList(
+                                        standardItem = standardProgramListUiState.data.toImmutableList(),
+                                        navigateToProgramDetail = navigateToProgramDetail
+                                    )
+                                }
+                                is StandardProgramListUiState.Empty -> Unit
+                                is StandardProgramListUiState.Error -> Unit
+                            }
+                        }
 
-                    1 -> {
-                        ProgramList(
-                            item = programItem,
-                            navigateToProgramDetail = navigateToProgramDetail
-                        )
+                        1 -> {
+                            when (trainingProgramUiState) {
+                                is TrainingProgramListUiState.Loading -> Unit
+                                is TrainingProgramListUiState.Success -> {
+                                    ProgramList(
+                                        trainingItem = trainingProgramUiState.data.toImmutableList(),
+                                        navigateToProgramDetail = navigateToProgramDetail
+                                    )
+                                }
+
+                                is TrainingProgramListUiState.Empty -> Unit
+                                is TrainingProgramListUiState.Error -> Unit
+                            }
+                        }
                     }
                 }
             }
@@ -185,20 +241,13 @@ internal fun HomeDetailProgramScreen(
 @Composable
 private fun HomeDetailProgramScreenPreview() {
     HomeDetailProgramScreen(
-        programItem = persistentListOf(
-            ProgramTempList(
-                programName = "adsfasfas",
-                check = true,
-                must = true
-            ),
-
-            ProgramTempList(
-                programName = "adsfasfas",
-                check = true,
-                must = true
-            ),
-        ),
         onBackClick = {},
-        navigateToProgramDetail = {}
+        navigateToProgramDetail = {},
+        id = "",
+        trainingProgramUiState = TrainingProgramListUiState.Loading,
+        standardProgramListUiState = StandardProgramListUiState.Loading,
+        swipeRefreshState = rememberSwipeRefreshState(isRefreshing = false),
+        getTrainingProgramList = {},
+        getStandardProgramList = {}
     )
 }

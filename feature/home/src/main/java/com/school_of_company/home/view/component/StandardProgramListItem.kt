@@ -12,20 +12,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
-import com.school_of_company.design_system.icon.CircleIcon
 import com.school_of_company.design_system.icon.XIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
-import com.school_of_company.home.enum.ProgramEnum
-import com.school_of_company.model.entity.training.TrainingProgramListResponseEntity
+import com.school_of_company.model.entity.standard.StandardProgramListResponseEntity
 
 @Composable
-fun ProgramListItem(
+fun StandardProgramListItem(
     modifier: Modifier = Modifier,
     index: Int,
-    data: TrainingProgramListResponseEntity,
+    data: StandardProgramListResponseEntity,
     navigateToProgramDetail: (Long) -> Unit
 ) {
     ExpoAndroidTheme { colors, typography ->
@@ -58,48 +55,19 @@ fun ProgramListItem(
                 modifier = Modifier.weight(2f)
             )
 
+            XIcon(
+                tint = colors.error,
+                modifier = Modifier
+                    .size(16.dp)
+                    .weight(1f)
+            )
 
-            when (data.category) {
-                "ESSENTIAL" -> {
-                    CircleIcon(
-                        tint = colors.black,
-                        modifier = Modifier
-                            .size(16.dp)
-                            .weight(1f)
-                    )
-                    XIcon(
-                        tint = colors.error,
-                        modifier = Modifier
-                            .size(16.dp)
-                            .weight(1f)
-                    )
-                }
-
-                "CHOICE" -> {
-                    XIcon(
-                        tint = colors.error,
-                        modifier = Modifier
-                            .size(16.dp)
-                            .weight(1f)
-                    )
-                    CircleIcon(
-                        tint = colors.black,
-                        modifier = Modifier
-                            .size(16.dp)
-                            .weight(1f)
-                    )
-                }
-
-                else -> {
-                    // 기본적으로 보여줄 UI가 있다면 여기에 작성
-                }
-            }
-
+            XIcon(
+                tint = colors.error,
+                modifier = Modifier
+                    .size(16.dp)
+                    .weight(1f)
+            )
         }
     }
-}
-
-@Preview
-@Composable
-private fun ProgramListItemPreview() {
 }

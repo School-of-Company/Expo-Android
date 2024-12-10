@@ -21,10 +21,12 @@ import com.school_of_company.home.navigation.homeDetailParticipantManagementScre
 import com.school_of_company.home.navigation.homeDetailProgramParticipantScreen
 import com.school_of_company.home.navigation.homeDetailProgramScreen
 import com.school_of_company.home.navigation.homeSendMessageScreen
+import com.school_of_company.home.navigation.navigateQrScanner
 import com.school_of_company.home.navigation.navigateToHomeDetailParticipantManagement
 import com.school_of_company.home.navigation.navigateToHomeDetailProgram
 import com.school_of_company.home.navigation.navigateToHomeDetailProgramParticipant
 import com.school_of_company.home.navigation.navigateToHomeSendMessage
+import com.school_of_company.home.navigation.qrScannerScreen
 import com.school_of_company.navigation.navigateToSignIn
 import com.school_of_company.navigation.sigInRoute
 import com.school_of_company.navigation.signInScreen
@@ -133,7 +135,9 @@ fun ExpoNavHost(
             onModifyClick = { id ->
                 navController.navigateToExpoModify(id)
             },
-            onProgramClick = navController::navigateToHomeDetailProgram
+            onProgramClick = { id ->
+                navController.navigateToHomeDetailProgram(id)
+            }
         )
 
         homeSendMessageScreen(
@@ -142,11 +146,14 @@ fun ExpoNavHost(
 
         homeDetailProgramScreen(
             onBackClick = navController::popBackStack,
-            navigateToProgramDetail = navController::navigateToHomeDetailProgramParticipant
+            navigateToProgramDetail = { id ->
+                navController.navigateToHomeDetailProgramParticipant(id)
+            }
         )
 
         homeDetailProgramParticipantScreen(
-            onBackClick = navController::popBackStack
+            onBackClick = navController::popBackStack,
+            navigateToQrScanner = navController::navigateQrScanner
         )
 
         homeDetailParticipantManagementScreen(
@@ -160,6 +167,11 @@ fun ExpoNavHost(
 
         expoCreateScreen(
             onErrorToast = makeErrorToast
+        )
+
+        qrScannerScreen(
+            onBackClick = navController::popBackStack,
+            onPermissionBlock = navController::popBackStack
         )
     }
 }

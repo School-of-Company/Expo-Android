@@ -6,17 +6,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
+import com.school_of_company.model.entity.training.TeacherTrainingProgramResponseEntity
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun HomeDetailProgramParticipantList(
     modifier: Modifier = Modifier,
-    item: ImmutableList<HomeDetailProgramParticipantData> = persistentListOf()
+    item: ImmutableList<TeacherTrainingProgramResponseEntity> = persistentListOf()
 ) {
     ExpoAndroidTheme { colors, _ ->
         LazyColumn(
@@ -38,22 +40,5 @@ fun HomeDetailProgramParticipantList(
 @Preview
 @Composable
 private fun HomeDetailProgramParticipantListPreview() {
-    HomeDetailProgramParticipantList(
-        item = persistentListOf(
-            HomeDetailProgramParticipantData(
-                name = "이명훈",
-                company = "초등학교",
-                position = "교사",
-                schoolSubject = "컴퓨터공학",
-                phone = "010-1234-5678"
-            ),
-            HomeDetailProgramParticipantData(
-                name = "이명훈",
-                company = "초등학교",
-                position = "교사",
-                schoolSubject = "컴퓨터공학",
-                phone = "010-1234-5678"
-            ),
-        )
-    )
+
 }

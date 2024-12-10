@@ -33,6 +33,7 @@ import com.school_of_company.model.model.expo.ExpoRequestAndResponseModel
 import com.school_of_company.model.model.standard.StandardRequestModel
 import com.school_of_company.model.model.training.TrainingDtoModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

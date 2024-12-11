@@ -32,7 +32,7 @@ fun ProgramTabRowItem(
                 text = title,
                 style = typography.bodyBold1,
                 fontWeight = if (isCurrentIndex) FontWeight.SemiBold else FontWeight.Normal,
-                color = if (isCurrentIndex) colors.black else colors.gray500,
+                color = if (isCurrentIndex) colors.main else colors.gray500,
                 textAlign = TextAlign.Center
             )
         }

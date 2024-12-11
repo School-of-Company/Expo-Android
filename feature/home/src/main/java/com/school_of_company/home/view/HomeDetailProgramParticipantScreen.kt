@@ -187,11 +187,11 @@ internal fun HomeDetailProgramParticipantScreen(
                     .padding(vertical = 16.dp)
             ) {
                 Row(
+                    horizontalArrangement = Arrangement.spacedBy(20.dp),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 16.dp)
-                        .horizontalScroll(rememberScrollState()),
-                    horizontalArrangement = Arrangement.spacedBy(20.dp)
+                        .horizontalScroll(rememberScrollState())
                 ) {
                     Spacer(modifier = Modifier.width(20.dp))
 
@@ -256,5 +256,13 @@ internal fun HomeDetailProgramParticipantScreen(
 @Preview
 @Composable
 private fun HomeDetailProgramParticipantScreenPreview() {
-
+    HomeDetailProgramParticipantScreen(
+        id = 0,
+        onBackClick = {},
+        teacherTrainingProgramListUiState = TeacherTrainingProgramListUiState.Loading,
+        swipeRefreshState = rememberSwipeRefreshState(isRefreshing = false),
+        getTeacherTrainingProgramList = {},
+        navigateToQrScanner = { _, _ -> },
+        traineeId = -1L
+    )
 }

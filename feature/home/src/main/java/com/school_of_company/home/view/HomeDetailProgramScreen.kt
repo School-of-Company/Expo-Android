@@ -1,7 +1,10 @@
 package com.school_of_company.home.view
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,10 +13,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
@@ -25,7 +31,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -36,7 +41,9 @@ import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.component.topbar.ExpoTopBar
+import com.school_of_company.design_system.icon.ExpoIcon
 import com.school_of_company.design_system.icon.LeftArrowIcon
+import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.home.view.component.ProgramList
 import com.school_of_company.home.view.component.ProgramTabRowItem
@@ -64,7 +71,6 @@ internal fun HomeDetailProgramRoute(
 
 
     HomeDetailProgramScreen(
-        id = id,
         onBackClick = onBackClick,
         navigateToProgramDetail = navigateToProgramDetail,
         trainingProgramUiState = trainingProgramListUiState,
@@ -82,7 +88,6 @@ internal fun HomeDetailProgramRoute(
 
 @Composable
 internal fun HomeDetailProgramScreen(
-    id: String,
     modifier: Modifier = Modifier,
     swipeRefreshState: SwipeRefreshState,
     trainingProgramUiState: TrainingProgramListUiState,
@@ -92,7 +97,8 @@ internal fun HomeDetailProgramScreen(
     onBackClick: () -> Unit,
     navigateToProgramDetail: (Long) -> Unit,
     getTrainingProgramList: () -> Unit,
-    getStandardProgramList: () -> Unit
+    getStandardProgramList: () -> Unit,
+    scrollState: ScrollState = rememberScrollState()
 ) {
     ExpoAndroidTheme { colors, typography ->
         Column(
@@ -156,33 +162,54 @@ internal fun HomeDetailProgramScreen(
                         horizontal = 16.dp,
                         vertical = 16.dp
                     )
+                    .horizontalScroll(scrollState)
             ) {
+
                 Row(verticalAlignment = Alignment.CenterVertically) {
 
-                    Spacer(modifier = Modifier.weight(0.5f))
+                    Spacer(modifier = Modifier.width(62.dp))
 
                     Text(
                         text = "프로그램",
                         style = typography.captionBold1,
                         color = colors.gray600,
-                        modifier = Modifier.weight(2f)
+                        modifier = Modifier.width(100.dp)
                     )
 
-                    Text(
-                        text = "선택",
-                        style = typography.captionBold1,
-                        color = colors.gray600,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.weight(1f)
-                    )
+                    Spacer(modifier = Modifier.width(64.dp))
 
-                    Text(
-                        text = "필수",
-                        style = typography.captionBold1,
-                        color = colors.gray600,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.weight(1f)
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(64.dp, Alignment.End)
+                    ) {
+                        Text(
+                            text = "시작시간",
+                            style = typography.captionBold1,
+                            color = colors.gray600,
+                            modifier = Modifier.width(150.dp)
+                        )
+
+                        Text(
+                            text = "종료시간",
+                            style = typography.captionBold1,
+                            color = colors.gray600,
+                            modifier = Modifier.width(150.dp)
+                        )
+
+                        Text(
+                            text = "선택",
+                            style = typography.captionBold1,
+                            color = colors.gray600,
+                            modifier = Modifier.width(25.dp)
+                        )
+
+                        Text(
+                            text = "필수",
+                            style = typography.captionBold1,
+                            color = colors.gray600,
+                            modifier = Modifier.width(25.dp)
+                        )
+                    }
                 }
             }
 
@@ -211,8 +238,50 @@ internal fun HomeDetailProgramScreen(
                                         navigateToProgramDetail = navigateToProgramDetail
                                     )
                                 }
-                                is StandardProgramListUiState.Empty -> Unit
-                                is StandardProgramListUiState.Error -> Unit
+
+                                is StandardProgramListUiState.Empty -> {
+                                    Column(
+                                        verticalArrangement = Arrangement.spacedBy(28.dp, Alignment.CenterVertically),
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .verticalScroll(scrollState)
+                                            .background(color = colors.white)
+                                    ) {
+                                        ExpoIcon(
+                                            tint = colors.black,
+                                            modifier = Modifier.size(100.dp)
+                                        )
+                                        Text(
+                                            text = "아직 일반 프로그램이 등장하지 않았아요..",
+                                            style = typography.bodyRegular2,
+                                            color = colors.gray400
+                                        )
+                                    }
+                                }
+                                is StandardProgramListUiState.Error -> {
+                                    Column(
+                                        verticalArrangement = Arrangement.spacedBy(
+                                            28.dp,
+                                            Alignment.CenterVertically
+                                        ),
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .background(color = colors.white)
+                                            .verticalScroll(scrollState)
+                                    ) {
+                                        WarnIcon(
+                                            tint = colors.black,
+                                            modifier = Modifier.size(100.dp)
+                                        )
+                                        Text(
+                                            text = "데이터를 불러올 수 없어요!",
+                                            style = typography.bodyRegular2,
+                                            color = colors.gray400
+                                        )
+                                    }
+                                }
                             }
                         }
 
@@ -226,8 +295,49 @@ internal fun HomeDetailProgramScreen(
                                     )
                                 }
 
-                                is TrainingProgramListUiState.Empty -> Unit
-                                is TrainingProgramListUiState.Error -> Unit
+                                is TrainingProgramListUiState.Empty -> {
+                                    Column(
+                                        verticalArrangement = Arrangement.spacedBy(28.dp, Alignment.CenterVertically),
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .verticalScroll(scrollState)
+                                            .background(color = colors.white)
+                                    ) {
+                                        ExpoIcon(
+                                            tint = colors.black,
+                                            modifier = Modifier.size(100.dp)
+                                        )
+                                        Text(
+                                            text = "아직 연수 프로그램이 등장하지 않았아요..",
+                                            style = typography.bodyRegular2,
+                                            color = colors.gray400
+                                        )
+                                    }
+                                }
+                                is TrainingProgramListUiState.Error -> {
+                                    Column(
+                                        verticalArrangement = Arrangement.spacedBy(
+                                            28.dp,
+                                            Alignment.CenterVertically
+                                        ),
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .background(color = colors.white)
+                                            .verticalScroll(scrollState)
+                                    ) {
+                                        WarnIcon(
+                                            tint = colors.black,
+                                            modifier = Modifier.size(100.dp)
+                                        )
+                                        Text(
+                                            text = "데이터를 불러올 수 없어요!",
+                                            style = typography.bodyRegular2,
+                                            color = colors.gray400
+                                        )
+                                    }
+                                }
                             }
                         }
                     }
@@ -243,7 +353,6 @@ private fun HomeDetailProgramScreenPreview() {
     HomeDetailProgramScreen(
         onBackClick = {},
         navigateToProgramDetail = {},
-        id = "",
         trainingProgramUiState = TrainingProgramListUiState.Loading,
         standardProgramListUiState = StandardProgramListUiState.Loading,
         swipeRefreshState = rememberSwipeRefreshState(isRefreshing = false),

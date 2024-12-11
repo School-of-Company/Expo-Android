@@ -24,7 +24,6 @@ import com.school_of_company.design_system.component.modifier.clickable.expoClic
 import com.school_of_company.design_system.icon.XIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.model.entity.standard.StandardProgramListResponseEntity
-import com.school_of_company.model.entity.training.TrainingProgramListResponseEntity
 
 @Composable
 fun StandardProgramListItem(

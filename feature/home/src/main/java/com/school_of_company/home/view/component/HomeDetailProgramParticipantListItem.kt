@@ -31,11 +31,11 @@ fun HomeDetailProgramParticipantListItem(
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(20.dp),
             modifier = modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)
-                .horizontalScroll(horizontalScrollState),
-            horizontalArrangement = Arrangement.spacedBy(20.dp)
+                .horizontalScroll(horizontalScrollState)
         ) {
             Text(
                 text = index.toString(),
@@ -81,4 +81,17 @@ fun HomeDetailProgramParticipantListItem(
 @Preview
 @Composable
 private fun HomeDetailProgramParticipantListItemPreview() {
+    HomeDetailProgramParticipantListItem(
+        index = 1,
+        data = TeacherTrainingProgramResponseEntity(
+            id = 0,
+            name = "홍길동",
+            organization = "한국대학교",
+            position = "교사",
+            programName = "프로그램",
+            status = true,
+            entryTime = "2024-09-12 T 08:30",
+            leaveTime = "2024-09-12 T 08:30"
+        )
+    )
 }

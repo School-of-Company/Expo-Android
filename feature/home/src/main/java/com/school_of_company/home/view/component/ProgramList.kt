@@ -69,4 +69,16 @@ fun StandardProgramList(
 @Preview
 @Composable
 private fun ProgramListPreview() {
+    ProgramList(
+        trainingItem = persistentListOf(
+            TrainingProgramListResponseEntity(
+                id = 0,
+                title = "title",
+                startedAt = "startedAt",
+                endedAt = "endedAt",
+                category = "ESSENTIAL"
+            )
+        ),
+        navigateToProgramDetail = {}
+    )
 }

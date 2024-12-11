@@ -1,7 +1,5 @@
 package com.school_of_company.expo_android.navigation
 
-import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -12,7 +10,6 @@ import com.school_of_company.expo.navigation.expoCreateScreen
 import com.school_of_company.expo.navigation.expoDetailScreen
 import com.school_of_company.expo.navigation.expoModifyScreen
 import com.school_of_company.expo.navigation.expoScreen
-import com.school_of_company.expo.navigation.homeRoute
 import com.school_of_company.expo.navigation.navigateToExpoDetail
 import com.school_of_company.expo.navigation.navigateToExpoModify
 import com.school_of_company.expo.navigation.navigateToHome
@@ -62,52 +59,6 @@ fun ExpoNavHost(
     NavHost(
         navController = navController,
         startDestination = startDestination,
-
-        enterTransition = {
-            // homeRoute로 이동할 때도 애니메이션 적용
-            if (targetState.destination.route == homeRoute) {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Right, // 오른쪽에서 들어옴
-                    animationSpec = tween(durationMillis = 500)
-                )
-            } else {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Left, // 왼쪽에서 들어옴
-                    animationSpec = tween(durationMillis = 500)
-                )
-            }
-        },
-
-        // 화면을 나갈 때의 애니메이션 - forward navigation
-        exitTransition = {
-            if (targetState.destination.route == homeRoute) {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Right, // 오른쪽으로 나감
-                    animationSpec = tween(durationMillis = 500)
-                )
-            } else {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Left, // 왼쪽으로 나감
-                    animationSpec = tween(durationMillis = 500)
-                )
-            }
-        },
-
-        // 이전 화면으로 돌아갈 때의 애니메이션 - back navigation
-        popEnterTransition = {
-            slideIntoContainer(
-                AnimatedContentTransitionScope.SlideDirection.Right,
-                animationSpec = tween(durationMillis = 350)
-            )
-        },
-
-        // 이전 화면으로 돌아갈 때의 애니메이션 설정 - back navigation
-        popExitTransition = {
-            slideOutOfContainer(
-                AnimatedContentTransitionScope.SlideDirection.Right,
-                animationSpec = tween(durationMillis = 350)
-            )
-        },
         modifier = modifier,
     ) {
 

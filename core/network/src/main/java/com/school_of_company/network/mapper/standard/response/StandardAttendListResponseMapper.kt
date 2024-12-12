@@ -5,6 +5,7 @@ import com.school_of_company.network.dto.standard.response.StandardAttendListRes
 
 fun StandardAttendListResponse.toModel(): StandardAttendListResponseEntity =
     StandardAttendListResponseEntity(
+        id = id,
         name = this.name,
         affiliation = this.affiliation,
         position = this.position,

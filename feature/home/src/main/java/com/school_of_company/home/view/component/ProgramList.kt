@@ -1,6 +1,5 @@
 package com.school_of_company.home.view.component
 
-import android.text.style.TabStopSpan.Standard
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -20,7 +19,7 @@ import kotlinx.collections.immutable.persistentListOf
 fun ProgramList(
     modifier: Modifier = Modifier,
     trainingItem: ImmutableList<TrainingProgramListResponseEntity> = persistentListOf(),
-    navigateToProgramDetail: (Long) -> Unit
+    navigateToTrainingProgramDetail: (Long) -> Unit
 ) {
     ExpoAndroidTheme { colors, _ ->
 
@@ -34,7 +33,7 @@ fun ProgramList(
                 ProgramListItem(
                     index = index + 1,
                     data = item,
-                    navigateToProgramDetail = navigateToProgramDetail
+                    navigateToTrainingProgramDetail = navigateToTrainingProgramDetail
                 )
             }
         }
@@ -45,7 +44,7 @@ fun ProgramList(
 fun StandardProgramList(
     modifier: Modifier = Modifier,
     standardItem: ImmutableList<StandardProgramListResponseEntity> = persistentListOf(),
-    navigateToProgramDetail: (Long) -> Unit
+    navigateToStandardProgramDetail: (Long) -> Unit
 ) {
     ExpoAndroidTheme { colors, _ ->
 
@@ -59,7 +58,7 @@ fun StandardProgramList(
                 StandardProgramListItem(
                     index = index + 1,
                     data = item,
-                    navigateToProgramDetail = navigateToProgramDetail
+                    navigateToStandardProgramDetail = navigateToStandardProgramDetail
                 )
             }
         }
@@ -79,6 +78,6 @@ private fun ProgramListPreview() {
                 category = "ESSENTIAL"
             )
         ),
-        navigateToProgramDetail = {}
+        navigateToTrainingProgramDetail = {}
     )
 }

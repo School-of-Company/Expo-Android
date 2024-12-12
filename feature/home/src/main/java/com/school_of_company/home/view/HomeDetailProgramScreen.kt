@@ -60,7 +60,8 @@ import kotlinx.coroutines.launch
 internal fun HomeDetailProgramRoute(
     id: String,
     onBackClick: () -> Unit,
-    navigateToProgramDetail: (Long) -> Unit,
+    navigateToTrainingProgramDetail: (Long) -> Unit,
+    navigateToStandardProgramDetail: (Long) -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val swipeRefreshLoading by viewModel.swipeRefreshLoading.collectAsStateWithLifecycle()
@@ -72,7 +73,8 @@ internal fun HomeDetailProgramRoute(
 
     HomeDetailProgramScreen(
         onBackClick = onBackClick,
-        navigateToProgramDetail = navigateToProgramDetail,
+        navigateToTrainingProgramDetail = navigateToTrainingProgramDetail,
+        navigateToStandardProgramDetail = navigateToStandardProgramDetail,
         trainingProgramUiState = trainingProgramListUiState,
         standardProgramListUiState = standardProgramListUiState,
         swipeRefreshState = swipeRefreshState,
@@ -95,7 +97,8 @@ internal fun HomeDetailProgramScreen(
     pagerState: PagerState = rememberPagerState(pageCount = { 2 }),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     onBackClick: () -> Unit,
-    navigateToProgramDetail: (Long) -> Unit,
+    navigateToTrainingProgramDetail: (Long) -> Unit,
+    navigateToStandardProgramDetail: (Long) -> Unit,
     getTrainingProgramList: () -> Unit,
     getStandardProgramList: () -> Unit,
     scrollState: ScrollState = rememberScrollState()
@@ -235,7 +238,7 @@ internal fun HomeDetailProgramScreen(
                                 is StandardProgramListUiState.Success -> {
                                     StandardProgramList(
                                         standardItem = standardProgramListUiState.data.toImmutableList(),
-                                        navigateToProgramDetail = navigateToProgramDetail
+                                        navigateToStandardProgramDetail = navigateToStandardProgramDetail
                                     )
                                 }
 
@@ -291,7 +294,7 @@ internal fun HomeDetailProgramScreen(
                                 is TrainingProgramListUiState.Success -> {
                                     ProgramList(
                                         trainingItem = trainingProgramUiState.data.toImmutableList(),
-                                        navigateToProgramDetail = navigateToProgramDetail
+                                        navigateToTrainingProgramDetail = navigateToTrainingProgramDetail
                                     )
                                 }
 
@@ -352,11 +355,12 @@ internal fun HomeDetailProgramScreen(
 private fun HomeDetailProgramScreenPreview() {
     HomeDetailProgramScreen(
         onBackClick = {},
-        navigateToProgramDetail = {},
         trainingProgramUiState = TrainingProgramListUiState.Loading,
         standardProgramListUiState = StandardProgramListUiState.Loading,
         swipeRefreshState = rememberSwipeRefreshState(isRefreshing = false),
         getTrainingProgramList = {},
-        getStandardProgramList = {}
+        getStandardProgramList = {},
+        navigateToStandardProgramDetail = {},
+        navigateToTrainingProgramDetail = {}
     )
 }

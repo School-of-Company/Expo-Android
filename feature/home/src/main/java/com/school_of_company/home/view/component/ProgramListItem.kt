@@ -30,7 +30,7 @@ fun ProgramListItem(
     modifier: Modifier = Modifier,
     index: Int,
     data: TrainingProgramListResponseEntity,
-    navigateToProgramDetail: (Long) -> Unit,
+    navigateToTrainingProgramDetail: (Long) -> Unit,
     horizontalScrollState: ScrollState = rememberScrollState()
 ) {
     ExpoAndroidTheme { colors, typography ->
@@ -44,7 +44,7 @@ fun ProgramListItem(
                 .background(color = colors.white)
                 .padding(vertical = 10.dp)
                 .horizontalScroll(horizontalScrollState)
-                .expoClickable { navigateToProgramDetail(data.id) }
+                .expoClickable { navigateToTrainingProgramDetail(data.id) }
         ) {
 
             Text(
@@ -137,6 +137,6 @@ private fun ProgramListItemPreview() {
             endedAt = "2024-09-12 T 08:30",
             category = "ESSENTIAL"
         ),
-        navigateToProgramDetail = {}
+        navigateToTrainingProgramDetail = {}
     )
 }

@@ -1,6 +1,7 @@
 package com.school_of_company.home.view.component
 
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -34,6 +35,7 @@ fun HomeDetailProgramParticipantListItem(
             horizontalArrangement = Arrangement.spacedBy(20.dp),
             modifier = modifier
                 .fillMaxWidth()
+                .background(color = colors.white)
                 .padding(vertical = 8.dp)
                 .horizontalScroll(horizontalScrollState)
         ) {
@@ -50,29 +52,40 @@ fun HomeDetailProgramParticipantListItem(
                 color = colors.black,
                 modifier = Modifier.width(80.dp)
             )
+
             Text(
                 text = data.organization,
                 style = typography.captionRegular2,
                 color = colors.black,
                 modifier = Modifier.width(100.dp)
             )
+
             Text(
                 text = data.position,
                 style = typography.captionRegular2,
                 color = colors.black,
                 modifier = Modifier.width(80.dp)
             )
+
             Text(
-                text = "교사",
+                text = if (data.status) "출석" else "미출석",
                 style = typography.captionRegular2,
                 color = colors.black,
                 modifier = Modifier.width(120.dp)
             )
+
             Text(
-                text = "010-3825-1716",
+                text = data.entryTime ?: "입실전",
                 style = typography.captionRegular2,
                 color = colors.black,
-                modifier = Modifier.width(100.dp)
+                modifier = Modifier.width(150.dp)
+            )
+
+            Text(
+                text = data.leaveTime ?: "퇴실전",
+                style = typography.captionRegular2,
+                color = colors.black,
+                modifier = Modifier.width(150.dp)
             )
         }
     }

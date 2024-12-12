@@ -1,5 +1,6 @@
 package com.school_of_company.home.view
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.horizontalScroll
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -31,6 +33,7 @@ import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.component.topbar.ExpoTopBar
+import com.school_of_company.design_system.icon.ExpoIcon
 import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
@@ -54,10 +57,8 @@ internal fun HomeDetailProgramParticipantRoute(
 
     val traineeId: Long = when (teacherTrainingProgramListUiState) {
         is TeacherTrainingProgramListUiState.Success -> {
-            (teacherTrainingProgramListUiState as TeacherTrainingProgramListUiState.Success).data.firstOrNull()?.id
-                ?: -1L
+            (teacherTrainingProgramListUiState as TeacherTrainingProgramListUiState.Success).data.firstOrNull()?.id ?: -1L
         }
-
         else -> -1L
     }
 
@@ -85,7 +86,8 @@ internal fun HomeDetailProgramParticipantScreen(
     getTeacherTrainingProgramList: () -> Unit,
     traineeId: Long,
     navigateToQrScanner: (Long, Long) -> Unit,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    scrollState: ScrollState = rememberScrollState()
 ) {
     ExpoAndroidTheme { colors, typography ->
         Column(
@@ -160,7 +162,13 @@ internal fun HomeDetailProgramParticipantScreen(
                         color = colors.gray500
                     )
                     when (teacherTrainingProgramListUiState) {
-                        is TeacherTrainingProgramListUiState.Loading -> Unit
+                        is TeacherTrainingProgramListUiState.Loading -> {
+                            Text(
+                                text = "로딩중..",
+                                style = typography.captionRegular2,
+                                color = colors.gray200
+                            )
+                        }
                         is TeacherTrainingProgramListUiState.Success -> {
                             Text(
                                 text = "${teacherTrainingProgramListUiState.data.size}명",
@@ -169,8 +177,20 @@ internal fun HomeDetailProgramParticipantScreen(
                             )
                         }
 
-                        is TeacherTrainingProgramListUiState.Error -> Unit
-                        is TeacherTrainingProgramListUiState.Empty -> Unit
+                        is TeacherTrainingProgramListUiState.Error -> {
+                            Text(
+                                text = "데이터를 불러올 수 없습니다..",
+                                style = typography.captionRegular2,
+                                color = colors.gray200
+                            )
+                        }
+                        is TeacherTrainingProgramListUiState.Empty -> {
+                            Text(
+                                text = "0명",
+                                style = typography.captionRegular2,
+                                color = colors.main
+                            )
+                        }
                     }
                 }
             }
@@ -201,29 +221,40 @@ internal fun HomeDetailProgramParticipantScreen(
                         color = colors.gray600,
                         modifier = Modifier.width(80.dp)
                     )
+
                     Text(
                         text = "소속",
                         style = typography.captionBold1,
                         color = colors.gray600,
                         modifier = Modifier.width(100.dp)
                     )
+
                     Text(
                         text = "직급",
                         style = typography.captionBold1,
                         color = colors.gray600,
                         modifier = Modifier.width(80.dp)
                     )
+
                     Text(
-                        text = "중고등학교인교인 교과명",
+                        text = "출석여부",
+                        style = typography.captionBold1,
+                        color = colors.gray600,
+                        modifier = Modifier.width(120.dp)
+                    )
+
+                    Text(
+                        text = "입실시간",
                         style = typography.captionBold1,
                         color = colors.gray600,
                         modifier = Modifier.width(150.dp)
                     )
+
                     Text(
-                        text = "안내문자 발송용 연락처",
+                        text = "퇴실시간",
                         style = typography.captionBold1,
                         color = colors.gray600,
-                        modifier = Modifier.width(130.dp)
+                        modifier = Modifier.width(150.dp)
                     )
                 }
             }
@@ -241,12 +272,50 @@ internal fun HomeDetailProgramParticipantScreen(
             ) {
                 when (teacherTrainingProgramListUiState) {
                     is TeacherTrainingProgramListUiState.Loading -> Unit
-                    is TeacherTrainingProgramListUiState.Success -> HomeDetailProgramParticipantList(
-                        item = teacherTrainingProgramListUiState.data.toImmutableList()
-                    )
-
-                    is TeacherTrainingProgramListUiState.Error -> Unit
-                    is TeacherTrainingProgramListUiState.Empty -> Unit
+                    is TeacherTrainingProgramListUiState.Success -> HomeDetailProgramParticipantList(item = teacherTrainingProgramListUiState.data.toImmutableList())
+                    is TeacherTrainingProgramListUiState.Error -> {
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(
+                                28.dp,
+                                Alignment.CenterVertically
+                            ),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(color = colors.white)
+                                .verticalScroll(scrollState)
+                        ) {
+                            WarnIcon(
+                                tint = colors.black,
+                                modifier = Modifier.size(100.dp)
+                            )
+                            Text(
+                                text = "데이터를 불러올 수 없어요!",
+                                style = typography.bodyRegular2,
+                                color = colors.gray400
+                            )
+                        }
+                    }
+                    is TeacherTrainingProgramListUiState.Empty -> {
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(28.dp, Alignment.CenterVertically),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .verticalScroll(scrollState)
+                                .background(color = colors.white)
+                        ) {
+                            ExpoIcon(
+                                tint = colors.black,
+                                modifier = Modifier.size(100.dp)
+                            )
+                            Text(
+                                text = "아직 연수 참가자가 등장하지 않았아요..",
+                                style = typography.bodyRegular2,
+                                color = colors.gray400
+                            )
+                        }
+                    }
                 }
             }
         }

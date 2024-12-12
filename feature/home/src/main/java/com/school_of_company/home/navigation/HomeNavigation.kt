@@ -2,17 +2,21 @@ package com.school_of_company.home.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHost
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.school_of_company.home.view.HomeDetailParticipantManagementRoute
 import com.school_of_company.home.view.HomeDetailProgramParticipantRoute
 import com.school_of_company.home.view.HomeDetailProgramRoute
+import com.school_of_company.home.view.HomeDetailStandardProgramParticipantRoute
+import com.school_of_company.home.view.HomeDetailStandardProgramParticipantScreen
 import com.school_of_company.home.view.QrScannerRoute
 import com.school_of_company.home.view.SendMessageRoute
 
 const val homeSendMessageRoute = "home_send_message_route"
 const val homeDetailProgramRoute = "home_detail_program_route"
-const val homeDetailProgramParticipantRoute = "home_detail_program_participant_route"
+const val homeDetailTrainingProgramParticipantRoute = "home_detail_program_participant_route"
+const val homeDetailStandardProgramParticipantRoute = "home_detail_standard_program_participant_route"
 const val homeDetailParticipantManagementRoute = "home_detail_participant_management_route"
 const val qrScannerRoute = "qr_scanner_route"
 
@@ -30,12 +34,22 @@ fun NavController.navigateToHomeDetailProgram(
     )
 }
 
-fun NavController.navigateToHomeDetailProgramParticipant(
+fun NavController.navigateToHomeDetailTrainingProgramParticipant(
     id: Long,
     navOptions: NavOptions? = null
 ) {
     this.navigate(
-        route = "$homeDetailProgramParticipantRoute/${id}",
+        route = "$homeDetailTrainingProgramParticipantRoute/${id}",
+        navOptions
+    )
+}
+
+fun NavController.navigateToHomeDetailStandardProgramParticipant(
+    id: Long,
+    navOptions: NavOptions? = null
+) {
+    this.navigate(
+        route = "$homeDetailStandardProgramParticipantRoute/${id}",
         navOptions
     )
 }
@@ -67,26 +81,44 @@ fun NavController.navigateQrScanner(
 
 fun NavGraphBuilder.homeDetailProgramScreen(
     onBackClick: () -> Unit,
-    navigateToProgramDetail: (Long) -> Unit
+    navigateToTrainingProgramDetail: (Long) -> Unit,
+    navigateToStandardProgramDetail: (Long) -> Unit
 ) {
     composable(route = "$homeDetailProgramRoute/{id}") { backStackEntry ->
         val id = backStackEntry.arguments?.getString("id") ?: ""
         HomeDetailProgramRoute(
             id = id,
             onBackClick = onBackClick,
-            navigateToProgramDetail = navigateToProgramDetail
+            navigateToTrainingProgramDetail = navigateToTrainingProgramDetail,
+            navigateToStandardProgramDetail = navigateToStandardProgramDetail
         )
     }
 }
 
-fun NavGraphBuilder.homeDetailProgramParticipantScreen(
+fun NavGraphBuilder.homeDetailTrainingProgramParticipantScreen(
     onBackClick: () -> Unit,
     navigateToQrScanner: (Long, Long) -> Unit
 ) {
-    composable(route = "$homeDetailProgramParticipantRoute/{id}") { backStackEntry ->
+    composable(route = "$homeDetailTrainingProgramParticipantRoute/{id}") { backStackEntry ->
         val id = backStackEntry.arguments?.getString("id")?.toLongOrNull()
         if (id != null) {
             HomeDetailProgramParticipantRoute(
+                id = id,
+                onBackClick = onBackClick,
+                navigateToQrScanner = navigateToQrScanner
+            )
+        }
+    }
+}
+
+fun NavGraphBuilder.homeDetailStandardProgramParticipantScreen(
+    onBackClick: () -> Unit,
+    navigateToQrScanner: (Long, Long) -> Unit
+) {
+    composable(route = "$homeDetailStandardProgramParticipantRoute/{id}") { backStackEntry ->
+        val id = backStackEntry.arguments?.getString("id")?.toLongOrNull()
+        if (id != null) {
+            HomeDetailStandardProgramParticipantRoute(
                 id = id,
                 onBackClick = onBackClick,
                 navigateToQrScanner = navigateToQrScanner

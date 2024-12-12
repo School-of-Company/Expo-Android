@@ -1,6 +1,5 @@
 package com.school_of_company.home.view.component
 
-import android.text.style.TabStopSpan.Standard
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
@@ -30,7 +29,7 @@ fun StandardProgramListItem(
     modifier: Modifier = Modifier,
     index: Int,
     data: StandardProgramListResponseEntity,
-    navigateToProgramDetail: (Long) -> Unit,
+    navigateToStandardProgramDetail: (Long) -> Unit,
     horizontalScrollState: ScrollState = rememberScrollState()
 ) {
     ExpoAndroidTheme { colors, typography ->
@@ -44,7 +43,7 @@ fun StandardProgramListItem(
                 .background(color = colors.white)
                 .padding(vertical = 10.dp)
                 .horizontalScroll(horizontalScrollState)
-                .expoClickable { navigateToProgramDetail(data.id) }
+                .expoClickable { navigateToStandardProgramDetail(data.id) }
         ) {
 
             Text(
@@ -109,6 +108,6 @@ private fun StandardProgramListItemPreview() {
             startedAt = "2024-09-12 T 08:30",
             endedAt = "2024-09-12 T 08:30",
         ),
-        navigateToProgramDetail = {}
+        navigateToStandardProgramDetail = {}
     )
 }

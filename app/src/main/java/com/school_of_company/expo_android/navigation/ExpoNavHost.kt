@@ -15,13 +15,15 @@ import com.school_of_company.expo.navigation.navigateToExpoModify
 import com.school_of_company.expo.navigation.navigateToHome
 import com.school_of_company.expo_android.ui.ExpoAppState
 import com.school_of_company.home.navigation.homeDetailParticipantManagementScreen
-import com.school_of_company.home.navigation.homeDetailProgramParticipantScreen
 import com.school_of_company.home.navigation.homeDetailProgramScreen
+import com.school_of_company.home.navigation.homeDetailStandardProgramParticipantScreen
+import com.school_of_company.home.navigation.homeDetailTrainingProgramParticipantScreen
 import com.school_of_company.home.navigation.homeSendMessageScreen
 import com.school_of_company.home.navigation.navigateQrScanner
 import com.school_of_company.home.navigation.navigateToHomeDetailParticipantManagement
 import com.school_of_company.home.navigation.navigateToHomeDetailProgram
-import com.school_of_company.home.navigation.navigateToHomeDetailProgramParticipant
+import com.school_of_company.home.navigation.navigateToHomeDetailStandardProgramParticipant
+import com.school_of_company.home.navigation.navigateToHomeDetailTrainingProgramParticipant
 import com.school_of_company.home.navigation.navigateToHomeSendMessage
 import com.school_of_company.home.navigation.qrScannerScreen
 import com.school_of_company.navigation.navigateToSignIn
@@ -97,12 +99,20 @@ fun ExpoNavHost(
 
         homeDetailProgramScreen(
             onBackClick = navController::popBackStack,
-            navigateToProgramDetail = { id ->
-                navController.navigateToHomeDetailProgramParticipant(id)
+            navigateToTrainingProgramDetail = { id ->
+                navController.navigateToHomeDetailTrainingProgramParticipant(id)
+            },
+            navigateToStandardProgramDetail = { id ->
+                navController.navigateToHomeDetailStandardProgramParticipant(id)
             }
         )
 
-        homeDetailProgramParticipantScreen(
+        homeDetailTrainingProgramParticipantScreen(
+            onBackClick = navController::popBackStack,
+            navigateToQrScanner = navController::navigateQrScanner
+        )
+
+        homeDetailStandardProgramParticipantScreen(
             onBackClick = navController::popBackStack,
             navigateToQrScanner = navController::navigateQrScanner
         )

@@ -15,16 +15,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
+import com.school_of_company.model.entity.standard.StandardAttendListResponseEntity
 import com.school_of_company.model.entity.training.TeacherTrainingProgramResponseEntity
 
 @Composable
-fun HomeDetailProgramParticipantListItem(
+fun HomeDetailStandardProgramParticipantListItem(
     modifier: Modifier = Modifier,
     index: Int,
-    data: TeacherTrainingProgramResponseEntity,
+    data: StandardAttendListResponseEntity,
     horizontalScrollState: ScrollState = rememberScrollState()
 ) {
     ExpoAndroidTheme { colors, typography ->
@@ -54,7 +54,7 @@ fun HomeDetailProgramParticipantListItem(
             )
 
             Text(
-                text = data.organization,
+                text = data.affiliation,
                 style = typography.captionRegular2,
                 color = colors.black,
                 modifier = Modifier.width(100.dp)
@@ -89,22 +89,4 @@ fun HomeDetailProgramParticipantListItem(
             )
         }
     }
-}
-
-@Preview
-@Composable
-private fun HomeDetailProgramParticipantListItemPreview() {
-    HomeDetailProgramParticipantListItem(
-        index = 1,
-        data = TeacherTrainingProgramResponseEntity(
-            id = 0,
-            name = "홍길동",
-            organization = "한국대학교",
-            position = "교사",
-            programName = "프로그램",
-            status = true,
-            entryTime = "2024-09-12 T 08:30",
-            leaveTime = "2024-09-12 T 08:30"
-        )
-    )
 }

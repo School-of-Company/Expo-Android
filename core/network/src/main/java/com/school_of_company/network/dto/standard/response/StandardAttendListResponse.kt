@@ -5,11 +5,12 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class StandardAttendListResponse(
+    @Json(name = "id") val id: Long,
     @Json(name = "name") val name: String,
     @Json(name = "affiliation") val affiliation: String,
     @Json(name = "position") val position: String,
     @Json(name = "programName") val programName: String,
     @Json(name = "status") val status: Boolean,
-    @Json(name = "entryTime") val entryTime: String,
-    @Json(name = "leaveTime") val leaveTime: String
+    @Json(name = "entryTime") val entryTime: String?,
+    @Json(name = "leaveTime") val leaveTime: String?,
 )

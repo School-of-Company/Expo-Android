@@ -11,6 +11,6 @@ data class StandardAttendListResponse(
     @Json(name = "position") val position: String,
     @Json(name = "programName") val programName: String,
     @Json(name = "status") val status: Boolean,
-    @Json(name = "entryTime") val entryTime: String,
-    @Json(name = "leaveTime") val leaveTime: String
+    @Json(name = "entryTime") val entryTime: String?,
+    @Json(name = "leaveTime") val leaveTime: String?,
 )

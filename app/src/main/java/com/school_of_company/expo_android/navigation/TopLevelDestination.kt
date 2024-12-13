@@ -11,14 +11,12 @@ enum class TopLevelDestination(
         unSelectedIcon = R.drawable.ic_house,
         iconText = "홈"
     ),
-    ROSTER(
-        unSelectedIcon = R.drawable.ic_append,
-        iconText = "박람회 명단"
-    ),
+
     EXPO(
         unSelectedIcon = R.drawable.ic_expo,
         iconText = "박람회 생성"
     ),
+
     PROFILE(
         unSelectedIcon = R.drawable.ic_user,
         iconText = "프로필"

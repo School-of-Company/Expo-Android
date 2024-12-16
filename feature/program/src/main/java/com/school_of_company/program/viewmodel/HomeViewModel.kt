@@ -10,9 +10,7 @@ import com.school_of_company.domain.usecase.standard.StandardProgramAttendListUs
 import com.school_of_company.domain.usecase.standard.StandardProgramListUseCase
 import com.school_of_company.domain.usecase.training.TeacherTrainingProgramListUseCase
 import com.school_of_company.domain.usecase.training.TrainingProgramListUseCase
-import com.school_of_company.program.viewmodel.uistate.StandardProgramAttendListUiState
 import com.school_of_company.program.viewmodel.uistate.StandardProgramListUiState
-import com.school_of_company.program.viewmodel.uistate.TeacherTrainingProgramListUiState
 import com.school_of_company.program.viewmodel.uistate.TrainingProgramListUiState
 import com.school_of_company.program.viewmodel.uistate.TrainingQrCodeUiState
 import com.school_of_company.model.param.attendance.TrainingQrCodeRequestParam
@@ -28,8 +26,6 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val trainingProgramListUseCase: TrainingProgramListUseCase,
     private val standardProgramListUseCase: StandardProgramListUseCase,
-    private val teacherTrainingProgramListUseCase: TeacherTrainingProgramListUseCase,
-    private val standardProgramAttendListUseCase: StandardProgramAttendListUseCase,
     private val trainingQrCodeRequestUseCase: TrainingQrCodeRequestUseCase,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -46,12 +42,6 @@ class HomeViewModel @Inject constructor(
 
     private val _standardProgramListUiState = MutableStateFlow<StandardProgramListUiState>(StandardProgramListUiState.Loading)
     internal val standardProgramListUiState = _standardProgramListUiState.asStateFlow()
-
-    private val _teacherTrainingProgramListUiState = MutableStateFlow<TeacherTrainingProgramListUiState>(TeacherTrainingProgramListUiState.Loading)
-    internal val teacherTrainingProgramListUiState = _teacherTrainingProgramListUiState.asStateFlow()
-
-    private val _standardProgramAttendListUiState = MutableStateFlow<StandardProgramAttendListUiState>(StandardProgramAttendListUiState.Loading)
-    internal val standardProgramAttendListUiState = _standardProgramAttendListUiState.asStateFlow()
 
     private val _trainingQrCodeUiState = MutableStateFlow<TrainingQrCodeUiState>(TrainingQrCodeUiState.Loading)
     internal val trainingQrCodeUiState = _trainingQrCodeUiState.asStateFlow()
@@ -102,51 +92,6 @@ class HomeViewModel @Inject constructor(
                     }
                     is Result.Error -> {
                         _standardProgramListUiState.value = StandardProgramListUiState.Error(result.exception)
-                        _swipeRefreshLoading.value = false
-                    }
-                }
-            }
-    }
-
-    internal fun teacherTrainingProgramList(trainingProId: Long) = viewModelScope.launch {
-        _teacherTrainingProgramListUiState.value = TeacherTrainingProgramListUiState.Loading
-        teacherTrainingProgramListUseCase(trainingProId = trainingProId)
-            .asResult()
-            .collectLatest { result ->
-                when (result) {
-                    is Result.Loading -> _teacherTrainingProgramListUiState.value = TeacherTrainingProgramListUiState.Loading
-                    is Result.Success -> {
-                        if (result.data.isEmpty()) {
-                            _teacherTrainingProgramListUiState.value = TeacherTrainingProgramListUiState.Empty
-                        } else {
-                            _teacherTrainingProgramListUiState.value = TeacherTrainingProgramListUiState.Success(result.data)
-                        }
-                    }
-                    is Result.Error -> {
-                        _teacherTrainingProgramListUiState.value = TeacherTrainingProgramListUiState.Error(result.exception)
-                    }
-                }
-            }
-    }
-
-    internal fun standardProgramList(standardProId: Long) = viewModelScope.launch {
-        _swipeRefreshLoading.value = true
-        standardProgramAttendListUseCase(standardProId = standardProId)
-            .asResult()
-            .collectLatest { result ->
-                when (result) {
-                    is Result.Loading -> _standardProgramAttendListUiState.value = StandardProgramAttendListUiState.Loading
-                    is Result.Success -> {
-                        if (result.data.isEmpty()) {
-                            _standardProgramAttendListUiState.value = StandardProgramAttendListUiState.Empty
-                            _swipeRefreshLoading.value = false
-                        } else {
-                            _standardProgramAttendListUiState.value = StandardProgramAttendListUiState.Success(result.data)
-                            _swipeRefreshLoading.value = false
-                        }
-                    }
-                    is Result.Error -> {
-                        _standardProgramAttendListUiState.value = StandardProgramAttendListUiState.Error(result.exception)
                         _swipeRefreshLoading.value = false
                     }
                 }

@@ -41,6 +41,8 @@ dependencies {
     implementation(project(":feature:signup"))
     implementation(project(":feature:program"))
     implementation(project(":feature:expo"))
+    implementation(project(":feature:standard"))
+    implementation(project(":feature:training"))
 
     implementation(libs.androidx.core.splashscreen)
 

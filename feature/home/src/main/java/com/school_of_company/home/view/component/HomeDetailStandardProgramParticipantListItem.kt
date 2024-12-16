@@ -25,7 +25,7 @@ fun HomeDetailStandardProgramParticipantListItem(
     modifier: Modifier = Modifier,
     index: Int,
     data: StandardAttendListResponseEntity,
-    horizontalScrollState: ScrollState = rememberScrollState()
+    horizontalScrollState: ScrollState
 ) {
     ExpoAndroidTheme { colors, typography ->
         Spacer(modifier = Modifier.height(20.dp))

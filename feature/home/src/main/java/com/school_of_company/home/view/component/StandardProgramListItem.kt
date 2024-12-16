@@ -30,7 +30,7 @@ fun StandardProgramListItem(
     index: Int,
     data: StandardProgramListResponseEntity,
     navigateToStandardProgramDetail: (Long) -> Unit,
-    horizontalScrollState: ScrollState = rememberScrollState()
+    horizontalScrollState: ScrollState
 ) {
     ExpoAndroidTheme { colors, typography ->
 
@@ -108,6 +108,7 @@ private fun StandardProgramListItemPreview() {
             startedAt = "2024-09-12 T 08:30",
             endedAt = "2024-09-12 T 08:30",
         ),
-        navigateToStandardProgramDetail = {}
+        navigateToStandardProgramDetail = {},
+        horizontalScrollState = rememberScrollState()
     )
 }

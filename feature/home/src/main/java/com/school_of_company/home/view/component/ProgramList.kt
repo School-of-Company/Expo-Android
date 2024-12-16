@@ -1,10 +1,12 @@
 package com.school_of_company.home.view.component
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,7 +21,8 @@ import kotlinx.collections.immutable.persistentListOf
 fun ProgramList(
     modifier: Modifier = Modifier,
     trainingItem: ImmutableList<TrainingProgramListResponseEntity> = persistentListOf(),
-    navigateToTrainingProgramDetail: (Long) -> Unit
+    navigateToTrainingProgramDetail: (Long) -> Unit,
+    horizontalScrollState: ScrollState
 ) {
     ExpoAndroidTheme { colors, _ ->
 
@@ -33,7 +36,8 @@ fun ProgramList(
                 ProgramListItem(
                     index = index + 1,
                     data = item,
-                    navigateToTrainingProgramDetail = navigateToTrainingProgramDetail
+                    navigateToTrainingProgramDetail = navigateToTrainingProgramDetail,
+                    horizontalScrollState = horizontalScrollState
                 )
             }
         }
@@ -44,7 +48,8 @@ fun ProgramList(
 fun StandardProgramList(
     modifier: Modifier = Modifier,
     standardItem: ImmutableList<StandardProgramListResponseEntity> = persistentListOf(),
-    navigateToStandardProgramDetail: (Long) -> Unit
+    navigateToStandardProgramDetail: (Long) -> Unit,
+    horizontalScrollState: ScrollState
 ) {
     ExpoAndroidTheme { colors, _ ->
 
@@ -58,7 +63,8 @@ fun StandardProgramList(
                 StandardProgramListItem(
                     index = index + 1,
                     data = item,
-                    navigateToStandardProgramDetail = navigateToStandardProgramDetail
+                    navigateToStandardProgramDetail = navigateToStandardProgramDetail,
+                    horizontalScrollState = horizontalScrollState
                 )
             }
         }
@@ -78,6 +84,7 @@ private fun ProgramListPreview() {
                 category = "ESSENTIAL"
             )
         ),
-        navigateToTrainingProgramDetail = {}
+        navigateToTrainingProgramDetail = {},
+        horizontalScrollState = rememberScrollState()
     )
 }

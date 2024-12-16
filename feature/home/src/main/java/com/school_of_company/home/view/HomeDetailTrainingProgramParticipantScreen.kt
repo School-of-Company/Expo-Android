@@ -211,7 +211,7 @@ internal fun HomeDetailProgramParticipantScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 16.dp)
-                        .horizontalScroll(rememberScrollState())
+                        .horizontalScroll(scrollState)
                 ) {
                     Spacer(modifier = Modifier.width(20.dp))
 
@@ -272,7 +272,12 @@ internal fun HomeDetailProgramParticipantScreen(
             ) {
                 when (teacherTrainingProgramListUiState) {
                     is TeacherTrainingProgramListUiState.Loading -> Unit
-                    is TeacherTrainingProgramListUiState.Success -> HomeDetailProgramParticipantList(item = teacherTrainingProgramListUiState.data.toImmutableList())
+                    is TeacherTrainingProgramListUiState.Success -> {
+                        HomeDetailProgramParticipantList(
+                            item = teacherTrainingProgramListUiState.data.toImmutableList(),
+                            horizontalScrollState = scrollState
+                        )
+                    }
                     is TeacherTrainingProgramListUiState.Error -> {
                         Column(
                             verticalArrangement = Arrangement.spacedBy(

@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
@@ -31,6 +32,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -156,11 +158,11 @@ internal fun HomeDetailProgramScreen(
 
             Box(
                 modifier = Modifier
+                    .fillMaxWidth()
                     .border(
                         width = 1.dp,
                         color = colors.gray200
                     )
-                    .fillMaxWidth()
                     .padding(
                         horizontal = 16.dp,
                         vertical = 16.dp
@@ -238,7 +240,8 @@ internal fun HomeDetailProgramScreen(
                                 is StandardProgramListUiState.Success -> {
                                     StandardProgramList(
                                         standardItem = standardProgramListUiState.data.toImmutableList(),
-                                        navigateToStandardProgramDetail = navigateToStandardProgramDetail
+                                        navigateToStandardProgramDetail = navigateToStandardProgramDetail,
+                                        horizontalScrollState = scrollState
                                     )
                                 }
 
@@ -294,7 +297,8 @@ internal fun HomeDetailProgramScreen(
                                 is TrainingProgramListUiState.Success -> {
                                     ProgramList(
                                         trainingItem = trainingProgramUiState.data.toImmutableList(),
-                                        navigateToTrainingProgramDetail = navigateToTrainingProgramDetail
+                                        navigateToTrainingProgramDetail = navigateToTrainingProgramDetail,
+                                        horizontalScrollState = scrollState
                                     )
                                 }
 

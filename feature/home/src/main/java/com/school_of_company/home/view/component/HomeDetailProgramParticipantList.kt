@@ -1,5 +1,6 @@
 package com.school_of_company.home.view.component
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -18,7 +19,8 @@ import kotlinx.collections.immutable.persistentListOf
 @Composable
 fun HomeDetailProgramParticipantList(
     modifier: Modifier = Modifier,
-    item: ImmutableList<TeacherTrainingProgramResponseEntity> = persistentListOf()
+    item: ImmutableList<TeacherTrainingProgramResponseEntity> = persistentListOf(),
+    horizontalScrollState: ScrollState
 ) {
     ExpoAndroidTheme { colors, _ ->
         LazyColumn(
@@ -30,7 +32,8 @@ fun HomeDetailProgramParticipantList(
             itemsIndexed(item) { index, item ->
                 HomeDetailProgramParticipantListItem(
                     index = index + 1,
-                    data = item
+                    data = item,
+                    horizontalScrollState = horizontalScrollState
                 )
             }
         }
@@ -40,7 +43,8 @@ fun HomeDetailProgramParticipantList(
 @Composable
 fun HomeDetailStandardParticipantList(
     modifier: Modifier = Modifier,
-    item: ImmutableList<StandardAttendListResponseEntity> = persistentListOf()
+    item: ImmutableList<StandardAttendListResponseEntity> = persistentListOf(),
+    horizontalScrollState: ScrollState
 ) {
     ExpoAndroidTheme { colors, _ ->
         LazyColumn(
@@ -52,7 +56,8 @@ fun HomeDetailStandardParticipantList(
             itemsIndexed(item) { index, item ->
                 HomeDetailStandardProgramParticipantListItem(
                     index = index + 1,
-                    data = item
+                    data = item,
+                    horizontalScrollState = horizontalScrollState
                 )
             }
         }

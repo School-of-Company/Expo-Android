@@ -25,7 +25,7 @@ fun HomeDetailProgramParticipantListItem(
     modifier: Modifier = Modifier,
     index: Int,
     data: TeacherTrainingProgramResponseEntity,
-    horizontalScrollState: ScrollState = rememberScrollState()
+    horizontalScrollState: ScrollState
 ) {
     ExpoAndroidTheme { colors, typography ->
         Spacer(modifier = Modifier.height(20.dp))
@@ -105,6 +105,7 @@ private fun HomeDetailProgramParticipantListItemPreview() {
             status = true,
             entryTime = "2024-09-12 T 08:30",
             leaveTime = "2024-09-12 T 08:30"
-        )
+        ),
+        horizontalScrollState = rememberScrollState()
     )
 }

@@ -1,4 +1,4 @@
-package com.school_of_company.program.viewmodel.uistate
+package com.school_of_company.training.viewmodel.uistate
 
 import com.school_of_company.model.entity.training.TeacherTrainingProgramResponseEntity
 

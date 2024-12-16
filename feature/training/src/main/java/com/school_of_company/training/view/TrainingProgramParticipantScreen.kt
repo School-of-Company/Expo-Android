@@ -1,4 +1,4 @@
-package com.school_of_company.program.view
+package com.school_of_company.training.view
 
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
@@ -37,18 +37,18 @@ import com.school_of_company.design_system.icon.ExpoIcon
 import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
-import com.school_of_company.program.view.component.HomeDetailProgramParticipantList
-import com.school_of_company.program.view.component.QrButton
-import com.school_of_company.program.viewmodel.HomeViewModel
-import com.school_of_company.program.viewmodel.uistate.TeacherTrainingProgramListUiState
+import com.school_of_company.training.view.component.QrButton
+import com.school_of_company.training.view.component.TrainingProgramParticipantList
+import com.school_of_company.training.viewmodel.TrainingViewModel
+import com.school_of_company.training.viewmodel.uistate.TeacherTrainingProgramListUiState
 import kotlinx.collections.immutable.toImmutableList
 
 @Composable
-internal fun HomeDetailProgramParticipantRoute(
+internal fun TrainingProgramParticipantRoute(
     id: Long,
     onBackClick: () -> Unit,
     navigateToQrScanner: (Long, Long) -> Unit,
-    viewModel: HomeViewModel = hiltViewModel()
+    viewModel: TrainingViewModel = hiltViewModel()
 ) {
     val swipeRefreshLoading by viewModel.swipeRefreshLoading.collectAsStateWithLifecycle()
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = swipeRefreshLoading)
@@ -62,7 +62,7 @@ internal fun HomeDetailProgramParticipantRoute(
         else -> -1L
     }
 
-    HomeDetailProgramParticipantScreen(
+    TrainingProgramParticipantScreen(
         id = id,
         onBackClick = onBackClick,
         teacherTrainingProgramListUiState = teacherTrainingProgramListUiState,
@@ -78,7 +78,7 @@ internal fun HomeDetailProgramParticipantRoute(
 }
 
 @Composable
-internal fun HomeDetailProgramParticipantScreen(
+internal fun TrainingProgramParticipantScreen(
     id: Long,
     modifier: Modifier = Modifier,
     swipeRefreshState: SwipeRefreshState,
@@ -273,7 +273,7 @@ internal fun HomeDetailProgramParticipantScreen(
                 when (teacherTrainingProgramListUiState) {
                     is TeacherTrainingProgramListUiState.Loading -> Unit
                     is TeacherTrainingProgramListUiState.Success -> {
-                        HomeDetailProgramParticipantList(
+                        TrainingProgramParticipantList(
                             item = teacherTrainingProgramListUiState.data.toImmutableList(),
                             horizontalScrollState = scrollState
                         )
@@ -330,7 +330,7 @@ internal fun HomeDetailProgramParticipantScreen(
 @Preview
 @Composable
 private fun HomeDetailProgramParticipantScreenPreview() {
-    HomeDetailProgramParticipantScreen(
+    TrainingProgramParticipantScreen(
         id = 0,
         onBackClick = {},
         teacherTrainingProgramListUiState = TeacherTrainingProgramListUiState.Loading,

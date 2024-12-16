@@ -1,4 +1,4 @@
-package com.school_of_company.program.view.component
+package com.school_of_company.training.view.component
 
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
@@ -21,7 +21,7 @@ import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.model.entity.training.TeacherTrainingProgramResponseEntity
 
 @Composable
-fun HomeDetailProgramParticipantListItem(
+fun TrainingProgramParticipantListItem(
     modifier: Modifier = Modifier,
     index: Int,
     data: TeacherTrainingProgramResponseEntity,
@@ -94,7 +94,7 @@ fun HomeDetailProgramParticipantListItem(
 @Preview
 @Composable
 private fun HomeDetailProgramParticipantListItemPreview() {
-    HomeDetailProgramParticipantListItem(
+    TrainingProgramParticipantListItem(
         index = 1,
         data = TeacherTrainingProgramResponseEntity(
             id = 0,

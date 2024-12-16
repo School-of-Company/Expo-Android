@@ -209,7 +209,7 @@ internal fun HomeDetailStandardProgramParticipantScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 16.dp)
-                        .horizontalScroll(rememberScrollState())
+                        .horizontalScroll(scrollState)
                 ) {
                     Spacer(modifier = Modifier.width(20.dp))
 
@@ -270,7 +270,12 @@ internal fun HomeDetailStandardProgramParticipantScreen(
             ) {
                 when (standardProgramAttendListUiState) {
                     is StandardProgramAttendListUiState.Loading -> Unit
-                    is StandardProgramAttendListUiState.Success -> HomeDetailStandardParticipantList(item = standardProgramAttendListUiState.data.toImmutableList())
+                    is StandardProgramAttendListUiState.Success -> {
+                        HomeDetailStandardParticipantList(
+                            item = standardProgramAttendListUiState.data.toImmutableList(),
+                            horizontalScrollState = scrollState
+                        )
+                    }
                     is StandardProgramAttendListUiState.Error -> {
                         Column(
                             verticalArrangement = Arrangement.spacedBy(

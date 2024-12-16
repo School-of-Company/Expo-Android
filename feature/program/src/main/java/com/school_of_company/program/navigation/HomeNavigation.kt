@@ -7,14 +7,12 @@ import androidx.navigation.compose.composable
 import com.school_of_company.program.view.HomeDetailParticipantManagementRoute
 import com.school_of_company.program.view.HomeDetailProgramParticipantRoute
 import com.school_of_company.program.view.HomeDetailProgramRoute
-import com.school_of_company.program.view.HomeDetailStandardProgramParticipantRoute
 import com.school_of_company.program.view.QrScannerRoute
 import com.school_of_company.program.view.SendMessageRoute
 
 const val homeSendMessageRoute = "home_send_message_route"
 const val homeDetailProgramRoute = "home_detail_program_route"
 const val homeDetailTrainingProgramParticipantRoute = "home_detail_program_participant_route"
-const val homeDetailStandardProgramParticipantRoute = "home_detail_standard_program_participant_route"
 const val homeDetailParticipantManagementRoute = "home_detail_participant_management_route"
 const val qrScannerRoute = "qr_scanner_route"
 
@@ -38,16 +36,6 @@ fun NavController.navigateToHomeDetailTrainingProgramParticipant(
 ) {
     this.navigate(
         route = "$homeDetailTrainingProgramParticipantRoute/${id}",
-        navOptions
-    )
-}
-
-fun NavController.navigateToHomeDetailStandardProgramParticipant(
-    id: Long,
-    navOptions: NavOptions? = null
-) {
-    this.navigate(
-        route = "$homeDetailStandardProgramParticipantRoute/${id}",
         navOptions
     )
 }
@@ -101,22 +89,6 @@ fun NavGraphBuilder.homeDetailTrainingProgramParticipantScreen(
         val id = backStackEntry.arguments?.getString("id")?.toLongOrNull()
         if (id != null) {
             HomeDetailProgramParticipantRoute(
-                id = id,
-                onBackClick = onBackClick,
-                navigateToQrScanner = navigateToQrScanner
-            )
-        }
-    }
-}
-
-fun NavGraphBuilder.homeDetailStandardProgramParticipantScreen(
-    onBackClick: () -> Unit,
-    navigateToQrScanner: (Long, Long) -> Unit
-) {
-    composable(route = "$homeDetailStandardProgramParticipantRoute/{id}") { backStackEntry ->
-        val id = backStackEntry.arguments?.getString("id")?.toLongOrNull()
-        if (id != null) {
-            HomeDetailStandardProgramParticipantRoute(
                 id = id,
                 onBackClick = onBackClick,
                 navigateToQrScanner = navigateToQrScanner

@@ -1,4 +1,4 @@
-package com.school_of_company.home.view
+package com.school_of_company.program.view
 
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
@@ -36,10 +36,10 @@ import com.school_of_company.design_system.icon.ExpoIcon
 import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
-import com.school_of_company.home.view.component.HomeDetailStandardParticipantList
-import com.school_of_company.home.view.component.QrButton
-import com.school_of_company.home.viewmodel.HomeViewModel
-import com.school_of_company.home.viewmodel.uistate.StandardProgramAttendListUiState
+import com.school_of_company.program.view.component.HomeDetailStandardParticipantList
+import com.school_of_company.program.view.component.QrButton
+import com.school_of_company.program.viewmodel.HomeViewModel
+import com.school_of_company.program.viewmodel.uistate.StandardProgramAttendListUiState
 import kotlinx.collections.immutable.toImmutableList
 
 @Composable

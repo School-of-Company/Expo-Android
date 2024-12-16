@@ -1,4 +1,4 @@
-package com.school_of_company.home
+package com.school_of_company.program
 
 import org.junit.Test
 

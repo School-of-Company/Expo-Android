@@ -1,4 +1,4 @@
-package com.school_of_company.home.view
+package com.school_of_company.program.view
 
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
@@ -32,7 +31,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -47,12 +45,12 @@ import com.school_of_company.design_system.icon.ExpoIcon
 import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
-import com.school_of_company.home.view.component.ProgramList
-import com.school_of_company.home.view.component.ProgramTabRowItem
-import com.school_of_company.home.view.component.StandardProgramList
-import com.school_of_company.home.viewmodel.HomeViewModel
-import com.school_of_company.home.viewmodel.uistate.StandardProgramListUiState
-import com.school_of_company.home.viewmodel.uistate.TrainingProgramListUiState
+import com.school_of_company.program.view.component.ProgramList
+import com.school_of_company.program.view.component.ProgramTabRowItem
+import com.school_of_company.program.view.component.StandardProgramList
+import com.school_of_company.program.viewmodel.HomeViewModel
+import com.school_of_company.program.viewmodel.uistate.StandardProgramListUiState
+import com.school_of_company.program.viewmodel.uistate.TrainingProgramListUiState
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineScope

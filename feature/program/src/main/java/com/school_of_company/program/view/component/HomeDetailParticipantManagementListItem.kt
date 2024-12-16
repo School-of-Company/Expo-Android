@@ -1,4 +1,4 @@
-package com.school_of_company.home.view.component
+package com.school_of_company.program.view.component
 
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.horizontalScroll

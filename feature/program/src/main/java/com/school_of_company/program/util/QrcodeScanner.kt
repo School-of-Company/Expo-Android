@@ -1,4 +1,4 @@
-package com.school_of_company.home.util
+package com.school_of_company.program.util
 
 import android.util.Log
 import androidx.camera.core.ImageAnalysis

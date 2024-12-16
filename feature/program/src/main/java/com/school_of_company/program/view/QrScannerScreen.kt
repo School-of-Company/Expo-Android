@@ -1,4 +1,4 @@
-package com.school_of_company.home.view
+package com.school_of_company.program.view
 
 import android.Manifest
 import androidx.compose.foundation.layout.Column
@@ -23,9 +23,9 @@ import com.school_of_company.design_system.component.modifier.clickable.expoClic
 import com.school_of_company.design_system.component.topbar.ExpoTopBar
 import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
-import com.school_of_company.home.view.component.QrcodeScanView
-import com.school_of_company.home.viewmodel.HomeViewModel
-import com.school_of_company.home.viewmodel.uistate.TrainingQrCodeUiState
+import com.school_of_company.program.view.component.QrcodeScanView
+import com.school_of_company.program.viewmodel.HomeViewModel
+import com.school_of_company.program.viewmodel.uistate.TrainingQrCodeUiState
 import com.school_of_company.model.param.attendance.TrainingQrCodeRequestParam
 import com.school_of_company.ui.toast.makeToast
 

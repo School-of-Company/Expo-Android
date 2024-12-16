@@ -1,6 +1,5 @@
-package com.school_of_company.home.viewmodel
+package com.school_of_company.program.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,11 +10,11 @@ import com.school_of_company.domain.usecase.standard.StandardProgramAttendListUs
 import com.school_of_company.domain.usecase.standard.StandardProgramListUseCase
 import com.school_of_company.domain.usecase.training.TeacherTrainingProgramListUseCase
 import com.school_of_company.domain.usecase.training.TrainingProgramListUseCase
-import com.school_of_company.home.viewmodel.uistate.StandardProgramAttendListUiState
-import com.school_of_company.home.viewmodel.uistate.StandardProgramListUiState
-import com.school_of_company.home.viewmodel.uistate.TeacherTrainingProgramListUiState
-import com.school_of_company.home.viewmodel.uistate.TrainingProgramListUiState
-import com.school_of_company.home.viewmodel.uistate.TrainingQrCodeUiState
+import com.school_of_company.program.viewmodel.uistate.StandardProgramAttendListUiState
+import com.school_of_company.program.viewmodel.uistate.StandardProgramListUiState
+import com.school_of_company.program.viewmodel.uistate.TeacherTrainingProgramListUiState
+import com.school_of_company.program.viewmodel.uistate.TrainingProgramListUiState
+import com.school_of_company.program.viewmodel.uistate.TrainingQrCodeUiState
 import com.school_of_company.model.param.attendance.TrainingQrCodeRequestParam
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

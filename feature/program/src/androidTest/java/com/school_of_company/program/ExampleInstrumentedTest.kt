@@ -1,4 +1,4 @@
-package com.school_of_company.home
+package com.school_of_company.program
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

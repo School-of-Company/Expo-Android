@@ -1,4 +1,4 @@
-package com.school_of_company.home.view
+package com.school_of_company.program.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -24,8 +24,8 @@ import com.school_of_company.design_system.component.modifier.padding.paddingHor
 import com.school_of_company.design_system.component.textfield.LimitedLengthTextField
 import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
-import com.school_of_company.home.view.component.HomeSendMessageTopBar
-import com.school_of_company.home.viewmodel.HomeViewModel
+import com.school_of_company.program.view.component.HomeSendMessageTopBar
+import com.school_of_company.program.viewmodel.HomeViewModel
 
 @Composable
 internal fun SendMessageRoute(

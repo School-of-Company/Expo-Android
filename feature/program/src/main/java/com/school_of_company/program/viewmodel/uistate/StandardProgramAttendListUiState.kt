@@ -1,4 +1,4 @@
-package com.school_of_company.home.viewmodel.uistate
+package com.school_of_company.program.viewmodel.uistate
 
 import com.school_of_company.model.entity.standard.StandardAttendListResponseEntity
 

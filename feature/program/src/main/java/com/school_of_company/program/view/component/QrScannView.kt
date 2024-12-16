@@ -1,4 +1,4 @@
-package com.school_of_company.home.view.component
+package com.school_of_company.program.view.component
 
 import android.util.Log
 import androidx.camera.core.CameraSelector
@@ -19,7 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
-import com.school_of_company.home.util.QrcodeScanner
+import com.school_of_company.program.util.QrcodeScanner
 import java.util.concurrent.Executors
 
 @androidx.camera.core.ExperimentalGetImage

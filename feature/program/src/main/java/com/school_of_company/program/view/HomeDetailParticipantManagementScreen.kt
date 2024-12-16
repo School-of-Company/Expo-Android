@@ -1,4 +1,4 @@
-package com.school_of_company.home.view
+package com.school_of_company.program.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -26,8 +26,8 @@ import com.school_of_company.design_system.component.topbar.ExpoTopBar
 import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
-import com.school_of_company.home.view.component.HomeDetailParticipantManagementData
-import com.school_of_company.home.view.component.HomeDetailParticipantManagementList
+import com.school_of_company.program.view.component.HomeDetailParticipantManagementData
+import com.school_of_company.program.view.component.HomeDetailParticipantManagementList
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 

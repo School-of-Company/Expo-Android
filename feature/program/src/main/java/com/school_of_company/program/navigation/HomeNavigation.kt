@@ -1,17 +1,15 @@
-package com.school_of_company.home.navigation
+package com.school_of_company.program.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHost
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
-import com.school_of_company.home.view.HomeDetailParticipantManagementRoute
-import com.school_of_company.home.view.HomeDetailProgramParticipantRoute
-import com.school_of_company.home.view.HomeDetailProgramRoute
-import com.school_of_company.home.view.HomeDetailStandardProgramParticipantRoute
-import com.school_of_company.home.view.HomeDetailStandardProgramParticipantScreen
-import com.school_of_company.home.view.QrScannerRoute
-import com.school_of_company.home.view.SendMessageRoute
+import com.school_of_company.program.view.HomeDetailParticipantManagementRoute
+import com.school_of_company.program.view.HomeDetailProgramParticipantRoute
+import com.school_of_company.program.view.HomeDetailProgramRoute
+import com.school_of_company.program.view.HomeDetailStandardProgramParticipantRoute
+import com.school_of_company.program.view.QrScannerRoute
+import com.school_of_company.program.view.SendMessageRoute
 
 const val homeSendMessageRoute = "home_send_message_route"
 const val homeDetailProgramRoute = "home_detail_program_route"

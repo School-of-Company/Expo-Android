@@ -1,4 +1,4 @@
-package com.school_of_company.home.view.component
+package com.school_of_company.program.view.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
-import com.school_of_company.home.view.generateParticipantManagementSampleData
+import com.school_of_company.program.view.generateParticipantManagementSampleData
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 

@@ -1,4 +1,4 @@
-package com.school_of_company.program.view.component
+package com.school_of_company.sms.view.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

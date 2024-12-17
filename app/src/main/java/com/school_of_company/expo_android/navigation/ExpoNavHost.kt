@@ -14,19 +14,19 @@ import com.school_of_company.expo.navigation.navigateToExpoDetail
 import com.school_of_company.expo.navigation.navigateToExpoModify
 import com.school_of_company.expo.navigation.navigateToHome
 import com.school_of_company.expo_android.ui.ExpoAppState
-import com.school_of_company.program.navigation.homeDetailParticipantManagementScreen
-import com.school_of_company.program.navigation.homeDetailProgramScreen
-import com.school_of_company.program.navigation.homeSendMessageScreen
 import com.school_of_company.program.navigation.navigateQrScanner
-import com.school_of_company.program.navigation.navigateToHomeDetailParticipantManagement
-import com.school_of_company.program.navigation.navigateToHomeDetailProgram
-import com.school_of_company.program.navigation.navigateToHomeSendMessage
 import com.school_of_company.program.navigation.qrScannerScreen
 import com.school_of_company.navigation.navigateToSignIn
 import com.school_of_company.navigation.sigInRoute
 import com.school_of_company.navigation.signInScreen
+import com.school_of_company.program.navigation.navigateToProgramDetailParticipantManagement
+import com.school_of_company.program.navigation.navigateToProgramDetailProgram
+import com.school_of_company.program.navigation.programDetailParticipantManagementScreen
+import com.school_of_company.program.navigation.programDetailProgramScreen
 import com.school_of_company.signup.navigation.navigationToSignUp
 import com.school_of_company.signup.navigation.signUpScreen
+import com.school_of_company.sms.navigation.navigateToSmsSendMessage
+import com.school_of_company.sms.navigation.smsSendMessageScreen
 import com.school_of_company.standard.navigation.navigateToStandardProgramParticipant
 import com.school_of_company.standard.navigation.standardProgramParticipantScreen
 import com.school_of_company.training.navigation.navigateToTrainingProgramParticipant
@@ -82,22 +82,22 @@ fun ExpoNavHost(
 
         expoDetailScreen(
             onBackClick = navController::popBackStack,
-            onMessageClick = navController::navigateToHomeSendMessage,
-            onCheckClick = navController::navigateToHomeDetailParticipantManagement,
+            onMessageClick = navController::navigateToSmsSendMessage,
+            onCheckClick = navController::navigateToProgramDetailParticipantManagement,
             onQrGenerateClick = {},
             onModifyClick = { id ->
                 navController.navigateToExpoModify(id)
             },
             onProgramClick = { id ->
-                navController.navigateToHomeDetailProgram(id)
+                navController.navigateToProgramDetailProgram(id)
             }
         )
 
-        homeSendMessageScreen(
+        smsSendMessageScreen(
             onBackClick = navController::popBackStack,
         )
 
-        homeDetailProgramScreen(
+        programDetailProgramScreen(
             onBackClick = navController::popBackStack,
             navigateToTrainingProgramDetail = { id ->
                 navController.navigateToTrainingProgramParticipant(id)
@@ -117,7 +117,7 @@ fun ExpoNavHost(
             navigateToQrScanner = navController::navigateQrScanner
         )
 
-        homeDetailParticipantManagementScreen(
+        programDetailParticipantManagementScreen(
             onBackClick = navController::popBackStack
         )
 

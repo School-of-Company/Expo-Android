@@ -43,6 +43,7 @@ dependencies {
     implementation(project(":feature:expo"))
     implementation(project(":feature:standard"))
     implementation(project(":feature:training"))
+    implementation(project(":feature:sms"))
 
     implementation(libs.androidx.core.splashscreen)
 

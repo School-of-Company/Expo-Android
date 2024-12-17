@@ -14,23 +14,23 @@ import com.school_of_company.expo.navigation.navigateToExpoDetail
 import com.school_of_company.expo.navigation.navigateToExpoModify
 import com.school_of_company.expo.navigation.navigateToHome
 import com.school_of_company.expo_android.ui.ExpoAppState
-import com.school_of_company.home.navigation.homeDetailParticipantManagementScreen
-import com.school_of_company.home.navigation.homeDetailProgramScreen
-import com.school_of_company.home.navigation.homeDetailStandardProgramParticipantScreen
-import com.school_of_company.home.navigation.homeDetailTrainingProgramParticipantScreen
-import com.school_of_company.home.navigation.homeSendMessageScreen
-import com.school_of_company.home.navigation.navigateQrScanner
-import com.school_of_company.home.navigation.navigateToHomeDetailParticipantManagement
-import com.school_of_company.home.navigation.navigateToHomeDetailProgram
-import com.school_of_company.home.navigation.navigateToHomeDetailStandardProgramParticipant
-import com.school_of_company.home.navigation.navigateToHomeDetailTrainingProgramParticipant
-import com.school_of_company.home.navigation.navigateToHomeSendMessage
-import com.school_of_company.home.navigation.qrScannerScreen
+import com.school_of_company.program.navigation.navigateQrScanner
+import com.school_of_company.program.navigation.qrScannerScreen
 import com.school_of_company.navigation.navigateToSignIn
 import com.school_of_company.navigation.sigInRoute
 import com.school_of_company.navigation.signInScreen
+import com.school_of_company.program.navigation.navigateToProgramDetailParticipantManagement
+import com.school_of_company.program.navigation.navigateToProgramDetailProgram
+import com.school_of_company.program.navigation.programDetailParticipantManagementScreen
+import com.school_of_company.program.navigation.programDetailProgramScreen
 import com.school_of_company.signup.navigation.navigationToSignUp
 import com.school_of_company.signup.navigation.signUpScreen
+import com.school_of_company.sms.navigation.navigateToSmsSendMessage
+import com.school_of_company.sms.navigation.smsSendMessageScreen
+import com.school_of_company.standard.navigation.navigateToStandardProgramParticipant
+import com.school_of_company.standard.navigation.standardProgramParticipantScreen
+import com.school_of_company.training.navigation.navigateToTrainingProgramParticipant
+import com.school_of_company.training.navigation.trainingProgramParticipantScreen
 import com.school_of_company.ui.toast.makeToast
 
 @Composable
@@ -82,42 +82,42 @@ fun ExpoNavHost(
 
         expoDetailScreen(
             onBackClick = navController::popBackStack,
-            onMessageClick = navController::navigateToHomeSendMessage,
-            onCheckClick = navController::navigateToHomeDetailParticipantManagement,
+            onMessageClick = navController::navigateToSmsSendMessage,
+            onCheckClick = navController::navigateToProgramDetailParticipantManagement,
             onQrGenerateClick = {},
             onModifyClick = { id ->
                 navController.navigateToExpoModify(id)
             },
             onProgramClick = { id ->
-                navController.navigateToHomeDetailProgram(id)
+                navController.navigateToProgramDetailProgram(id)
             }
         )
 
-        homeSendMessageScreen(
+        smsSendMessageScreen(
             onBackClick = navController::popBackStack,
         )
 
-        homeDetailProgramScreen(
+        programDetailProgramScreen(
             onBackClick = navController::popBackStack,
             navigateToTrainingProgramDetail = { id ->
-                navController.navigateToHomeDetailTrainingProgramParticipant(id)
+                navController.navigateToTrainingProgramParticipant(id)
             },
             navigateToStandardProgramDetail = { id ->
-                navController.navigateToHomeDetailStandardProgramParticipant(id)
+                navController.navigateToStandardProgramParticipant(id)
             }
         )
 
-        homeDetailTrainingProgramParticipantScreen(
+        trainingProgramParticipantScreen(
             onBackClick = navController::popBackStack,
             navigateToQrScanner = navController::navigateQrScanner
         )
 
-        homeDetailStandardProgramParticipantScreen(
+        standardProgramParticipantScreen(
             onBackClick = navController::popBackStack,
             navigateToQrScanner = navController::navigateQrScanner
         )
 
-        homeDetailParticipantManagementScreen(
+        programDetailParticipantManagementScreen(
             onBackClick = navController::popBackStack
         )
 

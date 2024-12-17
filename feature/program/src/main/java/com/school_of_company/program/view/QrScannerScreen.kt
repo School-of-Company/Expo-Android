@@ -24,7 +24,7 @@ import com.school_of_company.design_system.component.topbar.ExpoTopBar
 import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.program.view.component.QrcodeScanView
-import com.school_of_company.program.viewmodel.HomeViewModel
+import com.school_of_company.program.viewmodel.ProgramViewModel
 import com.school_of_company.program.viewmodel.uistate.TrainingQrCodeUiState
 import com.school_of_company.model.param.attendance.TrainingQrCodeRequestParam
 import com.school_of_company.ui.toast.makeToast
@@ -36,7 +36,7 @@ internal fun QrScannerRoute(
     traineeId: Long,
     onBackClick: () -> Unit,
     onPermissionBlock: () -> Unit,
-    viewModel: HomeViewModel = hiltViewModel()
+    viewModel: ProgramViewModel = hiltViewModel()
 ) {
     val trainingQrCodeUiState by viewModel.trainingQrCodeUiState.collectAsStateWithLifecycle()
 

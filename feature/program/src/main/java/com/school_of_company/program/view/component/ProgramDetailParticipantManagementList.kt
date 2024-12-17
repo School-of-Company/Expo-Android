@@ -15,7 +15,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
-fun HomeDetailParticipantManagementList(
+fun ProgramDetailParticipantManagementList(
     modifier: Modifier = Modifier,
     item: ImmutableList<HomeDetailParticipantManagementData> = persistentListOf()
 ) {
@@ -27,7 +27,7 @@ fun HomeDetailParticipantManagementList(
                 .padding(start = 16.dp)
         ) {
             itemsIndexed(item) { index, item ->
-                HomeDetailParticipantManagementListItem(
+                ProgramDetailParticipantManagementListItem(
                     index = index + 1,
                     data = item
                 )
@@ -39,7 +39,7 @@ fun HomeDetailParticipantManagementList(
 @Preview
 @Composable
 private fun HomeDetailParticipantManagementListPreview() {
-    HomeDetailParticipantManagementList(
+    ProgramDetailParticipantManagementList(
         item = generateParticipantManagementSampleData()
     )
 }

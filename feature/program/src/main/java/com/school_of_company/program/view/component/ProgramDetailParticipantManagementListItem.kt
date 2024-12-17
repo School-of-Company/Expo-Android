@@ -29,7 +29,7 @@ data class HomeDetailParticipantManagementData(
 )
 
 @Composable
-fun HomeDetailParticipantManagementListItem(
+fun ProgramDetailParticipantManagementListItem(
     modifier: Modifier = Modifier,
     index: Int,
     data: HomeDetailParticipantManagementData,
@@ -108,7 +108,7 @@ fun HomeDetailParticipantManagementListItem(
 @Preview
 @Composable
 private fun HomeDetailParticipantManagementListItemPreview() {
-    HomeDetailParticipantManagementListItem(
+    ProgramDetailParticipantManagementListItem(
         index = 1,
         data = HomeDetailParticipantManagementData(
             name = "이명훈",

@@ -69,9 +69,10 @@ fun ExpoApp(
             }
         ) { paddingValues ->
             // 네비게이션 호스트
-            Box(modifier = Modifier.padding(paddingValues = paddingValues)) {
-                ExpoNavHost(appState = appState)
-            }
+            ExpoNavHost(
+                appState = appState,
+                modifier = Modifier.padding(paddingValues = paddingValues)
+            )
         }
     }
 }

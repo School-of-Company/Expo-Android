@@ -25,6 +25,7 @@ import com.school_of_company.expo.navigation.expoCreateRoute
 import com.school_of_company.expo.navigation.homeRoute
 import com.school_of_company.expo_android.navigation.ExpoNavHost
 import com.school_of_company.expo_android.navigation.TopLevelDestination
+import com.school_of_company.user.navigation.profileRoute
 
 /**
  * 객체로 앱 상태를 중앙에서 관리하고, Scaffold와 BottomBar를 통해 유연한 UI 구성을 제공합니다.
@@ -44,7 +45,8 @@ fun ExpoApp(
     // 최상위 목적지들 중에 현재 보고 있는 화면이 있는 확인합니다.
     val topLevelDestinationRoute = arrayOf(
         homeRoute,
-        expoCreateRoute
+        expoCreateRoute,
+        profileRoute
     )
 
     // 현재 목적지가 최상위 목적지 목록에 포함되면 BottomBar를 표시하도록 설정합니다.

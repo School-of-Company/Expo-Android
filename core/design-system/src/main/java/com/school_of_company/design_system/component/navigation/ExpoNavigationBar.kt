@@ -72,11 +72,11 @@ fun ExpoNavigationBar(
 @Composable
 fun ExpoNavigationPreview() {
     val items = listOf(
+        "프로필",
         "홈",
         "프로그램",
         "명단 관리",
         "박람회 생성",
-        "프로필",
     )
     val icons = listOf(
         R.drawable.ic_house,

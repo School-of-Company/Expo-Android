@@ -42,7 +42,7 @@
 
     <string name="expection_saveToken">토큰이 저장되지 않았습니다.</string>
     <string name="expection_signIn">로그인에 실패했습니다.</string>
-    <string name="expection_not_found">존재하지 않는 유저입니다.</string>
+    <string name="expection_not_found">서버 관리자에서 문의해주세요..</string>
     <string name="expection_id_not_valid">아이디가 올바르지 않습니다.</string>
     <string name="expection_password_valid">비밀번호가 올바르지 않습니다.</string>
     <string name="expection_password_validdd">비밀번호가 유효하지 않습니다.</string>

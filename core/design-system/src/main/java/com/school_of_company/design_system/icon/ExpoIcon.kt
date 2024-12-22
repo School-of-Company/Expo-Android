@@ -150,11 +150,15 @@ fun TrashIcon(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun UserIcon(modifier: Modifier = Modifier) {
+fun UserIcon(
+    modifier: Modifier = Modifier,
+    tint: Color = Color.Unspecified
+) {
     Icon(
         painter = painterResource(id = R.drawable.ic_user),
         contentDescription = stringResource(id = R.string.user_description),
-        modifier = modifier
+        modifier = modifier,
+        tint = tint
     )
 }
 

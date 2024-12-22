@@ -32,6 +32,7 @@ import com.school_of_company.standard.navigation.standardProgramParticipantScree
 import com.school_of_company.training.navigation.navigateToTrainingProgramParticipant
 import com.school_of_company.training.navigation.trainingProgramParticipantScreen
 import com.school_of_company.ui.toast.makeToast
+import com.school_of_company.user.navigation.userScreen
 
 @Composable
 fun ExpoNavHost(
@@ -134,5 +135,7 @@ fun ExpoNavHost(
             onBackClick = navController::popBackStack,
             onPermissionBlock = navController::popBackStack
         )
+
+        userScreen()
     }
 }

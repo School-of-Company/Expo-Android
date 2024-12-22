@@ -17,6 +17,7 @@ import androidx.navigation.navOptions
 import com.school_of_company.expo.navigation.navigateToExpoCreate
 import com.school_of_company.expo.navigation.navigateToHome
 import com.school_of_company.expo_android.navigation.TopLevelDestination
+import com.school_of_company.user.navigation.navigateToUser
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
@@ -75,6 +76,7 @@ class ExpoAppState(
             when (topLevelDestination) {
                 TopLevelDestination.HOME -> navController.navigateToHome(topLevelNavOptions)
                 TopLevelDestination.EXPO -> navController.navigateToExpoCreate(topLevelNavOptions)
+                TopLevelDestination.PROFILE -> navController.navigateToUser(topLevelNavOptions)
                 else -> null
             }
         }

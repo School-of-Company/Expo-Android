@@ -39,3 +39,4 @@ gradle.startParameter.excludedTaskNames.addAll(listOf(":build-logic:convention:t
 include(":feature:training")
 include(":feature:standard")
 include(":feature:sms")
+include(":feature:user")

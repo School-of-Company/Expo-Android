@@ -60,9 +60,7 @@ private fun UserScreen(
             modifier = modifier
                 .fillMaxSize()
                 .background(color = colors.white)
-                .paddingHorizontal(
-                    top = 15.dp
-                )
+                .paddingHorizontal(top = 68.dp)
         ) {
 
             Row(

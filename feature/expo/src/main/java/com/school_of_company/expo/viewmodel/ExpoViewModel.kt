@@ -33,9 +33,7 @@ import com.school_of_company.model.model.expo.ExpoRequestAndResponseModel
 import com.school_of_company.model.model.standard.StandardRequestModel
 import com.school_of_company.model.model.training.TrainingDtoModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
@@ -66,17 +64,15 @@ class ExpoViewModel @Inject constructor(
         private const val COVER_IMAGE = "cover_image"
         private const val STARTED = "started"
         private const val ENDED = "ended"
-        private const val STANDARD_STARTED = "standard_started"
-        private const val STANDARD_ENDED = "standard_ended"
     }
 
     private val _swipeRefreshLoading = MutableStateFlow(false)
     val swipeRefreshLoading = _swipeRefreshLoading.asStateFlow()
 
-    private val _trainingProgramTextState = MutableStateFlow(listOf(""))
+    private val _trainingProgramTextState = MutableStateFlow<List<TrainingDtoModel>>(emptyList())
     internal val trainingProgramTextState = _trainingProgramTextState.asStateFlow()
 
-    private val _standardProgramTextState = MutableStateFlow(listOf(""))
+    private val _standardProgramTextState = MutableStateFlow<List<StandardRequestModel>>(emptyList())
     internal val standardProgramTextState = _standardProgramTextState.asStateFlow()
 
     private val _categoryState = MutableStateFlow(TrainingCategory.CHOICE)
@@ -125,14 +121,6 @@ class ExpoViewModel @Inject constructor(
     internal var location = savedStateHandle.getStateFlow(key = LOCATION, initialValue = "")
 
     internal var cover_image = savedStateHandle.getStateFlow(key = COVER_IMAGE, initialValue = "")
-
-    internal var started = savedStateHandle.getStateFlow(key = STARTED, initialValue = "")
-
-    internal var ended = savedStateHandle.getStateFlow(key = ENDED, initialValue = "")
-
-    internal var standardStarted = savedStateHandle.getStateFlow(key = STANDARD_STARTED, initialValue = "")
-
-    internal var standardEnded = savedStateHandle.getStateFlow(key = STANDARD_ENDED, initialValue = "")
 
     internal fun getExpoInformation(expoId: String) = viewModelScope.launch {
         getExpoInformationUseCase(expoId = expoId)
@@ -213,8 +201,8 @@ class ExpoViewModel @Inject constructor(
             onModifyTitleChange("")
             onStartedChange("")
             onEndedChange("")
-            updateTrainingProgramText(0, "")
-            updateStandardProgramText(0, "")
+            _trainingProgramTextState.value = emptyList()
+            _standardProgramTextState.value = emptyList()
         }
     }
 
@@ -363,16 +351,19 @@ class ExpoViewModel @Inject constructor(
             }
     }
 
-    internal fun updateTrainingProgramText(index: Int, newText: String) {
+    internal fun updateTrainingProgramText(index: Int, updateItem: TrainingDtoModel) {
         _trainingProgramTextState.value = _trainingProgramTextState.value.toMutableList().apply {
-            set(index, newText)
+            set(index, updateItem)
         }
     }
 
     internal fun addTrainingProgramText() {
-        _trainingProgramTextState.value = _trainingProgramTextState.value.toMutableList().apply {
-            add("")
-        }
+        _trainingProgramTextState.value += TrainingDtoModel(
+            title = "",
+            startedAt = "",
+            endedAt = "",
+            category = TrainingCategory.CHOICE.name
+        )
     }
 
     internal fun removeTrainingProgramText(index: Int) {
@@ -381,26 +372,24 @@ class ExpoViewModel @Inject constructor(
         }
     }
 
-    internal fun updateStandardProgramText(index: Int, newText: String) {
+    internal fun updateStandardProgramText(index: Int, updateItem: StandardRequestModel) {
         _standardProgramTextState.value = _standardProgramTextState.value.toMutableList().apply {
-            set(index, newText)
+            set(index, updateItem)
         }
     }
 
     internal fun addStandardProgramText() {
-        _standardProgramTextState.value = _standardProgramTextState.value.toMutableList().apply {
-            add("")
-        }
+        _standardProgramTextState.value += StandardRequestModel(
+            title = "",
+            startedAt = "",
+            endedAt = ""
+        )
     }
 
     internal fun removeStandardProgramText(index: Int) {
         _standardProgramTextState.value = _standardProgramTextState.value.toMutableList().apply {
             removeAt(index)
         }
-    }
-
-    internal fun updateCategory(newCategory: TrainingCategory) {
-        _categoryState.value = newCategory
     }
 
     internal fun onModifyTitleChange(value: String) {
@@ -437,13 +426,5 @@ class ExpoViewModel @Inject constructor(
 
     internal fun onEndedChange(value: String) {
         savedStateHandle[ENDED] = value
-    }
-
-    internal fun onStandardStartedChange(value: String) {
-        savedStateHandle[STANDARD_STARTED] = value
-    }
-
-    internal fun onStandardEndedChange(value: String) {
-        savedStateHandle[STANDARD_ENDED] = value
     }
 }

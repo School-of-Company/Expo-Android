@@ -65,13 +65,19 @@ import com.school_of_company.design_system.icon.ImageIcon
 import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
+import com.school_of_company.expo.enum.TrainingCategory
 import com.school_of_company.expo.view.component.ExpoAddTextField
 import com.school_of_company.expo.view.component.ExpoSettingBottomSheet
+import com.school_of_company.expo.view.component.ExpoStandardAddTextField
+import com.school_of_company.expo.view.component.ExpoStandardSettingBottomSheet
 import com.school_of_company.expo.viewmodel.ExpoViewModel
 import com.school_of_company.expo.viewmodel.uistate.ImageUpLoadUiState
 import com.school_of_company.expo.viewmodel.uistate.ModifyExpoInformationUiState
 import com.school_of_company.model.model.expo.ExpoRequestAndResponseModel
+import com.school_of_company.model.model.standard.StandardRequestModel
+import com.school_of_company.model.model.training.TrainingDtoModel
 import com.school_of_company.ui.toast.makeToast
+import java.util.Locale.Category
 
 @Composable
 internal fun ExpoModifyRoute(
@@ -216,16 +222,25 @@ internal fun ExpoModifyScreen(
     onIntroduceTitleChange: (String) -> Unit,
     onAddressChange: (String) -> Unit,
     onLocationChange: (String) -> Unit,
-    trainingProgramTextState: List<String>,
-    onTrainingProgramChange: (Int, String) -> Unit,
+    trainingProgramTextState: List<TrainingDtoModel>,
+    onTrainingProgramChange: (Int, TrainingDtoModel) -> Unit,
     onAddTrainingProgram: () -> Unit,
     onRemoveTrainingProgram: (Int) -> Unit,
-    standardProgramTextState: List<String>,
-    onStandardProgramChange: (Int, String) -> Unit,
+    standardProgramTextState: List<StandardRequestModel>,
+    onStandardProgramChange: (Int, StandardRequestModel) -> Unit,
     onAddStandardProgram: () -> Unit,
     onRemoveStandardProgram: (Int) -> Unit
 ) {
-    val (openTrainingSettingBottomSheet, isOpenTrainingSettingBottomSheet) = rememberSaveable { mutableStateOf(false) }
+    val (openTrainingSettingBottomSheet, isOpenTrainingSettingBottomSheet) = rememberSaveable {
+        mutableStateOf(
+            false
+        )
+    }
+    val (openStandardSettingBottomSheet, isOpenStandardSettingBottomSheet) = rememberSaveable {
+        mutableStateOf(
+            false
+        )
+    }
 
     ExpoAndroidTheme { colors, typography ->
         Column(
@@ -446,7 +461,7 @@ internal fun ExpoModifyScreen(
                         color = colors.black,
                     )
 
-                    ExpoAddTextField(
+                    ExpoStandardAddTextField(
                         trainingTextFieldList = standardProgramTextState,
                         onValueChange = { index, newState ->
                             onStandardProgramChange(index, newState)
@@ -509,20 +524,20 @@ internal fun ExpoModifyScreen(
 
                     ExpoStateButton(
                         text = "수정완료",
-                       state = if (
-                           modifyTitleState.isNotEmpty() &&
-                           startedDateState.isNotEmpty() &&
-                           endedDateState.isNotEmpty() &&
-                           introduceTitleState.isNotEmpty() &&
-                           addressState.isNotEmpty() &&
-                           locationState.isNotEmpty() &&
-                           trainingProgramTextState.isNotEmpty() &&
-                           standardProgramTextState.isNotEmpty()
-                           ) {
-                           ButtonState.Enable
-                       } else {
-                           ButtonState.Disable
-                       },
+                        state = if (
+                            modifyTitleState.isNotEmpty() &&
+                            startedDateState.isNotEmpty() &&
+                            endedDateState.isNotEmpty() &&
+                            introduceTitleState.isNotEmpty() &&
+                            addressState.isNotEmpty() &&
+                            locationState.isNotEmpty() &&
+                            trainingProgramTextState.isNotEmpty() &&
+                            standardProgramTextState.isNotEmpty()
+                        ) {
+                            ButtonState.Enable
+                        } else {
+                            ButtonState.Disable
+                        },
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         modifyCallBack()
@@ -538,12 +553,29 @@ internal fun ExpoModifyScreen(
         Dialog(onDismissRequest = { isOpenTrainingSettingBottomSheet(false) }) {
             ExpoSettingBottomSheet(
                 onCancelClick = { isOpenTrainingSettingBottomSheet(false) },
-                startedTextState = "",
-                endedTextState = "",
-                onStartedTextChange = {},
-                onEndedTextChange = {},
-                onCategoryChange = {},
-                onButtonClick = { /*TODO*/ }
+                onButtonClick = { isOpenTrainingSettingBottomSheet(false) },
+                trainingSettingItem = TrainingDtoModel(
+                    title = "",
+                    startedAt = "",
+                    endedAt = "",
+                    category = TrainingCategory.CHOICE.name
+                ),
+                onTrainingSettingChange = {},
+            )
+        }
+    }
+
+    if (openStandardSettingBottomSheet) {
+        Dialog(onDismissRequest = { isOpenStandardSettingBottomSheet(false) }) {
+            ExpoStandardSettingBottomSheet(
+                onCancelClick = { isOpenStandardSettingBottomSheet(false) },
+                onButtonClick = { isOpenStandardSettingBottomSheet(false) },
+                trainingSettingItem = StandardRequestModel(
+                    title = "",
+                    startedAt = "",
+                    endedAt = ""
+                ),
+                onTrainingSettingChange = {},
             )
         }
     }

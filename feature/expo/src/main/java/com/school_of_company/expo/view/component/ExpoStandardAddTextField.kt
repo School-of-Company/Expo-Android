@@ -19,20 +19,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.icon.PlusIcon
 import com.school_of_company.design_system.icon.XIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
-import com.school_of_company.model.model.training.TrainingDtoModel
+import com.school_of_company.model.model.standard.StandardRequestModel
 
 @Composable
-fun ExpoAddTextField(
+fun ExpoStandardAddTextField(
     modifier: Modifier = Modifier,
     placeHolder: String,
-    trainingTextFieldList: List<TrainingDtoModel>,
-    onValueChange: (Int, TrainingDtoModel) -> Unit,
+    trainingTextFieldList: List<StandardRequestModel>,
+    onValueChange: (Int, StandardRequestModel) -> Unit,
     onAddTextField: () -> Unit,
     onRemoveTextField: (Int) -> Unit,
     onTrainingSetting: (Int) -> Unit
@@ -124,17 +123,4 @@ fun ExpoAddTextField(
             }
         }
     }
-}
-
-@Preview
-@Composable
-private fun ExpoAddTextFieldPreview() {
-    ExpoAddTextField(
-        placeHolder = "연수를 입력하세요.",
-        trainingTextFieldList = listOf(),
-        onValueChange = { _, _ ->},
-        onAddTextField = { /*TODO*/ },
-        onRemoveTextField = { /*TODO*/ },
-        onTrainingSetting = { /*TODO*/ }
-    )
 }

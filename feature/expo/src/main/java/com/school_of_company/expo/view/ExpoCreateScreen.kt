@@ -65,6 +65,8 @@ import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.expo.enum.TrainingCategory
 import com.school_of_company.expo.view.component.ExpoAddTextField
 import com.school_of_company.expo.view.component.ExpoSettingBottomSheet
+import com.school_of_company.expo.view.component.ExpoStandardAddTextField
+import com.school_of_company.expo.view.component.ExpoStandardSettingBottomSheet
 import com.school_of_company.expo.viewmodel.ExpoViewModel
 import com.school_of_company.expo.viewmodel.uistate.ImageUpLoadUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterExpoInformationUiState
@@ -94,10 +96,6 @@ internal fun ExpoCreateRoute(
     val coverImageState by viewModel.cover_image.collectAsStateWithLifecycle()
     val trainingProgramTextState by viewModel.trainingProgramTextState.collectAsStateWithLifecycle()
     val standardProgramTextState by viewModel.standardProgramTextState.collectAsStateWithLifecycle()
-    val startedTextState by viewModel.started.collectAsStateWithLifecycle()
-    val endedTextState by viewModel.ended.collectAsStateWithLifecycle()
-    val startedStandardTextState by viewModel.standardStarted.collectAsStateWithLifecycle()
-    val endedStandardTextState by viewModel.standardEnded.collectAsStateWithLifecycle()
 
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
@@ -152,25 +150,12 @@ internal fun ExpoCreateRoute(
             is RegisterExpoInformationUiState.Success -> {
                 viewModel.registerTrainingProgramList(
                     expoId = (registerExpoInformationUiState as RegisterExpoInformationUiState.Success).data.expoId,
-                    body = viewModel.trainingProgramTextState.value.map { title ->
-                        TrainingDtoModel(
-                            title = title,
-                            startedAt = viewModel.started.value,
-                            endedAt = viewModel.ended.value,
-                            category = viewModel.categoryState.value.toString()
-                        )
-                    }
+                    body = trainingProgramTextState
                 )
 
                 viewModel.registerStandardProgramList(
                     expoId = (registerExpoInformationUiState as RegisterExpoInformationUiState.Success).data.expoId,
-                    body = viewModel.standardProgramTextState.value.map { title ->
-                        StandardRequestModel(
-                            title = title,
-                            startedAt = viewModel.standardStarted.value,
-                            endedAt = viewModel.standardEnded.value
-                        )
-                    }
+                    body = standardProgramTextState
                 )
             }
             is RegisterExpoInformationUiState.Error -> {
@@ -222,15 +207,6 @@ internal fun ExpoCreateRoute(
         onStandardProgramChange = viewModel::updateStandardProgramText,
         onAddStandardProgram = viewModel::addStandardProgramText,
         onRemoveStandardProgram = viewModel::removeStandardProgramText,
-        startedTextState = startedTextState,
-        endedTextState = endedTextState,
-        onStartedChange = viewModel::onStartedChange,
-        onEndedChange = viewModel::onEndedChange,
-        onTrainingCategoryChange = viewModel::updateCategory,
-        startedStandardTextState = startedStandardTextState,
-        endedStandardTextState = endedStandardTextState,
-        onStartedStandardChange = viewModel::onStandardStartedChange,
-        onEndedStandardChange = viewModel::onStandardEndedChange
     )
 }
 
@@ -254,26 +230,20 @@ internal fun ExpoCreateScreen(
     onAddressChange: (String) -> Unit,
     onLocationChange: (String) -> Unit,
     onExpoCreateCallBack: () -> Unit,
-    trainingProgramTextState: List<String>,
-    onTrainingProgramChange: (Int, String) -> Unit,
+    trainingProgramTextState: List<TrainingDtoModel>,
+    onTrainingProgramChange: (Int, TrainingDtoModel) -> Unit,
     onAddTrainingProgram: () -> Unit,
     onRemoveTrainingProgram: (Int) -> Unit,
-    standardProgramTextState: List<String>,
-    onStandardProgramChange: (Int, String) -> Unit,
+    standardProgramTextState: List<StandardRequestModel>,
+    onStandardProgramChange: (Int, StandardRequestModel) -> Unit,
     onAddStandardProgram: () -> Unit,
     onRemoveStandardProgram: (Int) -> Unit,
-    startedTextState: String,
-    endedTextState: String,
-    onStartedChange: (String) -> Unit,
-    onEndedChange: (String) -> Unit,
-    onTrainingCategoryChange: (TrainingCategory) -> Unit,
-    startedStandardTextState: String,
-    endedStandardTextState: String,
-    onStartedStandardChange: (String) -> Unit,
-    onEndedStandardChange: (String) -> Unit
 ) {
     val (openTrainingSettingBottomSheet, isOpenTrainingSettingBottomSheet) = rememberSaveable { mutableStateOf(false) }
     val (openStandardSettingBottomSheet, isOpenStandardSettingBottomSheet) = rememberSaveable { mutableStateOf(false) }
+
+    var selectedTrainingIndex by remember { mutableStateOf<Int?>(null) }
+    var selectedStandardIndex by remember { mutableStateOf<Int?>(null) }
 
     ExpoAndroidTheme { colors, typography ->
         Column(
@@ -459,7 +429,7 @@ internal fun ExpoCreateScreen(
                         color = colors.black,
                     )
 
-                    ExpoAddTextField(
+                    ExpoStandardAddTextField(
                         trainingTextFieldList = standardProgramTextState,
                         onValueChange = { index, newState ->
                             onStandardProgramChange(index, newState)
@@ -468,7 +438,8 @@ internal fun ExpoCreateScreen(
                         onRemoveTextField = { index ->
                             onRemoveStandardProgram(index)
                         },
-                        onTrainingSetting = {
+                        onTrainingSetting = { index ->
+                            selectedStandardIndex = index
                             isOpenStandardSettingBottomSheet(true)
                         },
                         placeHolder = "연수 종류를 입력해주세요."
@@ -491,7 +462,8 @@ internal fun ExpoCreateScreen(
                         onRemoveTextField = { index ->
                             onRemoveTrainingProgram(index)
                         },
-                        onTrainingSetting = {
+                        onTrainingSetting = { index ->
+                            selectedTrainingIndex = index
                             isOpenTrainingSettingBottomSheet(true)
                         },
                         placeHolder = "연수 종류를 입력해주세요."
@@ -549,30 +521,41 @@ internal fun ExpoCreateScreen(
 
     if (openTrainingSettingBottomSheet) {
         Dialog(onDismissRequest = { isOpenTrainingSettingBottomSheet(false) }) {
-            ExpoSettingBottomSheet(
-                onCancelClick = { isOpenTrainingSettingBottomSheet(false) },
-                startedTextState = startedTextState,
-                endedTextState = endedTextState,
-                onStartedTextChange = onStartedChange,
-                onEndedTextChange = onEndedChange,
-                onCategoryChange = onTrainingCategoryChange,
-                onButtonClick = { isOpenTrainingSettingBottomSheet(false) }
-            )
+
+            val selectedTrainingItem = selectedTrainingIndex?.let { trainingProgramTextState[it] }
+
+            if (selectedTrainingItem != null) {
+                ExpoSettingBottomSheet(
+                    onCancelClick = { isOpenTrainingSettingBottomSheet(false) },
+                    onButtonClick = { isOpenTrainingSettingBottomSheet(false) },
+                    trainingSettingItem = selectedTrainingItem,
+                    onTrainingSettingChange = { updateItem ->
+                        selectedTrainingIndex?.let { index ->
+                            onTrainingProgramChange(index, updateItem)
+                        }
+                    },
+                )
+            }
         }
     }
 
     if (openStandardSettingBottomSheet) {
         Dialog(onDismissRequest = { isOpenStandardSettingBottomSheet(false) }) {
-            ExpoSettingBottomSheet(
-                onCancelClick = { isOpenStandardSettingBottomSheet(false) },
-                startedTextState = startedStandardTextState,
-                endedTextState = endedStandardTextState,
-                onStartedTextChange = onStartedStandardChange,
-                onEndedTextChange = onEndedStandardChange,
-                onButtonClick = { isOpenStandardSettingBottomSheet(false) },
-                onCategoryChange = {},
-                isTraining = false
-            )
+
+            val selectedStandardItem = selectedStandardIndex?.let { standardProgramTextState[it] }
+
+            if (selectedStandardItem != null) {
+                ExpoStandardSettingBottomSheet(
+                    onCancelClick = { isOpenStandardSettingBottomSheet(false) },
+                    onButtonClick = { isOpenStandardSettingBottomSheet(false) },
+                    trainingSettingItem = selectedStandardItem,
+                    onTrainingSettingChange = { updateItem ->
+                        selectedStandardIndex?.let { index ->
+                            onStandardProgramChange(index, updateItem)
+                        }
+                    }
+                )
+            }
         }
     }
 }
@@ -604,14 +587,5 @@ private fun ExpoCreateScreenPreview() {
         onStandardProgramChange = { _, _ -> },
         onAddStandardProgram = {},
         onRemoveStandardProgram = {},
-        startedTextState = "",
-        endedTextState = "",
-        onStartedChange = {},
-        onEndedChange = {},
-        onTrainingCategoryChange = {},
-        startedStandardTextState = "",
-        endedStandardTextState = "",
-        onStartedStandardChange = {},
-        onEndedStandardChange = {}
     )
 }

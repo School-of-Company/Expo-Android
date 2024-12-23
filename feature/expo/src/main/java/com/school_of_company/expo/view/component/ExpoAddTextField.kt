@@ -25,16 +25,17 @@ import com.school_of_company.design_system.component.modifier.clickable.expoClic
 import com.school_of_company.design_system.icon.PlusIcon
 import com.school_of_company.design_system.icon.XIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
+import com.school_of_company.model.model.training.TrainingDtoModel
 
 @Composable
 fun ExpoAddTextField(
     modifier: Modifier = Modifier,
     placeHolder: String,
-    trainingTextFieldList: List<String>,
-    onValueChange: (Int, String) -> Unit,
+    trainingTextFieldList: List<TrainingDtoModel>,
+    onValueChange: (Int, TrainingDtoModel) -> Unit,
     onAddTextField: () -> Unit,
     onRemoveTextField: (Int) -> Unit,
-    onTrainingSetting: () -> Unit
+    onTrainingSetting: (Int) -> Unit
 ) {
 
     ExpoAndroidTheme { colors, typography ->
@@ -72,14 +73,14 @@ fun ExpoAddTextField(
                         Spacer(modifier = Modifier.padding(end = 12.dp))
 
                         BasicTextField(
-                            value = text,
+                            value = text.title,
                             onValueChange = { newState ->
-                                onValueChange(index, newState)
+                                onValueChange(index, text.copy(title = newState))
                             },
                             textStyle = typography.bodyRegular2,
                             cursorBrush = SolidColor(colors.main),
                             decorationBox = { innerTextField ->
-                                if (text.isEmpty()) {
+                                if (text.title.isEmpty()) {
                                     Text(
                                         text = placeHolder,
                                         style = typography.bodyRegular2,
@@ -95,7 +96,7 @@ fun ExpoAddTextField(
 
                         TrainingSettingButton(
                             text = "연수설정",
-                            onClick = onTrainingSetting
+                            onClick = { onTrainingSetting(index) }
                         )
 
                         IconButton(onClick = { onRemoveTextField(index) }) {
@@ -130,11 +131,10 @@ fun ExpoAddTextField(
 private fun ExpoAddTextFieldPreview() {
     ExpoAddTextField(
         placeHolder = "연수를 입력하세요.",
-        trainingTextFieldList = listOf(""),
+        trainingTextFieldList = listOf(),
         onValueChange = { _, _ ->},
         onAddTextField = { /*TODO*/ },
         onRemoveTextField = { /*TODO*/ },
         onTrainingSetting = { /*TODO*/ }
-
     )
 }

@@ -45,23 +45,21 @@ import com.school_of_company.design_system.icon.XIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.design_system.theme.color.ExpoColor
 import com.school_of_company.expo.enum.TrainingCategory
+import com.school_of_company.model.model.training.TrainingDtoModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExpoSettingBottomSheet(
     modifier: Modifier = Modifier,
     onCancelClick: () -> Unit,
-    startedTextState: String,
-    endedTextState: String,
-    onStartedTextChange: (String) -> Unit,
-    onEndedTextChange: (String) -> Unit,
+    trainingSettingItem: TrainingDtoModel,
+    onTrainingSettingChange: (TrainingDtoModel) -> Unit,
     onButtonClick: () -> Unit,
-    categoryState: TrainingCategory = TrainingCategory.CHOICE,
-    onCategoryChange: (TrainingCategory) -> Unit,
     focusManager: FocusManager = LocalFocusManager.current,
     isTraining: Boolean = true
 ) {
     val sheetState = rememberModalBottomSheetState()
+    var currentItem by remember { mutableStateOf(trainingSettingItem) }
 
     ExpoAndroidTheme { colors, typography ->
 
@@ -119,7 +117,7 @@ fun ExpoSettingBottomSheet(
                         modifier = Modifier.weight(1f)
                     ) {
                         ExpoNoneLineTextField(
-                            textState = startedTextState,
+                            textState = currentItem.startedAt,
                             placeHolder = {
                                 Text(
                                     text = "yyyy-MM-dd HH:mm",
@@ -129,12 +127,12 @@ fun ExpoSettingBottomSheet(
                                 )
                             },
                             onTextChange = { newText ->
-                                onStartedTextChange(newText)
+                                currentItem = currentItem.copy(startedAt = newText)
                             }
                         )
 
                         ExpoNoneLineTextField(
-                            textState = endedTextState,
+                            textState = currentItem.endedAt,
                             placeHolder = {
                                 Text(
                                     text = "yyyy-MM-dd HH:mm",
@@ -144,7 +142,7 @@ fun ExpoSettingBottomSheet(
                                 )
                             },
                             onTextChange = { newText ->
-                                onEndedTextChange(newText)
+                                currentItem = currentItem.copy(endedAt = newText)
                             }
                         )
                     }
@@ -161,8 +159,10 @@ fun ExpoSettingBottomSheet(
                             )
 
                             CustomCheckBox(
-                                categoryState = categoryState,
-                                onCategoryChange = onCategoryChange
+                                categoryState = currentItem.category,
+                                onCategoryChange = { newCategory ->
+                                    currentItem = currentItem.copy(category = newCategory)
+                                }
                             )
                         }
                     } else {
@@ -174,7 +174,10 @@ fun ExpoSettingBottomSheet(
 
                 ExpoStateButton(
                     text = "확인",
-                    onClick = onButtonClick,
+                    onClick = {
+                        onTrainingSettingChange(currentItem)
+                        onButtonClick()
+                    },
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -186,13 +189,13 @@ fun ExpoSettingBottomSheet(
 fun CustomCheckBox(
     modifier: Modifier = Modifier,
     primaryColor: ExpoColor = ExpoColor,
-    categoryState: TrainingCategory = TrainingCategory.CHOICE,
-    onCategoryChange: (TrainingCategory) -> Unit
+    categoryState: String = TrainingCategory.CHOICE.name,
+    onCategoryChange: (String) -> Unit
 ) {
     var category by remember { mutableStateOf(categoryState) }
 
     val animatedColor by animateColorAsState(
-        if (category == TrainingCategory.ESSENTIAL) ExpoColor.white else primaryColor.white,
+        if (category == TrainingCategory.ESSENTIAL.name) ExpoColor.white else primaryColor.white,
         label = "color"
     )
 
@@ -210,14 +213,13 @@ fun CustomCheckBox(
             }
             .clip(RoundedCornerShape(6.dp))
             .expoClickable {
-                category =
-                    if (category == TrainingCategory.ESSENTIAL) TrainingCategory.CHOICE else TrainingCategory.ESSENTIAL
+                category = if (category == TrainingCategory.ESSENTIAL.name) TrainingCategory.CHOICE.name else TrainingCategory.ESSENTIAL.name
                 onCategoryChange(category)
             }
     ) {
         Column(modifier = Modifier.align(Alignment.Center)) {
             AnimatedVisibility(
-                visible = category == TrainingCategory.ESSENTIAL,
+                visible = category == TrainingCategory.ESSENTIAL.name,
                 enter = scaleIn(initialScale = 0.5f),
                 exit = shrinkOut(shrinkTowards = Alignment.Center)
             ) {
@@ -232,13 +234,14 @@ fun CustomCheckBox(
 private fun ExpoTrainingSettingBottomSheetPreview() {
     ExpoSettingBottomSheet(
         onCancelClick = {},
-        startedTextState = "",
-        endedTextState = "",
-        onStartedTextChange = {},
-        onEndedTextChange = {},
         onButtonClick = {},
-        categoryState = TrainingCategory.ESSENTIAL,
-        onCategoryChange = {}
+        trainingSettingItem = TrainingDtoModel(
+            title = "",
+            startedAt = "",
+            endedAt = "",
+            category = TrainingCategory.ESSENTIAL.name
+        ),
+        onTrainingSettingChange = {}
     )
 }
 
@@ -247,7 +250,7 @@ private fun ExpoTrainingSettingBottomSheetPreview() {
 private fun CheckBoxPreview() {
     CustomCheckBox(
         primaryColor = ExpoColor,
-        categoryState = TrainingCategory.ESSENTIAL,
+        categoryState = TrainingCategory.ESSENTIAL.name,
         onCategoryChange = {}
     )
 }

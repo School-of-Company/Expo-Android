@@ -107,7 +107,6 @@ private fun HomeBottomSheetOptions(
                 .padding(vertical = 14.dp)
         )
     }
-
 }
 
 @Preview

@@ -171,7 +171,7 @@ internal fun ExpoCreateRoute(
             selectedImageUri = null
             makeToast(context, "박람회 등록을 완료하였습니다.")
             viewModel.initRegisterExpo()
-        } else if (registerTrainingProgramListUiState is RegisterTrainingProgramListUiState.Error && registerStandardProgramListUiState is RegisterStandardProgramListUiState.Error) {
+        } else if (registerTrainingProgramListUiState is RegisterTrainingProgramListUiState.Error || registerStandardProgramListUiState is RegisterStandardProgramListUiState.Error) {
             onErrorToast(null, R.string.expo_register_fail)
         }
     }

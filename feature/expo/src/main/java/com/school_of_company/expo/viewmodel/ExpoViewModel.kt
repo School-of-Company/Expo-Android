@@ -35,6 +35,7 @@ import com.school_of_company.expo.viewmodel.uistate.RegisterExpoInformationUiSta
 import com.school_of_company.expo.viewmodel.uistate.RegisterStandardProgramListUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterTrainingProgramListUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterTrainingProgramUiState
+import com.school_of_company.model.entity.standard.StandardProgramListResponseEntity
 import com.school_of_company.model.model.expo.ExpoRequestAndResponseModel
 import com.school_of_company.model.model.standard.StandardRequestModel
 import com.school_of_company.model.model.training.TrainingDtoModel
@@ -374,7 +375,17 @@ class ExpoViewModel @Inject constructor(
             .collectLatest { result ->
                 when (result) {
                     is Result.Loading -> _getStandardProgramListUiState.value = GetStandardProgramListUiState.Loading
-                    is Result.Success -> _getStandardProgramListUiState.value = GetStandardProgramListUiState.Success(result.data)
+                    is Result.Success -> {
+                        _getStandardProgramListUiState.value = GetStandardProgramListUiState.Success(result.data)
+
+                        _standardProgramTextState.value = result.data.map { program ->
+                            StandardRequestModel(
+                                title = program.title,
+                                startedAt = program.startedAt,
+                                endedAt = program.endedAt
+                            )
+                        }
+                    }
                     is Result.Error -> _getStandardProgramListUiState.value = GetStandardProgramListUiState.Error(result.exception)
                 }
             }
@@ -387,7 +398,18 @@ class ExpoViewModel @Inject constructor(
             .collectLatest { result ->
                 when (result) {
                     is Result.Loading -> _getTrainingProgramListUiState.value = GetTrainingProgramListUiState.Loading
-                    is Result.Success -> _getTrainingProgramListUiState.value = GetTrainingProgramListUiState.Success(result.data)
+                    is Result.Success -> {
+                        _getTrainingProgramListUiState.value = GetTrainingProgramListUiState.Success(result.data)
+
+                        _trainingProgramTextState.value = result.data.map { program ->
+                            TrainingDtoModel(
+                                title = program.title,
+                                startedAt = program.startedAt,
+                                endedAt = program.endedAt,
+                                category = program.category
+                            )
+                        }
+                    }
                     is Result.Error -> _getTrainingProgramListUiState.value = GetTrainingProgramListUiState.Error(result.exception)
                 }
             }

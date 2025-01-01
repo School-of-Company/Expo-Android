@@ -71,8 +71,12 @@ import com.school_of_company.expo.view.component.ExpoSettingBottomSheet
 import com.school_of_company.expo.view.component.ExpoStandardAddTextField
 import com.school_of_company.expo.view.component.ExpoStandardSettingBottomSheet
 import com.school_of_company.expo.viewmodel.ExpoViewModel
+import com.school_of_company.expo.viewmodel.uistate.GetStandardProgramListUiState
+import com.school_of_company.expo.viewmodel.uistate.GetTrainingProgramListUiState
 import com.school_of_company.expo.viewmodel.uistate.ImageUpLoadUiState
 import com.school_of_company.expo.viewmodel.uistate.ModifyExpoInformationUiState
+import com.school_of_company.expo.viewmodel.uistate.ModifyStandardProgramUiState
+import com.school_of_company.expo.viewmodel.uistate.ModifyTrainingProgramUiState
 import com.school_of_company.model.model.expo.ExpoRequestAndResponseModel
 import com.school_of_company.model.model.standard.StandardRequestModel
 import com.school_of_company.model.model.training.TrainingDtoModel
@@ -88,6 +92,10 @@ internal fun ExpoModifyRoute(
 ) {
     val modifyExpoInformationUiState by viewModel.modifyExpoInformationUiState.collectAsStateWithLifecycle()
     val imageUpLoadUiState by viewModel.imageUpLoadUiState.collectAsStateWithLifecycle()
+    val modifyTrainingProgramUiState by viewModel.modifyTrainingProgramUiState.collectAsStateWithLifecycle()
+    val modifyStandardProgramUiState by viewModel.modifyStandardProgramUiState.collectAsStateWithLifecycle()
+    val getTrainingProgramUiState by viewModel.getTrainingProgramListUiState.collectAsStateWithLifecycle()
+    val getStandardProgramUiState by viewModel.getStandardProgramListUiState.collectAsStateWithLifecycle()
 
     val modifyTitleState by viewModel.modify_title.collectAsStateWithLifecycle()
     val startedDateState by viewModel.started_date.collectAsStateWithLifecycle()
@@ -120,6 +128,8 @@ internal fun ExpoModifyRoute(
 
     LaunchedEffect(id) {
         viewModel.getExpoInformation(id)
+        viewModel.getStandardProgramList(id)
+        viewModel.getTrainingProgramList(id)
     }
 
     DisposableEffect(Unit) {
@@ -145,7 +155,6 @@ internal fun ExpoModifyRoute(
                         y = 126.80043f
                     )
                 )
-                viewModel.initModifyExpo()
             }
             is ImageUpLoadUiState.Error -> {
                 onErrorToast(null, R.string.expo_image_fail)
@@ -153,15 +162,62 @@ internal fun ExpoModifyRoute(
         }
     }
 
-    LaunchedEffect(modifyExpoInformationUiState) {
-        when (modifyExpoInformationUiState) {
-            is ModifyExpoInformationUiState.Loading -> Unit
-            is ModifyExpoInformationUiState.Success -> {
+    LaunchedEffect(getTrainingProgramUiState) {
+        when (getTrainingProgramUiState) {
+            is GetTrainingProgramListUiState.Loading -> Unit
+            is GetTrainingProgramListUiState.Success -> {
+                viewModel.modifyTrainingProgram(
+                    trainingProId = (getTrainingProgramUiState as GetTrainingProgramListUiState.Success).data.first().id,
+                    body = TrainingDtoModel(
+                        title = "",
+                        startedAt = "",
+                        endedAt = "",
+                        category = TrainingCategory.CHOICE.name
+                    )
+                )
+            }
+            is GetTrainingProgramListUiState.Error -> {
+                onErrorToast(null, R.string.expo_modify_fail)
+            }
+        }
+    }
+
+    LaunchedEffect(getStandardProgramUiState) {
+        when (getStandardProgramUiState) {
+            is GetStandardProgramListUiState.Loading -> Unit
+            is GetStandardProgramListUiState.Success -> {
+                viewModel.modifyStandardProgram(
+                    standardProId = (getStandardProgramUiState as GetStandardProgramListUiState.Success).data.first().id,
+                    body = StandardRequestModel(
+                        title = "",
+                        startedAt = "",
+                        endedAt = ""
+                    )
+                )
+            }
+            is GetStandardProgramListUiState.Error -> {
+                onErrorToast(null, R.string.expo_modify_fail)
+            }
+        }
+    }
+
+    LaunchedEffect(modifyExpoInformationUiState, modifyTrainingProgramUiState, modifyStandardProgramUiState) {
+        val allTasksSuccess = modifyExpoInformationUiState is ModifyExpoInformationUiState.Success &&
+                modifyTrainingProgramUiState is ModifyTrainingProgramUiState.Success &&
+                modifyStandardProgramUiState is ModifyStandardProgramUiState.Success
+
+        val anyTaskError = modifyExpoInformationUiState is ModifyExpoInformationUiState.Error ||
+                modifyTrainingProgramUiState is ModifyTrainingProgramUiState.Error ||
+                modifyStandardProgramUiState is ModifyStandardProgramUiState.Error
+
+        when {
+            allTasksSuccess -> {
                 onBackClick()
                 viewModel.resetExpoInformation()
+                viewModel.initModifyExpo()
                 makeToast(context, "박람회 수정을 완료하였습니다.")
             }
-            is ModifyExpoInformationUiState.Error -> {
+            anyTaskError -> {
                 onErrorToast(null, R.string.expo_modify_fail)
             }
         }

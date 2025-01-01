@@ -104,8 +104,8 @@ internal fun ExpoModifyRoute(
     val addressState by viewModel.address.collectAsStateWithLifecycle()
     val locationState by viewModel.location.collectAsStateWithLifecycle()
     val coverImageState by viewModel.cover_image.collectAsStateWithLifecycle()
-    val trainingProgramTextState by rememberSaveable { mutableStateOf(viewModel.trainingProgramTextState.value) }
-    val standardProgramTextState by rememberSaveable { mutableStateOf(viewModel.standardProgramTextState.value) }
+    val trainingProgramTextState by viewModel.trainingProgramTextState.collectAsStateWithLifecycle()
+    val standardProgramTextState by viewModel.standardProgramTextState.collectAsStateWithLifecycle()
 
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
@@ -292,6 +292,7 @@ internal fun ExpoModifyScreen(
             false
         )
     }
+
     val (openStandardSettingBottomSheet, isOpenStandardSettingBottomSheet) = rememberSaveable {
         mutableStateOf(
             false

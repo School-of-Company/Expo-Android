@@ -3,11 +3,7 @@ package com.school_of_company.network.api
 import com.school_of_company.network.dto.standard.request.StandardRequest
 import com.school_of_company.network.dto.standard.response.StandardAttendListResponse
 import com.school_of_company.network.dto.standard.response.StandardProgramListResponse
-import retrofit2.http.Body
-import retrofit2.http.DELETE
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
+import retrofit2.http.*
 
 interface StandardAPI {
 
@@ -23,7 +19,7 @@ interface StandardAPI {
         @Body body: List<StandardRequest>
     )
 
-    @POST("/standard/{standardPro_id}")
+    @PATCH("/standard/{standardPro_id}")
     suspend fun modifyStandardProgram(
         @Path("standardPro_id") standardProId: Long,
         @Body body: StandardRequest

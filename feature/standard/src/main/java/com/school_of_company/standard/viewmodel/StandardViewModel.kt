@@ -4,18 +4,23 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.school_of_company.common.result.Result
 import com.school_of_company.common.result.asResult
+import com.school_of_company.domain.usecase.attendance.StandardQrCodeRequestUseCase
 import com.school_of_company.domain.usecase.standard.StandardProgramAttendListUseCase
+import com.school_of_company.model.param.attendance.StandardQrCodeRequestParam
 import com.school_of_company.standard.viewmodel.uistate.StandardProgramAttendListUiState
+import com.school_of_company.standard.viewmodel.uistate.StandardQrCodeUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class StandardViewModel @Inject constructor(
-    private val standardProgramAttendListUseCase: StandardProgramAttendListUseCase
+    private val standardProgramAttendListUseCase: StandardProgramAttendListUseCase,
+    private val standardQrCodeRequestUseCase: StandardQrCodeRequestUseCase
 ) : ViewModel() {
 
     private val _swipeRefreshLoading = MutableStateFlow(false)
@@ -23,6 +28,9 @@ class StandardViewModel @Inject constructor(
 
     private val _standardProgramAttendListUiState = MutableStateFlow<StandardProgramAttendListUiState>(StandardProgramAttendListUiState.Loading)
     internal val standardProgramAttendListUiState = _standardProgramAttendListUiState.asStateFlow()
+
+    private val _standardQrCodeUiState = MutableStateFlow<StandardQrCodeUiState>(StandardQrCodeUiState.Loading)
+    internal val standardQrCodeUiState = _standardQrCodeUiState.asStateFlow()
 
     internal fun standardProgramList(standardProId: Long) = viewModelScope.launch {
         _swipeRefreshLoading.value = true
@@ -45,6 +53,27 @@ class StandardViewModel @Inject constructor(
                         _swipeRefreshLoading.value = false
                     }
                 }
+            }
+    }
+
+    internal fun standardQrCode(
+        standardProId: Long,
+        body: StandardQrCodeRequestParam
+    ) = viewModelScope.launch {
+        _standardQrCodeUiState.value = StandardQrCodeUiState.Loading
+        standardQrCodeRequestUseCase(
+            standardId = standardProId,
+            body = body
+        )
+            .onSuccess {
+                it.catch { remoteError ->
+                    _standardQrCodeUiState.value = StandardQrCodeUiState.Error(remoteError)
+                }.collect {
+                    _standardQrCodeUiState.value = StandardQrCodeUiState.Success
+                }
+            }
+            .onFailure { error ->
+                _standardQrCodeUiState.value = StandardQrCodeUiState.Error(error)
             }
     }
 }

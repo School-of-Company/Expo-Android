@@ -34,7 +34,6 @@ import com.school_of_company.ui.toast.makeToast
 @Composable
 internal fun QrScannerRoute(
     id: Long,
-    traineeId: Long,
     onBackClick: () -> Unit,
     onPermissionBlock: () -> Unit,
     viewModel: ProgramViewModel = hiltViewModel()
@@ -74,7 +73,7 @@ internal fun QrScannerRoute(
         QrScannerScreen(
             onBackClick = onBackClick,
             lifecycleOwner = lifecycleOwner,
-            onQrcodeScan = {
+            onQrcodeScan = { traineeId ->
                 viewModel.trainingQrCode(
                     trainingId = id,
                     body = TrainingQrCodeRequestParam(traineeId = traineeId)
@@ -92,7 +91,7 @@ internal fun QrScannerScreen(
     modifier: Modifier = Modifier,
     lifecycleOwner: LifecycleOwner,
     onBackClick: () -> Unit,
-    onQrcodeScan: (String) -> Unit,
+    onQrcodeScan: (Long) -> Unit,
 ) {
     ExpoAndroidTheme { colors, _ ->
 

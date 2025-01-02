@@ -16,25 +16,19 @@ internal fun QrcodeScanView(
     onQrcodeScan: (Long) -> Unit,
     lifecycleOwner: LifecycleOwner
 ) {
-    Scaffold(
+    AndroidView(
         modifier = modifier.fillMaxSize(),
-    ) { innerPadding ->
-        AndroidView(
-            factory = { context ->
-                PreviewView(context).apply {
-                    scaleType = PreviewView.ScaleType.FILL_CENTER
-                    post {
-                        setupQrScanCamera(
-                            previewView = this,
-                            lifecycleOwner = lifecycleOwner,
-                            onQrcodeScanned = onQrcodeScan
-                        )
-                    }
+        factory = { context ->
+            PreviewView(context).apply {
+                scaleType = PreviewView.ScaleType.FILL_CENTER
+                post {
+                    setupQrScanCamera(
+                        previewView = this,
+                        lifecycleOwner = lifecycleOwner,
+                        onQrcodeScanned = onQrcodeScan
+                    )
                 }
-            },
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-        )
-    }
+            }
+        },
+    )
 }

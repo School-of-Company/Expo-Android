@@ -20,7 +20,7 @@ fun NavController.navigateToTrainingProgramParticipant(
 
 fun NavGraphBuilder.trainingProgramParticipantScreen(
     onBackClick: () -> Unit,
-    navigateToQrScanner: (Long, Long) -> Unit
+    navigateToQrScanner: (Long) -> Unit
 ) {
     composable(route = "$trainingProgramParticipantRoute/{id}") { backStackEntry ->
         val id = backStackEntry.arguments?.getString("id")?.toLongOrNull()

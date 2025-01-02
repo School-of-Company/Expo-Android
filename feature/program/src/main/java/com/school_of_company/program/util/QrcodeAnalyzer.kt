@@ -12,7 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
-class QrcodeScanner(
+class QrcodeAnalyzer(
     private val qrcodeData: (Long) -> Unit
 ) : ImageAnalysis.Analyzer {
 

@@ -17,7 +17,7 @@ import java.util.concurrent.Executors
 fun setupQrScanCamera(
     previewView: PreviewView,
     lifecycleOwner: LifecycleOwner,
-    onQrcodeScanned: (Long) -> Unit
+    onQrcodeScanned: (String) -> Unit
 ) {
     val context = previewView.context
     val cameraExecutor = Executors.newSingleThreadExecutor()
@@ -51,6 +51,7 @@ fun setupQrScanCamera(
         val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
         try {
+                    qrCodeData?.takeIf { it.isNotEmpty() }?.let { onQrcodeScanned(it) }
             cameraProvider.unbindAll()
 
             val camera = cameraProvider.bindToLifecycle(

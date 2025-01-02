@@ -13,7 +13,7 @@ import com.school_of_company.program.util.setupQrScanCamera
 @Composable
 internal fun QrcodeScanView(
     modifier: Modifier = Modifier,
-    onQrcodeScan: (Long) -> Unit,
+    onQrcodeScan: (String) -> Unit,
     lifecycleOwner: LifecycleOwner
 ) {
     AndroidView(

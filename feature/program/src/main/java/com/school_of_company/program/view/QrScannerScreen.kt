@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
@@ -43,6 +44,8 @@ internal fun QrScannerRoute(
     val cameraPermissionState = rememberPermissionState(Manifest.permission.CAMERA)
 
     val context = LocalContext.current
+    val lifecycleOwner = context as? LifecycleOwner
+        ?: throw IllegalStateException("Context is not a LifecycleOwner")
 
     LaunchedEffect("getPermission") {
         if (!cameraPermissionState.status.isGranted && !cameraPermissionState.status.shouldShowRationale) {
@@ -55,10 +58,12 @@ internal fun QrScannerRoute(
             is TrainingQrCodeUiState.Loading -> {
                 makeToast(context, "로딩중..")
             }
+
             is TrainingQrCodeUiState.Success -> {
                 makeToast(context, "인식 성공!")
                 onBackClick()
             }
+
             is TrainingQrCodeUiState.Error -> {
                 makeToast(context, "인식을 하지 못하였습니다.")
             }
@@ -68,6 +73,7 @@ internal fun QrScannerRoute(
     if (cameraPermissionState.status.isGranted) {
         QrScannerScreen(
             onBackClick = onBackClick,
+            lifecycleOwner = lifecycleOwner,
             onQrcodeScan = {
                 viewModel.trainingQrCode(
                     trainingId = id,
@@ -84,12 +90,16 @@ internal fun QrScannerRoute(
 @Composable
 internal fun QrScannerScreen(
     modifier: Modifier = Modifier,
+    lifecycleOwner: LifecycleOwner,
     onBackClick: () -> Unit,
-    onQrcodeScan: (Long) -> Unit,
+    onQrcodeScan: (String) -> Unit,
 ) {
     ExpoAndroidTheme { colors, _ ->
 
-        QrcodeScanView(onQrcodeScan = onQrcodeScan)
+        QrcodeScanView(
+            onQrcodeScan = onQrcodeScan,
+            lifecycleOwner = lifecycleOwner,
+        )
 
         Column(
             modifier = modifier

@@ -21,7 +21,7 @@ internal fun QrcodeScanView(
     ) { innerPadding ->
         AndroidView(
             factory = { context ->
-                val previewView = PreviewView(context).apply {
+                PreviewView(context).apply {
                     scaleType = PreviewView.ScaleType.FILL_CENTER
                     post {
                         setupQrScanCamera(
@@ -31,7 +31,6 @@ internal fun QrcodeScanView(
                         )
                     }
                 }
-                previewView
             },
             modifier = Modifier
                 .fillMaxSize()

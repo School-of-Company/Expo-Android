@@ -20,7 +20,6 @@ internal fun QrcodeScanView(
         modifier = modifier.fillMaxSize(),
         factory = { context ->
             PreviewView(context).apply {
-                scaleType = PreviewView.ScaleType.FILL_CENTER
                 post {
                     setupQrScanCamera(
                         previewView = this,

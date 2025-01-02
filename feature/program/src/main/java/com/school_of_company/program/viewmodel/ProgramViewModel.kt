@@ -128,14 +128,13 @@ class ProgramViewModel @Inject constructor(
                         body = body
                     )
                         .onSuccess {
-                            it.collect {
-                                _trainingQrCodeUiState.value = TrainingQrCodeUiState.Success
-                            }
                             it.catch { remoteError ->
                                 _trainingQrCodeUiState.value =
                                     TrainingQrCodeUiState.Error(remoteError)
+                            }.collect {
+                                _trainingQrCodeUiState.value = TrainingQrCodeUiState.Success
                             }
-                            delay(5000)
+                            delay(2000)
                         }
                         .onFailure { error ->
                             _trainingQrCodeUiState.value = TrainingQrCodeUiState.Error(error)

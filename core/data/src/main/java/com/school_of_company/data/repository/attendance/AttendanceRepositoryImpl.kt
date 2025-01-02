@@ -1,5 +1,6 @@
 package com.school_of_company.data.repository.attendance
 
+import com.school_of_company.model.param.attendance.StandardQrCodeRequestParam
 import com.school_of_company.model.param.attendance.TrainingQrCodeRequestParam
 import com.school_of_company.network.datasource.attendance.AttendanceDataSource
 import com.school_of_company.network.mapper.attendance.request.toDto
@@ -15,6 +16,16 @@ class AttendanceRepositoryImpl @Inject constructor(
     ): Flow<Unit> {
         return dataSource.trainingQrCode(
             trainingId = trainingId,
+            body = body.toDto()
+        )
+    }
+
+    override fun standardQrCode(
+        standardId: Long,
+        body: StandardQrCodeRequestParam
+    ): Flow<Unit> {
+        return dataSource.standardQrCode(
+            standardId = standardId,
             body = body.toDto()
         )
     }

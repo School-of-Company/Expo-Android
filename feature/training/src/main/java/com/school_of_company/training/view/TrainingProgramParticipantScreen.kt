@@ -47,20 +47,13 @@ import kotlinx.collections.immutable.toImmutableList
 internal fun TrainingProgramParticipantRoute(
     id: Long,
     onBackClick: () -> Unit,
-    navigateToQrScanner: (Long, Long) -> Unit,
+    navigateToQrScanner: (Long) -> Unit,
     viewModel: TrainingViewModel = hiltViewModel()
 ) {
     val swipeRefreshLoading by viewModel.swipeRefreshLoading.collectAsStateWithLifecycle()
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = swipeRefreshLoading)
 
     val teacherTrainingProgramListUiState by viewModel.teacherTrainingProgramListUiState.collectAsStateWithLifecycle()
-
-    val traineeId: Long = when (teacherTrainingProgramListUiState) {
-        is TeacherTrainingProgramListUiState.Success -> {
-            (teacherTrainingProgramListUiState as TeacherTrainingProgramListUiState.Success).data.firstOrNull()?.id ?: -1L
-        }
-        else -> -1L
-    }
 
     TrainingProgramParticipantScreen(
         id = id,
@@ -69,7 +62,6 @@ internal fun TrainingProgramParticipantRoute(
         swipeRefreshState = swipeRefreshState,
         getTeacherTrainingProgramList = { viewModel.teacherTrainingProgramList(id) },
         navigateToQrScanner = navigateToQrScanner,
-        traineeId = traineeId
     )
 
     LaunchedEffect(Unit) {
@@ -84,8 +76,7 @@ internal fun TrainingProgramParticipantScreen(
     swipeRefreshState: SwipeRefreshState,
     teacherTrainingProgramListUiState: TeacherTrainingProgramListUiState,
     getTeacherTrainingProgramList: () -> Unit,
-    traineeId: Long,
-    navigateToQrScanner: (Long, Long) -> Unit,
+    navigateToQrScanner: (Long) -> Unit,
     onBackClick: () -> Unit,
     scrollState: ScrollState = rememberScrollState()
 ) {
@@ -122,7 +113,7 @@ internal fun TrainingProgramParticipantScreen(
                 )
 
                 QrButton(
-                    onClick = { navigateToQrScanner(id, traineeId) },
+                    onClick = { navigateToQrScanner(id) },
                     modifier = Modifier.padding(end = 16.dp)
                 )
             }
@@ -336,7 +327,6 @@ private fun HomeDetailProgramParticipantScreenPreview() {
         teacherTrainingProgramListUiState = TeacherTrainingProgramListUiState.Loading,
         swipeRefreshState = rememberSwipeRefreshState(isRefreshing = false),
         getTeacherTrainingProgramList = {},
-        navigateToQrScanner = { _, _ -> },
-        traineeId = -1L
+        navigateToQrScanner = { _ -> },
     )
 }

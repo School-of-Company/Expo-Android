@@ -46,20 +46,13 @@ import kotlinx.collections.immutable.toImmutableList
 internal fun StandardProgramParticipantRoute(
     id: Long,
     onBackClick: () -> Unit,
-    navigateToQrScanner: (Long, Long) -> Unit,
+    navigateToQrScanner: (Long) -> Unit,
     viewModel: StandardViewModel = hiltViewModel()
 ) {
     val swipeRefreshLoading by viewModel.swipeRefreshLoading.collectAsStateWithLifecycle()
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = swipeRefreshLoading)
 
     val standardProgramAttendListUiState = viewModel.standardProgramAttendListUiState.collectAsStateWithLifecycle().value
-
-    val standardId: Long = when (standardProgramAttendListUiState) {
-        is StandardProgramAttendListUiState.Success -> {
-            standardProgramAttendListUiState.data.firstOrNull()?.id ?: -1L
-        }
-        else -> -1L
-    }
 
     StandardProgramParticipantScreen(
         id = id,
@@ -68,7 +61,6 @@ internal fun StandardProgramParticipantRoute(
         swipeRefreshState = swipeRefreshState,
         getTeacherTrainingProgramList = { viewModel.standardProgramList(id) },
         navigateToQrScanner = navigateToQrScanner,
-        standardId = standardId
     )
 
     LaunchedEffect(Unit) {
@@ -83,8 +75,7 @@ internal fun StandardProgramParticipantScreen(
     swipeRefreshState: SwipeRefreshState,
     standardProgramAttendListUiState: StandardProgramAttendListUiState,
     getTeacherTrainingProgramList: () -> Unit,
-    standardId: Long,
-    navigateToQrScanner: (Long, Long) -> Unit,
+    navigateToQrScanner: (Long) -> Unit,
     onBackClick: () -> Unit,
     scrollState: ScrollState = rememberScrollState()
 ) {
@@ -121,7 +112,7 @@ internal fun StandardProgramParticipantScreen(
                 )
 
                 QrButton(
-                    onClick = { navigateToQrScanner(id, standardId) },
+                    onClick = { navigateToQrScanner(id) },
                     modifier = Modifier.padding(end = 16.dp)
                 )
             }
@@ -168,6 +159,7 @@ internal fun StandardProgramParticipantScreen(
                                 color = colors.gray200
                             )
                         }
+
                         is StandardProgramAttendListUiState.Success -> {
                             Text(
                                 text = "${standardProgramAttendListUiState.data.size}명",
@@ -175,6 +167,7 @@ internal fun StandardProgramParticipantScreen(
                                 color = colors.main
                             )
                         }
+
                         is StandardProgramAttendListUiState.Error -> {
                             Text(
                                 text = "데이터를 불러올 수 없습니다..",
@@ -182,6 +175,7 @@ internal fun StandardProgramParticipantScreen(
                                 color = colors.gray200
                             )
                         }
+
                         is StandardProgramAttendListUiState.Empty -> {
                             Text(
                                 text = "0명",
@@ -276,6 +270,7 @@ internal fun StandardProgramParticipantScreen(
                             horizontalScrollState = scrollState
                         )
                     }
+
                     is StandardProgramAttendListUiState.Error -> {
                         Column(
                             verticalArrangement = Arrangement.spacedBy(
@@ -299,9 +294,13 @@ internal fun StandardProgramParticipantScreen(
                             )
                         }
                     }
+
                     is StandardProgramAttendListUiState.Empty -> {
                         Column(
-                            verticalArrangement = Arrangement.spacedBy(28.dp, Alignment.CenterVertically),
+                            verticalArrangement = Arrangement.spacedBy(
+                                28.dp,
+                                Alignment.CenterVertically
+                            ),
                             horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier
                                 .fillMaxSize()

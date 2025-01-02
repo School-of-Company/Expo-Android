@@ -20,7 +20,7 @@ fun NavController.navigateToStandardProgramParticipant(
 
 fun NavGraphBuilder.standardProgramParticipantScreen(
     onBackClick: () -> Unit,
-    navigateToQrScanner: (Long, Long) -> Unit
+    navigateToQrScanner: (Long) -> Unit
 ) {
     composable(route = "$standardProgramParticipantRoute/{id}") { backStackEntry ->
         val id = backStackEntry.arguments?.getString("id")?.toLongOrNull()

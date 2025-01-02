@@ -26,11 +26,7 @@ fun setupQrScanCamera(
     cameraProviderFuture.addListener({
         val cameraProvider = cameraProviderFuture.get()
 
-        val preview = Preview.Builder()
-            .build()
-            .apply {
-                surfaceProvider = previewView.surfaceProvider
-            }
+        val preview = buildPreview(previewView)
 
         val imageCapture = ImageCapture.Builder().build()
 

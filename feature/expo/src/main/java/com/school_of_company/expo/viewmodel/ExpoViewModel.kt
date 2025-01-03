@@ -456,6 +456,18 @@ class ExpoViewModel @Inject constructor(
         }
     }
 
+    internal fun updateExistingTrainingProgram(index: Int, updatedItem: TrainingDtoModel) {
+        _trainingProgramTextState.value = _trainingProgramTextState.value.toMutableList().apply {
+            this[index] = updatedItem
+        }
+    }
+
+    internal fun updateExistingStandardProgram(index: Int, updatedItem: StandardRequestModel) {
+        _standardProgramTextState.value = _standardProgramTextState.value.toMutableList().apply {
+            this[index] = updatedItem
+        }
+    }
+
     internal fun onModifyTitleChange(value: String) {
         savedStateHandle[MODIFY_TITLE] = value
     }

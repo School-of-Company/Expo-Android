@@ -54,6 +54,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import com.school_of_company.design_system.R
+import com.school_of_company.design_system.component.bottomsheet.SettingBottomSheet
 import com.school_of_company.design_system.component.button.ExpoStateButton
 import com.school_of_company.design_system.component.button.state.ButtonState
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
@@ -625,19 +626,22 @@ internal fun ExpoModifyScreen(
 
             val selectedTrainingItem = selectedTrainingIndex?.let { trainingProgramTextState[it] }
 
-            if (selectedTrainingItem != null) {
+            SettingBottomSheet(
+                isOpen = openTrainingSettingBottomSheet,
+                onDismiss = { isOpenTrainingSettingBottomSheet(false) },
+                selectedItem = selectedTrainingIndex?.let { trainingProgramTextState[it] },
+                onUpdateItem = { updateItem ->
+                    selectedTrainingIndex?.let { index ->
+                        updateExistingTrainingProgram(index, updateItem)
+                    }
+                }
+            ) { item, updateItem ->
                 ExpoSettingBottomSheet(
                     onCancelClick = { isOpenTrainingSettingBottomSheet(false) },
                     onButtonClick = { isOpenTrainingSettingBottomSheet(false) },
-                    trainingSettingItem = selectedTrainingItem,
-                    onTrainingSettingChange = { updateItem ->
-                        selectedTrainingIndex?.let { index ->
-                            updateExistingTrainingProgram(index, updateItem)
-                        }
-                    }
+                    trainingSettingItem = item,
+                    onTrainingSettingChange = updateItem
                 )
-            } else {
-                Log.d("ExpoModifyScreen", "selectedTrainingItem is null")
             }
         }
     }
@@ -647,19 +651,22 @@ internal fun ExpoModifyScreen(
 
             val selectedStandardItem = selectedStandardIndex?.let { standardProgramTextState[it] }
 
-            if (selectedStandardItem != null) {
+            SettingBottomSheet(
+                isOpen = openStandardSettingBottomSheet,
+                onDismiss = { isOpenStandardSettingBottomSheet(false) },
+                selectedItem = selectedStandardIndex?.let { standardProgramTextState[it] },
+                onUpdateItem = { updateItem ->
+                    selectedStandardIndex?.let { index ->
+                        updateExistingStandardProgram(index, updateItem)
+                    }
+                }
+            ) { item, updateItem ->
                 ExpoStandardSettingBottomSheet(
                     onCancelClick = { isOpenStandardSettingBottomSheet(false) },
                     onButtonClick = { isOpenStandardSettingBottomSheet(false) },
-                    trainingSettingItem = selectedStandardItem,
-                    onTrainingSettingChange = { updateItem ->
-                        selectedStandardIndex?.let { index ->
-                            updateExistingStandardProgram(index, updateItem)
-                        }
-                    },
+                    trainingSettingItem = item,
+                    onTrainingSettingChange = updateItem
                 )
-            } else {
-                Log.d("ExpoModifyScreen", "selectedTrainingItem is null")
             }
         }
     }

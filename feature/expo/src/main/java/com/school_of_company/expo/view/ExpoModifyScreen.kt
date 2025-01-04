@@ -542,7 +542,7 @@ internal fun ExpoModifyScreen(
                         },
                         onTrainingSetting = { index ->
                             selectedStandardIndex = index
-                            isOpenTrainingSettingBottomSheet(true)
+                            isOpenStandardSettingBottomSheet(true)
                         },
                         placeHolder = "연수 종류를 입력해주세요."
                     )
@@ -629,7 +629,7 @@ internal fun ExpoModifyScreen(
             SettingBottomSheet(
                 isOpen = openTrainingSettingBottomSheet,
                 onDismiss = { isOpenTrainingSettingBottomSheet(false) },
-                selectedItem = selectedTrainingIndex?.let { trainingProgramTextState[it] },
+                selectedItem = selectedTrainingItem,
                 onUpdateItem = { updateItem ->
                     selectedTrainingIndex?.let { index ->
                         updateExistingTrainingProgram(index, updateItem)
@@ -654,7 +654,7 @@ internal fun ExpoModifyScreen(
             SettingBottomSheet(
                 isOpen = openStandardSettingBottomSheet,
                 onDismiss = { isOpenStandardSettingBottomSheet(false) },
-                selectedItem = selectedStandardIndex?.let { standardProgramTextState[it] },
+                selectedItem = selectedStandardItem,
                 onUpdateItem = { updateItem ->
                     selectedStandardIndex?.let { index ->
                         updateExistingStandardProgram(index, updateItem)

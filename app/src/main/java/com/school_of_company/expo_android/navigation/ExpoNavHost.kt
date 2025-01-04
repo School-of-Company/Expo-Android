@@ -23,6 +23,7 @@ import com.school_of_company.program.navigation.navigateToProgramDetailParticipa
 import com.school_of_company.program.navigation.navigateToProgramDetailProgram
 import com.school_of_company.program.navigation.programDetailParticipantManagementScreen
 import com.school_of_company.program.navigation.programDetailProgramScreen
+import com.school_of_company.program.util.QrReadScreenType
 import com.school_of_company.signup.navigation.navigationToSignUp
 import com.school_of_company.signup.navigation.signUpScreen
 import com.school_of_company.sms.navigation.navigateToSmsSendMessage
@@ -45,7 +46,7 @@ fun ExpoNavHost(
 
     val makeErrorToast: (throwable: Throwable?, message: Int?) -> Unit = { throwable, message ->
         val errorMessage = throwable?.let {
-            when(it) {
+            when (it) {
                 is ForbiddenException -> R.string.error_for_bidden
                 is TimeOutException -> R.string.error_time_out
                 is ServerException -> R.string.error_server
@@ -110,12 +111,22 @@ fun ExpoNavHost(
 
         trainingProgramParticipantScreen(
             onBackClick = navController::popBackStack,
-            navigateToQrScanner = navController::navigateQrScanner
+            navigateToQrScanner = { id ->
+                navController.navigateQrScanner(
+                    id = id,
+                    screenType = QrReadScreenType.TrainingProgramParticipantScreen.routeName
+                )
+            }
         )
 
         standardProgramParticipantScreen(
             onBackClick = navController::popBackStack,
-            navigateToQrScanner = navController::navigateQrScanner
+            navigateToQrScanner = { id ->
+                navController.navigateQrScanner(
+                    id = id,
+                    screenType = QrReadScreenType.StandardProgramParticipantRoute.routeName
+                )
+            }
         )
 
         programDetailParticipantManagementScreen(

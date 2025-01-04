@@ -15,6 +15,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
@@ -32,6 +35,7 @@ import com.school_of_company.design_system.component.button.ExpoStateButton
 import com.school_of_company.design_system.component.button.state.ButtonState
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.component.textfield.ExpoDefaultTextField
+import com.school_of_company.design_system.icon.EyeIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.model.param.auth.AdminSignInRequestParam
 import com.school_of_company.signin.viewmodel.SignInViewModel
@@ -131,6 +135,8 @@ internal fun SignInScreen(
     signInCallBack: () -> Unit,
     ) {
 
+    val isPasswordVisible = rememberSaveable { mutableStateOf(false) }
+
     ExpoAndroidTheme { colors, typography ->
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -188,7 +194,13 @@ internal fun SignInScreen(
                     errorText = stringResource(id = R.string.wrong_password),
                     onValueChange = onPasswordChange,
                     label = stringResource(id = R.string.password_label),
-                    visualTransformationState = true
+                    visualTransformationState = if (isPasswordVisible.value) false else true,
+                    trailingIcon = {
+                        EyeIcon(
+                            isSelected = isPasswordVisible.value,
+                            modifier = Modifier.expoClickable { isPasswordVisible.value = !isPasswordVisible.value }
+                        )
+                    }
                 )
 
                 Spacer(modifier = modifier.padding(top = 24.dp))

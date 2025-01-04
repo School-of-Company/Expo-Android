@@ -14,21 +14,17 @@ class AttendanceDataSourceImpl @Inject constructor(
         trainingId: Long,
         body: TrainingQrCodeRequest
     ): Flow<Unit> =
-        performApiRequest {
-            service.trainingQrCode(
-                body = body,
-                trainingId = trainingId
-            )
-        }
+        performApiRequest { service.trainingQrCode(
+            body = body,
+            trainingId = trainingId
+        ) }
 
     override fun standardQrCode(
         standardId: Long,
-        body: StandardQrCodeRequest,
+        body: StandardQrCodeRequest
     ): Flow<Unit> =
-        performApiRequest {
-            service.standardQrCode(
-                body = body,
-                standardId = standardId
-            )
-        }
+        performApiRequest { service.standardQrCode(
+            body = body,
+            standardId = standardId
+        ) }
 }

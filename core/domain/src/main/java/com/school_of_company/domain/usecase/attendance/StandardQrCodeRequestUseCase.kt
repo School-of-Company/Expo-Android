@@ -8,11 +8,11 @@ class StandardQrCodeRequestUseCase @Inject constructor(
     private val repository: AttendanceRepository
 ) {
     operator fun invoke(
-        trainingId: Long,
+        standardId: Long,
         body: StandardQrCodeRequestParam
     ) = runCatching {
         repository.standardQrCode(
-            trainingId = trainingId,
+            standardId = standardId,
             body = body
         )
     }

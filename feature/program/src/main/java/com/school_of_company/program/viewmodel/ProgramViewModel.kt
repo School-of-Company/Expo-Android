@@ -121,7 +121,7 @@ class ProgramViewModel @Inject constructor(
 
             viewModelScope.launch {
 
-                _trainingQrCodeUiState.value = TrainingQrCodeUiState.Loading
+                _readQrCodeUiState.value = ReadQrCodeUiState.Loading
                 try {
                     trainingQrCodeRequestUseCase(
                         trainingId = trainingId,
@@ -129,15 +129,15 @@ class ProgramViewModel @Inject constructor(
                     )
                         .onSuccess {
                             it.catch { remoteError ->
-                                _trainingQrCodeUiState.value =
-                                    TrainingQrCodeUiState.Error(remoteError)
+                                _readQrCodeUiState.value =
+                                    ReadQrCodeUiState.Error(remoteError)
                             }.collect {
-                                _trainingQrCodeUiState.value = TrainingQrCodeUiState.Success
+                                _readQrCodeUiState.value = ReadQrCodeUiState.Success
                             }
                             delay(2000)
                         }
                         .onFailure { error ->
-                            _trainingQrCodeUiState.value = TrainingQrCodeUiState.Error(error)
+                            _readQrCodeUiState.value = ReadQrCodeUiState.Error(error)
                         }
                 } finally {
                     isRequestInProgress = false

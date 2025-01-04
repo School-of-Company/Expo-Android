@@ -151,7 +151,7 @@ class ProgramViewModel @Inject constructor(
     }
 
     internal fun standardQrCode(
-        trainingId: Long,
+        standardId: Long,
         body: StandardQrCodeRequestParam,
     ) {
         if (!isRequestInProgress) {
@@ -162,7 +162,7 @@ class ProgramViewModel @Inject constructor(
                 _readQrCodeUiState.value = ReadQrCodeUiState.Loading
                 try {
                     standardQrCodeRequestUseCase(
-                        trainingId = trainingId,
+                        standardId = standardId,
                         body = body
                     )
                         .onSuccess {

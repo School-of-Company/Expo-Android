@@ -88,7 +88,7 @@ internal fun QrScannerRoute(
 
                     QrReadScreenType.StandardProgramParticipantRoute.routeName -> {
                         viewModel.standardQrCode(
-                            trainingId = id,
+                            standardId = id,
                             body = StandardQrCodeRequestParam(
                                 participantId = qrScanModel.participantId,
                                 phoneNumber = qrScanModel.phoneNumber

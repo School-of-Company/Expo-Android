@@ -13,22 +13,29 @@ import com.school_of_company.domain.usecase.expo.GetExpoInformationUseCase
 import com.school_of_company.domain.usecase.expo.GetExpoListUseCase
 import com.school_of_company.domain.usecase.expo.ModifyExpoInformationUseCase
 import com.school_of_company.domain.usecase.expo.RegisterExpoInformationUseCase
+import com.school_of_company.domain.usecase.standard.ModifyStandardProgramUseCase
 import com.school_of_company.domain.usecase.standard.RegisterStandardListProgramUseCase
+import com.school_of_company.domain.usecase.standard.StandardProgramListUseCase
 import com.school_of_company.domain.usecase.training.ModifyTrainingProgramUseCase
 import com.school_of_company.domain.usecase.training.RegisterTrainingProgramListUseCase
 import com.school_of_company.domain.usecase.training.RegisterTrainingProgramUseCase
+import com.school_of_company.domain.usecase.training.TrainingProgramListUseCase
 import com.school_of_company.expo.enum.TrainingCategory
 import com.school_of_company.expo.util.getMultipartFile
 import com.school_of_company.expo.viewmodel.uistate.DeleteExpoInformationUiState
 import com.school_of_company.expo.viewmodel.uistate.GetExpoInformationUiState
 import com.school_of_company.expo.viewmodel.uistate.GetExpoListUiState
+import com.school_of_company.expo.viewmodel.uistate.GetStandardProgramListUiState
+import com.school_of_company.expo.viewmodel.uistate.GetTrainingProgramListUiState
 import com.school_of_company.expo.viewmodel.uistate.ImageUpLoadUiState
 import com.school_of_company.expo.viewmodel.uistate.ModifyExpoInformationUiState
+import com.school_of_company.expo.viewmodel.uistate.ModifyStandardProgramUiState
 import com.school_of_company.expo.viewmodel.uistate.ModifyTrainingProgramUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterExpoInformationUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterStandardProgramListUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterTrainingProgramListUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterTrainingProgramUiState
+import com.school_of_company.model.entity.standard.StandardProgramListResponseEntity
 import com.school_of_company.model.model.expo.ExpoRequestAndResponseModel
 import com.school_of_company.model.model.standard.StandardRequestModel
 import com.school_of_company.model.model.training.TrainingDtoModel
@@ -48,10 +55,12 @@ class ExpoViewModel @Inject constructor(
     private val deleteExpoInformationUseCase: DeleteExpoInformationUseCase,
     private val getExpoListUseCase: GetExpoListUseCase,
     private val imageUpLoadUseCase: ImageUpLoadUseCase,
-    private val registerTrainingProgramUseCase: RegisterTrainingProgramUseCase,
     private val registerTrainingProgramListUseCase: RegisterTrainingProgramListUseCase,
     private val modifyTrainingProgramUseCase: ModifyTrainingProgramUseCase,
+    private val modifyStandardProgramUseCase: ModifyStandardProgramUseCase,
     private val registerStandardProgramListUseCase: RegisterStandardListProgramUseCase,
+    private val standardProgramListUseCase: StandardProgramListUseCase,
+    private val trainingProgramListUseCase: TrainingProgramListUseCase,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     companion object {
@@ -96,17 +105,23 @@ class ExpoViewModel @Inject constructor(
     private val _imageUpLoadUiState = MutableStateFlow<ImageUpLoadUiState>(ImageUpLoadUiState.Loading)
     internal val imageUpLoadUiState = _imageUpLoadUiState.asStateFlow()
 
-    private val _registerTrainingProgramUiState = MutableStateFlow<RegisterTrainingProgramUiState>(RegisterTrainingProgramUiState.Loading)
-    internal val registerTrainingProgramUiState = _registerTrainingProgramUiState.asStateFlow()
-
     private val _registerTrainingProgramListUiState = MutableStateFlow<RegisterTrainingProgramListUiState>(RegisterTrainingProgramListUiState.Loading)
     internal val registerTrainingProgramListUiState = _registerTrainingProgramListUiState.asStateFlow()
 
     private val _modifyTrainingProgramUiState = MutableStateFlow<ModifyTrainingProgramUiState>(ModifyTrainingProgramUiState.Loading)
     internal val modifyTrainingProgramUiState = _modifyTrainingProgramUiState.asStateFlow()
 
+    private val _modifyStandardProgramUiState = MutableStateFlow<ModifyStandardProgramUiState>(ModifyStandardProgramUiState.Loading)
+    internal val modifyStandardProgramUiState = _modifyStandardProgramUiState.asStateFlow()
+
     private val _registerStandardProgramListUiState = MutableStateFlow<RegisterStandardProgramListUiState>(RegisterStandardProgramListUiState.Loading)
     internal val registerStandardProgramListUiState = _registerStandardProgramListUiState.asStateFlow()
+
+    private val _getStandardProgramListUiState = MutableStateFlow<GetStandardProgramListUiState>(GetStandardProgramListUiState.Loading)
+    internal val getStandardProgramListUiState = _getStandardProgramListUiState.asStateFlow()
+
+    private val _getTrainingProgramListUiState = MutableStateFlow<GetTrainingProgramListUiState>(GetTrainingProgramListUiState.Loading)
+    internal val getTrainingProgramListUiState = _getTrainingProgramListUiState.asStateFlow()
 
     internal var modify_title = savedStateHandle.getStateFlow(key = MODIFY_TITLE, initialValue = "")
 
@@ -188,6 +203,8 @@ class ExpoViewModel @Inject constructor(
 
     internal fun initModifyExpo() {
         _modifyExpoInformationUiState.value = ModifyExpoInformationUiState.Loading
+        _modifyTrainingProgramUiState.value = ModifyTrainingProgramUiState.Loading
+        _modifyStandardProgramUiState.value = ModifyStandardProgramUiState.Loading
     }
 
     internal fun resetExpoInformation() {
@@ -267,27 +284,6 @@ class ExpoViewModel @Inject constructor(
             }
     }
 
-    internal fun registerTrainingProgram(
-        expoId: String,
-        body: TrainingDtoModel
-    ) = viewModelScope.launch {
-        _registerTrainingProgramUiState.value = RegisterTrainingProgramUiState.Loading
-        registerTrainingProgramUseCase(
-            expoId = expoId,
-            body = body
-        )
-            .onSuccess {
-                it.catch { remoteError ->
-                    _registerTrainingProgramUiState.value = RegisterTrainingProgramUiState.Error(remoteError)
-                }.collect {
-                    _registerTrainingProgramUiState.value = RegisterTrainingProgramUiState.Success
-                }
-            }
-            .onFailure { error ->
-                _registerTrainingProgramUiState.value = RegisterTrainingProgramUiState.Error(error)
-            }
-    }
-
     internal fun registerTrainingProgramList(
         expoId: String,
         body: List<TrainingDtoModel>
@@ -330,6 +326,27 @@ class ExpoViewModel @Inject constructor(
             }
     }
 
+    internal fun modifyStandardProgram(
+        standardProId: Long,
+        body: StandardRequestModel
+    ) = viewModelScope.launch {
+        _modifyStandardProgramUiState.value = ModifyStandardProgramUiState.Loading
+        modifyStandardProgramUseCase(
+            standardProId = standardProId,
+            body = body
+        )
+            .onSuccess {
+                it.catch { remoteError ->
+                    _modifyStandardProgramUiState.value = ModifyStandardProgramUiState.Error(remoteError)
+                }.collect {
+                    _modifyStandardProgramUiState.value = ModifyStandardProgramUiState.Success
+                }
+            }
+            .onFailure { error ->
+                _modifyStandardProgramUiState.value = ModifyStandardProgramUiState.Error(error)
+            }
+    }
+
     internal fun registerStandardProgramList(
         expoId: String,
         body: List<StandardRequestModel>
@@ -348,6 +365,53 @@ class ExpoViewModel @Inject constructor(
             }
             .onFailure { error ->
                 _registerStandardProgramListUiState.value = RegisterStandardProgramListUiState.Error(error)
+            }
+    }
+
+    internal fun getStandardProgramList(expoId: String) = viewModelScope.launch {
+        _getStandardProgramListUiState.value = GetStandardProgramListUiState.Loading
+        standardProgramListUseCase(expoId = expoId)
+            .asResult()
+            .collectLatest { result ->
+                when (result) {
+                    is Result.Loading -> _getStandardProgramListUiState.value = GetStandardProgramListUiState.Loading
+                    is Result.Success -> {
+                        _getStandardProgramListUiState.value = GetStandardProgramListUiState.Success(result.data)
+
+                        _standardProgramTextState.value = result.data.map { program ->
+                            StandardRequestModel(
+                                title = program.title,
+                                startedAt = program.startedAt,
+                                endedAt = program.endedAt
+                            )
+                        }
+                    }
+                    is Result.Error -> _getStandardProgramListUiState.value = GetStandardProgramListUiState.Error(result.exception)
+                }
+            }
+    }
+
+    internal fun getTrainingProgramList(expoId: String) = viewModelScope.launch {
+        _getTrainingProgramListUiState.value = GetTrainingProgramListUiState.Loading
+        trainingProgramListUseCase(expoId = expoId)
+            .asResult()
+            .collectLatest { result ->
+                when (result) {
+                    is Result.Loading -> _getTrainingProgramListUiState.value = GetTrainingProgramListUiState.Loading
+                    is Result.Success -> {
+                        _getTrainingProgramListUiState.value = GetTrainingProgramListUiState.Success(result.data)
+
+                        _trainingProgramTextState.value = result.data.map { program ->
+                            TrainingDtoModel(
+                                title = program.title,
+                                startedAt = program.startedAt,
+                                endedAt = program.endedAt,
+                                category = program.category
+                            )
+                        }
+                    }
+                    is Result.Error -> _getTrainingProgramListUiState.value = GetTrainingProgramListUiState.Error(result.exception)
+                }
             }
     }
 
@@ -389,6 +453,18 @@ class ExpoViewModel @Inject constructor(
     internal fun removeStandardProgramText(index: Int) {
         _standardProgramTextState.value = _standardProgramTextState.value.toMutableList().apply {
             removeAt(index)
+        }
+    }
+
+    internal fun updateExistingTrainingProgram(index: Int, updatedItem: TrainingDtoModel) {
+        _trainingProgramTextState.value = _trainingProgramTextState.value.toMutableList().apply {
+            this[index] = updatedItem
+        }
+    }
+
+    internal fun updateExistingStandardProgram(index: Int, updatedItem: StandardRequestModel) {
+        _standardProgramTextState.value = _standardProgramTextState.value.toMutableList().apply {
+            this[index] = updatedItem
         }
     }
 

@@ -24,19 +24,23 @@ import com.school_of_company.design_system.component.modifier.clickable.expoClic
 import com.school_of_company.design_system.component.topbar.ExpoTopBar
 import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
+import com.school_of_company.model.param.attendance.StandardQrCodeRequestParam
 import com.school_of_company.program.view.component.QrcodeScanView
 import com.school_of_company.program.viewmodel.ProgramViewModel
-import com.school_of_company.program.viewmodel.uistate.TrainingQrCodeUiState
+import com.school_of_company.program.viewmodel.uistate.ReadQrCodeUiState
 import com.school_of_company.model.param.attendance.TrainingQrCodeRequestParam
+import com.school_of_company.program.util.QrReadScreenType
+import com.school_of_company.program.util.QrScanModel
 import com.school_of_company.ui.toast.makeToast
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 internal fun QrScannerRoute(
     id: Long,
+    screenType: String,
     onBackClick: () -> Unit,
     onPermissionBlock: () -> Unit,
-    viewModel: ProgramViewModel = hiltViewModel()
+    viewModel: ProgramViewModel = hiltViewModel(),
 ) {
     val trainingQrCodeUiState by viewModel.readQrCodeUiState.collectAsStateWithLifecycle()
 
@@ -73,11 +77,25 @@ internal fun QrScannerRoute(
         QrScannerScreen(
             onBackClick = onBackClick,
             lifecycleOwner = lifecycleOwner,
-            onQrcodeScan = { traineeId ->
-                viewModel.trainingQrCode(
-                    trainingId = id,
-                    body = TrainingQrCodeRequestParam(traineeId = traineeId)
-                )
+            onQrcodeScan = { qrScanModel ->
+                when (screenType) {
+                    QrReadScreenType.TrainingProgramParticipantScreen.routeName -> {
+                        viewModel.trainingQrCode(
+                            trainingId = id,
+                            body = TrainingQrCodeRequestParam(traineeId = qrScanModel.participantId)
+                        )
+                    }
+
+                    QrReadScreenType.StandardProgramParticipantRoute.routeName -> {
+                        viewModel.standardQrCode(
+                            trainingId = id,
+                            body = StandardQrCodeRequestParam(
+                                participantId = qrScanModel.participantId,
+                                phoneNumber = qrScanModel.phoneNumber
+                            )
+                        )
+                    }
+                }
             }
         )
     } else {
@@ -91,7 +109,7 @@ internal fun QrScannerScreen(
     modifier: Modifier = Modifier,
     lifecycleOwner: LifecycleOwner,
     onBackClick: () -> Unit,
-    onQrcodeScan: (Long) -> Unit,
+    onQrcodeScan: (QrScanModel) -> Unit,
 ) {
     ExpoAndroidTheme { colors, _ ->
 

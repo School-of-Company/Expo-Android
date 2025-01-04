@@ -5,9 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.school_of_company.common.result.Result
 import com.school_of_company.common.result.asResult
+import com.school_of_company.domain.usecase.attendance.StandardQrCodeRequestUseCase
 import com.school_of_company.domain.usecase.attendance.TrainingQrCodeRequestUseCase
 import com.school_of_company.domain.usecase.standard.StandardProgramListUseCase
 import com.school_of_company.domain.usecase.training.TrainingProgramListUseCase
+import com.school_of_company.model.param.attendance.StandardQrCodeRequestParam
 import com.school_of_company.program.viewmodel.uistate.StandardProgramListUiState
 import com.school_of_company.program.viewmodel.uistate.TrainingProgramListUiState
 import com.school_of_company.program.viewmodel.uistate.ReadQrCodeUiState
@@ -26,6 +28,7 @@ class ProgramViewModel @Inject constructor(
     private val trainingProgramListUseCase: TrainingProgramListUseCase,
     private val standardProgramListUseCase: StandardProgramListUseCase,
     private val trainingQrCodeRequestUseCase: TrainingQrCodeRequestUseCase,
+    private val standardQrCodeRequestUseCase: StandardQrCodeRequestUseCase,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     companion object {
@@ -125,6 +128,40 @@ class ProgramViewModel @Inject constructor(
                 _readQrCodeUiState.value = ReadQrCodeUiState.Loading
                 try {
                     trainingQrCodeRequestUseCase(
+                        trainingId = trainingId,
+                        body = body
+                    )
+                        .onSuccess {
+                            it.catch { remoteError ->
+                                _readQrCodeUiState.value =
+                                    ReadQrCodeUiState.Error(remoteError)
+                            }.collect {
+                                _readQrCodeUiState.value = ReadQrCodeUiState.Success
+                            }
+                            delay(REQUEST_DELAY_MS)
+                        }
+                        .onFailure { error ->
+                            _readQrCodeUiState.value = ReadQrCodeUiState.Error(error)
+                        }
+                } finally {
+                    isRequestInProgress = false
+                }
+            }
+        }
+    }
+
+    internal fun standardQrCode(
+        trainingId: Long,
+        body: StandardQrCodeRequestParam,
+    ) {
+        if (!isRequestInProgress) {
+            isRequestInProgress = true
+
+            viewModelScope.launch {
+
+                _readQrCodeUiState.value = ReadQrCodeUiState.Loading
+                try {
+                    standardQrCodeRequestUseCase(
                         trainingId = trainingId,
                         body = body
                     )

@@ -31,6 +31,7 @@ class ProgramViewModel @Inject constructor(
     companion object {
         private const val TITLE = "title"
         private const val CONTENT = "content"
+        private const val REQUEST_DELAY_MS = 2000L
     }
 
     private var isRequestInProgress = false
@@ -134,7 +135,7 @@ class ProgramViewModel @Inject constructor(
                             }.collect {
                                 _readQrCodeUiState.value = ReadQrCodeUiState.Success
                             }
-                            delay(2000)
+                            delay(REQUEST_DELAY_MS)
                         }
                         .onFailure { error ->
                             _readQrCodeUiState.value = ReadQrCodeUiState.Error(error)

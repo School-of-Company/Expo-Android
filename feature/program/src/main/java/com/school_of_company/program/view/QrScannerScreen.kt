@@ -38,7 +38,7 @@ internal fun QrScannerRoute(
     onPermissionBlock: () -> Unit,
     viewModel: ProgramViewModel = hiltViewModel()
 ) {
-    val trainingQrCodeUiState by viewModel.trainingQrCodeUiState.collectAsStateWithLifecycle()
+    val trainingQrCodeUiState by viewModel.readQrCodeUiState.collectAsStateWithLifecycle()
 
     val cameraPermissionState = rememberPermissionState(Manifest.permission.CAMERA)
 
@@ -54,16 +54,16 @@ internal fun QrScannerRoute(
 
     LaunchedEffect(trainingQrCodeUiState) {
         when (trainingQrCodeUiState) {
-            is TrainingQrCodeUiState.Loading -> {
+            is ReadQrCodeUiState.Loading -> {
                 makeToast(context, "로딩중..")
             }
 
-            is TrainingQrCodeUiState.Success -> {
+            is ReadQrCodeUiState.Success -> {
                 makeToast(context, "인식 성공!")
                 onBackClick()
             }
 
-            is TrainingQrCodeUiState.Error -> {
+            is ReadQrCodeUiState.Error -> {
                 makeToast(context, "인식을 하지 못하였습니다.")
             }
         }

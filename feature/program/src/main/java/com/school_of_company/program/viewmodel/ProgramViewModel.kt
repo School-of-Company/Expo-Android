@@ -10,7 +10,7 @@ import com.school_of_company.domain.usecase.standard.StandardProgramListUseCase
 import com.school_of_company.domain.usecase.training.TrainingProgramListUseCase
 import com.school_of_company.program.viewmodel.uistate.StandardProgramListUiState
 import com.school_of_company.program.viewmodel.uistate.TrainingProgramListUiState
-import com.school_of_company.program.viewmodel.uistate.TrainingQrCodeUiState
+import com.school_of_company.program.viewmodel.uistate.ReadQrCodeUiState
 import com.school_of_company.model.param.attendance.TrainingQrCodeRequestParam
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -46,9 +46,9 @@ class ProgramViewModel @Inject constructor(
         MutableStateFlow<StandardProgramListUiState>(StandardProgramListUiState.Loading)
     internal val standardProgramListUiState = _standardProgramListUiState.asStateFlow()
 
-    private val _trainingQrCodeUiState =
-        MutableStateFlow<TrainingQrCodeUiState>(TrainingQrCodeUiState.Loading)
-    internal val trainingQrCodeUiState = _trainingQrCodeUiState.asStateFlow()
+    private val _readQrCodeUiState =
+        MutableStateFlow<ReadQrCodeUiState>(ReadQrCodeUiState.Loading)
+    internal val readQrCodeUiState = _readQrCodeUiState.asStateFlow()
 
     internal var title = savedStateHandle.getStateFlow(key = TITLE, initialValue = "")
 

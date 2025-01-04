@@ -13,8 +13,13 @@ enum class TopLevelDestination(
     ),
 
     EXPO(
-        unSelectedIcon = R.drawable.ic_expo,
+        unSelectedIcon = R.drawable.ic_plus,
         iconText = "박람회 생성"
+    ),
+
+    EXPO_CREATED(
+        unSelectedIcon = R.drawable.ic_expo,
+        iconText = "등록된 박람회"
     ),
 
     PROFILE(

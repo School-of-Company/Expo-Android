@@ -4,7 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
-import com.school_of_company.signin.view.SignInRoute
+import com.school_of_company.view.SignInRoute
 
 const val sigInRoute = "signIn_route"
 

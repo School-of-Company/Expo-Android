@@ -76,6 +76,7 @@ class ExpoAppState(
             when (topLevelDestination) {
                 TopLevelDestination.HOME -> navController.navigateToHome(topLevelNavOptions)
                 TopLevelDestination.EXPO -> navController.navigateToExpoCreate(topLevelNavOptions)
+                TopLevelDestination.EXPO_CREATED, // todo : Add Navigation Code
                 TopLevelDestination.PROFILE -> navController.navigateToProfile(topLevelNavOptions)
             }
         }

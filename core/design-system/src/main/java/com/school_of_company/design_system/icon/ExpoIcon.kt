@@ -317,3 +317,17 @@ fun LocationIcon(
         tint = tint
     )
 }
+
+@Composable
+fun EyeIcon(
+    modifier: Modifier = Modifier,
+    isSelected: Boolean = false,
+    tint: Color = Color.Unspecified
+) {
+    Icon(
+        painter = if (isSelected) painterResource(id = R.drawable.ic_open_eye) else painterResource(id = R.drawable.ic_eye_close),
+        contentDescription = "눈 아이콘",
+        modifier = modifier,
+        tint = tint
+    )
+}

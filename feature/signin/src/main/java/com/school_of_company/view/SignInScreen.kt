@@ -1,4 +1,4 @@
-package com.school_of_company.signin.view
+package com.school_of_company.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -17,7 +17,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
@@ -135,7 +135,7 @@ internal fun SignInScreen(
     signInCallBack: () -> Unit,
     ) {
 
-    val isPasswordVisible = rememberSaveable { mutableStateOf(false) }
+    var isPasswordVisible by remember { mutableStateOf(false) }
 
     ExpoAndroidTheme { colors, typography ->
         Column(
@@ -194,11 +194,11 @@ internal fun SignInScreen(
                     errorText = stringResource(id = R.string.wrong_password),
                     onValueChange = onPasswordChange,
                     label = stringResource(id = R.string.password_label),
-                    visualTransformationState = if (isPasswordVisible.value) false else true,
+                    visualTransformationState = if (isPasswordVisible) false else true,
                     trailingIcon = {
                         EyeIcon(
-                            isSelected = isPasswordVisible.value,
-                            modifier = Modifier.expoClickable { isPasswordVisible.value = !isPasswordVisible.value }
+                            isSelected = isPasswordVisible,
+                            modifier = Modifier.expoClickable { isPasswordVisible = !isPasswordVisible }
                         )
                     }
                 )

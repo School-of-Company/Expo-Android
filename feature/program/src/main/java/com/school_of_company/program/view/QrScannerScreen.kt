@@ -1,6 +1,7 @@
 package com.school_of_company.program.view
 
 import android.Manifest
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -23,6 +24,7 @@ import com.google.accompanist.permissions.shouldShowRationale
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.component.topbar.ExpoTopBar
 import com.school_of_company.design_system.icon.LeftArrowIcon
+import com.school_of_company.design_system.icon.QrGuideImage
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.model.param.attendance.StandardQrCodeRequestParam
 import com.school_of_company.program.view.component.QrcodeScanView
@@ -117,30 +119,33 @@ internal fun QrScannerScreen(
     onQrcodeScan: (String) -> Unit,
 ) {
     ExpoAndroidTheme { colors, _ ->
-
-        QrcodeScanView(
-            onQrcodeScan = onQrcodeScan,
-            lifecycleOwner = lifecycleOwner,
-        )
-
-        Column(
-            modifier = modifier
-                .fillMaxSize()
-                .navigationBarsPadding()
-                .statusBarsPadding()
-                .padding(horizontal = 16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            ExpoTopBar(
-                startIcon = {
-                    LeftArrowIcon(
-                        tint = colors.white,
-                        modifier = Modifier
-                            .expoClickable { onBackClick() }
-                            .padding(top = 16.dp)
-                    )
-                }
+        Box(contentAlignment = Alignment.Center) {
+            QrcodeScanView(
+                onQrcodeScan = onQrcodeScan,
+                lifecycleOwner = lifecycleOwner,
             )
+
+            QrGuideImage()
+
+            Column(
+                modifier = modifier
+                    .fillMaxSize()
+                    .navigationBarsPadding()
+                    .statusBarsPadding()
+                    .padding(horizontal = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                ExpoTopBar(
+                    startIcon = {
+                        LeftArrowIcon(
+                            tint = colors.white,
+                            modifier = Modifier
+                                .expoClickable { onBackClick() }
+                                .padding(top = 16.dp)
+                        )
+                    }
+                )
+            }
         }
     }
 }

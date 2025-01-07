@@ -67,7 +67,7 @@ fun NavGraphBuilder.qrScannerScreen(
     onBackClick: () -> Unit,
     onPermissionBlock: () -> Unit
 ) {
-    composable(route = "$qrScannerRoute/{id}／｛screenType｝") { backStackEntry ->
+    composable(route = "$qrScannerRoute/{id}/｛screenType｝") { backStackEntry ->
         val id = backStackEntry.arguments?.getString("id")?.toLongOrNull()
         val screenType = backStackEntry.arguments?.getString("screenType")
 

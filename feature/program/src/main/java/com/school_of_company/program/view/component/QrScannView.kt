@@ -6,14 +6,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.LifecycleOwner
-import com.school_of_company.program.util.QrScanModel
-import com.school_of_company.program.util.parseQrScanModel
 import com.school_of_company.program.util.setupQrScanCamera
 
 @Composable
 internal fun QrcodeScanView(
     modifier: Modifier = Modifier,
-    onQrcodeScan: (QrScanModel) -> Unit,
+    onQrcodeScan: (String) -> Unit,
     lifecycleOwner: LifecycleOwner
 ) {
     AndroidView(
@@ -24,9 +22,7 @@ internal fun QrcodeScanView(
                     setupQrScanCamera(
                         previewView = this,
                         lifecycleOwner = lifecycleOwner,
-                        onQrcodeScanned = { jsonData ->
-                            onQrcodeScan(jsonData.parseQrScanModel())
-                        }
+                        onQrcodeScanned = onQrcodeScan
                     )
                 }
             }

@@ -30,7 +30,8 @@ import com.school_of_company.program.viewmodel.ProgramViewModel
 import com.school_of_company.program.viewmodel.uistate.ReadQrCodeUiState
 import com.school_of_company.model.param.attendance.TrainingQrCodeRequestParam
 import com.school_of_company.program.util.QrReadScreenType
-import com.school_of_company.program.util.QrScanModel
+import com.school_of_company.program.util.parseStandardQrScanModel
+import com.school_of_company.program.util.parseTrainingQr
 import com.school_of_company.ui.toast.makeToast
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -77,21 +78,25 @@ internal fun QrScannerRoute(
         QrScannerScreen(
             onBackClick = onBackClick,
             lifecycleOwner = lifecycleOwner,
-            onQrcodeScan = { qrScanModel ->
+            onQrcodeScan = { jsonData ->
                 when (screenType) {
                     QrReadScreenType.TrainingProgramParticipantScreen.routeName -> {
                         viewModel.trainingQrCode(
                             trainingId = id,
-                            body = TrainingQrCodeRequestParam(traineeId = qrScanModel.participantId)
+                            body = TrainingQrCodeRequestParam(
+                                traineeId = jsonData.parseTrainingQr().toLong()
+                            )
                         )
                     }
 
                     QrReadScreenType.StandardProgramParticipantRoute.routeName -> {
+                        val parsedData = jsonData.parseStandardQrScanModel()
+
                         viewModel.standardQrCode(
                             standardId = id,
                             body = StandardQrCodeRequestParam(
-                                participantId = qrScanModel.participantId,
-                                phoneNumber = qrScanModel.phoneNumber
+                                participantId = parsedData.participantId,
+                                phoneNumber = parsedData.phoneNumber
                             )
                         )
                     }
@@ -109,7 +114,7 @@ internal fun QrScannerScreen(
     modifier: Modifier = Modifier,
     lifecycleOwner: LifecycleOwner,
     onBackClick: () -> Unit,
-    onQrcodeScan: (QrScanModel) -> Unit,
+    onQrcodeScan: (String) -> Unit,
 ) {
     ExpoAndroidTheme { colors, _ ->
 

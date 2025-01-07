@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -191,6 +192,7 @@ internal fun SignUpScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = modifier
                 .fillMaxSize()
+                .imePadding()
                 .background(color = colors.white)
                 .verticalScroll(scrollState)
                 .pointerInput(Unit) {
@@ -278,7 +280,9 @@ internal fun SignUpScreen(
                     placeholder = "(8~24자 영어(대소문자)/숫자 특수문자 1개이상)",
                     isError = isPasswordValidError,
                     isDisabled = false,
-                    errorText = if (isPasswordValidError) stringResource(id = R.string.expection_password_validdd) else stringResource(id = R.string.wrong_password),
+                    errorText = if (isPasswordValidError) stringResource(id = R.string.expection_password_validdd) else stringResource(
+                        id = R.string.wrong_password
+                    ),
                     onValueChange = onPasswordChange,
                     visualTransformationState = true
                 )
@@ -291,7 +295,9 @@ internal fun SignUpScreen(
                     placeholder = stringResource(id = R.string.retry_password),
                     isError = isPasswordMismatchError,
                     isDisabled = false,
-                    errorText = if (isPasswordMismatchError) stringResource(id = R.string.mismatch_password) else stringResource(id = R.string.wrong_password),
+                    errorText = if (isPasswordMismatchError) stringResource(id = R.string.mismatch_password) else stringResource(
+                        id = R.string.wrong_password
+                    ),
                     onValueChange = onRePasswordChange,
                     visualTransformationState = true
                 )
@@ -336,7 +342,11 @@ internal fun SignUpScreen(
                         isError = isCertificationCodeError,
                         isDisabled = false,
                         errorText = stringResource(id = R.string.valid_certification),
-                        onValueChange = { if (it.length <= 6 && it.all { char -> char.isDigit() }) onCertificationNumberChange(it) },
+                        onValueChange = {
+                            if (it.length <= 6 && it.all { char -> char.isDigit() }) onCertificationNumberChange(
+                                it
+                            )
+                        },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                     )
 

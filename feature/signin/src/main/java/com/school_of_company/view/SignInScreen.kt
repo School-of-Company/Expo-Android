@@ -1,5 +1,6 @@
 package com.school_of_company.view
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -9,8 +10,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -74,34 +78,46 @@ internal fun SignInRoute(
                         onSignInClick()
                         makeToast(context, "로그인 성공")
                     }
+
                     is SaveTokenUiState.Error -> {
                         viewModel.setError(true)
-                        onErrorToast((saveTokenUiState as SaveTokenUiState.Error).exception, R.string.expection_saveToken)
+                        onErrorToast(
+                            (saveTokenUiState as SaveTokenUiState.Error).exception,
+                            R.string.expection_saveToken
+                        )
                     }
                 }
             }
+
             is SignInUiState.NotFound -> {
                 viewModel.setNotFoundError(true)
                 onErrorToast(null, R.string.expection_not_found)
             }
+
             is SignInUiState.EmailNotValid -> {
                 viewModel.setIdError(true)
                 onErrorToast(null, R.string.expection_id_not_valid)
             }
+
             is SignInUiState.PasswordValid -> {
                 viewModel.setPasswordError(true)
                 onErrorToast(null, R.string.expection_password_valid)
             }
+
             is SignInUiState.BadRequest -> {
                 viewModel.setBadRequestError(true)
                 onErrorToast(null, R.string.expection_bad_request)
             }
+
             is SignInUiState.Error -> {
                 viewModel.setError(true)
-                onErrorToast((signInUiState as SignInUiState.Error).exception,  R.string.expection_signIn)
+                onErrorToast(
+                    (signInUiState as SignInUiState.Error).exception,
+                    R.string.expection_signIn
+                )
             }
         }
-        onDispose {  }
+        onDispose { }
     }
 
     SignInScreen(
@@ -112,11 +128,13 @@ internal fun SignInRoute(
         onIdChange = viewModel::onIdChange,
         onPasswordChange = viewModel::onPasswordChange,
         onSignUpClick = onSignUpClick,
-        signInCallBack =  {
-            viewModel.signIn(body = AdminSignInRequestParam(
-                nickname = idState,
-                password = passwordState
-            ))
+        signInCallBack = {
+            viewModel.signIn(
+                body = AdminSignInRequestParam(
+                    nickname = idState,
+                    password = passwordState
+                )
+            )
         },
     )
 }
@@ -125,6 +143,7 @@ internal fun SignInRoute(
 internal fun SignInScreen(
     modifier: Modifier = Modifier,
     focusManager: FocusManager = LocalFocusManager.current,
+    scrollState: ScrollState = rememberScrollState(),
     isEmailError: Boolean,
     isPasswordError: Boolean,
     id: String,
@@ -133,8 +152,7 @@ internal fun SignInScreen(
     onPasswordChange: (String) -> Unit,
     onSignUpClick: () -> Unit,
     signInCallBack: () -> Unit,
-    ) {
-
+) {
     var isPasswordVisible by remember { mutableStateOf(false) }
 
     ExpoAndroidTheme { colors, typography ->
@@ -142,6 +160,8 @@ internal fun SignInScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
+                .imePadding()
+                .verticalScroll(scrollState)
                 .background(color = colors.white)
                 .pointerInput(Unit) {
                     detectTapGestures {
@@ -152,7 +172,7 @@ internal fun SignInScreen(
             Spacer(modifier = modifier.padding(top = 150.dp))
 
             Text(
-                text =  stringResource(id = R.string.main_string),
+                text = stringResource(id = R.string.main_string),
                 style = typography.mainTypo,
                 color = colors.main
             )
@@ -167,7 +187,9 @@ internal fun SignInScreen(
             Spacer(modifier = modifier.padding(40.dp))
 
             Column(
-                modifier = modifier.padding(horizontal = 16.dp),
+                modifier = modifier
+                    .padding(horizontal = 16.dp)
+                    .weight(1f),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 ExpoDefaultTextField(
@@ -198,7 +220,9 @@ internal fun SignInScreen(
                     trailingIcon = {
                         EyeIcon(
                             isSelected = isPasswordVisible,
-                            modifier = Modifier.expoClickable { isPasswordVisible = !isPasswordVisible }
+                            modifier = Modifier.expoClickable {
+                                isPasswordVisible = !isPasswordVisible
+                            }
                         )
                     }
                 )
@@ -216,10 +240,11 @@ internal fun SignInScreen(
                         fontWeight = FontWeight.Normal
                     )
 
-                    Spacer(modifier = Modifier
-                        .width(1.dp)
-                        .height(12.dp)
-                        .background(color = colors.gray400)
+                    Spacer(
+                        modifier = Modifier
+                            .width(1.dp)
+                            .height(12.dp)
+                            .background(color = colors.gray400)
                     )
 
                     Text(

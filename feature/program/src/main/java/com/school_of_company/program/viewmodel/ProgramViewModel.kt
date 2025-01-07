@@ -42,20 +42,16 @@ class ProgramViewModel @Inject constructor(
     private val _swipeRefreshLoading = MutableStateFlow(false)
     val swipeRefreshLoading = _swipeRefreshLoading.asStateFlow()
 
-    private val _trainingProgramListUiState =
-        MutableStateFlow<TrainingProgramListUiState>(TrainingProgramListUiState.Loading)
+    private val _trainingProgramListUiState = MutableStateFlow<TrainingProgramListUiState>(TrainingProgramListUiState.Loading)
     internal val trainingProgramListUiState = _trainingProgramListUiState.asStateFlow()
 
-    private val _standardProgramListUiState =
-        MutableStateFlow<StandardProgramListUiState>(StandardProgramListUiState.Loading)
+    private val _standardProgramListUiState = MutableStateFlow<StandardProgramListUiState>(StandardProgramListUiState.Loading)
     internal val standardProgramListUiState = _standardProgramListUiState.asStateFlow()
 
-    private val _readQrCodeUiState =
-        MutableStateFlow<ReadQrCodeUiState>(ReadQrCodeUiState.Loading)
+    private val _readQrCodeUiState = MutableStateFlow<ReadQrCodeUiState>(ReadQrCodeUiState.Loading)
     internal val readQrCodeUiState = _readQrCodeUiState.asStateFlow()
 
     internal var title = savedStateHandle.getStateFlow(key = TITLE, initialValue = "")
-
     internal var content = savedStateHandle.getStateFlow(key = CONTENT, initialValue = "")
 
     internal fun trainingProgramList(expoId: String) = viewModelScope.launch {
@@ -72,15 +68,13 @@ class ProgramViewModel @Inject constructor(
                             _trainingProgramListUiState.value = TrainingProgramListUiState.Empty
                             _swipeRefreshLoading.value = false
                         } else {
-                            _trainingProgramListUiState.value =
-                                TrainingProgramListUiState.Success(result.data)
+                            _trainingProgramListUiState.value = TrainingProgramListUiState.Success(result.data)
                             _swipeRefreshLoading.value = false
                         }
                     }
 
                     is Result.Error -> {
-                        _trainingProgramListUiState.value =
-                            TrainingProgramListUiState.Error(result.exception)
+                        _trainingProgramListUiState.value = TrainingProgramListUiState.Error(result.exception)
                         _swipeRefreshLoading.value = false
                     }
                 }
@@ -101,15 +95,13 @@ class ProgramViewModel @Inject constructor(
                             _standardProgramListUiState.value = StandardProgramListUiState.Empty
                             _swipeRefreshLoading.value = false
                         } else {
-                            _standardProgramListUiState.value =
-                                StandardProgramListUiState.Success(result.data)
+                            _standardProgramListUiState.value = StandardProgramListUiState.Success(result.data)
                             _swipeRefreshLoading.value = false
                         }
                     }
 
                     is Result.Error -> {
-                        _standardProgramListUiState.value =
-                            StandardProgramListUiState.Error(result.exception)
+                        _standardProgramListUiState.value = StandardProgramListUiState.Error(result.exception)
                         _swipeRefreshLoading.value = false
                     }
                 }
@@ -133,8 +125,7 @@ class ProgramViewModel @Inject constructor(
                     )
                         .onSuccess {
                             it.catch { remoteError ->
-                                _readQrCodeUiState.value =
-                                    ReadQrCodeUiState.Error(remoteError)
+                                _readQrCodeUiState.value = ReadQrCodeUiState.Error(remoteError)
                             }.collect {
                                 _readQrCodeUiState.value = ReadQrCodeUiState.Success
                             }
@@ -167,8 +158,7 @@ class ProgramViewModel @Inject constructor(
                     )
                         .onSuccess {
                             it.catch { remoteError ->
-                                _readQrCodeUiState.value =
-                                    ReadQrCodeUiState.Error(remoteError)
+                                _readQrCodeUiState.value = ReadQrCodeUiState.Error(remoteError)
                             }.collect {
                                 _readQrCodeUiState.value = ReadQrCodeUiState.Success
                             }

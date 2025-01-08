@@ -64,14 +64,7 @@ fun CreatedExpoListItem(
                     textAlign = TextAlign.Center,
                 )
                 Text(
-                    text = startedDay,
-                    style = typography.captionRegular2,
-                    fontWeight = FontWeight.W400,
-                    color = colors.black,
-                    textAlign = TextAlign.Center,
-                )
-                Text(
-                    text = finishedDay,
+                    text = "$startedDay ~ $finishedDay",
                     style = typography.captionRegular2,
                     fontWeight = FontWeight.W400,
                     color = colors.black,
@@ -94,6 +87,7 @@ fun CreatedExpoListItemNotSelectedPreview() {
         isSelected = false,
     )
 }
+
 @Preview
 @Composable
 fun CreatedExpoListItemSelectedPreview() {

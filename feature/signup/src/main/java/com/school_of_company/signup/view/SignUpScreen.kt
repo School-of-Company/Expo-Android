@@ -20,6 +20,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
@@ -40,6 +43,7 @@ import com.school_of_company.design_system.component.modifier.clickable.expoClic
 import com.school_of_company.design_system.component.modifier.padding.paddingHorizontal
 import com.school_of_company.design_system.component.textfield.ExpoDefaultTextField
 import com.school_of_company.design_system.component.textfield.ExpoNoneLabelTextField
+import com.school_of_company.design_system.icon.EyeIcon
 import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.model.param.auth.AdminSignUpRequestParam
@@ -186,6 +190,8 @@ internal fun SignUpScreen(
     certificationCallBack: () -> Unit,
     sendCertificationCodeCallBack: () -> Unit
 ) {
+    var isPasswordVisible by remember { mutableStateOf(false) }
+
     ExpoAndroidTheme { colors, typography ->
 
         Column(
@@ -284,7 +290,15 @@ internal fun SignUpScreen(
                         id = R.string.wrong_password
                     ),
                     onValueChange = onPasswordChange,
-                    visualTransformationState = true
+                    visualTransformationState = if (isPasswordVisible) false else true,
+                    trailingIcon = {
+                        EyeIcon(
+                            isSelected = isPasswordVisible,
+                            modifier = Modifier.expoClickable {
+                                isPasswordVisible = !isPasswordVisible
+                            }
+                        )
+                    }
                 )
 
                 ExpoNoneLabelTextField(
@@ -299,8 +313,15 @@ internal fun SignUpScreen(
                         id = R.string.wrong_password
                     ),
                     onValueChange = onRePasswordChange,
-                    visualTransformationState = true
-                )
+                    visualTransformationState = if (isPasswordVisible) false else true,
+                    trailingIcon = {
+                        EyeIcon(
+                            isSelected = isPasswordVisible,
+                            modifier = Modifier.expoClickable {
+                                isPasswordVisible = !isPasswordVisible
+                            }
+                        )
+                    }                )
 
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.Start),

@@ -22,7 +22,7 @@ class AttendanceRepositoryImpl @Inject constructor(
 
     override fun standardQrCode(
         standardId: Long,
-        body: StandardQrCodeRequestParam
+        body: StandardQrCodeRequestParam,
     ): Flow<Unit> {
         return dataSource.standardQrCode(
             standardId = standardId,

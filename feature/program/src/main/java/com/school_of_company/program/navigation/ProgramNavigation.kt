@@ -28,11 +28,11 @@ fun NavController.navigateToProgramDetailParticipantManagement(navOptions: NavOp
 
 fun NavController.navigateQrScanner(
     id: Long,
-    traineeId: Long,
+    screenType: String,
     navOptions: NavOptions? = null
 ) {
     this.navigate(
-        route = "$qrScannerRoute/${id}/${traineeId}",
+        route = "$qrScannerRoute/$id/$screenType",
         navOptions
     )
 }
@@ -67,13 +67,14 @@ fun NavGraphBuilder.qrScannerScreen(
     onBackClick: () -> Unit,
     onPermissionBlock: () -> Unit
 ) {
-    composable(route = "$qrScannerRoute/{id}/{traineeId}") { backStackEntry ->
+    composable(route = "$qrScannerRoute/{id}/{screenType}") { backStackEntry ->
         val id = backStackEntry.arguments?.getString("id")?.toLongOrNull()
-        val traineeId = backStackEntry.arguments?.getString("traineeId")?.toLongOrNull()
-        if (id != null && traineeId != null) {
+        val screenType = backStackEntry.arguments?.getString("screenType")
+
+        if (id != null && screenType != null) {
             QrScannerRoute(
                 id = id,
-                traineeId = traineeId,
+                screenType = screenType,
                 onBackClick = onBackClick,
                 onPermissionBlock = onPermissionBlock
             )

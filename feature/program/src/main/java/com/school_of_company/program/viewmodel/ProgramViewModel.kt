@@ -5,14 +5,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.school_of_company.common.result.Result
 import com.school_of_company.common.result.asResult
+import com.school_of_company.domain.usecase.attendance.StandardQrCodeRequestUseCase
 import com.school_of_company.domain.usecase.attendance.TrainingQrCodeRequestUseCase
 import com.school_of_company.domain.usecase.standard.StandardProgramListUseCase
 import com.school_of_company.domain.usecase.training.TrainingProgramListUseCase
+import com.school_of_company.model.param.attendance.StandardQrCodeRequestParam
 import com.school_of_company.program.viewmodel.uistate.StandardProgramListUiState
 import com.school_of_company.program.viewmodel.uistate.TrainingProgramListUiState
-import com.school_of_company.program.viewmodel.uistate.TrainingQrCodeUiState
+import com.school_of_company.program.viewmodel.uistate.ReadQrCodeUiState
 import com.school_of_company.model.param.attendance.TrainingQrCodeRequestParam
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -25,12 +28,16 @@ class ProgramViewModel @Inject constructor(
     private val trainingProgramListUseCase: TrainingProgramListUseCase,
     private val standardProgramListUseCase: StandardProgramListUseCase,
     private val trainingQrCodeRequestUseCase: TrainingQrCodeRequestUseCase,
+    private val standardQrCodeRequestUseCase: StandardQrCodeRequestUseCase,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     companion object {
         private const val TITLE = "title"
         private const val CONTENT = "content"
+        private const val REQUEST_DELAY_MS = 2000L
     }
+
+    private var isRequestInProgress = false
 
     private val _swipeRefreshLoading = MutableStateFlow(false)
     val swipeRefreshLoading = _swipeRefreshLoading.asStateFlow()
@@ -41,11 +48,10 @@ class ProgramViewModel @Inject constructor(
     private val _standardProgramListUiState = MutableStateFlow<StandardProgramListUiState>(StandardProgramListUiState.Loading)
     internal val standardProgramListUiState = _standardProgramListUiState.asStateFlow()
 
-    private val _trainingQrCodeUiState = MutableStateFlow<TrainingQrCodeUiState>(TrainingQrCodeUiState.Loading)
-    internal val trainingQrCodeUiState = _trainingQrCodeUiState.asStateFlow()
+    private val _readQrCodeUiState = MutableStateFlow<ReadQrCodeUiState>(ReadQrCodeUiState.Loading)
+    internal val readQrCodeUiState = _readQrCodeUiState.asStateFlow()
 
     internal var title = savedStateHandle.getStateFlow(key = TITLE, initialValue = "")
-
     internal var content = savedStateHandle.getStateFlow(key = CONTENT, initialValue = "")
 
     internal fun trainingProgramList(expoId: String) = viewModelScope.launch {
@@ -54,7 +60,9 @@ class ProgramViewModel @Inject constructor(
             .asResult()
             .collectLatest { result ->
                 when (result) {
-                    is Result.Loading -> _trainingProgramListUiState.value = TrainingProgramListUiState.Loading
+                    is Result.Loading -> _trainingProgramListUiState.value =
+                        TrainingProgramListUiState.Loading
+
                     is Result.Success -> {
                         if (result.data.isEmpty()) {
                             _trainingProgramListUiState.value = TrainingProgramListUiState.Empty
@@ -64,6 +72,7 @@ class ProgramViewModel @Inject constructor(
                             _swipeRefreshLoading.value = false
                         }
                     }
+
                     is Result.Error -> {
                         _trainingProgramListUiState.value = TrainingProgramListUiState.Error(result.exception)
                         _swipeRefreshLoading.value = false
@@ -78,7 +87,9 @@ class ProgramViewModel @Inject constructor(
             .asResult()
             .collectLatest { result ->
                 when (result) {
-                    is Result.Loading -> _standardProgramListUiState.value = StandardProgramListUiState.Loading
+                    is Result.Loading -> _standardProgramListUiState.value =
+                        StandardProgramListUiState.Loading
+
                     is Result.Success -> {
                         if (result.data.isEmpty()) {
                             _standardProgramListUiState.value = StandardProgramListUiState.Empty
@@ -88,6 +99,7 @@ class ProgramViewModel @Inject constructor(
                             _swipeRefreshLoading.value = false
                         }
                     }
+
                     is Result.Error -> {
                         _standardProgramListUiState.value = StandardProgramListUiState.Error(result.exception)
                         _swipeRefreshLoading.value = false
@@ -99,22 +111,67 @@ class ProgramViewModel @Inject constructor(
     internal fun trainingQrCode(
         trainingId: Long,
         body: TrainingQrCodeRequestParam
-    ) = viewModelScope.launch {
-        _trainingQrCodeUiState.value = TrainingQrCodeUiState.Loading
-        trainingQrCodeRequestUseCase(
-            trainingId = trainingId,
-            body = body
-        )
-            .onSuccess {
-                it.catch { remoteError ->
-                    _trainingQrCodeUiState.value = TrainingQrCodeUiState.Error(remoteError)
-                }.collect {
-                    _trainingQrCodeUiState.value = TrainingQrCodeUiState.Success
+    ) {
+        if (!isRequestInProgress) {
+            isRequestInProgress = true
+
+            viewModelScope.launch {
+
+                _readQrCodeUiState.value = ReadQrCodeUiState.Loading
+                try {
+                    trainingQrCodeRequestUseCase(
+                        trainingId = trainingId,
+                        body = body
+                    )
+                        .onSuccess {
+                            it.catch { remoteError ->
+                                _readQrCodeUiState.value = ReadQrCodeUiState.Error(remoteError)
+                            }.collect {
+                                _readQrCodeUiState.value = ReadQrCodeUiState.Success
+                            }
+                            delay(REQUEST_DELAY_MS)
+                        }
+                        .onFailure { error ->
+                            _readQrCodeUiState.value = ReadQrCodeUiState.Error(error)
+                        }
+                } finally {
+                    isRequestInProgress = false
                 }
             }
-            .onFailure { error ->
-                _trainingQrCodeUiState.value = TrainingQrCodeUiState.Error(error)
+        }
+    }
+
+    internal fun standardQrCode(
+        standardId: Long,
+        body: StandardQrCodeRequestParam,
+    ) {
+        if (!isRequestInProgress) {
+            isRequestInProgress = true
+
+            viewModelScope.launch {
+
+                _readQrCodeUiState.value = ReadQrCodeUiState.Loading
+                try {
+                    standardQrCodeRequestUseCase(
+                        standardId = standardId,
+                        body = body
+                    )
+                        .onSuccess {
+                            it.catch { remoteError ->
+                                _readQrCodeUiState.value = ReadQrCodeUiState.Error(remoteError)
+                            }.collect {
+                                _readQrCodeUiState.value = ReadQrCodeUiState.Success
+                            }
+                            delay(REQUEST_DELAY_MS)
+                        }
+                        .onFailure { error ->
+                            _readQrCodeUiState.value = ReadQrCodeUiState.Error(error)
+                        }
+                } finally {
+                    isRequestInProgress = false
+                }
             }
+        }
     }
 
     internal fun onTitleChange(value: String) {

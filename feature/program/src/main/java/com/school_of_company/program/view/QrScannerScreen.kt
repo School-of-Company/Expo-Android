@@ -1,6 +1,7 @@
 package com.school_of_company.program.view
 
 import android.Manifest
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -14,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
@@ -22,27 +24,34 @@ import com.google.accompanist.permissions.shouldShowRationale
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.component.topbar.ExpoTopBar
 import com.school_of_company.design_system.icon.LeftArrowIcon
+import com.school_of_company.design_system.icon.QrGuideImage
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
+import com.school_of_company.model.param.attendance.StandardQrCodeRequestParam
 import com.school_of_company.program.view.component.QrcodeScanView
 import com.school_of_company.program.viewmodel.ProgramViewModel
-import com.school_of_company.program.viewmodel.uistate.TrainingQrCodeUiState
+import com.school_of_company.program.viewmodel.uistate.ReadQrCodeUiState
 import com.school_of_company.model.param.attendance.TrainingQrCodeRequestParam
+import com.school_of_company.program.util.QrReadScreenType
+import com.school_of_company.program.util.parseStandardQrScanModel
+import com.school_of_company.program.util.parseTrainingQr
 import com.school_of_company.ui.toast.makeToast
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 internal fun QrScannerRoute(
     id: Long,
-    traineeId: Long,
+    screenType: String,
     onBackClick: () -> Unit,
     onPermissionBlock: () -> Unit,
-    viewModel: ProgramViewModel = hiltViewModel()
+    viewModel: ProgramViewModel = hiltViewModel(),
 ) {
-    val trainingQrCodeUiState by viewModel.trainingQrCodeUiState.collectAsStateWithLifecycle()
+    val trainingQrCodeUiState by viewModel.readQrCodeUiState.collectAsStateWithLifecycle()
 
     val cameraPermissionState = rememberPermissionState(Manifest.permission.CAMERA)
 
     val context = LocalContext.current
+    val lifecycleOwner = context as? LifecycleOwner
+        ?: throw IllegalStateException("Context is not a LifecycleOwner")
 
     LaunchedEffect("getPermission") {
         if (!cameraPermissionState.status.isGranted && !cameraPermissionState.status.shouldShowRationale) {
@@ -52,14 +61,16 @@ internal fun QrScannerRoute(
 
     LaunchedEffect(trainingQrCodeUiState) {
         when (trainingQrCodeUiState) {
-            is TrainingQrCodeUiState.Loading -> {
+            is ReadQrCodeUiState.Loading -> {
                 makeToast(context, "로딩중..")
             }
-            is TrainingQrCodeUiState.Success -> {
+
+            is ReadQrCodeUiState.Success -> {
                 makeToast(context, "인식 성공!")
                 onBackClick()
             }
-            is TrainingQrCodeUiState.Error -> {
+
+            is ReadQrCodeUiState.Error -> {
                 makeToast(context, "인식을 하지 못하였습니다.")
             }
         }
@@ -68,11 +79,30 @@ internal fun QrScannerRoute(
     if (cameraPermissionState.status.isGranted) {
         QrScannerScreen(
             onBackClick = onBackClick,
-            onQrcodeScan = {
-                viewModel.trainingQrCode(
-                    trainingId = id,
-                    body = TrainingQrCodeRequestParam(traineeId = traineeId)
-                )
+            lifecycleOwner = lifecycleOwner,
+            onQrcodeScan = { jsonData ->
+                when (screenType) {
+                    QrReadScreenType.TrainingProgramParticipantScreen.routeName -> {
+                        viewModel.trainingQrCode(
+                            trainingId = id,
+                            body = TrainingQrCodeRequestParam(
+                                traineeId = jsonData.parseTrainingQr().toLong()
+                            )
+                        )
+                    }
+
+                    QrReadScreenType.StandardProgramParticipantRoute.routeName -> {
+                        val parsedData = jsonData.parseStandardQrScanModel()
+
+                        viewModel.standardQrCode(
+                            standardId = id,
+                            body = StandardQrCodeRequestParam(
+                                participantId = parsedData.participantId,
+                                phoneNumber = parsedData.phoneNumber
+                            )
+                        )
+                    }
+                }
             }
         )
     } else {
@@ -84,31 +114,38 @@ internal fun QrScannerRoute(
 @Composable
 internal fun QrScannerScreen(
     modifier: Modifier = Modifier,
+    lifecycleOwner: LifecycleOwner,
     onBackClick: () -> Unit,
-    onQrcodeScan: (Long) -> Unit,
+    onQrcodeScan: (String) -> Unit,
 ) {
     ExpoAndroidTheme { colors, _ ->
-
-        QrcodeScanView(onQrcodeScan = onQrcodeScan)
-
-        Column(
-            modifier = modifier
-                .fillMaxSize()
-                .navigationBarsPadding()
-                .statusBarsPadding()
-                .padding(horizontal = 16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            ExpoTopBar(
-                startIcon = {
-                    LeftArrowIcon(
-                        tint = colors.white,
-                        modifier = Modifier
-                            .expoClickable { onBackClick() }
-                            .padding(top = 16.dp)
-                    )
-                }
+        Box(contentAlignment = Alignment.Center) {
+            QrcodeScanView(
+                onQrcodeScan = onQrcodeScan,
+                lifecycleOwner = lifecycleOwner,
             )
+
+            QrGuideImage()
+
+            Column(
+                modifier = modifier
+                    .fillMaxSize()
+                    .navigationBarsPadding()
+                    .statusBarsPadding()
+                    .padding(horizontal = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                ExpoTopBar(
+                    startIcon = {
+                        LeftArrowIcon(
+                            tint = colors.white,
+                            modifier = Modifier
+                                .expoClickable { onBackClick() }
+                                .padding(top = 16.dp)
+                        )
+                    }
+                )
+            }
         }
     }
 }

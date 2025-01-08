@@ -7,5 +7,4 @@ import kotlinx.coroutines.flow.Flow
 interface AttendanceDataSource {
     fun trainingQrCode(trainingId: Long, body: TrainingQrCodeRequest) : Flow<Unit>
     fun standardQrCode(standardId: Long, body: StandardQrCodeRequest) : Flow<Unit>
-
 }

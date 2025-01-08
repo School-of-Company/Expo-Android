@@ -19,6 +19,15 @@ fun ExpoMainLogo(modifier: Modifier = Modifier) {
 }
 
 @Composable
+fun QrGuideImage(modifier: Modifier = Modifier) {
+    Image(
+        painter = painterResource(id = R.drawable.qr_guide),
+        contentDescription = stringResource(id = R.string.qr_guide),
+        modifier = modifier
+    )
+}
+
+@Composable
 fun DownArrowIcon(
     modifier: Modifier = Modifier,
     tint: Color = Color.Unspecified

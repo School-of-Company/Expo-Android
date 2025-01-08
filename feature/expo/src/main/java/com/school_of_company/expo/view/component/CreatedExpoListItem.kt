@@ -22,12 +22,12 @@ import com.school_of_company.design_system.theme.color.ColorTheme
 @Composable
 fun CreatedExpoListItem(
     modifier: Modifier = Modifier,
-    isSelected: Boolean,
+    selectedIndex: Long,
     id: Long,
     title: String,
     startedDay: String,
     finishedDay: String,
-    coverImage: String?
+    coverImage: String?,
 ) {
     ExpoAndroidTheme { colors: ColorTheme, typography: ExpoTypography ->
         Row(
@@ -35,9 +35,10 @@ fun CreatedExpoListItem(
             verticalAlignment = Alignment.CenterVertically,
             modifier = modifier
                 .background(
-                    color = if (isSelected) colors.main100 else colors.white,
+                    color = if (selectedIndex == id) colors.main100 else colors.white,
                     shape = RoundedCornerShape(size = 4.dp)
                 )
+                .expoClickable { onClick(selectedIndex == id) }
                 .padding(8.dp),
         ) {
             Text(
@@ -84,7 +85,7 @@ fun CreatedExpoListItemNotSelectedPreview() {
         startedDay = "시작날",
         finishedDay = "끝날",
         title = "제목입니다",
-        isSelected = false,
+        selectedIndex = 0,
     )
 }
 
@@ -97,6 +98,6 @@ fun CreatedExpoListItemSelectedPreview() {
         startedDay = "시작날",
         finishedDay = "끝날",
         title = "제목입니다",
-        isSelected = true,
+        selectedIndex = 0,
     )
 }

@@ -349,7 +349,7 @@ internal fun ExpoCreateScreen(
                     )
 
                     Text(
-                        text = "이미지 328 × 178 사이즈로 등록해주세요.",
+                        text = "이미지 328 × 178 사이즈를 권장합니다.",
                         style = typography.captionRegular2,
                         color = colors.gray300
                     )

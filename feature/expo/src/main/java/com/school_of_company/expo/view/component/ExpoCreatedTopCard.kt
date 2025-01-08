@@ -30,9 +30,7 @@ fun ExpoCreatedTopCard(
         Column(
             verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.Top),
             horizontalAlignment = Alignment.Start,
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(horizontal = 22.dp, vertical = 10.dp),
+            modifier = modifier.padding(horizontal = 22.dp, vertical = 10.dp),
         ) {
             Text(
                 text = "등록된 박람회",

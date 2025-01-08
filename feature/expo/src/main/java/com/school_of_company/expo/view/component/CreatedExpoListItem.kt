@@ -13,6 +13,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.icon.CircleIcon
 import com.school_of_company.design_system.icon.XIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
@@ -28,6 +29,7 @@ fun CreatedExpoListItem(
     startedDay: String,
     finishedDay: String,
     coverImage: String?,
+    onClick: (Boolean) -> Unit,
 ) {
     ExpoAndroidTheme { colors: ColorTheme, typography: ExpoTypography ->
         Row(
@@ -86,6 +88,7 @@ fun CreatedExpoListItemNotSelectedPreview() {
         finishedDay = "끝날",
         title = "제목입니다",
         selectedIndex = 0,
+        onClick = { _ -> },
     )
 }
 
@@ -99,5 +102,6 @@ fun CreatedExpoListItemSelectedPreview() {
         finishedDay = "끝날",
         title = "제목입니다",
         selectedIndex = 0,
+        onClick = { _ -> },
     )
 }

@@ -48,6 +48,11 @@ import com.school_of_company.expo.view.component.HomeKakaoMap
 import com.school_of_company.expo.view.component.QrCode
 import com.school_of_company.expo.viewmodel.ExpoViewModel
 import com.school_of_company.expo.viewmodel.uistate.GetExpoInformationUiState
+import com.school_of_company.expo.viewmodel.uistate.GetStandardProgramListUiState
+import com.school_of_company.expo.viewmodel.uistate.GetTrainingProgramListUiState
+import com.school_of_company.model.entity.training.TrainingProgramListResponseEntity
+import com.school_of_company.model.model.expo.ExpoRequestAndResponseModel
+import com.school_of_company.ui.preview.ExpoPreviews
 import com.school_of_company.ui.util.formatServerDate
 
 @Composable
@@ -62,10 +67,14 @@ internal fun ExpoDetailRoute(
     viewModel: ExpoViewModel = hiltViewModel()
 ) {
     val getExpoInformationUiState by viewModel.getExpoInformationUiState.collectAsStateWithLifecycle()
+    val getTrainingProgramUiState by viewModel.getTrainingProgramListUiState.collectAsStateWithLifecycle()
+    val getStandardProgramUiState by viewModel.getStandardProgramListUiState.collectAsStateWithLifecycle()
 
     ExpoDetailScreen(
         id = id,
         getExpoInformationUiState = getExpoInformationUiState,
+        getTrainingProgramUiState = getTrainingProgramUiState,
+        getStandardProgramUiState = getStandardProgramUiState,
         qrData = QrCode(content = "121231342352"),
         onBackClick = onBackClick,
         onMessageClick = onMessageClick,
@@ -77,6 +86,8 @@ internal fun ExpoDetailRoute(
 
     LaunchedEffect(Unit) {
         viewModel.getExpoInformation(expoId = id)
+        viewModel.getTrainingProgramList(expoId = id)
+        viewModel.getStandardProgramList(expoId = id)
     }
 }
 
@@ -86,6 +97,8 @@ internal fun ExpoDetailScreen(
     modifier: Modifier = Modifier,
     scrollState: ScrollState = rememberScrollState(),
     getExpoInformationUiState: GetExpoInformationUiState,
+    getTrainingProgramUiState: GetTrainingProgramListUiState,
+    getStandardProgramUiState: GetStandardProgramListUiState,
     qrData: QrCode,
     onBackClick: () -> Unit,
     onMessageClick: () -> Unit,
@@ -98,9 +111,9 @@ internal fun ExpoDetailScreen(
     val (openQrDialog, isOpenQrDialog) = rememberSaveable { mutableStateOf(false) }
 
     ExpoAndroidTheme { colors, typography ->
-        when (getExpoInformationUiState) {
+        when {
 
-            is GetExpoInformationUiState.Success -> {
+            getExpoInformationUiState is GetExpoInformationUiState.Success && getTrainingProgramUiState is GetTrainingProgramListUiState.Success && getStandardProgramUiState is GetStandardProgramListUiState.Success -> {
                 Column(
                     modifier = modifier
                         .fillMaxSize()
@@ -205,17 +218,43 @@ internal fun ExpoDetailScreen(
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Bottom)) {
 
                             Text(
-                                text = "연수",
+                                text = "프로그램",
                                 style = typography.bodyRegular2,
                                 color = colors.gray600,
                                 fontWeight = FontWeight(600),
                             )
 
-                            Text(
-                                text = "",
-                                style = typography.bodyRegular2,
-                                color = colors.gray400
-                            )
+                            Column {
+                                Text(
+                                    text = "일반 프로그램",
+                                    style = typography.bodyRegular2,
+                                    color = colors.gray400
+                                )
+
+                                getStandardProgramUiState.data.forEach { program ->
+                                    Text(
+                                        text = "· ${program.title}",
+                                        style = typography.bodyRegular2,
+                                        color = colors.gray400
+                                    )
+                                }
+                            }
+
+                            Column {
+                                Text(
+                                    text = "연수자 프로그램",
+                                    style = typography.bodyRegular2,
+                                    color = colors.gray400
+                                )
+
+                                getTrainingProgramUiState.data.forEach { program ->
+                                    Text(
+                                        text = "· ${program.title}",
+                                        style = typography.bodyRegular2,
+                                        color = colors.gray400
+                                    )
+                                }
+                            }
                         }
 
                         Spacer(modifier = Modifier.height(18.dp))
@@ -266,10 +305,11 @@ internal fun ExpoDetailScreen(
                                     .fillMaxWidth()
                                     .padding(top = 38.dp)
                             ) {
+
                                 ExpoButton(
-                                    text = "문자 보내기",
+                                    text = "프로그램",
                                     color = colors.main,
-                                    onClick = { isOpenDialog(true) },
+                                    onClick = { onProgramClick(id) },
                                     modifier = Modifier
                                         .weight(1f)
                                         .padding(
@@ -279,36 +319,21 @@ internal fun ExpoDetailScreen(
                                 )
 
                                 ExpoButton(
-                                    text = "QR 조회하기",
+                                    text = "조회하기",
                                     color = colors.main,
-                                    onClick = {
-                                        onQrGenerateClick()
-                                        isOpenQrDialog(true)
-                                    },
+                                    onClick = onCheckClick,
                                     modifier = Modifier
                                         .weight(1f)
                                         .padding(
                                             vertical = 15.dp,
-                                            horizontal = 37.dp
+                                            horizontal = 41.5.dp
                                         )
                                 )
                             }
 
                             ExpoEnableDetailButton(
-                                text = "프로그램",
-                                onClick = { onProgramClick(id) },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .border(
-                                        width = 1.dp,
-                                        color = colors.main,
-                                        shape = RoundedCornerShape(6.dp)
-                                    )
-                            )
-
-                            ExpoEnableDetailButton(
-                                text = "조회하기",
-                                onClick = onCheckClick,
+                                text = "문자 보내기",
+                                onClick = { isOpenDialog(true) },
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .border(
@@ -336,9 +361,9 @@ internal fun ExpoDetailScreen(
                 }
             }
 
-            is GetExpoInformationUiState.Loading -> Unit
+            getExpoInformationUiState is GetExpoInformationUiState.Loading || getTrainingProgramUiState is GetTrainingProgramListUiState.Loading || getStandardProgramUiState is GetStandardProgramListUiState.Loading -> Unit
 
-            is GetExpoInformationUiState.Error -> {
+            getExpoInformationUiState is GetExpoInformationUiState.Error || getTrainingProgramUiState is GetTrainingProgramListUiState.Error || getStandardProgramUiState is GetStandardProgramListUiState.Error -> {
 
                 Column(
                     modifier = modifier
@@ -409,7 +434,7 @@ internal fun ExpoDetailScreen(
     }
 }
 
-@Preview
+@ExpoPreviews
 @Composable
 private fun HomeDetailScreenPreview() {
     ExpoDetailScreen(
@@ -421,7 +446,9 @@ private fun HomeDetailScreenPreview() {
         onModifyClick = {},
         onProgramClick = {},
         qrData = QrCode(content = "121231342352"),
-        getExpoInformationUiState = GetExpoInformationUiState.Loading,
+        getExpoInformationUiState = GetExpoInformationUiState.Success(ExpoRequestAndResponseModel(title = "asdf", description = "asdfasdf", startedDay = "afsdf", finishedDay = "asdf", location = "adsf", coverImage = "asdf", x = 126.80042860412009f, y = 35.14308063423194f)),
+        getTrainingProgramUiState = GetTrainingProgramListUiState.Loading,
+        getStandardProgramUiState = GetStandardProgramListUiState.Loading,
         id = ""
     )
 }

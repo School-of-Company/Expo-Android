@@ -18,7 +18,6 @@ import com.school_of_company.domain.usecase.standard.RegisterStandardListProgram
 import com.school_of_company.domain.usecase.standard.StandardProgramListUseCase
 import com.school_of_company.domain.usecase.training.ModifyTrainingProgramUseCase
 import com.school_of_company.domain.usecase.training.RegisterTrainingProgramListUseCase
-import com.school_of_company.domain.usecase.training.RegisterTrainingProgramUseCase
 import com.school_of_company.domain.usecase.training.TrainingProgramListUseCase
 import com.school_of_company.expo.enum.TrainingCategory
 import com.school_of_company.expo.util.getMultipartFile
@@ -34,8 +33,6 @@ import com.school_of_company.expo.viewmodel.uistate.ModifyTrainingProgramUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterExpoInformationUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterStandardProgramListUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterTrainingProgramListUiState
-import com.school_of_company.expo.viewmodel.uistate.RegisterTrainingProgramUiState
-import com.school_of_company.model.entity.standard.StandardProgramListResponseEntity
 import com.school_of_company.model.model.expo.ExpoRequestAndResponseModel
 import com.school_of_company.model.model.standard.StandardRequestModel
 import com.school_of_company.model.model.training.TrainingDtoModel
@@ -238,7 +235,7 @@ class ExpoViewModel @Inject constructor(
             }
     }
 
-    internal fun expoList() = viewModelScope.launch {
+    internal fun getExpoList() = viewModelScope.launch {
         _swipeRefreshLoading.value = true
         getExpoListUseCase()
             .asResult()

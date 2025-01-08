@@ -29,7 +29,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -50,8 +49,6 @@ import com.school_of_company.expo.viewmodel.ExpoViewModel
 import com.school_of_company.expo.viewmodel.uistate.GetExpoInformationUiState
 import com.school_of_company.expo.viewmodel.uistate.GetStandardProgramListUiState
 import com.school_of_company.expo.viewmodel.uistate.GetTrainingProgramListUiState
-import com.school_of_company.model.entity.training.TrainingProgramListResponseEntity
-import com.school_of_company.model.model.expo.ExpoRequestAndResponseModel
 import com.school_of_company.ui.preview.ExpoPreviews
 import com.school_of_company.ui.util.formatServerDate
 
@@ -61,7 +58,6 @@ internal fun ExpoDetailRoute(
     onBackClick: () -> Unit,
     onMessageClick: () -> Unit,
     onCheckClick: () -> Unit,
-    onQrGenerateClick: () -> Unit,
     onModifyClick: (String) -> Unit,
     onProgramClick: (String) -> Unit,
     viewModel: ExpoViewModel = hiltViewModel()
@@ -75,11 +71,9 @@ internal fun ExpoDetailRoute(
         getExpoInformationUiState = getExpoInformationUiState,
         getTrainingProgramUiState = getTrainingProgramUiState,
         getStandardProgramUiState = getStandardProgramUiState,
-        qrData = QrCode(content = "121231342352"),
         onBackClick = onBackClick,
         onMessageClick = onMessageClick,
         onCheckClick = onCheckClick,
-        onQrGenerateClick = onQrGenerateClick,
         onModifyClick = onModifyClick,
         onProgramClick = onProgramClick
     )
@@ -99,16 +93,13 @@ internal fun ExpoDetailScreen(
     getExpoInformationUiState: GetExpoInformationUiState,
     getTrainingProgramUiState: GetTrainingProgramListUiState,
     getStandardProgramUiState: GetStandardProgramListUiState,
-    qrData: QrCode,
     onBackClick: () -> Unit,
     onMessageClick: () -> Unit,
     onCheckClick: () -> Unit,
-    onQrGenerateClick: () -> Unit,
     onModifyClick: (String) -> Unit,
     onProgramClick: (String) -> Unit
 ) {
     val (openDialog, isOpenDialog) = rememberSaveable { mutableStateOf(false) }
-    val (openQrDialog, isOpenQrDialog) = rememberSaveable { mutableStateOf(false) }
 
     ExpoAndroidTheme { colors, typography ->
         when {
@@ -423,15 +414,6 @@ internal fun ExpoDetailScreen(
             )
         }
     }
-
-    if (openQrDialog) {
-        Dialog(onDismissRequest = { isOpenQrDialog(false) }) {
-            com.school_of_company.expo.view.component.QrDialog(
-                data = qrData,
-                onCancelClick = { isOpenQrDialog(false) }
-            )
-        }
-    }
 }
 
 @ExpoPreviews
@@ -442,11 +424,9 @@ private fun HomeDetailScreenPreview() {
         onBackClick = {},
         onMessageClick = {},
         onCheckClick = {},
-        onQrGenerateClick = {},
         onModifyClick = {},
         onProgramClick = {},
-        qrData = QrCode(content = "121231342352"),
-        getExpoInformationUiState = GetExpoInformationUiState.Success(ExpoRequestAndResponseModel(title = "asdf", description = "asdfasdf", startedDay = "afsdf", finishedDay = "asdf", location = "adsf", coverImage = "asdf", x = 126.80042860412009f, y = 35.14308063423194f)),
+        getExpoInformationUiState = GetExpoInformationUiState.Loading,
         getTrainingProgramUiState = GetTrainingProgramListUiState.Loading,
         getStandardProgramUiState = GetStandardProgramListUiState.Loading,
         id = ""

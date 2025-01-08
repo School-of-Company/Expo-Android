@@ -71,7 +71,6 @@ internal fun SignUpRoute(
     val isPasswordMismatchError by viewModel.isPasswordMismatchError.collectAsStateWithLifecycle()
     val isEmailValidError by viewModel.isEmailValidError.collectAsStateWithLifecycle()
     val isCertificationCodeError by viewModel.isCertificationCodeValid.collectAsStateWithLifecycle()
-    val isCertificationResent by viewModel.isCertificationResent.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     DisposableEffect(signUpUiState) {
@@ -132,7 +131,6 @@ internal fun SignUpRoute(
         isPasswordMismatchError = isPasswordMismatchError,
         isEmailValidError = isEmailValidError,
         isCertificationCodeError = isCertificationCodeError,
-        isCertificationResent = isCertificationResent,
         certificationCallBack = {
             viewModel.certificationCode(
                 phoneNumber = phoneNumber,
@@ -185,12 +183,12 @@ internal fun SignUpScreen(
     isPasswordMismatchError: Boolean,
     isEmailValidError: Boolean,
     isCertificationCodeError: Boolean,
-    isCertificationResent: Boolean,
     signUpCallBack: () -> Unit,
     certificationCallBack: () -> Unit,
     sendCertificationCodeCallBack: () -> Unit
 ) {
     var isPasswordVisible by remember { mutableStateOf(false) }
+    var isCheckPasswordVisible by remember { mutableStateOf(false) }
 
     ExpoAndroidTheme { colors, typography ->
 
@@ -313,15 +311,16 @@ internal fun SignUpScreen(
                         id = R.string.wrong_password
                     ),
                     onValueChange = onRePasswordChange,
-                    visualTransformationState = if (isPasswordVisible) false else true,
+                    visualTransformationState = if (isCheckPasswordVisible) false else true,
                     trailingIcon = {
                         EyeIcon(
-                            isSelected = isPasswordVisible,
+                            isSelected = isCheckPasswordVisible,
                             modifier = Modifier.expoClickable {
-                                isPasswordVisible = !isPasswordVisible
+                                isCheckPasswordVisible = !isCheckPasswordVisible
                             }
                         )
-                    }                )
+                    }
+                )
 
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.Start),
@@ -422,6 +421,5 @@ private fun SignUpScreenPreview() {
         certificationCallBack = {},
         sendCertificationCodeCallBack = {},
         isCertificationCodeError = false,
-        isCertificationResent = false
     )
 }

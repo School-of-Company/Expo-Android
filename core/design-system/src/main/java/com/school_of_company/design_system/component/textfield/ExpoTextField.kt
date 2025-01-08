@@ -161,7 +161,8 @@ fun ExpoNoneLabelTextField(
     onClicked: (() -> Unit)? = null,
     value: String? = null,
     visualTransformationState: Boolean = false,
-) {
+    trailingIcon: @Composable (() -> Unit)? = null
+    ) {
     var text by remember { mutableStateOf(value ?: "") }
     val isFocused = remember { mutableStateOf(false) }
 
@@ -216,7 +217,8 @@ fun ExpoNoneLabelTextField(
                 singleLine = true,
                 readOnly = isReadOnly,
                 keyboardOptions = keyboardOptions,
-                visualTransformation = if (visualTransformationState) PasswordVisualTransformation() else VisualTransformation.None
+                visualTransformation = if (visualTransformationState) PasswordVisualTransformation() else VisualTransformation.None,
+                trailingIcon = trailingIcon
             )
             if (isError) {
                 Row(horizontalArrangement = if (isError) Arrangement.Start else Arrangement.End) {

@@ -20,6 +20,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
@@ -40,6 +43,7 @@ import com.school_of_company.design_system.component.modifier.clickable.expoClic
 import com.school_of_company.design_system.component.modifier.padding.paddingHorizontal
 import com.school_of_company.design_system.component.textfield.ExpoDefaultTextField
 import com.school_of_company.design_system.component.textfield.ExpoNoneLabelTextField
+import com.school_of_company.design_system.icon.EyeIcon
 import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.model.param.auth.AdminSignUpRequestParam
@@ -67,7 +71,6 @@ internal fun SignUpRoute(
     val isPasswordMismatchError by viewModel.isPasswordMismatchError.collectAsStateWithLifecycle()
     val isEmailValidError by viewModel.isEmailValidError.collectAsStateWithLifecycle()
     val isCertificationCodeError by viewModel.isCertificationCodeValid.collectAsStateWithLifecycle()
-    val isCertificationResent by viewModel.isCertificationResent.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     DisposableEffect(signUpUiState) {
@@ -128,7 +131,6 @@ internal fun SignUpRoute(
         isPasswordMismatchError = isPasswordMismatchError,
         isEmailValidError = isEmailValidError,
         isCertificationCodeError = isCertificationCodeError,
-        isCertificationResent = isCertificationResent,
         certificationCallBack = {
             viewModel.certificationCode(
                 phoneNumber = phoneNumber,
@@ -181,11 +183,13 @@ internal fun SignUpScreen(
     isPasswordMismatchError: Boolean,
     isEmailValidError: Boolean,
     isCertificationCodeError: Boolean,
-    isCertificationResent: Boolean,
     signUpCallBack: () -> Unit,
     certificationCallBack: () -> Unit,
     sendCertificationCodeCallBack: () -> Unit
 ) {
+    var isPasswordVisible by remember { mutableStateOf(false) }
+    var isCheckPasswordVisible by remember { mutableStateOf(false) }
+
     ExpoAndroidTheme { colors, typography ->
 
         Column(
@@ -284,7 +288,15 @@ internal fun SignUpScreen(
                         id = R.string.wrong_password
                     ),
                     onValueChange = onPasswordChange,
-                    visualTransformationState = true
+                    visualTransformationState = if (isPasswordVisible) false else true,
+                    trailingIcon = {
+                        EyeIcon(
+                            isSelected = isPasswordVisible,
+                            modifier = Modifier.expoClickable {
+                                isPasswordVisible = !isPasswordVisible
+                            }
+                        )
+                    }
                 )
 
                 ExpoNoneLabelTextField(
@@ -299,7 +311,15 @@ internal fun SignUpScreen(
                         id = R.string.wrong_password
                     ),
                     onValueChange = onRePasswordChange,
-                    visualTransformationState = true
+                    visualTransformationState = if (isCheckPasswordVisible) false else true,
+                    trailingIcon = {
+                        EyeIcon(
+                            isSelected = isCheckPasswordVisible,
+                            modifier = Modifier.expoClickable {
+                                isCheckPasswordVisible = !isCheckPasswordVisible
+                            }
+                        )
+                    }
                 )
 
                 Row(
@@ -401,6 +421,5 @@ private fun SignUpScreenPreview() {
         certificationCallBack = {},
         sendCertificationCodeCallBack = {},
         isCertificationCodeError = false,
-        isCertificationResent = false
     )
 }

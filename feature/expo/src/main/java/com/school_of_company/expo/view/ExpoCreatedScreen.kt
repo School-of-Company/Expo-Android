@@ -27,7 +27,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.design_system.theme.ExpoTypography
 import com.school_of_company.design_system.theme.color.ColorTheme
-import com.school_of_company.expo.view.component.CreatedExpoListItem
 import com.school_of_company.expo.view.component.ExpoCreatedDeleteButton
 import com.school_of_company.expo.view.component.ExpoCreatedTable
 import com.school_of_company.expo.view.component.ExpoCreatedTopCard
@@ -58,7 +57,7 @@ fun ExpoCreatedScreen(
     scrollState: ScrollState = rememberScrollState(),
     deleteExpoInformation: (String) -> Unit,
 ) {
-    val (selectedIndex, setSelectedIndex) = rememberSaveable { mutableLongStateOf(0L) }
+    val (selectedId, setSelectedId) = rememberSaveable { mutableLongStateOf(0L) }
 
     ExpoAndroidTheme { colors: ColorTheme, typography: ExpoTypography ->
         Column(
@@ -95,14 +94,14 @@ fun ExpoCreatedScreen(
                             items(getExpoListUiState.data) {
                                 with(it) {
                                     CreatedExpoListItem(
-                                        selectedIndex = selectedIndex,
+                                        selectedIndex = selectedId,
                                         id = id.toLong(),
                                         title = title,
                                         startedDay = startedDay,
                                         finishedDay = finishedDay,
                                         coverImage = coverImage,
                                         onClick = { isSelected ->
-                                            setSelectedIndex(if (isSelected) 0L else id.toLong())
+                                            setSelectedId(if (isSelected) 0L else id.toLong())
                                         },
                                     )
                                 }
@@ -113,8 +112,8 @@ fun ExpoCreatedScreen(
             }
             Spacer(modifier = Modifier.height(32.dp))
             ExpoCreatedDeleteButton(
-                enabled = selectedIndex != 0L,
-                onClick = { deleteExpoInformation("") })
+                enabled = selectedId != 0L,
+                onClick = { deleteExpoInformation(selectedId.toString()) })
         }
     }
 }

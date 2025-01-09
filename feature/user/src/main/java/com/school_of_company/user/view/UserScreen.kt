@@ -17,43 +17,52 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
+import com.google.accompanist.swiperefresh.SwipeRefreshState
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.school_of_company.design_system.component.modifier.padding.paddingHorizontal
+import com.school_of_company.design_system.icon.ExpoIcon
 import com.school_of_company.design_system.icon.UserIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.user.view.component.SignUpRequestList
-import com.school_of_company.user.view.component.temparory
+import com.school_of_company.user.viewmodel.UserViewModel
+import com.school_of_company.user.viewmodel.uistate.GetAdminRequestAllowListUiState
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toPersistentList
-
-private fun generateSignUpRequestSampleData(): ImmutableList<temparory> {
-    return List(20) {
-        temparory(
-            name = "이명훈",
-            id = "audgns3825",
-            email = "audgns3825@gmail.com",
-            phoneNumber = "01012345678"
-        )
-    }.toPersistentList()
-}
+import kotlinx.collections.immutable.toImmutableList
 
 @Composable
-internal fun UserRoute() {
+internal fun UserRoute(
+    viewModel: UserViewModel = hiltViewModel()
+) {
+    val swipeRefreshLoading by viewModel.swipeRefreshLoading.collectAsStateWithLifecycle()
+    val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = swipeRefreshLoading)
+    val getAdminRequestAllowListUiState by viewModel.getAdminRequestAllowListUiState.collectAsStateWithLifecycle()
+
     UserScreen(
-        sampleData = generateSignUpRequestSampleData()
+        getAdminRequestAllowListUiState = getAdminRequestAllowListUiState,
+        getSignUpRequestList = { viewModel.getAdminRequestAllowList() },
+        swipeRefreshState = swipeRefreshState
     )
 }
 
 @Composable
 private fun UserScreen(
     modifier: Modifier = Modifier,
-    sampleData: ImmutableList<temparory>,
+    getAdminRequestAllowListUiState: GetAdminRequestAllowListUiState,
+    getSignUpRequestList: () -> Unit,
+    swipeRefreshState: SwipeRefreshState,
     scrollState: ScrollState = rememberScrollState()
 ) {
     ExpoAndroidTheme { colors, typography ->
@@ -192,11 +201,36 @@ private fun UserScreen(
                         color = colors.gray500
                     )
 
-                    Text(
-                        text = "${12}명", // todo : Apply UiState Data Size
-                        style = typography.captionRegular2,
-                        color = colors.main
-                    )
+                    when (getAdminRequestAllowListUiState) {
+                        is GetAdminRequestAllowListUiState.Loading -> {
+                            Text(
+                                text = "로딩중..",
+                                style = typography.captionRegular2,
+                                color = colors.gray200
+                            )
+                        }
+                        is GetAdminRequestAllowListUiState.Success -> {
+                            Text(
+                                text = "${getAdminRequestAllowListUiState.data.size}명",
+                                style = typography.captionRegular2,
+                                color = colors.main
+                            )
+                        }
+                        is GetAdminRequestAllowListUiState.Error -> {
+                            Text(
+                                text = "데이터를 불러올 수 없습니다..",
+                                style = typography.captionRegular2,
+                                color = colors.gray200
+                            )
+                        }
+                        is GetAdminRequestAllowListUiState.Empty -> {
+                            Text(
+                                text = "0명",
+                                style = typography.captionRegular2,
+                                color = colors.main
+                            )
+                        }
+                    }
                 }
             }
 
@@ -250,10 +284,72 @@ private fun UserScreen(
                 }
             }
 
-            SignUpRequestList(
-                item = sampleData,
-                horizontalScrollState = scrollState
-            )
+            SwipeRefresh(
+                state = swipeRefreshState,
+                onRefresh = { getSignUpRequestList() },
+                indicator = { state, refreshTrigger ->
+                    SwipeRefreshIndicator(
+                        state = state,
+                        refreshTriggerDistance = refreshTrigger,
+                        contentColor = colors.main
+                    )
+                }
+            ) {
+                when (getAdminRequestAllowListUiState) {
+                    is GetAdminRequestAllowListUiState.Success -> {
+                        SignUpRequestList(
+                            item = getAdminRequestAllowListUiState.data.toImmutableList(),
+                            horizontalScrollState = scrollState
+                        )
+                    }
+                    is GetAdminRequestAllowListUiState.Error -> {
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(
+                                28.dp,
+                                Alignment.CenterVertically
+                            ),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(color = colors.white)
+                                .verticalScroll(scrollState)
+                        ) {
+                            WarnIcon(
+                                tint = colors.black,
+                                modifier = Modifier.size(100.dp)
+                            )
+                            Text(
+                                text = "데이터를 불러올 수 없어요!",
+                                style = typography.bodyRegular2,
+                                color = colors.gray400
+                            )
+                        }
+                    }
+
+                    is GetAdminRequestAllowListUiState.Empty -> {
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(28.dp, Alignment.CenterVertically),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .verticalScroll(scrollState)
+                                .background(color = colors.white)
+                        ) {
+                            ExpoIcon(
+                                tint = colors.black,
+                                modifier = Modifier.size(100.dp)
+                            )
+                            Text(
+                                text = "회원가입 요청이 없어요..",
+                                style = typography.bodyRegular2,
+                                color = colors.gray400
+                            )
+                        }
+                    }
+
+                    is GetAdminRequestAllowListUiState.Loading -> Unit
+                }
+            }
         }
     }
 }
@@ -261,7 +357,4 @@ private fun UserScreen(
 @Preview
 @Composable
 private fun UserScreenPreview() {
-    UserScreen(
-        sampleData = generateSignUpRequestSampleData()
-    )
 }

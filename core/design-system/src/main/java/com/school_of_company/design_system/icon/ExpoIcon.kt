@@ -150,11 +150,15 @@ fun PlusIcon(
 }
 
 @Composable
-fun TrashIcon(modifier: Modifier = Modifier) {
+fun TrashIcon(
+    modifier: Modifier = Modifier,
+    tint: Color = Color.Unspecified,
+) {
     Icon(
         painter = painterResource(id = R.drawable.ic_trash),
         contentDescription = stringResource(id = R.string.trash_description),
-        modifier = modifier
+        modifier = modifier,
+        tint = tint
     )
 }
 
@@ -334,7 +338,9 @@ fun EyeIcon(
     tint: Color = Color.Unspecified
 ) {
     Icon(
-        painter = if (isSelected) painterResource(id = R.drawable.ic_open_eye) else painterResource(id = R.drawable.ic_eye_close),
+        painter = if (isSelected) painterResource(id = R.drawable.ic_open_eye) else painterResource(
+            id = R.drawable.ic_eye_close
+        ),
         contentDescription = "눈 아이콘",
         modifier = modifier,
         tint = tint

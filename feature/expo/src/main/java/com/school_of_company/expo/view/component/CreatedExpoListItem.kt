@@ -55,9 +55,9 @@ fun CreatedExpoListItem(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 if (coverImage == null) {
-                    XIcon()
+                    XIcon(tint = colors.error)
                 } else {
-                    CircleIcon()
+                    CircleIcon(tint = colors.black)
                 }
                 Text(
                     text = title,
@@ -82,12 +82,12 @@ fun CreatedExpoListItem(
 @Composable
 fun CreatedExpoListItemNotSelectedPreview() {
     CreatedExpoListItem(
-        id = 2,
+        id = 0,
         coverImage = null,
         startedDay = "시작날",
         finishedDay = "끝날",
         title = "제목입니다",
-        selectedIndex = 0,
+        selectedIndex = 1,
         onClick = { _ -> },
     )
 }
@@ -96,12 +96,12 @@ fun CreatedExpoListItemNotSelectedPreview() {
 @Composable
 fun CreatedExpoListItemSelectedPreview() {
     CreatedExpoListItem(
-        id = 2,
+        id = 1,
         coverImage = null,
         startedDay = "시작날",
         finishedDay = "끝날",
         title = "제목입니다",
-        selectedIndex = 0,
+        selectedIndex = 1,
         onClick = { _ -> },
     )
 }

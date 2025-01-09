@@ -27,6 +27,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.design_system.theme.ExpoTypography
 import com.school_of_company.design_system.theme.color.ColorTheme
+import com.school_of_company.expo.view.component.CreatedExpoListItem
 import com.school_of_company.expo.view.component.ExpoCreatedDeleteButton
 import com.school_of_company.expo.view.component.ExpoCreatedTable
 import com.school_of_company.expo.view.component.ExpoCreatedTopCard

@@ -228,6 +228,7 @@ class ExpoViewModel @Inject constructor(
                     _deleteExpoInformationUiState.value = DeleteExpoInformationUiState.Error(remoteError)
                 }.collect {
                     _deleteExpoInformationUiState.value = DeleteExpoInformationUiState.Success
+                    getExpoList()
                 }
             }
             .onFailure { error ->

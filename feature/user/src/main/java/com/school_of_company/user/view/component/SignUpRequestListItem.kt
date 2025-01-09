@@ -18,21 +18,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
-
-data class temparory (
-    val name: String,
-    val id: String,
-    val email: String,
-    val phoneNumber: String
-)
+import com.school_of_company.model.entity.admin.AdminRequestAllowListResponseEntity
 
 @Composable
 internal fun SignUpRequestListItem(
     modifier: Modifier = Modifier,
     index: Int,
-    data: temparory,
+    data: AdminRequestAllowListResponseEntity,
     horizontalScrollState: ScrollState,
-    // todo : Apply Profile Data
 ) {
     ExpoAndroidTheme { colors, typography ->
         Spacer(modifier = Modifier.height(20.dp))
@@ -61,7 +54,7 @@ internal fun SignUpRequestListItem(
             )
 
             Text(
-                text = data.id,
+                text = data.nickname,
                 style = typography.captionRegular2,
                 color = colors.black,
                 modifier = Modifier.width(120.dp)
@@ -90,11 +83,12 @@ private fun SignUpRequestListItemPreview() {
     SignUpRequestListItem(
         index = 1,
         horizontalScrollState = rememberScrollState(),
-        data = temparory(
-            name = "홍길동",
-            id = "asd;lfj",
-            email = "asd;lfj",
-            phoneNumber = "asd;lfj"
+        data = AdminRequestAllowListResponseEntity(
+            id = 1,
+            name = "이명훈",
+            nickname = "뀨뀨뀨",
+            email = "john.mclean@examplepetstore.com",
+            phoneNumber = "010-1234-5678"
         )
     )
 }

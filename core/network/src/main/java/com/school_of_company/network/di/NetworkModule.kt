@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.readystatesoftware.chuck.ChuckInterceptor
 import com.school_of_company.network.BuildConfig
+import com.school_of_company.network.api.AdminAPI
 import com.school_of_company.network.api.AttendanceAPI
 import com.school_of_company.network.api.AuthAPI
 import com.school_of_company.network.api.ExpoAPI
@@ -118,4 +119,8 @@ object NetworkModule {
     @Provides
     fun provideAttendanceAPI(retrofit: Retrofit) : AttendanceAPI =
         retrofit.create(AttendanceAPI::class.java)
+
+    @Provides
+    fun provideAdminAPI(retrofit: Retrofit) : AdminAPI =
+        retrofit.create(AdminAPI::class.java)
 }

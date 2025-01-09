@@ -87,7 +87,6 @@ fun ExpoNavHost(
             onBackClick = navController::popBackStack,
             onMessageClick = navController::navigateToSmsSendMessage,
             onCheckClick = navController::navigateToProgramDetailParticipantManagement,
-            onQrGenerateClick = {},
             onModifyClick = { id ->
                 navController.navigateToExpoModify(id)
             },

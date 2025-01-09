@@ -13,6 +13,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.icon.TrashIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.design_system.theme.ExpoTypography
@@ -22,12 +23,14 @@ import com.school_of_company.design_system.theme.color.ColorTheme
 fun ExpoCreatedDeleteButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    onClick: () -> Unit,
 ) {
     ExpoAndroidTheme { colors: ColorTheme, typography: ExpoTypography ->
         Row(
             horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally),
             verticalAlignment = Alignment.CenterVertically,
             modifier = modifier
+                .expoClickable { onClick() }
                 .background(
                     color = if (enabled) colors.error
                     else colors.white,
@@ -54,11 +57,11 @@ fun ExpoCreatedDeleteButton(
 @Preview
 @Composable
 fun ExpoCreatedDeleteButtonEnabled() {
-    ExpoCreatedDeleteButton(enabled = true)
+    ExpoCreatedDeleteButton(enabled = true) {}
 }
 
 @Preview
 @Composable
 fun ExpoCreatedDeleteButtonDisabled() {
-    ExpoCreatedDeleteButton(enabled = false)
+    ExpoCreatedDeleteButton(enabled = false) {}
 }

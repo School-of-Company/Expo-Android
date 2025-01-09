@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -41,6 +42,10 @@ fun ExpoCreatedRoute(
     expoViewModel: ExpoViewModel = hiltViewModel(),
 ) {
     val getExpoListUiState by expoViewModel.getExpoListUiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect("initCreatedExpo") {
+        expoViewModel.getExpoList()
+    }
 
     ExpoCreatedScreen(
         modifier = modifier,

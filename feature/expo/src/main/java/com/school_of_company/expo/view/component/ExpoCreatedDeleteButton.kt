@@ -1,6 +1,7 @@
 package com.school_of_company.expo.view.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -35,6 +36,14 @@ fun ExpoCreatedDeleteButton(
                     color = if (enabled) colors.error
                     else colors.white,
                     shape = RoundedCornerShape(size = 6.dp)
+                )
+                .then(
+                    if (enabled) Modifier
+                    else Modifier.border(
+                        width = 1.dp,
+                        color = colors.gray200,
+                        shape = RoundedCornerShape(size = 6.dp)
+                    )
                 )
                 .padding(horizontal = 16.dp, vertical = 12.dp),
         ) {

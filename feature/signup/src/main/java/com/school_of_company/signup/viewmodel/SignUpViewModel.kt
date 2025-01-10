@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SignUpViewModel @Inject constructor(
+internal class SignUpViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val signUpRequestUseCase: AdminSignUpRequestUseCase,
     private val smsSignUpCertificationNumberSendRequestUseCase: SmsSignUpCertificationNumberSendRequestUseCase,

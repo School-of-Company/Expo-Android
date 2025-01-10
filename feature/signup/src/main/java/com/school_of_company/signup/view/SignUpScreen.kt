@@ -160,7 +160,7 @@ internal fun SignUpRoute(
 }
 
 @Composable
-internal fun SignUpScreen(
+private fun SignUpScreen(
     modifier: Modifier = Modifier,
     focusManager: FocusManager = LocalFocusManager.current,
     scrollState: ScrollState = rememberScrollState(),

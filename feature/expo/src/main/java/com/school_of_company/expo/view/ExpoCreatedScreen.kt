@@ -1,5 +1,6 @@
 package com.school_of_company.expo.view
 
+import CreatedExpoList
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -11,8 +12,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -25,23 +24,26 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.accompanist.swiperefresh.SwipeRefreshState
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
-import com.school_of_company.design_system.theme.ExpoTypography
-import com.school_of_company.design_system.theme.color.ColorTheme
-import com.school_of_company.expo.view.component.CreatedExpoListItem
 import com.school_of_company.expo.view.component.ExpoCreatedDeleteButton
 import com.school_of_company.expo.view.component.ExpoCreatedTable
 import com.school_of_company.expo.view.component.ExpoCreatedTopCard
 import com.school_of_company.expo.viewmodel.ExpoViewModel
 import com.school_of_company.expo.viewmodel.uistate.GetExpoListUiState
 import com.school_of_company.model.entity.expo.ExpoListResponseEntity
+import kotlinx.collections.immutable.immutableListOf
+import kotlinx.collections.immutable.toPersistentList
 
 @Composable
-fun ExpoCreatedRoute(
+internal fun ExpoCreatedRoute(
     modifier: Modifier = Modifier,
     expoViewModel: ExpoViewModel = hiltViewModel(),
 ) {
     val getExpoListUiState by expoViewModel.getExpoListUiState.collectAsStateWithLifecycle()
+    val swipeRefreshLoading by expoViewModel.swipeRefreshLoading.collectAsStateWithLifecycle()
+    val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = swipeRefreshLoading)
 
     LaunchedEffect("initCreatedExpo") {
         expoViewModel.getExpoList()
@@ -51,21 +53,25 @@ fun ExpoCreatedRoute(
         modifier = modifier,
         participantCount = 0,
         getExpoListUiState = getExpoListUiState,
+        swipeRefreshState = swipeRefreshState,
+        initCreatedExpoList = expoViewModel::getExpoList,
         deleteExpoInformation = expoViewModel::deleteExpoInformation,
     )
 }
 
 @Composable
-fun ExpoCreatedScreen(
+private fun ExpoCreatedScreen(
     modifier: Modifier = Modifier,
     participantCount: Int,
     getExpoListUiState: GetExpoListUiState,
     scrollState: ScrollState = rememberScrollState(),
+    swipeRefreshState: SwipeRefreshState,
+    initCreatedExpoList: () -> Unit,
     deleteExpoInformation: (String) -> Unit,
 ) {
     val (selectedId, setSelectedId) = rememberSaveable { mutableLongStateOf(0L) }
 
-    ExpoAndroidTheme { colors: ColorTheme, typography: ExpoTypography ->
+    ExpoAndroidTheme { colors, _ ->
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = modifier
@@ -93,26 +99,15 @@ fun ExpoCreatedScreen(
                     is GetExpoListUiState.Error -> TODO()
                     GetExpoListUiState.Loading -> TODO()
                     is GetExpoListUiState.Success -> {
-                        LazyColumn(
-                            modifier = Modifier.padding(horizontal = 8.dp),
-                            verticalArrangement = Arrangement.spacedBy(20.dp),
-                        ) {
-                            items(getExpoListUiState.data) {
-                                with(it) {
-                                    CreatedExpoListItem(
-                                        selectedIndex = selectedId,
-                                        id = id.toLong(),
-                                        title = title,
-                                        startedDay = startedDay,
-                                        finishedDay = finishedDay,
-                                        coverImage = coverImage,
-                                        onClick = { isSelected ->
-                                            setSelectedId(if (isSelected) 0L else id.toLong())
-                                        },
-                                    )
-                                }
-                            }
-                        }
+                        CreatedExpoList(
+                            expoList = getExpoListUiState.data.toPersistentList(),
+                            onItemClick = { isSelected, id ->
+                                setSelectedId(if (isSelected) 0L else id)
+                            },
+                            selectedIndex = selectedId,
+                            swipeRefreshState = swipeRefreshState,
+                            onRefresh = initCreatedExpoList
+                        )
                     }
                 }
             }
@@ -126,10 +121,10 @@ fun ExpoCreatedScreen(
 
 @Preview
 @Composable
-fun ExpoCreatedScreenPreview() {
+private fun ExpoCreatedScreenPreview() {
     ExpoCreatedScreen(
         getExpoListUiState = GetExpoListUiState.Success(
-            listOf(
+            immutableListOf(
                 ExpoListResponseEntity(
                     id = "2",
                     title = "제목",
@@ -149,6 +144,8 @@ fun ExpoCreatedScreenPreview() {
             )
         ),
         participantCount = 100,
-        deleteExpoInformation = { _ -> }
+        deleteExpoInformation = { _ -> },
+        swipeRefreshState = SwipeRefreshState(isRefreshing = true),
+        initCreatedExpoList = {}
     )
 }

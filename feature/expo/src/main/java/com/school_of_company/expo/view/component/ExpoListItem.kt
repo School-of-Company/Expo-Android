@@ -33,7 +33,7 @@ import com.school_of_company.model.entity.expo.ExpoListResponseEntity
 import com.school_of_company.ui.util.formatServerDate
 
 @Composable
-fun ExpoListItem(
+internal fun ExpoListItem(
     modifier: Modifier = Modifier,
     data: ExpoListResponseEntity,
     navigateToExpoDetail: (String) -> Unit

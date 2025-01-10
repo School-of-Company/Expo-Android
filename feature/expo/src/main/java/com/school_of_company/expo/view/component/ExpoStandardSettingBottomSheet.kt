@@ -35,7 +35,7 @@ import com.school_of_company.model.model.standard.StandardRequestModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ExpoStandardSettingBottomSheet(
+internal fun ExpoStandardSettingBottomSheet(
     modifier: Modifier = Modifier,
     onCancelClick: () -> Unit,
     trainingSettingItem: StandardRequestModel,

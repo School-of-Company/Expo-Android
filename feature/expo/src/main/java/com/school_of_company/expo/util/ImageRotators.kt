@@ -8,7 +8,7 @@ import android.net.Uri
 import android.provider.MediaStore
 import androidx.exifinterface.media.ExifInterface
 
-fun rotateImage(bitmap: Bitmap, exif: String): Bitmap {
+internal fun rotateImage(bitmap: Bitmap, exif: String): Bitmap {
     val matrix = Matrix()
     val angle = when (exif) {
         ExifInterface.ORIENTATION_ROTATE_90.toString() -> 90f
@@ -20,7 +20,7 @@ fun rotateImage(bitmap: Bitmap, exif: String): Bitmap {
     return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
 }
 
-fun getExifData(context: Context, uri: Uri): String? {
+internal fun getExifData(context: Context, uri: Uri): String? {
     var exifData: String? = null
     var cursor: Cursor? = null
     try {

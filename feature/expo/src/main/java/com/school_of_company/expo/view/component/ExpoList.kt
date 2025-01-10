@@ -24,7 +24,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
-fun ExpoList(
+internal fun ExpoList(
     modifier: Modifier = Modifier,
     emptyList: Boolean = false,
     item: ImmutableList<ExpoListResponseEntity> = persistentListOf(),

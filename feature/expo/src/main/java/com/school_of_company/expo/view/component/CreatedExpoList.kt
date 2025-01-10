@@ -1,12 +1,14 @@
-package com.school_of_company.expo.view.component
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.SwipeRefreshState
+import com.school_of_company.expo.view.component.CreatedExpoListItem
 import com.school_of_company.model.entity.expo.ExpoListResponseEntity
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -14,22 +16,29 @@ import kotlinx.collections.immutable.persistentListOf
 @Composable
 internal fun CreatedExpoList(
     modifier: Modifier = Modifier,
-    expoList: ImmutableList<ExpoListResponseEntity>, // getExpoListUiState.data 대신 데이터 리스트
-    selectedIndex: Long, // 선택된 ID를 전달받음
-    onItemClick: (Boolean, Long) -> Unit, // 클릭 이벤트 콜백
+    expoList: ImmutableList<ExpoListResponseEntity>,
+    selectedIndex: Long,
+    swipeRefreshState: SwipeRefreshState, // 상위에서 전달받은 SwipeRefreshState
+    onItemClick: (Boolean, Long) -> Unit,
+    onRefresh: () -> Unit, // 새로고침 콜백
 ) {
-    LazyColumn(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(20.dp)
+    SwipeRefresh(
+        state = swipeRefreshState,
+        onRefresh = onRefresh // 새로고침 시 호출되는 함수
     ) {
-        items(expoList) { item ->
-            CreatedExpoListItem(
-                selectedIndex = selectedIndex,
-                item = item,
-                onClick = { isSelected ->
-                    onItemClick(isSelected, item.id.toLong())
-                }
-            )
+        LazyColumn(
+            modifier = modifier,
+            verticalArrangement = Arrangement.spacedBy(20.dp)
+        ) {
+            items(expoList) { item ->
+                CreatedExpoListItem(
+                    selectedIndex = selectedIndex,
+                    item = item,
+                    onClick = { isSelected ->
+                        onItemClick(isSelected, item.id.toLong())
+                    }
+                )
+            }
         }
     }
 }
@@ -37,6 +46,8 @@ internal fun CreatedExpoList(
 @Preview
 @Composable
 fun CreatedExpoListPreview() {
+    val swipeRefreshState = remember { SwipeRefreshState(false) }
+
     CreatedExpoList(
         expoList = persistentListOf(
             ExpoListResponseEntity(
@@ -49,6 +60,8 @@ fun CreatedExpoListPreview() {
             ),
         ),
         onItemClick = { _, _ -> },
-        selectedIndex = 1
+        selectedIndex = 1,
+        onRefresh = { /* 새로고침 시 동작할 함수 */ },
+        swipeRefreshState = swipeRefreshState // 상위에서 전달한 상태
     )
 }

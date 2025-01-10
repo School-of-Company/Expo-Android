@@ -48,7 +48,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ExpoViewModel @Inject constructor(
+internal class ExpoViewModel @Inject constructor(
     private val getExpoInformationUseCase: GetExpoInformationUseCase,
     private val registerExpoInformationUseCase: RegisterExpoInformationUseCase,
     private val modifyExpoInformationUseCase: ModifyExpoInformationUseCase,

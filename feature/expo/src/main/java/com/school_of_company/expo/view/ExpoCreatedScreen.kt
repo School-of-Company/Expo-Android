@@ -51,7 +51,7 @@ internal fun ExpoCreatedRoute(
 }
 
 @Composable
-fun ExpoCreatedScreen(
+private fun ExpoCreatedScreen(
     modifier: Modifier = Modifier,
     participantCount: Int,
     getExpoListUiState: GetExpoListUiState,
@@ -96,11 +96,7 @@ fun ExpoCreatedScreen(
                                 with(it) {
                                     CreatedExpoListItem(
                                         selectedIndex = selectedId,
-                                        id = id.toLong(),
-                                        title = title,
-                                        startedDay = startedDay,
-                                        finishedDay = finishedDay,
-                                        coverImage = coverImage,
+                                        item = it,
                                         onClick = { isSelected ->
                                             setSelectedId(if (isSelected) 0L else id.toLong())
                                         },
@@ -121,7 +117,7 @@ fun ExpoCreatedScreen(
 
 @Preview
 @Composable
-fun ExpoCreatedScreenPreview() {
+private fun ExpoCreatedScreenPreview() {
     ExpoCreatedScreen(
         getExpoListUiState = GetExpoListUiState.Success(
             listOf(

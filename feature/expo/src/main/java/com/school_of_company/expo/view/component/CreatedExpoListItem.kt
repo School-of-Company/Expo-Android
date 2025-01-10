@@ -19,60 +19,59 @@ import com.school_of_company.design_system.icon.XIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.design_system.theme.ExpoTypography
 import com.school_of_company.design_system.theme.color.ColorTheme
+import com.school_of_company.model.entity.expo.ExpoListResponseEntity
 
 @Composable
 internal fun CreatedExpoListItem(
     modifier: Modifier = Modifier,
     selectedIndex: Long,
-    id: Long,
-    title: String,
-    startedDay: String,
-    finishedDay: String,
-    coverImage: String?,
+    item: ExpoListResponseEntity,
     onClick: (Boolean) -> Unit,
 ) {
-    ExpoAndroidTheme { colors: ColorTheme, typography: ExpoTypography ->
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(38.dp, Alignment.Start),
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = modifier
-                .background(
-                    color = if (selectedIndex == id) colors.main100 else colors.white,
-                    shape = RoundedCornerShape(size = 4.dp)
-                )
-                .expoClickable { onClick(selectedIndex == id) }
-                .padding(8.dp),
-        ) {
-            Text(
-                text = id.toString(),
-                style = typography.captionBold1,
-                fontWeight = FontWeight.W600,
-                color = colors.black,
-                textAlign = TextAlign.Center,
-            )
+    with(item) {
+        ExpoAndroidTheme { colors: ColorTheme, typography: ExpoTypography ->
             Row(
-                horizontalArrangement = Arrangement.spacedBy(48.dp, Alignment.Start),
+                horizontalArrangement = Arrangement.spacedBy(38.dp, Alignment.Start),
                 verticalAlignment = Alignment.CenterVertically,
+                modifier = modifier
+                    .background(
+                        color = if (selectedIndex == id.toLong()) colors.main100 else colors.white,
+                        shape = RoundedCornerShape(size = 4.dp)
+                    )
+                    .expoClickable { onClick(selectedIndex == id.toLong()) }
+                    .padding(8.dp),
             ) {
-                if (coverImage == null) {
-                    XIcon(tint = colors.error)
-                } else {
-                    CircleIcon(tint = colors.black)
+                Text(
+                    text = id.toString(),
+                    style = typography.captionBold1,
+                    fontWeight = FontWeight.W600,
+                    color = colors.black,
+                    textAlign = TextAlign.Center,
+                )
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(48.dp, Alignment.Start),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    if (coverImage == null) {
+                        XIcon(tint = colors.error)
+                    } else {
+                        CircleIcon(tint = colors.black)
+                    }
+                    Text(
+                        text = title,
+                        style = typography.captionRegular2,
+                        fontWeight = FontWeight.W400,
+                        color = colors.black,
+                        textAlign = TextAlign.Center,
+                    )
+                    Text(
+                        text = "$startedDay ~ $finishedDay",
+                        style = typography.captionRegular2,
+                        fontWeight = FontWeight.W400,
+                        color = colors.black,
+                        textAlign = TextAlign.Center,
+                    )
                 }
-                Text(
-                    text = title,
-                    style = typography.captionRegular2,
-                    fontWeight = FontWeight.W400,
-                    color = colors.black,
-                    textAlign = TextAlign.Center,
-                )
-                Text(
-                    text = "$startedDay ~ $finishedDay",
-                    style = typography.captionRegular2,
-                    fontWeight = FontWeight.W400,
-                    color = colors.black,
-                    textAlign = TextAlign.Center,
-                )
             }
         }
     }
@@ -82,11 +81,14 @@ internal fun CreatedExpoListItem(
 @Composable
 private fun CreatedExpoListItemNotSelectedPreview() {
     CreatedExpoListItem(
-        id = 0,
-        coverImage = null,
-        startedDay = "시작날",
-        finishedDay = "끝날",
-        title = "제목입니다",
+        item = ExpoListResponseEntity(
+            id = "",
+            title = "",
+            description = "",
+            startedDay = "",
+            finishedDay = "",
+            coverImage = null
+        ),
         selectedIndex = 1,
         onClick = { _ -> },
     )
@@ -96,11 +98,14 @@ private fun CreatedExpoListItemNotSelectedPreview() {
 @Composable
 private fun CreatedExpoListItemSelectedPreview() {
     CreatedExpoListItem(
-        id = 1,
-        coverImage = null,
-        startedDay = "시작날",
-        finishedDay = "끝날",
-        title = "제목입니다",
+        item = ExpoListResponseEntity(
+            id = "1",
+            title = "",
+            description = "",
+            startedDay = "",
+            finishedDay = "",
+            coverImage = null
+        ),
         selectedIndex = 1,
         onClick = { _ -> },
     )

@@ -1,5 +1,6 @@
 package com.school_of_company.expo.view
 
+import CreatedExpoList
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -22,10 +23,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.accompanist.swiperefresh.SwipeRefreshState
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
-import com.school_of_company.design_system.theme.ExpoTypography
-import com.school_of_company.design_system.theme.color.ColorTheme
-import com.school_of_company.expo.view.component.CreatedExpoList
 import com.school_of_company.expo.view.component.ExpoCreatedDeleteButton
 import com.school_of_company.expo.view.component.ExpoCreatedTable
 import com.school_of_company.expo.view.component.ExpoCreatedTopCard
@@ -41,11 +41,15 @@ internal fun ExpoCreatedRoute(
     expoViewModel: ExpoViewModel = hiltViewModel(),
 ) {
     val getExpoListUiState by expoViewModel.getExpoListUiState.collectAsStateWithLifecycle()
+    val swipeRefreshLoading by expoViewModel.swipeRefreshLoading.collectAsStateWithLifecycle()
+    val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = swipeRefreshLoading)
 
     ExpoCreatedScreen(
         modifier = modifier,
         participantCount = 0,
         getExpoListUiState = getExpoListUiState,
+        swipeRefreshState = swipeRefreshState,
+        initCreatedExpoList = expoViewModel::getExpoList,
         deleteExpoInformation = expoViewModel::deleteExpoInformation,
     )
 }
@@ -56,11 +60,13 @@ private fun ExpoCreatedScreen(
     participantCount: Int,
     getExpoListUiState: GetExpoListUiState,
     scrollState: ScrollState = rememberScrollState(),
+    swipeRefreshState: SwipeRefreshState,
+    initCreatedExpoList: () -> Unit,
     deleteExpoInformation: (String) -> Unit,
 ) {
     val (selectedId, setSelectedId) = rememberSaveable { mutableLongStateOf(0L) }
 
-    ExpoAndroidTheme { colors: ColorTheme, typography: ExpoTypography ->
+    ExpoAndroidTheme { colors, _ ->
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = modifier
@@ -94,6 +100,8 @@ private fun ExpoCreatedScreen(
                                 setSelectedId(if (isSelected) 0L else id)
                             },
                             selectedIndex = selectedId,
+                            swipeRefreshState = swipeRefreshState,
+                            onRefresh = initCreatedExpoList
                         )
                     }
                 }
@@ -131,6 +139,8 @@ private fun ExpoCreatedScreenPreview() {
             )
         ),
         participantCount = 100,
-        deleteExpoInformation = { _ -> }
+        deleteExpoInformation = { _ -> },
+        swipeRefreshState = SwipeRefreshState(isRefreshing = true),
+        initCreatedExpoList = {}
     )
 }

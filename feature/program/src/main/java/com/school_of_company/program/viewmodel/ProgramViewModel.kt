@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ProgramViewModel @Inject constructor(
+internal class ProgramViewModel @Inject constructor(
     private val trainingProgramListUseCase: TrainingProgramListUseCase,
     private val standardProgramListUseCase: StandardProgramListUseCase,
     private val trainingQrCodeRequestUseCase: TrainingQrCodeRequestUseCase,

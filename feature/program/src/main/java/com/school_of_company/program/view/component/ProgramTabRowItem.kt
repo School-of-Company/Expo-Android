@@ -38,3 +38,23 @@ fun ProgramTabRowItem(
         }
     }
 }
+
+@Preview
+@Composable
+private fun ProgramTabRowItemNotCurrentIndexPreview() {
+    ProgramTabRowItem(
+        isCurrentIndex = false,
+        onClick = {},
+        title = "제목"
+    )
+}
+
+@Preview
+@Composable
+private fun ProgramTabRowItemCurrentIndexPreview() {
+    ProgramTabRowItem(
+        isCurrentIndex = true,
+        onClick = {},
+        title = "제목"
+    )
+}

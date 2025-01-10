@@ -82,11 +82,11 @@ internal fun CreatedExpoListItem(
 private fun CreatedExpoListItemNotSelectedPreview() {
     CreatedExpoListItem(
         item = ExpoListResponseEntity(
-            id = "",
-            title = "",
+            id = "1",
+            title = "2024 AI광주미래교육박람회",
             description = "",
-            startedDay = "",
-            finishedDay = "",
+            startedDay = "09.10",
+            finishedDay = "09.20",
             coverImage = null
         ),
         selectedIndex = 1,
@@ -100,10 +100,10 @@ private fun CreatedExpoListItemSelectedPreview() {
     CreatedExpoListItem(
         item = ExpoListResponseEntity(
             id = "1",
-            title = "",
+            title = "2024 AI광주미래교육박람회",
             description = "",
-            startedDay = "",
-            finishedDay = "",
+            startedDay = "09.10",
+            finishedDay = "09.20",
             coverImage = null
         ),
         selectedIndex = 1,

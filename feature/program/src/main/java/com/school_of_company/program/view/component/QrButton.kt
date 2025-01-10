@@ -52,3 +52,11 @@ fun QrButton(
         }
     }
 }
+
+@Preview
+@Composable
+private fun QrButtonPreview() {
+    QrButton(
+        onClick = {},
+    )
+}

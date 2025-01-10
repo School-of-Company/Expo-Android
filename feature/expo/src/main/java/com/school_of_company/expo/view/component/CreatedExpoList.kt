@@ -7,7 +7,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.SwipeRefreshState
+import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.expo.view.component.CreatedExpoListItem
 import com.school_of_company.model.entity.expo.ExpoListResponseEntity
 import kotlinx.collections.immutable.ImmutableList
@@ -22,22 +24,31 @@ internal fun CreatedExpoList(
     onItemClick: (Boolean, Long) -> Unit,
     onRefresh: () -> Unit, // 새로고침 콜백
 ) {
-    SwipeRefresh(
-        state = swipeRefreshState,
-        onRefresh = onRefresh // 새로고침 시 호출되는 함수
-    ) {
-        LazyColumn(
-            modifier = modifier,
-            verticalArrangement = Arrangement.spacedBy(20.dp)
-        ) {
-            items(expoList) { item ->
-                CreatedExpoListItem(
-                    selectedIndex = selectedIndex,
-                    item = item,
-                    onClick = { isSelected ->
-                        onItemClick(isSelected, item.id.toLong())
-                    }
+    ExpoAndroidTheme { colors, _ ->
+        SwipeRefresh(
+            state = swipeRefreshState,
+            onRefresh = onRefresh,// 새로고침 시 호출되는 함수
+            indicator = { state, refreshTrigger ->
+                SwipeRefreshIndicator(
+                    state = state,
+                    refreshTriggerDistance = refreshTrigger,
+                    contentColor = colors.main
                 )
+            }
+        ) {
+            LazyColumn(
+                modifier = modifier,
+                verticalArrangement = Arrangement.spacedBy(20.dp)
+            ) {
+                items(expoList) { item ->
+                    CreatedExpoListItem(
+                        selectedIndex = selectedIndex,
+                        item = item,
+                        onClick = { isSelected ->
+                            onItemClick(isSelected, item.id.toLong())
+                        }
+                    )
+                }
             }
         }
     }

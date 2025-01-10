@@ -55,8 +55,7 @@ fun ExpoCreatedDeleteButton(
                 textValue = "삭제하기",
                 leadingIcon = { color -> TrashIcon(tint = color) },
                 onClick = { onClick() }
-                )
-            }
+            )
         }
     }
 }

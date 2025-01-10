@@ -7,12 +7,12 @@ data class QrScanModel(
     val phoneNumber: String
 )
 
-fun String.parseStandardQrScanModel(): QrScanModel {
+internal fun String.parseStandardQrScanModel(): QrScanModel {
     val jsonObject = JSONObject(this)
     val participantId = jsonObject.optLong("participantId")
     val phoneNumber = jsonObject.optString("phoneNumber")
 
     return QrScanModel(participantId, phoneNumber)
 }
-fun String.parseTrainingQr(): String = JSONObject(this).optString("traineeId")
+internal fun String.parseTrainingQr(): String = JSONObject(this).optString("traineeId")
 

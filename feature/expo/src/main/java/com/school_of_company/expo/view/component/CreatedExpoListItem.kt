@@ -89,7 +89,7 @@ private fun CreatedExpoListItemNotSelectedPreview() {
             finishedDay = "09.20",
             coverImage = null
         ),
-        selectedIndex = 1,
+        selectedIndex = 0,
         onClick = { _ -> },
     )
 }

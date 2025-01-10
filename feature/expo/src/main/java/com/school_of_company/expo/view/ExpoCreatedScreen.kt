@@ -11,8 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -27,13 +25,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.design_system.theme.ExpoTypography
 import com.school_of_company.design_system.theme.color.ColorTheme
-import com.school_of_company.expo.view.component.CreatedExpoListItem
+import com.school_of_company.expo.view.component.CreatedExpoList
 import com.school_of_company.expo.view.component.ExpoCreatedDeleteButton
 import com.school_of_company.expo.view.component.ExpoCreatedTable
 import com.school_of_company.expo.view.component.ExpoCreatedTopCard
 import com.school_of_company.expo.viewmodel.ExpoViewModel
 import com.school_of_company.expo.viewmodel.uistate.GetExpoListUiState
 import com.school_of_company.model.entity.expo.ExpoListResponseEntity
+import kotlinx.collections.immutable.immutableListOf
 
 @Composable
 internal fun ExpoCreatedRoute(
@@ -88,22 +87,13 @@ private fun ExpoCreatedScreen(
                     is GetExpoListUiState.Error -> TODO()
                     GetExpoListUiState.Loading -> TODO()
                     is GetExpoListUiState.Success -> {
-                        LazyColumn(
-                            modifier = Modifier.padding(horizontal = 8.dp),
-                            verticalArrangement = Arrangement.spacedBy(20.dp),
-                        ) {
-                            items(getExpoListUiState.data) {
-                                with(it) {
-                                    CreatedExpoListItem(
-                                        selectedIndex = selectedId,
-                                        item = it,
-                                        onClick = { isSelected ->
-                                            setSelectedId(if (isSelected) 0L else id.toLong())
-                                        },
-                                    )
-                                }
-                            }
-                        }
+                        CreatedExpoList(
+                            expoList = getExpoListUiState.data,
+                            onItemClick = { isSelected, id ->
+                                setSelectedId(if (isSelected) 0L else id)
+                            },
+                            selectedIndex = selectedId,
+                        )
                     }
                 }
             }
@@ -120,7 +110,7 @@ private fun ExpoCreatedScreen(
 private fun ExpoCreatedScreenPreview() {
     ExpoCreatedScreen(
         getExpoListUiState = GetExpoListUiState.Success(
-            listOf(
+            immutableListOf(
                 ExpoListResponseEntity(
                     id = "2",
                     title = "제목",

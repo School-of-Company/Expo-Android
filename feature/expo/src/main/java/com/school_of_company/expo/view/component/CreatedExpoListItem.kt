@@ -21,7 +21,7 @@ import com.school_of_company.design_system.theme.ExpoTypography
 import com.school_of_company.design_system.theme.color.ColorTheme
 
 @Composable
-fun CreatedExpoListItem(
+internal fun CreatedExpoListItem(
     modifier: Modifier = Modifier,
     selectedIndex: Long,
     id: Long,
@@ -80,7 +80,7 @@ fun CreatedExpoListItem(
 
 @Preview
 @Composable
-fun CreatedExpoListItemNotSelectedPreview() {
+private fun CreatedExpoListItemNotSelectedPreview() {
     CreatedExpoListItem(
         id = 0,
         coverImage = null,
@@ -94,7 +94,7 @@ fun CreatedExpoListItemNotSelectedPreview() {
 
 @Preview
 @Composable
-fun CreatedExpoListItemSelectedPreview() {
+private fun CreatedExpoListItemSelectedPreview() {
     CreatedExpoListItem(
         id = 1,
         coverImage = null,

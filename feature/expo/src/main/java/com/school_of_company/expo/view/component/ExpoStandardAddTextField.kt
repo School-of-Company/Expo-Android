@@ -125,3 +125,22 @@ internal fun ExpoStandardAddTextField(
         }
     }
 }
+
+@Preview
+@Composable
+private fun ExpoStandardAddTextFieldPreview() {
+    ExpoStandardAddTextField(
+        onAddTextField = {},
+        onValueChange = { _, _ -> },
+        onRemoveTextField = {},
+        onTrainingSetting = {},
+        placeHolder = "안녕하세요",
+        trainingTextFieldList = listOf(
+            StandardRequestModel(
+                title = "제목",
+                startedAt = "9:10",
+                endedAt = "11:11"
+            )
+        ),
+    )
+}

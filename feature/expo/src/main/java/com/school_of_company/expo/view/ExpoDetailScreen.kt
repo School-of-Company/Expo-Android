@@ -44,7 +44,6 @@ import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.expo.view.component.HomeKakaoMap
-import com.school_of_company.expo.view.component.QrCode
 import com.school_of_company.expo.viewmodel.ExpoViewModel
 import com.school_of_company.expo.viewmodel.uistate.GetExpoInformationUiState
 import com.school_of_company.expo.viewmodel.uistate.GetStandardProgramListUiState
@@ -86,7 +85,7 @@ internal fun ExpoDetailRoute(
 }
 
 @Composable
-internal fun ExpoDetailScreen(
+private fun ExpoDetailScreen(
     id: String,
     modifier: Modifier = Modifier,
     scrollState: ScrollState = rememberScrollState(),

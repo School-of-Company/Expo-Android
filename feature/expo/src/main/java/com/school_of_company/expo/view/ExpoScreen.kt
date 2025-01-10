@@ -68,7 +68,7 @@ internal fun ExpoRoute(
 }
 
 @Composable
-internal fun ExpoScreen(
+private fun ExpoScreen(
     modifier: Modifier = Modifier,
     scrollState: ScrollState = rememberScrollState(),
     swipeRefreshState: SwipeRefreshState,

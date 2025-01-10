@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.model.entity.standard.StandardAttendListResponseEntity
@@ -36,4 +37,24 @@ fun StandardParticipantList(
             }
         }
     }
+}
+
+@Preview
+@Composable
+private fun StandardParticipantListPreview() {
+    StandardParticipantList(
+        horizontalScrollState = ScrollState(1),
+        item = persistentListOf(
+            StandardAttendListResponseEntity(
+                affiliation = "affiliation",
+                entryTime = "입장시간",
+                id = 1,
+                leaveTime = "퇴장시간",
+                name = "연수자 이름",
+                position = "직위",
+                programName = "연수 이름",
+                status = true
+            )
+        )
+    )
 }

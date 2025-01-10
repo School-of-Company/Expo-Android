@@ -33,6 +33,7 @@ import com.school_of_company.expo.viewmodel.ExpoViewModel
 import com.school_of_company.expo.viewmodel.uistate.GetExpoListUiState
 import com.school_of_company.model.entity.expo.ExpoListResponseEntity
 import kotlinx.collections.immutable.immutableListOf
+import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 internal fun ExpoCreatedRoute(
@@ -88,7 +89,7 @@ private fun ExpoCreatedScreen(
                     GetExpoListUiState.Loading -> TODO()
                     is GetExpoListUiState.Success -> {
                         CreatedExpoList(
-                            expoList = getExpoListUiState.data,
+                            expoList = getExpoListUiState.data.toPersistentList(),
                             onItemClick = { isSelected, id ->
                                 setSelectedId(if (isSelected) 0L else id)
                             },

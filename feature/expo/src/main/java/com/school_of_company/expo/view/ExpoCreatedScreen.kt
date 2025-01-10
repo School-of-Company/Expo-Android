@@ -36,7 +36,7 @@ import com.school_of_company.expo.viewmodel.uistate.GetExpoListUiState
 import com.school_of_company.model.entity.expo.ExpoListResponseEntity
 
 @Composable
-fun ExpoCreatedRoute(
+internal fun ExpoCreatedRoute(
     modifier: Modifier = Modifier,
     expoViewModel: ExpoViewModel = hiltViewModel(),
 ) {

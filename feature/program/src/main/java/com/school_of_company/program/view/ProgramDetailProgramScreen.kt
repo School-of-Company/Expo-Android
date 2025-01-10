@@ -89,7 +89,7 @@ internal fun ProgramDetailProgramRoute(
 }
 
 @Composable
-internal fun ProgramDetailProgramScreen(
+private fun ProgramDetailProgramScreen(
     modifier: Modifier = Modifier,
     swipeRefreshState: SwipeRefreshState,
     trainingProgramUiState: TrainingProgramListUiState,

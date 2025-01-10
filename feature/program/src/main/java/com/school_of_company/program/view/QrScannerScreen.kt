@@ -112,7 +112,7 @@ internal fun QrScannerRoute(
 
 @androidx.annotation.OptIn(androidx.camera.core.ExperimentalGetImage::class)
 @Composable
-internal fun QrScannerScreen(
+private fun QrScannerScreen(
     modifier: Modifier = Modifier,
     lifecycleOwner: LifecycleOwner,
     onBackClick: () -> Unit,

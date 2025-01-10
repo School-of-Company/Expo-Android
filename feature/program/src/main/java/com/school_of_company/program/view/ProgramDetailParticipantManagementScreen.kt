@@ -31,7 +31,7 @@ import com.school_of_company.program.view.component.ProgramDetailParticipantMana
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 
-fun generateParticipantManagementSampleData(): ImmutableList<HomeDetailParticipantManagementData> {
+internal fun generateParticipantManagementSampleData(): ImmutableList<HomeDetailParticipantManagementData> {
     return List(20) {
         HomeDetailParticipantManagementData(
             name = "이명훈",
@@ -56,7 +56,7 @@ internal fun ProgramDetailParticipantManagementRoute(
 }
 
 @Composable
-internal fun ProgramDetailParticipantManagementScreen(
+private fun ProgramDetailParticipantManagementScreen(
     modifier: Modifier = Modifier,
     participantManagementData: ImmutableList<HomeDetailParticipantManagementData>,
     onBackClick: () -> Unit

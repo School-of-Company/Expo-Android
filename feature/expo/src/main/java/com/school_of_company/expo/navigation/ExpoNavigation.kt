@@ -43,6 +43,7 @@ fun NavController.navigateToExpoModify(
 fun NavController.navigateToExpoCreate(navOptions: NavOptions? = null) {
     this.navigate(expoCreateRoute, navOptions)
 }
+
 fun NavController.navigateToExpoCreated(navOptions: NavOptions? = null) {
     this.navigate(expoCreatedRoute, navOptions)
 }

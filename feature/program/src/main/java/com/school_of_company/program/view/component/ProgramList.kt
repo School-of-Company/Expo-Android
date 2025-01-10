@@ -18,7 +18,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
-fun ProgramList(
+internal fun ProgramList(
     modifier: Modifier = Modifier,
     trainingItem: ImmutableList<TrainingProgramListResponseEntity> = persistentListOf(),
     navigateToTrainingProgramDetail: (Long) -> Unit,
@@ -45,7 +45,7 @@ fun ProgramList(
 }
 
 @Composable
-fun StandardProgramList(
+internal fun StandardProgramList(
     modifier: Modifier = Modifier,
     standardItem: ImmutableList<StandardProgramListResponseEntity> = persistentListOf(),
     navigateToStandardProgramDetail: (Long) -> Unit,

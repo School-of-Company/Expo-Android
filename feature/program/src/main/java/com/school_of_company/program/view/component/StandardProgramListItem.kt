@@ -25,7 +25,7 @@ import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.model.entity.standard.StandardProgramListResponseEntity
 
 @Composable
-fun StandardProgramListItem(
+internal fun StandardProgramListItem(
     modifier: Modifier = Modifier,
     index: Int,
     data: StandardProgramListResponseEntity,

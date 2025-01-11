@@ -64,18 +64,16 @@ internal fun UserRoute(
         viewModel.getAdminRequestAllowList()
     }
 
-    DisposableEffect(allowAdminRequestUiState) {
+    LaunchedEffect(allowAdminRequestUiState) {
         when (allowAdminRequestUiState) {
             is AllowAdminRequestUiState.Loading -> Unit
             is AllowAdminRequestUiState.Success -> {
                 onErrorToast(null, R.string.sign_up_request_allow_success)
             }
-
             is AllowAdminRequestUiState.Error -> {
                 onErrorToast(null, R.string.sign_up_request_allow_fail)
             }
         }
-        onDispose { }
     }
 
     UserScreen(

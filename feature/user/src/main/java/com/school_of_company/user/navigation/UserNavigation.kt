@@ -12,8 +12,10 @@ fun NavController.navigateToProfile(navOptions: NavOptions? = null) {
     this.navigate(profileRoute, navOptions)
 }
 
-fun NavGraphBuilder.profileScreen() {
+fun NavGraphBuilder.profileScreen(
+    onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
+) {
     composable(route = profileRoute) {
-        UserRoute()
+        UserRoute(onErrorToast = onErrorToast)
     }
 }

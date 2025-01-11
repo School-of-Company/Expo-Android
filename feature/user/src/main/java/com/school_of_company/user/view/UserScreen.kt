@@ -21,6 +21,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,7 +41,6 @@ import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.user.view.component.SignUpRequestList
 import com.school_of_company.user.viewmodel.UserViewModel
 import com.school_of_company.user.viewmodel.uistate.GetAdminRequestAllowListUiState
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
 @Composable
@@ -65,6 +66,8 @@ private fun UserScreen(
     swipeRefreshState: SwipeRefreshState,
     scrollState: ScrollState = rememberScrollState()
 ) {
+    val (selectedId, setSelectedId) = rememberSaveable { mutableLongStateOf(0L) }
+
     ExpoAndroidTheme { colors, typography ->
         Column(
             modifier = modifier
@@ -299,7 +302,11 @@ private fun UserScreen(
                     is GetAdminRequestAllowListUiState.Success -> {
                         SignUpRequestList(
                             item = getAdminRequestAllowListUiState.data.toImmutableList(),
-                            horizontalScrollState = scrollState
+                            horizontalScrollState = scrollState,
+                            selectedIndex = selectedId,
+                            onClick = { isSelected ->
+                                setSelectedId(if (isSelected) 0L else selectedId)
+                            }
                         )
                     }
                     is GetAdminRequestAllowListUiState.Error -> {

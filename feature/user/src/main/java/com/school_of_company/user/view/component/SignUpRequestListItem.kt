@@ -11,12 +11,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.model.entity.admin.AdminRequestAllowListResponseEntity
 
@@ -26,6 +28,8 @@ internal fun SignUpRequestListItem(
     index: Int,
     data: AdminRequestAllowListResponseEntity,
     horizontalScrollState: ScrollState,
+    onClick: (Boolean) -> Unit,
+    selectedIndex: Long
 ) {
     ExpoAndroidTheme { colors, typography ->
         Spacer(modifier = Modifier.height(20.dp))
@@ -35,9 +39,13 @@ internal fun SignUpRequestListItem(
             horizontalArrangement = Arrangement.spacedBy(20.dp),
             modifier = modifier
                 .fillMaxWidth()
-                .background(color = colors.white)
+                .background(
+                    color = if (selectedIndex == data.id) colors.main100 else colors.white,
+                    shape = RoundedCornerShape(size = 4.dp)
+                )
                 .padding(vertical = 8.dp)
                 .horizontalScroll(horizontalScrollState)
+                .expoClickable { onClick(selectedIndex == data.id) }
         ) {
             Text(
                 text = index.toString(),
@@ -89,6 +97,8 @@ private fun SignUpRequestListItemPreview() {
             nickname = "뀨뀨뀨",
             email = "john.mclean@examplepetstore.com",
             phoneNumber = "010-1234-5678"
-        )
+        ),
+        onClick = {_ ->},
+        selectedIndex = 1
     )
 }

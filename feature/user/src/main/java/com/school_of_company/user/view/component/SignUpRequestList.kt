@@ -20,6 +20,8 @@ internal fun SignUpRequestList(
     modifier: Modifier = Modifier,
     item: ImmutableList<AdminRequestAllowListResponseEntity> = persistentListOf(),
     horizontalScrollState: ScrollState,
+    onClick: (Boolean) -> Unit,
+    selectedIndex: Long
 ) {
     ExpoAndroidTheme { colors, _ ->
         LazyColumn(
@@ -32,7 +34,9 @@ internal fun SignUpRequestList(
                 SignUpRequestListItem(
                     index = index + 1,
                     data = item,
-                    horizontalScrollState = horizontalScrollState
+                    horizontalScrollState = horizontalScrollState,
+                    onClick = onClick,
+                    selectedIndex = selectedIndex
                 )
             }
         }

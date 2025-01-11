@@ -16,7 +16,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
-fun TrainingProgramParticipantList(
+internal fun TrainingProgramParticipantList(
     modifier: Modifier = Modifier,
     item: ImmutableList<TeacherTrainingProgramResponseEntity> = persistentListOf(),
     horizontalScrollState: ScrollState

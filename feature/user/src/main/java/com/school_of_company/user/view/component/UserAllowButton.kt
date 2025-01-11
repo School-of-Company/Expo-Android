@@ -37,7 +37,7 @@ internal fun UserAllowButton(
                     )
                     .padding(horizontal = 16.dp, vertical = 12.dp),
             ) {
-                TrashIcon(tint = colors.white)
+                CheckIcon(tint = colors.white)
 
                 Text(
                     text = "수락",

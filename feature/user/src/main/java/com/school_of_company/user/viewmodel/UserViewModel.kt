@@ -44,10 +44,7 @@ class UserViewModel @Inject constructor(
             .asResult()
             .collectLatest { result ->
                 when (result) {
-                    is Result.Loading -> {
-                        _getAdminRequestAllowListUiState.value = GetAdminRequestAllowListUiState.Loading
-                        _swipeRefreshLoading.value = false
-                    }
+                    is Result.Loading -> _getAdminRequestAllowListUiState.value = GetAdminRequestAllowListUiState.Loading
                     is Result.Success -> {
                         if (result.data.isEmpty()) {
                             _getAdminRequestAllowListUiState.value = GetAdminRequestAllowListUiState.Empty

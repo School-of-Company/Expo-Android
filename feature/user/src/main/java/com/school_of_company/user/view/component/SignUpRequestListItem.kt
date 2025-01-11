@@ -28,7 +28,7 @@ internal fun SignUpRequestListItem(
     index: Int,
     data: AdminRequestAllowListResponseEntity,
     horizontalScrollState: ScrollState,
-    onClick: (Boolean) -> Unit,
+    onClick: (Long) -> Unit,
     selectedIndex: Long
 ) {
     ExpoAndroidTheme { colors, typography ->
@@ -45,7 +45,7 @@ internal fun SignUpRequestListItem(
                 )
                 .padding(vertical = 8.dp)
                 .horizontalScroll(horizontalScrollState)
-                .expoClickable { onClick(selectedIndex == data.id) }
+                .expoClickable { onClick(data.id) }
         ) {
             Text(
                 text = index.toString(),

@@ -360,8 +360,9 @@ private fun UserScreen(
                                     onClick = {
                                         if (selectedId == 0L) {
                                             onErrorToast(null, R.string.check_sign_up_request_list_item)
+                                        } else {
+                                            successCallBack(selectedId)
                                         }
-                                        successCallBack(selectedId)
                                     },
                                 )
 

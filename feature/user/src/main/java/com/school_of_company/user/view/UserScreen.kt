@@ -35,6 +35,7 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.school_of_company.design_system.R
 import com.school_of_company.design_system.component.modifier.padding.paddingHorizontal
 import com.school_of_company.design_system.icon.ExpoIcon
 import com.school_of_company.design_system.icon.UserIcon
@@ -67,16 +68,18 @@ internal fun UserRoute(
         when (allowAdminRequestUiState) {
             is AllowAdminRequestUiState.Loading -> Unit
             is AllowAdminRequestUiState.Success -> {
-                onErrorToast(null, "회원가입 요청 수락 완료".toInt())
+                onErrorToast(null, R.string.sign_up_request_allow_success)
             }
+
             is AllowAdminRequestUiState.Error -> {
-                onErrorToast(null, "회원가입 요청 수락 실패".toInt())
+                onErrorToast(null, R.string.sign_up_request_allow_fail)
             }
         }
-        onDispose {  }
+        onDispose { }
     }
 
     UserScreen(
+        onErrorToast = onErrorToast,
         getAdminRequestAllowListUiState = getAdminRequestAllowListUiState,
         getSignUpRequestList = { viewModel.getAdminRequestAllowList() },
         swipeRefreshState = swipeRefreshState,
@@ -88,6 +91,7 @@ internal fun UserRoute(
 @Composable
 private fun UserScreen(
     modifier: Modifier = Modifier,
+    onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
     getAdminRequestAllowListUiState: GetAdminRequestAllowListUiState,
     getSignUpRequestList: () -> Unit,
     swipeRefreshState: SwipeRefreshState,
@@ -241,6 +245,7 @@ private fun UserScreen(
                                 color = colors.gray200
                             )
                         }
+
                         is GetAdminRequestAllowListUiState.Success -> {
                             Text(
                                 text = "${getAdminRequestAllowListUiState.data.size}명",
@@ -248,6 +253,7 @@ private fun UserScreen(
                                 color = colors.main
                             )
                         }
+
                         is GetAdminRequestAllowListUiState.Error -> {
                             Text(
                                 text = "데이터를 불러올 수 없습니다..",
@@ -255,6 +261,7 @@ private fun UserScreen(
                                 color = colors.gray200
                             )
                         }
+
                         is GetAdminRequestAllowListUiState.Empty -> {
                             Text(
                                 text = "0명",
@@ -304,7 +311,7 @@ private fun UserScreen(
                         text = "이메일",
                         style = typography.captionBold1,
                         color = colors.gray600,
-                        modifier = Modifier.width(100.dp)
+                        modifier = Modifier.width(180.dp)
                     )
 
                     Text(
@@ -329,14 +336,42 @@ private fun UserScreen(
             ) {
                 when (getAdminRequestAllowListUiState) {
                     is GetAdminRequestAllowListUiState.Success -> {
-                        SignUpRequestList(
-                            item = getAdminRequestAllowListUiState.data.toImmutableList(),
-                            horizontalScrollState = scrollState,
-                            selectedIndex = selectedId,
-                            onClick = { isSelected ->
-                                setSelectedId(if (isSelected) 0L else selectedId)
+                        Column {
+                            SignUpRequestList(
+                                item = getAdminRequestAllowListUiState.data.toImmutableList(),
+                                horizontalScrollState = scrollState,
+                                selectedIndex = selectedId,
+                                onClick = { id ->
+                                    setSelectedId(if (selectedId == id) 0L else id)
+                                }
+                            )
+
+                            Spacer(modifier = Modifier.height(16.dp))
+
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(
+                                    16.dp,
+                                    Alignment.CenterHorizontally
+                                ),
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                UserAllowButton(
+                                    enabled = selectedId != 0L,
+                                    onClick = {
+                                        if (selectedId == 0L) {
+                                            onErrorToast(null, R.string.check_sign_up_request_list_item)
+                                        }
+                                        successCallBack(selectedId)
+                                    },
+                                )
+
+                                UserDeleteButton(
+                                    enabled = selectedId != 0L,
+                                    onClick = { deleteCallBack(selectedId) },
+                                )
                             }
-                        )
+                        }
                     }
 
                     is GetAdminRequestAllowListUiState.Error -> {
@@ -366,7 +401,10 @@ private fun UserScreen(
 
                     is GetAdminRequestAllowListUiState.Empty -> {
                         Column(
-                            verticalArrangement = Arrangement.spacedBy(28.dp, Alignment.CenterVertically),
+                            verticalArrangement = Arrangement.spacedBy(
+                                28.dp,
+                                Alignment.CenterVertically
+                            ),
                             horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier
                                 .fillMaxSize()

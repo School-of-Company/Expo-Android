@@ -37,6 +37,7 @@ import com.school_of_company.design_system.icon.ExpoIcon
 import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
+import com.school_of_company.model.entity.standard.StandardAttendListResponseEntity
 import com.school_of_company.standard.view.component.QrButton
 import com.school_of_company.standard.view.component.StandardParticipantList
 import com.school_of_company.standard.viewmodel.StandardViewModel
@@ -53,7 +54,8 @@ internal fun StandardProgramParticipantRoute(
     val swipeRefreshLoading by viewModel.swipeRefreshLoading.collectAsStateWithLifecycle()
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = swipeRefreshLoading)
 
-    val standardProgramAttendListUiState = viewModel.standardProgramAttendListUiState.collectAsStateWithLifecycle().value
+    val standardProgramAttendListUiState =
+        viewModel.standardProgramAttendListUiState.collectAsStateWithLifecycle().value
 
     StandardProgramParticipantScreen(
         id = id,
@@ -70,7 +72,7 @@ internal fun StandardProgramParticipantRoute(
 }
 
 @Composable
-internal fun StandardProgramParticipantScreen(
+private fun StandardProgramParticipantScreen(
     id: Long,
     modifier: Modifier = Modifier,
     swipeRefreshState: SwipeRefreshState,

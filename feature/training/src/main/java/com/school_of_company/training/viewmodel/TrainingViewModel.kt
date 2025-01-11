@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class TrainingViewModel @Inject constructor(
+internal class TrainingViewModel @Inject constructor(
     private val teacherTrainingProgramListUseCase: TeacherTrainingProgramListUseCase
 ) : ViewModel() {
     private val _swipeRefreshLoading = MutableStateFlow(false)

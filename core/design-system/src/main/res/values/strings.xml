@@ -108,4 +108,8 @@
     <string name="string_type">%s</string>
 
     <string name="image_size_error">이미지 크기는 328 × 178이어야 합니다.</string>
+
+    <string name="sign_up_request_allow_success">회원가입 요청 수락 성공</string>
+    <string name="sign_up_request_allow_fail">회원가입 요청 수락 실패</string>
+    <string name="check_sign_up_request_list_item">가입을 수락할 회원을 선택해주세요.</string>
 </resources>

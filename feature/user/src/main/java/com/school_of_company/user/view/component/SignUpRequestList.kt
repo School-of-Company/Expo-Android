@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import kotlinx.collections.immutable.ImmutableList
@@ -35,4 +36,20 @@ internal fun SignUpRequestList(
             }
         }
     }
+}
+
+@Preview
+@Composable
+private fun SignUpRequestListPreview() {
+    SignUpRequestList(
+        item = persistentListOf(
+            temparory(
+                name = "이름",
+                id = "아이디",
+                email = "s23013@gsm.hs.kr",
+                phoneNumber = "101-2933-2334"
+            )
+        ),
+        horizontalScrollState = ScrollState(1),
+    )
 }

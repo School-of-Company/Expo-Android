@@ -8,7 +8,7 @@ import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
 
-class QrcodeAnalyzer(
+internal class QrcodeAnalyzer(
     private val qrcodeData: (String) -> Unit
 ) : ImageAnalysis.Analyzer {
 

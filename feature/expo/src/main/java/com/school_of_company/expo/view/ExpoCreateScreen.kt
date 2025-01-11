@@ -207,7 +207,7 @@ internal fun ExpoCreateRoute(
 }
 
 @Composable
-internal fun ExpoCreateScreen(
+private fun ExpoCreateScreen(
     modifier: Modifier = Modifier,
     imageUri: String?,
     onImageClick: () -> Unit,

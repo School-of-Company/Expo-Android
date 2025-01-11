@@ -266,7 +266,7 @@ internal fun ExpoModifyRoute(
 }
 
 @Composable
-internal fun ExpoModifyScreen(
+private fun ExpoModifyScreen(
     modifier: Modifier = Modifier,
     focusManager: FocusManager = LocalFocusManager.current,
     scrollState: ScrollState = rememberScrollState(),

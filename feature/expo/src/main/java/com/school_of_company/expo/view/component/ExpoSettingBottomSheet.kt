@@ -49,7 +49,7 @@ import com.school_of_company.model.model.training.TrainingDtoModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ExpoSettingBottomSheet(
+internal fun ExpoSettingBottomSheet(
     modifier: Modifier = Modifier,
     onCancelClick: () -> Unit,
     trainingSettingItem: TrainingDtoModel,

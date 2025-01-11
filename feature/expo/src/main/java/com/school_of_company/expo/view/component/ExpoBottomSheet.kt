@@ -27,7 +27,7 @@ import com.school_of_company.design_system.theme.ExpoTypography
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeBottomSheet(
+internal fun HomeBottomSheet(
     modifier: Modifier = Modifier,
     onRecentClick: () -> Unit,
     onOldClick: () -> Unit,

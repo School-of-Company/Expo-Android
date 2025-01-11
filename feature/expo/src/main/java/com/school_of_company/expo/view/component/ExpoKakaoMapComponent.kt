@@ -17,7 +17,7 @@ import com.kakao.vectormap.camera.CameraUpdateFactory
 import com.school_of_company.ui.toast.makeToast
 
 @Composable
-fun HomeKakaoMap(
+internal fun HomeKakaoMap(
     modifier: Modifier = Modifier,
     locationX: Double,
     locationY: Double,

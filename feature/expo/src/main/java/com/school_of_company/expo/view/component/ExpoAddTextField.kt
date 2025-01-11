@@ -28,7 +28,7 @@ import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.model.model.training.TrainingDtoModel
 
 @Composable
-fun ExpoAddTextField(
+internal fun ExpoAddTextField(
     modifier: Modifier = Modifier,
     placeHolder: String,
     trainingTextFieldList: List<TrainingDtoModel>,

@@ -10,15 +10,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 
 @Composable
-fun QrButton(
+internal fun QrButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
+    // TODO: 사용 여부 확인하기
     ExpoAndroidTheme { colors, typography ->
 
         Row(
@@ -51,4 +53,12 @@ fun QrButton(
             }
         }
     }
+}
+
+@Preview
+@Composable
+private fun QrButtonPreview() {
+    QrButton(
+        onClick = {},
+    )
 }

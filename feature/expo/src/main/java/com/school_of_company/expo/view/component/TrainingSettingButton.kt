@@ -16,7 +16,7 @@ import com.school_of_company.design_system.component.modifier.clickable.expoClic
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 
 @Composable
-fun TrainingSettingButton(
+internal fun TrainingSettingButton(
     modifier: Modifier = Modifier,
     text: String,
     onClick: () -> Unit

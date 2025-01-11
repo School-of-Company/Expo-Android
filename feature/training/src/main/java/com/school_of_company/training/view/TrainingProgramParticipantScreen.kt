@@ -70,7 +70,7 @@ internal fun TrainingProgramParticipantRoute(
 }
 
 @Composable
-internal fun TrainingProgramParticipantScreen(
+private fun TrainingProgramParticipantScreen(
     id: Long,
     modifier: Modifier = Modifier,
     swipeRefreshState: SwipeRefreshState,

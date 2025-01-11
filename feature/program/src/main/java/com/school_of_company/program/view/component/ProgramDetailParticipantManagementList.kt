@@ -15,7 +15,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
-fun ProgramDetailParticipantManagementList(
+internal fun ProgramDetailParticipantManagementList(
     modifier: Modifier = Modifier,
     item: ImmutableList<HomeDetailParticipantManagementData> = persistentListOf()
 ) {

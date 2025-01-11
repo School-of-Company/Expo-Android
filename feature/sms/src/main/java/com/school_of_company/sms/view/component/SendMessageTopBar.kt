@@ -10,7 +10,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.school_of_company.design_system.icon.CheckIcon
+import com.school_of_company.design_system.icon.TrashIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 
 @Composable
@@ -35,4 +38,14 @@ internal fun HomeSendMessageTopBar(
             endIcon()
         }
     }
+}
+
+@Preview
+@Composable
+private fun HomeSendMessageTopBarPreview() {
+    HomeSendMessageTopBar(
+        startIcon = { TrashIcon() },
+        betweenText = "사이 텍스트 입니다",
+        endIcon = { CheckIcon() },
+    )
 }

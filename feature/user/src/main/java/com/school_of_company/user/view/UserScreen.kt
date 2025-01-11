@@ -69,6 +69,7 @@ internal fun UserRoute(
             is AllowAdminRequestUiState.Loading -> Unit
             is AllowAdminRequestUiState.Success -> {
                 onErrorToast(null, R.string.sign_up_request_allow_success)
+                viewModel.getAdminRequestAllowList()
             }
             is AllowAdminRequestUiState.Error -> {
                 onErrorToast(null, R.string.sign_up_request_allow_fail)

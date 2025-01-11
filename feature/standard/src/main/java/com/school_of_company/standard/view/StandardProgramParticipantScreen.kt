@@ -23,6 +23,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -322,4 +323,30 @@ internal fun StandardProgramParticipantScreen(
             }
         }
     }
+}
+
+@Preview
+@Composable
+private fun StandardProgramParticipantScreenPreview() {
+    StandardProgramParticipantScreen(
+        id = 1,
+        swipeRefreshState = SwipeRefreshState(false),
+        getTeacherTrainingProgramList = {},
+        navigateToQrScanner = { _ -> },
+        onBackClick = {},
+        standardProgramAttendListUiState = StandardProgramAttendListUiState.Success(
+            listOf(
+                StandardAttendListResponseEntity(
+                    affiliation = "affiliation",
+                    entryTime = "입장시간",
+                    id = 1,
+                    leaveTime = "퇴장시간",
+                    name = "연수자 이름",
+                    position = "직위",
+                    programName = "연수 이름",
+                    status = true
+                )
+            )
+        ),
+    )
 }

@@ -42,19 +42,3 @@ internal fun SignUpRequestList(
         }
     }
 }
-
-@Preview
-@Composable
-private fun SignUpRequestListPreview() {
-    SignUpRequestList(
-        item = persistentListOf(
-            temparory(
-                name = "이름",
-                id = "아이디",
-                email = "s23013@gsm.hs.kr",
-                phoneNumber = "101-2933-2334"
-            )
-        ),
-        horizontalScrollState = ScrollState(1),
-    )
-}

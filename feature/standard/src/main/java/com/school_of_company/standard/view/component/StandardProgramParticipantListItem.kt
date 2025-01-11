@@ -20,7 +20,7 @@ import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.model.entity.standard.StandardAttendListResponseEntity
 
 @Composable
-fun StandardProgramParticipantListItem(
+internal fun StandardProgramParticipantListItem(
     modifier: Modifier = Modifier,
     index: Int,
     data: StandardAttendListResponseEntity,

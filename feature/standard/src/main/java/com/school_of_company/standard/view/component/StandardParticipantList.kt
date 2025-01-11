@@ -16,7 +16,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
-fun StandardParticipantList(
+internal fun StandardParticipantList(
     modifier: Modifier = Modifier,
     item: ImmutableList<StandardAttendListResponseEntity> = persistentListOf(),
     horizontalScrollState: ScrollState

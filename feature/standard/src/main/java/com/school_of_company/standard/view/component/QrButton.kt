@@ -16,7 +16,7 @@ import com.school_of_company.design_system.component.modifier.clickable.expoClic
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 
 @Composable
-fun QrButton(
+internal fun QrButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {

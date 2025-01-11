@@ -32,7 +32,7 @@ import com.school_of_company.user.view.component.temparory
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 
-fun generateSignUpRequestSampleData(): ImmutableList<temparory> {
+private fun generateSignUpRequestSampleData(): ImmutableList<temparory> {
     return List(20) {
         temparory(
             name = "이명훈",
@@ -42,6 +42,7 @@ fun generateSignUpRequestSampleData(): ImmutableList<temparory> {
         )
     }.toPersistentList()
 }
+
 @Composable
 internal fun UserRoute() {
     UserScreen(

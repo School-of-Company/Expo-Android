@@ -58,12 +58,12 @@ internal fun ExpoRoute(
     ExpoScreen(
         swipeRefreshState = swipeRefreshState,
         getExpoListData = getExpoListUiState,
-        getExpoList = { viewModel.expoList() },
+        getExpoList = { viewModel.getExpoList() },
         navigationToDetail = navigationToDetail
     )
 
     LaunchedEffect(Unit) {
-        viewModel.expoList()
+        viewModel.getExpoList()
     }
 }
 

@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import com.school_of_company.common.exception.*
 import com.school_of_company.design_system.R
 import com.school_of_company.expo.navigation.expoCreateScreen
+import com.school_of_company.expo.navigation.expoCreatedScreen
 import com.school_of_company.expo.navigation.expoDetailScreen
 import com.school_of_company.expo.navigation.expoModifyScreen
 import com.school_of_company.expo.navigation.expoScreen
@@ -138,6 +139,10 @@ fun ExpoNavHost(
         )
 
         expoCreateScreen(
+            onErrorToast = makeErrorToast
+        )
+
+        expoCreatedScreen(
             onErrorToast = makeErrorToast
         )
 

@@ -20,6 +20,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -39,22 +41,47 @@ import com.school_of_company.design_system.icon.UserIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.user.view.component.SignUpRequestList
+import com.school_of_company.user.view.component.UserAllowButton
+import com.school_of_company.user.view.component.UserDeleteButton
 import com.school_of_company.user.viewmodel.UserViewModel
+import com.school_of_company.user.viewmodel.uistate.AllowAdminRequestUiState
 import com.school_of_company.user.viewmodel.uistate.GetAdminRequestAllowListUiState
 import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 internal fun UserRoute(
+    onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
     viewModel: UserViewModel = hiltViewModel()
 ) {
     val swipeRefreshLoading by viewModel.swipeRefreshLoading.collectAsStateWithLifecycle()
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = swipeRefreshLoading)
+
     val getAdminRequestAllowListUiState by viewModel.getAdminRequestAllowListUiState.collectAsStateWithLifecycle()
+    val allowAdminRequestUiState by viewModel.allowAdminRequestUiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.getAdminRequestAllowList()
+    }
+
+    DisposableEffect(allowAdminRequestUiState) {
+        when (allowAdminRequestUiState) {
+            is AllowAdminRequestUiState.Loading -> Unit
+            is AllowAdminRequestUiState.Success -> {
+                onErrorToast(null, "회원가입 요청 수락 완료".toInt())
+            }
+            is AllowAdminRequestUiState.Error -> {
+                onErrorToast(null, "회원가입 요청 수락 실패".toInt())
+            }
+        }
+        onDispose {  }
+    }
 
     UserScreen(
         getAdminRequestAllowListUiState = getAdminRequestAllowListUiState,
         getSignUpRequestList = { viewModel.getAdminRequestAllowList() },
-        swipeRefreshState = swipeRefreshState
+        swipeRefreshState = swipeRefreshState,
+        deleteCallBack = {},
+        successCallBack = viewModel::allowAdminRequest
     )
 }
 
@@ -64,7 +91,9 @@ private fun UserScreen(
     getAdminRequestAllowListUiState: GetAdminRequestAllowListUiState,
     getSignUpRequestList: () -> Unit,
     swipeRefreshState: SwipeRefreshState,
-    scrollState: ScrollState = rememberScrollState()
+    scrollState: ScrollState = rememberScrollState(),
+    deleteCallBack: (Long) -> Unit,
+    successCallBack: (Long) -> Unit
 ) {
     val (selectedId, setSelectedId) = rememberSaveable { mutableLongStateOf(0L) }
 
@@ -309,7 +338,9 @@ private fun UserScreen(
                             }
                         )
                     }
+
                     is GetAdminRequestAllowListUiState.Error -> {
+
                         Column(
                             verticalArrangement = Arrangement.spacedBy(
                                 28.dp,

@@ -25,6 +25,7 @@ import com.school_of_company.model.entity.expo.ExpoListResponseEntity
 internal fun CreatedExpoListItem(
     modifier: Modifier = Modifier,
     selectedIndex: Long,
+    index: Long,
     item: ExpoListResponseEntity,
     onClick: (Boolean) -> Unit,
 ) {
@@ -35,14 +36,14 @@ internal fun CreatedExpoListItem(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = modifier
                     .background(
-                        color = if (selectedIndex == id.toLong()) colors.main100 else colors.white,
+                        color = if (selectedIndex == index) colors.main100 else colors.white,
                         shape = RoundedCornerShape(size = 4.dp)
                     )
-                    .expoClickable { onClick(selectedIndex == id.toLong()) }
+                    .expoClickable { onClick(selectedIndex == index) }
                     .padding(8.dp),
             ) {
                 Text(
-                    text = id.toString(),
+                    text = "${index + 1}",
                     style = typography.captionBold1,
                     fontWeight = FontWeight.W600,
                     color = colors.black,
@@ -90,6 +91,7 @@ private fun CreatedExpoListItemNotSelectedPreview() {
             coverImage = null
         ),
         selectedIndex = 0,
+        index = 1,
         onClick = { _ -> },
     )
 }
@@ -106,6 +108,7 @@ private fun CreatedExpoListItemSelectedPreview() {
             finishedDay = "09.20",
             coverImage = null
         ),
+        index = 1,
         selectedIndex = 1,
         onClick = { _ -> },
     )

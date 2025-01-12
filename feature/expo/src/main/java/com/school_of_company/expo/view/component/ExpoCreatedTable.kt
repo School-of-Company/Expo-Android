@@ -6,7 +6,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,7 +24,8 @@ import com.school_of_company.design_system.theme.color.ColorTheme
 @Composable
 fun ExpoCreatedTable(modifier: Modifier = Modifier) {
     ExpoAndroidTheme { colors: ColorTheme, typography: ExpoTypography ->
-        Column {
+        Column(Modifier.fillMaxWidth()) {
+            HorizontalDivider(thickness = 1.dp, color = colors.gray200)
             Row(
                 horizontalArrangement = Arrangement.spacedBy(73.dp, Alignment.Start),
                 verticalAlignment = Alignment.CenterVertically,
@@ -55,7 +58,7 @@ fun ExpoCreatedTable(modifier: Modifier = Modifier) {
                     textAlign = TextAlign.Center,
                 )
             }
-            Spacer(modifier = Modifier.background(colors.gray100).fillMaxWidth())
+            HorizontalDivider(thickness = 1.dp, color = colors.gray100)
         }
     }
 }

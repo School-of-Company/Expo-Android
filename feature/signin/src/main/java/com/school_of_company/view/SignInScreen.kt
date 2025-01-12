@@ -140,7 +140,7 @@ internal fun SignInRoute(
 }
 
 @Composable
-internal fun SignInScreen(
+private fun SignInScreen(
     modifier: Modifier = Modifier,
     focusManager: FocusManager = LocalFocusManager.current,
     scrollState: ScrollState = rememberScrollState(),
@@ -274,7 +274,7 @@ internal fun SignInScreen(
 
 @Preview
 @Composable
-fun SignInScreenPreview() {
+private fun SignInScreenPreview() {
     SignInScreen(
         id = "",
         password = "",

@@ -16,7 +16,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
-fun TrainingProgramParticipantList(
+internal fun TrainingProgramParticipantList(
     modifier: Modifier = Modifier,
     item: ImmutableList<TeacherTrainingProgramResponseEntity> = persistentListOf(),
     horizontalScrollState: ScrollState
@@ -42,4 +42,19 @@ fun TrainingProgramParticipantList(
 @Preview
 @Composable
 private fun HomeDetailProgramParticipantListPreview() {
+    TrainingProgramParticipantList(
+        item = persistentListOf(
+            TeacherTrainingProgramResponseEntity(
+                id = 0,
+                name = "홍길동",
+                organization = "한국대학교",
+                position = "교사",
+                programName = "프로그램",
+                status = true,
+                entryTime = "2024-09-12 T 08:30",
+                leaveTime = "2024-09-12 T 08:30"
+            )
+        ),
+        horizontalScrollState = ScrollState(1)
+    )
 }

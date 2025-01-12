@@ -17,7 +17,7 @@ import com.school_of_company.design_system.icon.DownArrowIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 
 @Composable
-fun HomeFilterButton(
+internal fun HomeFilterButton(
     modifier: Modifier = Modifier,
     text: String,
     onClick: () -> Unit

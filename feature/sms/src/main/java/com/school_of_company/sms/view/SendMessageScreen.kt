@@ -45,7 +45,7 @@ internal fun SendMessageRoute(
 }
 
 @Composable
-internal fun SendMessageScreen(
+private fun SendMessageScreen(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
     title: String,

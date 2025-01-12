@@ -10,19 +10,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
+import com.school_of_company.model.entity.admin.AdminRequestAllowListResponseEntity
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 internal fun SignUpRequestList(
     modifier: Modifier = Modifier,
-    item: ImmutableList<temparory> = persistentListOf(),
+    item: ImmutableList<AdminRequestAllowListResponseEntity> = persistentListOf(),
     horizontalScrollState: ScrollState,
+    onClick: (Long) -> Unit,
+    selectedIndex: Long
 ) {
     ExpoAndroidTheme { colors, _ ->
         LazyColumn(
             modifier = modifier
-                .fillMaxSize()
                 .background(color = colors.white)
                 .padding(start = 16.dp)
         ) {
@@ -30,7 +32,9 @@ internal fun SignUpRequestList(
                 SignUpRequestListItem(
                     index = index + 1,
                     data = item,
-                    horizontalScrollState = horizontalScrollState
+                    horizontalScrollState = horizontalScrollState,
+                    onClick = onClick,
+                    selectedIndex = selectedIndex
                 )
             }
         }

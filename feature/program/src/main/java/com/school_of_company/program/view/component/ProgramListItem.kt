@@ -26,7 +26,7 @@ import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.model.entity.training.TrainingProgramListResponseEntity
 
 @Composable
-fun ProgramListItem(
+internal fun ProgramListItem(
     modifier: Modifier = Modifier,
     index: Int,
     data: TrainingProgramListResponseEntity,

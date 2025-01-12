@@ -24,7 +24,7 @@ import com.school_of_company.design_system.theme.ExpoTypography
 import com.school_of_company.design_system.theme.color.ExpoColor
 
 @Composable
-fun ExpoNoneLineTextField(
+internal fun ExpoNoneLineTextField(
     modifier: Modifier = Modifier,
     textState: String,
     placeHolder: @Composable () -> Unit,

@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.icon.PlusIcon
@@ -27,7 +28,7 @@ import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.model.model.standard.StandardRequestModel
 
 @Composable
-fun ExpoStandardAddTextField(
+internal fun ExpoStandardAddTextField(
     modifier: Modifier = Modifier,
     placeHolder: String,
     trainingTextFieldList: List<StandardRequestModel>,
@@ -123,4 +124,23 @@ fun ExpoStandardAddTextField(
             }
         }
     }
+}
+
+@Preview
+@Composable
+private fun ExpoStandardAddTextFieldPreview() {
+    ExpoStandardAddTextField(
+        onAddTextField = {},
+        onValueChange = { _, _ -> },
+        onRemoveTextField = {},
+        onTrainingSetting = {},
+        placeHolder = "안녕하세요",
+        trainingTextFieldList = listOf(
+            StandardRequestModel(
+                title = "제목",
+                startedAt = "9:10",
+                endedAt = "11:11"
+            )
+        ),
+    )
 }

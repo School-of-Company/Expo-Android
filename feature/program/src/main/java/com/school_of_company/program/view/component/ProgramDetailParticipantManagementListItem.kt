@@ -29,7 +29,7 @@ data class HomeDetailParticipantManagementData(
 )
 
 @Composable
-fun ProgramDetailParticipantManagementListItem(
+internal fun ProgramDetailParticipantManagementListItem(
     modifier: Modifier = Modifier,
     index: Int,
     data: HomeDetailParticipantManagementData,

@@ -9,12 +9,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 
 @Composable
-fun ProgramTabRowItem(
+internal fun ProgramTabRowItem(
     modifier: Modifier = Modifier,
     title: String,
     onClick: () -> Unit,
@@ -37,4 +38,24 @@ fun ProgramTabRowItem(
             )
         }
     }
+}
+
+@Preview
+@Composable
+private fun ProgramTabRowItemNotCurrentIndexPreview() {
+    ProgramTabRowItem(
+        isCurrentIndex = false,
+        onClick = {},
+        title = "제목"
+    )
+}
+
+@Preview
+@Composable
+private fun ProgramTabRowItemCurrentIndexPreview() {
+    ProgramTabRowItem(
+        isCurrentIndex = true,
+        onClick = {},
+        title = "제목"
+    )
 }

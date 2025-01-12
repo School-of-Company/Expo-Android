@@ -7,7 +7,7 @@ import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 
-fun setupQrScanCamera(
+internal fun setupQrScanCamera(
     previewView: PreviewView,
     lifecycleOwner: LifecycleOwner,
     onQrcodeScanned: (String) -> Unit

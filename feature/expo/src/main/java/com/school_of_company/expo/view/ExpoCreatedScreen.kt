@@ -102,8 +102,8 @@ private fun ExpoCreatedScreen(
                     is GetExpoListUiState.Success -> {
                         CreatedExpoList(
                             expoList = getExpoListUiState.data.toPersistentList(),
-                            onItemClick = { isSelected, id ->
-                                setSelectedId(if (isSelected) 0L else id)
+                            onItemClick = { isSelected, index ->
+                                setSelectedId(if (isSelected) -1L else index)
                             },
                             selectedIndex = selectedId,
                             swipeRefreshState = swipeRefreshState,
@@ -114,8 +114,13 @@ private fun ExpoCreatedScreen(
             }
             Spacer(modifier = Modifier.height(32.dp))
             ExpoCreatedDeleteButton(
-                enabled = selectedId != 0L,
-                onClick = { deleteExpoInformation(selectedId.toString()) })
+                enabled = selectedId != -1L,
+                onClick = {
+                    if (getExpoListUiState is GetExpoListUiState.Success && selectedId != -1L) deleteExpoInformation(
+                        getExpoListUiState.data[selectedId.toInt()].id
+                    )
+                }
+            )
         }
     }
 }

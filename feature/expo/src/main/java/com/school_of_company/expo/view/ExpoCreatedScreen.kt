@@ -55,6 +55,14 @@ internal fun ExpoCreatedRoute(
         expoViewModel.getExpoList()
     }
 
+    LaunchedEffect(getExpoListUiState) {
+        when (getExpoListUiState) {
+            GetExpoListUiState.Empty -> onErrorToast(null, R.string.get_created_expo_list_empty)
+            is GetExpoListUiState.Error -> onErrorToast(null, R.string.get_created_expo_list_fail)
+            else -> Unit
+        }
+    }
+
     ExpoCreatedScreen(
         modifier = modifier,
         expoListSize = expoListSize,

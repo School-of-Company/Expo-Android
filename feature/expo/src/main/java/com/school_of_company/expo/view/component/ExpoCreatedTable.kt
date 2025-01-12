@@ -33,7 +33,7 @@ fun ExpoCreatedTable(modifier: Modifier = Modifier) {
                     drawLine(
                         color = colors.gray100, // Border 색상
                         start = Offset(0f, y),
-                        end = Offset(size.width, y),
+                        end = Offset(size.maxDimension, y),
                         strokeWidth = strokeWidth
                     )
                 }

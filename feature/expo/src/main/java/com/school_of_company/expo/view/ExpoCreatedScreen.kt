@@ -43,6 +43,7 @@ import kotlinx.collections.immutable.toPersistentList
 internal fun ExpoCreatedRoute(
     modifier: Modifier = Modifier,
     expoViewModel: ExpoViewModel = hiltViewModel(),
+    onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
 ) {
     val getExpoListUiState by expoViewModel.getExpoListUiState.collectAsStateWithLifecycle()
     val swipeRefreshLoading by expoViewModel.swipeRefreshLoading.collectAsStateWithLifecycle()

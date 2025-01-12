@@ -11,7 +11,7 @@ import com.school_of_company.expo.view.ExpoModifyRoute
 import com.school_of_company.expo.view.ExpoRoute
 
 const val homeRoute = "home_route"
-const val expoDetailRoute=  "expo_detail_route"
+const val expoDetailRoute = "expo_detail_route"
 const val expoModifyRoute = "expo_modify_route"
 const val expoCreateRoute = "expo_create_route"
 const val expoCreatedRoute = "expo_created_route"
@@ -106,6 +106,6 @@ fun NavGraphBuilder.expoCreatedScreen(
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit
 ) {
     composable(route = expoCreatedRoute) {
-        ExpoCreatedRoute()
+        ExpoCreatedRoute(onErrorToast = onErrorToast)
     }
 }

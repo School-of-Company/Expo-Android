@@ -38,6 +38,7 @@ import com.school_of_company.expo.viewmodel.uistate.GetExpoListUiState
 import com.school_of_company.model.entity.expo.ExpoListResponseEntity
 import kotlinx.collections.immutable.immutableListOf
 import kotlinx.collections.immutable.toPersistentList
+import com.school_of_company.design_system.R
 
 @Composable
 internal fun ExpoCreatedRoute(
@@ -62,7 +63,9 @@ internal fun ExpoCreatedRoute(
         initCreatedExpoList = expoViewModel::getExpoList,
         deleteSelectedExpo = { selectedId ->
             val currentGetExpoListUiState = getExpoListUiState
-            if (currentGetExpoListUiState is GetExpoListUiState.Success && selectedId != -1L) expoViewModel.deleteExpoInformation(
+            if (selectedId == -1L) {
+                onErrorToast(null, R.string.expo_not_selected)
+            } else if (currentGetExpoListUiState is GetExpoListUiState.Success) expoViewModel.deleteExpoInformation(
                 currentGetExpoListUiState.data[selectedId.toInt()].id
             )
         },

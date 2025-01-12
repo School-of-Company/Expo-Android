@@ -32,7 +32,7 @@ fun ExpoCreatedDeleteButton(
                 horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally),
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = modifier
-                    .expoClickable(enabled = enabled) { onClick() }
+                    .expoClickable { onClick() }
                     .background(
                         color = colors.error,
                         shape = RoundedCornerShape(size = 6.dp)

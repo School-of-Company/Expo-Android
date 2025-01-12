@@ -115,7 +115,6 @@ private fun ExpoCreatedScreen(
                 modifier = Modifier
                     .border(width = 1.dp, color = colors.gray200)
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp)
                     .horizontalScroll(scrollState),
             ) {
                 ExpoCreatedTable()

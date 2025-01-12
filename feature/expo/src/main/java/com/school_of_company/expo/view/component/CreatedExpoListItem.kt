@@ -60,7 +60,7 @@ internal fun CreatedExpoListItem(
                         CircleIcon(tint = colors.black)
                     }
                     Text(
-                        modifier = Modifier.width(140.dp),
+                        modifier = Modifier.width(136.dp),
                         text = title,
                         style = typography.captionRegular2,
                         fontWeight = FontWeight.W400,
@@ -68,7 +68,7 @@ internal fun CreatedExpoListItem(
                         textAlign = TextAlign.Center,
                     )
                     Text(
-                        modifier = Modifier.width(70.dp),
+                        modifier = Modifier.width(68.dp),
                         text = "$startedDay ~ $finishedDay",
                         style = typography.captionRegular2,
                         fontWeight = FontWeight.W400,

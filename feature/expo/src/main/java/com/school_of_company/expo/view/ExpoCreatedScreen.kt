@@ -43,6 +43,7 @@ internal fun ExpoCreatedRoute(
 ) {
     val getExpoListUiState by expoViewModel.getExpoListUiState.collectAsStateWithLifecycle()
     val swipeRefreshLoading by expoViewModel.swipeRefreshLoading.collectAsStateWithLifecycle()
+    val expoListSize by expoViewModel.expoListSize.collectAsStateWithLifecycle()
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = swipeRefreshLoading)
 
     LaunchedEffect("initCreatedExpo") {
@@ -51,7 +52,7 @@ internal fun ExpoCreatedRoute(
 
     ExpoCreatedScreen(
         modifier = modifier,
-        participantCount = 0,
+        expoListSize = expoListSize,
         getExpoListUiState = getExpoListUiState,
         swipeRefreshState = swipeRefreshState,
         initCreatedExpoList = expoViewModel::getExpoList,
@@ -62,7 +63,7 @@ internal fun ExpoCreatedRoute(
 @Composable
 private fun ExpoCreatedScreen(
     modifier: Modifier = Modifier,
-    participantCount: Int,
+    expoListSize: Int,
     getExpoListUiState: GetExpoListUiState,
     scrollState: ScrollState = rememberScrollState(),
     swipeRefreshState: SwipeRefreshState,
@@ -81,7 +82,7 @@ private fun ExpoCreatedScreen(
         ) {
             ExpoCreatedTopCard(
                 modifier = Modifier.fillMaxWidth(),
-                totalExpo = participantCount,
+                totalExpo = expoListSize,
             )
             Spacer(modifier = Modifier.height(16.dp))
             Column(
@@ -143,7 +144,7 @@ private fun ExpoCreatedScreenPreview() {
                 )
             )
         ),
-        participantCount = 100,
+        expoListSize = 100,
         deleteExpoInformation = { _ -> },
         swipeRefreshState = SwipeRefreshState(isRefreshing = true),
         initCreatedExpoList = {}

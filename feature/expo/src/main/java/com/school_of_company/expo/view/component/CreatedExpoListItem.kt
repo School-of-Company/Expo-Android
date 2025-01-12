@@ -20,6 +20,7 @@ import com.school_of_company.design_system.icon.XIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.design_system.theme.ExpoTypography
 import com.school_of_company.design_system.theme.color.ColorTheme
+import com.school_of_company.expo.util.formatDateToMonthDay
 import com.school_of_company.model.entity.expo.ExpoListResponseEntity
 
 @Composable
@@ -69,7 +70,7 @@ internal fun CreatedExpoListItem(
                     )
                     Text(
                         modifier = Modifier.width(68.dp),
-                        text = "$startedDay ~ $finishedDay",
+                        text = "${formatDateToMonthDay(startedDay)} ~ ${formatDateToMonthDay(finishedDay)}",
                         style = typography.captionRegular2,
                         fontWeight = FontWeight.W400,
                         color = colors.black,
@@ -107,8 +108,8 @@ private fun CreatedExpoListItemSelectedPreview() {
             id = "1",
             title = "2024 AI광주미래교육박람회",
             description = "",
-            startedDay = "09.10",
-            finishedDay = "09.20",
+            startedDay = "2024-11-23",
+            finishedDay = "2024-11-23",
             coverImage = null
         ),
         index = 1,

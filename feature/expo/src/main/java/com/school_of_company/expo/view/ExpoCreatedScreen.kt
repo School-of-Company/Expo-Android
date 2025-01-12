@@ -176,16 +176,16 @@ private fun ExpoCreatedScreenPreview() {
                     id = "2",
                     title = "제목",
                     description = "묘사",
-                    startedDay = "어제",
-                    finishedDay = "오늘",
+                    startedDay = "2024-11-23",
+                    finishedDay = "2024-11-23",
                     coverImage = null,
                 ),
                 ExpoListResponseEntity(
                     id = "2",
                     title = "제목",
                     description = "묘사",
-                    startedDay = "어제",
-                    finishedDay = "오늘",
+                    startedDay = "2024-11-23",
+                    finishedDay = "2024-11-23",
                     coverImage = null,
                 )
             )

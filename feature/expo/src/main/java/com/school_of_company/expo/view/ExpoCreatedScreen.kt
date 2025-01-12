@@ -70,7 +70,7 @@ private fun ExpoCreatedScreen(
     initCreatedExpoList: () -> Unit,
     deleteExpoInformation: (String) -> Unit,
 ) {
-    val (selectedId, setSelectedId) = rememberSaveable { mutableLongStateOf(0L) }
+    val (selectedId, setSelectedId) = rememberSaveable { mutableLongStateOf(-1L) }
 
     ExpoAndroidTheme { colors, _ ->
         Column(

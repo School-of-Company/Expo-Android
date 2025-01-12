@@ -117,7 +117,7 @@ private fun ExpoCreatedScreen(
                     .fillMaxWidth()
                     .horizontalScroll(scrollState),
             ) {
-                ExpoCreatedTable()
+                ExpoCreatedTable(modifier = Modifier.fillMaxWidth())
                 when (getExpoListUiState) {
                     GetExpoListUiState.Empty,
                     is GetExpoListUiState.Error -> {

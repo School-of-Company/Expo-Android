@@ -188,11 +188,18 @@ private fun TrainingProgramParticipantScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
+            Spacer(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(1.dp)
+                    .background(color = colors.gray200)
+            )
+
             Box(
                 modifier = Modifier
                     .border(
                         width = 1.dp,
-                        color = colors.gray200
+                        color = colors.white
                     )
                     .fillMaxWidth()
                     .padding(vertical = 16.dp)
@@ -249,6 +256,13 @@ private fun TrainingProgramParticipantScreen(
                     )
                 }
             }
+
+            Spacer(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(1.dp)
+                    .background(color = colors.gray100)
+            )
 
             SwipeRefresh(
                 state = swipeRefreshState,

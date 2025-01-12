@@ -81,7 +81,7 @@ private fun ExpoCreatedScreen(
         ) {
             ExpoCreatedTopCard(
                 modifier = Modifier.fillMaxWidth(),
-                participantCount = participantCount,
+                totalExpo = participantCount,
             )
             Spacer(modifier = Modifier.height(16.dp))
             Column(

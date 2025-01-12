@@ -12,7 +12,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -26,6 +28,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.expo.view.component.ExpoCreatedDeleteButton
 import com.school_of_company.expo.view.component.ExpoCreatedTable
@@ -56,7 +59,11 @@ internal fun ExpoCreatedRoute(
         getExpoListUiState = getExpoListUiState,
         swipeRefreshState = swipeRefreshState,
         initCreatedExpoList = expoViewModel::getExpoList,
-        deleteExpoInformation = expoViewModel::deleteExpoInformation,
+        deleteSelectedExpo = { selectedId ->
+            if (getExpoListUiState is GetExpoListUiState.Success && selectedId != -1L) expoViewModel.deleteExpoInformation(
+                getExpoListUiState.data[selectedId.toInt()].id
+            )
+        },
     )
 }
 
@@ -68,11 +75,11 @@ private fun ExpoCreatedScreen(
     scrollState: ScrollState = rememberScrollState(),
     swipeRefreshState: SwipeRefreshState,
     initCreatedExpoList: () -> Unit,
-    deleteExpoInformation: (String) -> Unit,
+    deleteSelectedExpo: (Long) -> Unit,
 ) {
     val (selectedId, setSelectedId) = rememberSaveable { mutableLongStateOf(-1L) }
 
-    ExpoAndroidTheme { colors, _ ->
+    ExpoAndroidTheme { colors, typography ->
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = modifier
@@ -96,7 +103,7 @@ private fun ExpoCreatedScreen(
             ) {
                 ExpoCreatedTable()
                 when (getExpoListUiState) {
-                    GetExpoListUiState.Empty ,
+                    GetExpoListUiState.Empty,
                     is GetExpoListUiState.Error -> {
                         Column(
                             verticalArrangement = Arrangement.spacedBy(
@@ -119,6 +126,7 @@ private fun ExpoCreatedScreen(
                             )
                         }
                     }
+
                     GetExpoListUiState.Loading -> Unit
                     is GetExpoListUiState.Success -> {
                         CreatedExpoList(
@@ -136,11 +144,7 @@ private fun ExpoCreatedScreen(
             Spacer(modifier = Modifier.height(32.dp))
             ExpoCreatedDeleteButton(
                 enabled = selectedId != -1L,
-                onClick = {
-                    if (getExpoListUiState is GetExpoListUiState.Success && selectedId != -1L) deleteExpoInformation(
-                        getExpoListUiState.data[selectedId.toInt()].id
-                    )
-                }
+                onClick = { deleteSelectedExpo(selectedId) }
             )
         }
     }
@@ -171,7 +175,7 @@ private fun ExpoCreatedScreenPreview() {
             )
         ),
         expoListSize = 100,
-        deleteExpoInformation = { _ -> },
+        deleteSelectedExpo = { _ -> },
         swipeRefreshState = SwipeRefreshState(isRefreshing = true),
         initCreatedExpoList = {}
     )

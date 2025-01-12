@@ -11,28 +11,25 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
-
-data class temparory (
-    val name: String,
-    val id: String,
-    val email: String,
-    val phoneNumber: String
-)
+import com.school_of_company.model.entity.admin.AdminRequestAllowListResponseEntity
 
 @Composable
 internal fun SignUpRequestListItem(
     modifier: Modifier = Modifier,
     index: Int,
-    data: temparory,
+    data: AdminRequestAllowListResponseEntity,
     horizontalScrollState: ScrollState,
-    // todo : Apply Profile Data
+    onClick: (Long) -> Unit,
+    selectedIndex: Long
 ) {
     ExpoAndroidTheme { colors, typography ->
         Spacer(modifier = Modifier.height(20.dp))
@@ -42,9 +39,13 @@ internal fun SignUpRequestListItem(
             horizontalArrangement = Arrangement.spacedBy(20.dp),
             modifier = modifier
                 .fillMaxWidth()
-                .background(color = colors.white)
+                .background(
+                    color = if (selectedIndex == data.id) colors.main100 else colors.white,
+                    shape = RoundedCornerShape(size = 4.dp)
+                )
                 .padding(vertical = 8.dp)
                 .horizontalScroll(horizontalScrollState)
+                .expoClickable { onClick(data.id) }
         ) {
             Text(
                 text = index.toString(),
@@ -61,7 +62,7 @@ internal fun SignUpRequestListItem(
             )
 
             Text(
-                text = data.id,
+                text = data.nickname,
                 style = typography.captionRegular2,
                 color = colors.black,
                 modifier = Modifier.width(120.dp)
@@ -90,11 +91,14 @@ private fun SignUpRequestListItemPreview() {
     SignUpRequestListItem(
         index = 1,
         horizontalScrollState = rememberScrollState(),
-        data = temparory(
-            name = "홍길동",
-            id = "asd;lfj",
-            email = "asd;lfj",
-            phoneNumber = "asd;lfj"
-        )
+        data = AdminRequestAllowListResponseEntity(
+            id = 1,
+            name = "이명훈",
+            nickname = "뀨뀨뀨",
+            email = "john.mclean@examplepetstore.com",
+            phoneNumber = "010-1234-5678"
+        ),
+        onClick = {_ ->},
+        selectedIndex = 1
     )
 }

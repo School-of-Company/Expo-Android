@@ -151,6 +151,6 @@ fun ExpoNavHost(
             onPermissionBlock = navController::popBackStack
         )
 
-        profileScreen()
+        profileScreen(onErrorToast = makeErrorToast)
     }
 }

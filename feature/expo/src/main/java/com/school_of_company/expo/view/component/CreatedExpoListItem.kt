@@ -14,7 +14,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.icon.CircleIcon
 import com.school_of_company.design_system.icon.XIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
@@ -28,7 +27,7 @@ internal fun CreatedExpoListItem(
     selectedIndex: Long,
     index: Long,
     item: ExpoListResponseEntity,
-    onClick: (Boolean) -> Unit,
+    onClick: () -> Unit,
 ) {
     with(item) {
         ExpoAndroidTheme { colors: ColorTheme, typography: ExpoTypography ->
@@ -40,7 +39,7 @@ internal fun CreatedExpoListItem(
                         color = if (selectedIndex == index) colors.main100 else colors.white,
                         shape = RoundedCornerShape(size = 4.dp)
                     )
-                    .clickable { onClick(selectedIndex == index) }
+                    .clickable { onClick() }
                     .padding(8.dp),
             ) {
                 Text(
@@ -93,7 +92,7 @@ private fun CreatedExpoListItemNotSelectedPreview() {
         ),
         selectedIndex = 0,
         index = 1,
-        onClick = { _ -> },
+        onClick = { },
     )
 }
 
@@ -111,6 +110,6 @@ private fun CreatedExpoListItemSelectedPreview() {
         ),
         index = 1,
         selectedIndex = 1,
-        onClick = { _ -> },
+        onClick = { },
     )
 }

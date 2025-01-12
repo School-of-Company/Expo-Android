@@ -45,8 +45,8 @@ internal fun CreatedExpoList(
                         selectedIndex = selectedIndex,
                         item = item,
                         index = index.toLong(),
-                        onClick = { isSelected ->
-                            onItemClick(isSelected, index.toLong())
+                        onClick = {
+                            onItemClick(selectedIndex == index.toLong(), index.toLong())
                         }
                     )
                 }

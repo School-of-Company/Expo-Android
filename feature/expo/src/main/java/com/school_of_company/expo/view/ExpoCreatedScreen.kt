@@ -50,6 +50,7 @@ internal fun ExpoCreatedRoute(
     val swipeRefreshLoading by expoViewModel.swipeRefreshLoading.collectAsStateWithLifecycle()
     val expoListSize by expoViewModel.expoListSize.collectAsStateWithLifecycle()
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = swipeRefreshLoading)
+    val (selectedIndex, setSelectedIndex) = rememberSaveable { mutableIntStateOf(-1) }
 
     LaunchedEffect("initCreatedExpo") {
         expoViewModel.getExpoList()
@@ -66,6 +67,8 @@ internal fun ExpoCreatedRoute(
     ExpoCreatedScreen(
         modifier = modifier,
         expoListSize = expoListSize,
+        selectedIndex = selectedIndex,
+        setSelectedIndex = setSelectedIndex,
         getExpoListUiState = getExpoListUiState,
         swipeRefreshState = swipeRefreshState,
         initCreatedExpoList = expoViewModel::getExpoList,
@@ -84,14 +87,14 @@ internal fun ExpoCreatedRoute(
 private fun ExpoCreatedScreen(
     modifier: Modifier = Modifier,
     expoListSize: Int,
+    selectedIndex: Int,
     getExpoListUiState: GetExpoListUiState,
     scrollState: ScrollState = rememberScrollState(),
     swipeRefreshState: SwipeRefreshState,
+    setSelectedIndex: (Int) -> Unit,
     initCreatedExpoList: () -> Unit,
     deleteSelectedExpo: (Int) -> Unit,
 ) {
-    val (selectedIndex, setSelectedIndex) = rememberSaveable { mutableIntStateOf(-1) }
-
     ExpoAndroidTheme { colors, typography ->
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -190,6 +193,8 @@ private fun ExpoCreatedScreenPreview() {
         expoListSize = 100,
         deleteSelectedExpo = { _ -> },
         swipeRefreshState = SwipeRefreshState(isRefreshing = true),
-        initCreatedExpoList = {}
+        initCreatedExpoList = {},
+        selectedIndex = 9,
+        setSelectedIndex = { _ -> }
     )
 }

@@ -101,7 +101,7 @@ private fun ExpoCreatedScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = modifier
                 .background(color = colors.white)
-                .padding(top = 40.dp)
+                .padding(top = 68.dp)
                 .fillMaxSize(),
         ) {
             ExpoCreatedTopCard(

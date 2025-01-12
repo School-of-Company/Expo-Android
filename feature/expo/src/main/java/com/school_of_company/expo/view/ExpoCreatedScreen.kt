@@ -60,6 +60,7 @@ internal fun ExpoCreatedRoute(
         when (getExpoListUiState) {
             GetExpoListUiState.Empty -> onErrorToast(null, R.string.get_created_expo_list_empty)
             is GetExpoListUiState.Error -> onErrorToast(null, R.string.get_created_expo_list_fail)
+            is GetExpoListUiState.Success -> setSelectedIndex(-1)
             else -> Unit
         }
     }

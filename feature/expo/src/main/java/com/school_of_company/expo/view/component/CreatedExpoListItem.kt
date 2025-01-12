@@ -69,8 +69,8 @@ internal fun CreatedExpoListItem(
                         textAlign = TextAlign.Center,
                     )
                     Text(
-                        modifier = Modifier.width(68.dp),
-                        text = "${formatDateToMonthDay(startedDay)} ~ ${formatDateToMonthDay(finishedDay)}",
+                        modifier = Modifier.width(70.dp),
+                        text = "${formatDateToMonthDay(startedDay)}~${formatDateToMonthDay(finishedDay)}",
                         style = typography.captionRegular2,
                         fontWeight = FontWeight.W400,
                         color = colors.black,

@@ -1,6 +1,7 @@
 package com.school_of_company.expo.view.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -39,7 +40,7 @@ internal fun CreatedExpoListItem(
                         color = if (selectedIndex == index) colors.main100 else colors.white,
                         shape = RoundedCornerShape(size = 4.dp)
                     )
-                    .expoClickable { onClick(selectedIndex == index) }
+                    .clickable { onClick(selectedIndex == index) }
                     .padding(8.dp),
             ) {
                 Text(

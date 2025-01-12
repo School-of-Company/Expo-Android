@@ -1,7 +1,6 @@
 package com.school_of_company.expo_android.ui
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
@@ -22,6 +21,7 @@ import com.school_of_company.design_system.component.navigation.ExpoNavigationBa
 import com.school_of_company.design_system.component.navigation.ExpoNavigationBarItem
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.expo.navigation.expoCreateRoute
+import com.school_of_company.expo.navigation.expoCreatedRoute
 import com.school_of_company.expo.navigation.homeRoute
 import com.school_of_company.expo_android.navigation.ExpoNavHost
 import com.school_of_company.expo_android.navigation.TopLevelDestination
@@ -46,7 +46,7 @@ fun ExpoApp(
     val topLevelDestinationRoute = arrayOf(
         homeRoute,
         expoCreateRoute,
-        // todo : Expo Created Route
+        expoCreatedRoute,
         profileRoute
     )
 

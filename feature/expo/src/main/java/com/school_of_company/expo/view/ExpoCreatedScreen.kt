@@ -96,9 +96,9 @@ private fun ExpoCreatedScreen(
             ) {
                 ExpoCreatedTable()
                 when (getExpoListUiState) {
-                    GetExpoListUiState.Empty -> TODO()
-                    is GetExpoListUiState.Error -> TODO()
-                    GetExpoListUiState.Loading -> TODO()
+                    GetExpoListUiState.Empty -> Unit
+                    is GetExpoListUiState.Error -> Unit
+                    GetExpoListUiState.Loading -> Unit
                     is GetExpoListUiState.Success -> {
                         CreatedExpoList(
                             expoList = getExpoListUiState.data.toPersistentList(),

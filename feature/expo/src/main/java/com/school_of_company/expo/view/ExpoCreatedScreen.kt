@@ -96,8 +96,29 @@ private fun ExpoCreatedScreen(
             ) {
                 ExpoCreatedTable()
                 when (getExpoListUiState) {
-                    GetExpoListUiState.Empty -> Unit
-                    is GetExpoListUiState.Error -> Unit
+                    GetExpoListUiState.Empty ,
+                    is GetExpoListUiState.Error -> {
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(
+                                28.dp,
+                                Alignment.CenterVertically
+                            ),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(color = colors.white)
+                        ) {
+                            WarnIcon(
+                                tint = colors.black,
+                                modifier = Modifier.size(100.dp)
+                            )
+                            Text(
+                                text = "데이터를 불러올 수 없어요!",
+                                style = typography.bodyRegular2,
+                                color = colors.gray400
+                            )
+                        }
+                    }
                     GetExpoListUiState.Loading -> Unit
                     is GetExpoListUiState.Success -> {
                         CreatedExpoList(

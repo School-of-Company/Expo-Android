@@ -18,7 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,6 +28,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.school_of_company.design_system.R
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.expo.view.component.ExpoCreatedDeleteButton
@@ -38,7 +39,6 @@ import com.school_of_company.expo.viewmodel.uistate.GetExpoListUiState
 import com.school_of_company.model.entity.expo.ExpoListResponseEntity
 import kotlinx.collections.immutable.immutableListOf
 import kotlinx.collections.immutable.toPersistentList
-import com.school_of_company.design_system.R
 
 @Composable
 internal fun ExpoCreatedRoute(
@@ -71,10 +71,10 @@ internal fun ExpoCreatedRoute(
         initCreatedExpoList = expoViewModel::getExpoList,
         deleteSelectedExpo = { selectedId ->
             val currentGetExpoListUiState = getExpoListUiState
-            if (selectedId == -1L) {
+            if (selectedId == -1) {
                 onErrorToast(null, R.string.expo_not_selected)
             } else if (currentGetExpoListUiState is GetExpoListUiState.Success) expoViewModel.deleteExpoInformation(
-                currentGetExpoListUiState.data[selectedId.toInt()].id
+                currentGetExpoListUiState.data[selectedId].id
             )
         },
     )
@@ -88,9 +88,9 @@ private fun ExpoCreatedScreen(
     scrollState: ScrollState = rememberScrollState(),
     swipeRefreshState: SwipeRefreshState,
     initCreatedExpoList: () -> Unit,
-    deleteSelectedExpo: (Long) -> Unit,
+    deleteSelectedExpo: (Int) -> Unit,
 ) {
-    val (selectedId, setSelectedId) = rememberSaveable { mutableLongStateOf(-1L) }
+    val (selectedIndex, setSelectedIndex) = rememberSaveable { mutableIntStateOf(-1) }
 
     ExpoAndroidTheme { colors, typography ->
         Column(
@@ -145,9 +145,9 @@ private fun ExpoCreatedScreen(
                         CreatedExpoList(
                             expoList = getExpoListUiState.data.toPersistentList(),
                             onItemClick = { isSelected, index ->
-                                setSelectedId(if (isSelected) -1L else index)
+                                setSelectedIndex(if (isSelected) -1 else index)
                             },
-                            selectedIndex = selectedId,
+                            selectedIndex = selectedIndex,
                             swipeRefreshState = swipeRefreshState,
                             onRefresh = initCreatedExpoList
                         )
@@ -156,8 +156,8 @@ private fun ExpoCreatedScreen(
             }
             Spacer(modifier = Modifier.height(32.dp))
             ExpoCreatedDeleteButton(
-                enabled = selectedId != -1L,
-                onClick = { deleteSelectedExpo(selectedId) }
+                enabled = selectedIndex != -1,
+                onClick = { deleteSelectedExpo(selectedIndex) }
             )
         }
     }

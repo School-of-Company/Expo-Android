@@ -24,8 +24,8 @@ import com.school_of_company.model.entity.expo.ExpoListResponseEntity
 @Composable
 internal fun CreatedExpoListItem(
     modifier: Modifier = Modifier,
-    selectedIndex: Long,
-    index: Long,
+    selectedIndex: Int,
+    index: Int,
     item: ExpoListResponseEntity,
     onClick: () -> Unit,
 ) {

@@ -19,9 +19,9 @@ import kotlinx.collections.immutable.persistentListOf
 internal fun CreatedExpoList(
     modifier: Modifier = Modifier,
     expoList: ImmutableList<ExpoListResponseEntity>,
-    selectedIndex: Long,
+    selectedIndex: Int,
     swipeRefreshState: SwipeRefreshState, // 상위에서 전달받은 SwipeRefreshState
-    onItemClick: (Boolean, Long) -> Unit,
+    onItemClick: (Boolean, Int) -> Unit,
     onRefresh: () -> Unit, // 새로고침 콜백
 ) {
     ExpoAndroidTheme { colors, _ ->
@@ -44,10 +44,8 @@ internal fun CreatedExpoList(
                     CreatedExpoListItem(
                         selectedIndex = selectedIndex,
                         item = item,
-                        index = index.toLong(),
-                        onClick = {
-                            onItemClick(selectedIndex == index.toLong(), index.toLong())
-                        }
+                        index = index,
+                        onClick = { onItemClick(selectedIndex == index, index) }
                     )
                 }
             }

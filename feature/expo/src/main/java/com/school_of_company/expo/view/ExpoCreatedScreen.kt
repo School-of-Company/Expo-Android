@@ -60,8 +60,9 @@ internal fun ExpoCreatedRoute(
         swipeRefreshState = swipeRefreshState,
         initCreatedExpoList = expoViewModel::getExpoList,
         deleteSelectedExpo = { selectedId ->
-            if (getExpoListUiState is GetExpoListUiState.Success && selectedId != -1L) expoViewModel.deleteExpoInformation(
-                getExpoListUiState.data[selectedId.toInt()].id
+            val currentGetExpoListUiState = getExpoListUiState
+            if (currentGetExpoListUiState is GetExpoListUiState.Success && selectedId != -1L) expoViewModel.deleteExpoInformation(
+                currentGetExpoListUiState.data[selectedId.toInt()].id
             )
         },
     )

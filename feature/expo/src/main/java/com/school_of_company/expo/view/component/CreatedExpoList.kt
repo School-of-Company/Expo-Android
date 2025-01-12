@@ -1,6 +1,6 @@
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -40,12 +40,13 @@ internal fun CreatedExpoList(
                 modifier = modifier,
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
-                items(expoList) { item ->
+                itemsIndexed(expoList) { index, item ->
                     CreatedExpoListItem(
                         selectedIndex = selectedIndex,
                         item = item,
+                        index = index.toLong(),
                         onClick = { isSelected ->
-                            onItemClick(isSelected, item.id.toLong())
+                            onItemClick(isSelected, index.toLong())
                         }
                     )
                 }

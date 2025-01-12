@@ -113,7 +113,6 @@ private fun ExpoCreatedScreen(
                 verticalArrangement = Arrangement.spacedBy(14.dp, Alignment.CenterVertically),
                 horizontalAlignment = Alignment.Start,
                 modifier = Modifier
-                    .border(width = 1.dp, color = colors.gray200)
                     .fillMaxWidth()
                     .horizontalScroll(scrollState),
             ) {

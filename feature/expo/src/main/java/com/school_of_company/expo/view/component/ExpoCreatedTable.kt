@@ -4,10 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,6 +36,7 @@ fun ExpoCreatedTable(modifier: Modifier = Modifier) {
                     )
             ) {
                 Text(
+                    modifier = Modifier.width(37.dp),
                     text = "이미지",
                     style = typography.captionBold1,
                     fontWeight = FontWeight.W600,
@@ -44,6 +44,7 @@ fun ExpoCreatedTable(modifier: Modifier = Modifier) {
                     textAlign = TextAlign.Center,
                 )
                 Text(
+                    modifier = Modifier.width(64.dp),
                     text = "박람회 이름",
                     style = typography.captionBold1,
                     fontWeight = FontWeight.W600,
@@ -51,6 +52,7 @@ fun ExpoCreatedTable(modifier: Modifier = Modifier) {
                     textAlign = TextAlign.Center,
                 )
                 Text(
+                    modifier = Modifier.width(52.dp),
                     text = "모집 기간",
                     style = typography.captionBold1,
                     fontWeight = FontWeight.W600,

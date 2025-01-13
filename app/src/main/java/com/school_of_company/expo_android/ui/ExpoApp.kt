@@ -92,7 +92,7 @@ fun ExpoBottomBar(
             // 각 최상위 목적지에 대한 아이템을 생성합니다.
             destinations.forEach { destination ->
                 // 현재 목적지가 선택된 상태인지 확인
-                val selected = currentDestination.isTopLevelDestinationInHierarchy(destination)
+                val isSelected = destination.routeName == currentDestination?.route
 
                 // 각 네비게이션 바 아이템을 설정합니다.
                 ExpoNavigationBarItem(

@@ -3,8 +3,6 @@ package com.school_of_company.expo.view
 import CreatedExpoList
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -112,9 +110,7 @@ private fun ExpoCreatedScreen(
             Column(
                 verticalArrangement = Arrangement.spacedBy(14.dp, Alignment.CenterVertically),
                 horizontalAlignment = Alignment.Start,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .horizontalScroll(scrollState),
+                modifier = Modifier.fillMaxWidth()
             ) {
                 ExpoCreatedTable(modifier = Modifier.fillMaxWidth())
                 when (getExpoListUiState) {

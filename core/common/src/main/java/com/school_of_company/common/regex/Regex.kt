@@ -21,12 +21,23 @@ fun String.isValidDate(): Boolean =
             }.isSuccess // 파싱이 성공하면 유효한 날짜, 실패하면 유효하지 않음
 
 fun String.isValidDateTime(): Boolean =
-    this.matches(Regex("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}")) && runCatching {
-        LocalDateTime.parse(this, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
-    }.isSuccess
     // 먼저, 문자열이 "yyyy-MM-dd HH:mm" 형식에 맞는지 확인
+    this.matches(Regex("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}")) &&
+
             // 예외가 발생하지 않으면 유효한 날짜와 시간을 확인
+            runCatching {
                 // 날짜와 시간을 파싱하여 LocalDateTime 객체로 변환
+                val dateTime = LocalDateTime.parse(this, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
+
                 // 날짜 부분을 잘라서 실제 날짜로 변환하고, 해당 날짜가 유효한지 확인
+                val parsedDate = LocalDate.parse(this.substring(0, 10), DateTimeFormatter.ISO_LOCAL_DATE)
+
                 // 파싱된 날짜가 실제로 존재하는 날짜와 일치하는지 확인
+                dateTime.toLocalDate() == parsedDate &&
+
+                        // 시간과 분이 유효한 범위(0~23시, 0~59분)에 있는지 확인
+                        dateTime.hour in 0..23 && dateTime.minute in 0..59
+            }.getOrElse {
                 // 예외가 발생하면 유효하지 않은 값으로 간주하고 false 반환
+                false
+            }

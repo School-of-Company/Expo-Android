@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,7 +50,7 @@ internal fun QrScannerRoute(
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
     viewModel: ProgramViewModel = hiltViewModel(),
 ) {
-    var showScanner by remember { mutableStateOf(false) }
+    var showScanner by rememberSaveable { mutableStateOf(false) }
 
     val trainingQrCodeUiState by viewModel.readQrCodeUiState.collectAsStateWithLifecycle()
 
@@ -63,11 +63,10 @@ internal fun QrScannerRoute(
 
     LaunchedEffect(cameraPermissionState.status) {
         when {
-            // 권한이 이미 허용된 경우
             cameraPermissionState.status.isGranted -> {
                 showScanner = true
             }
-            // 권한이 없고 권한 요청 다이얼로그를 보여줄 수 있는 경우
+
             !cameraPermissionState.status.isGranted &&
                     !cameraPermissionState.status.shouldShowRationale -> {
                 cameraPermissionState.launchPermissionRequest()

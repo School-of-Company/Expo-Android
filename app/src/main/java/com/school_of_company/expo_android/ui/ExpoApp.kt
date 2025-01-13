@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavDestination
-import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.school_of_company.design_system.component.navigation.ExpoNavigationBar
 import com.school_of_company.design_system.component.navigation.ExpoNavigationBarItem
@@ -64,7 +63,7 @@ fun ExpoApp(
                 // BottomBar가 보여져야 하는 경우에만 표시합니다.
                 if (isBottomBarVisible.value) {
                     ExpoBottomBar(
-                        destinations = appState.topLevelDestinations, // 최상위 목적지 목록을 전달
+                        topLevelDestinations = appState.topLevelDestinations, // 최상위 목적지 목록을 전달
                         onNavigateToDestination = appState::navigateToTopLevelDestination, // 네비게이션 함수
                         currentDestination = appState.currentDestination // 현재 목적지 정보
                     )
@@ -82,34 +81,26 @@ fun ExpoApp(
 
 @Composable
 fun ExpoBottomBar(
-    destinations: List<TopLevelDestination>, // BottomBar에 표시될 최상위 목적지 목록
+    modifier: Modifier = Modifier,
+    topLevelDestinations: List<TopLevelDestination>,
     onNavigateToDestination: (TopLevelDestination) -> Unit, // 사용자가 클릭했을 때 호출될 콜백
     currentDestination: NavDestination? // 현재 네비게이션 목적지
 ) {
     ExpoAndroidTheme { _, typography ->
         // 커스텀 네비게이션 바 구성 요소
-        ExpoNavigationBar {
+        ExpoNavigationBar(modifier = modifier) {
             // 각 최상위 목적지에 대한 아이템을 생성합니다.
-            destinations.forEach { destination ->
+            topLevelDestinations.forEach { destination ->
+                // icon painter를 미리 변수로 추출
+                val iconPainter = painterResource(id = destination.unSelectedIcon)
                 // 현재 목적지가 선택된 상태인지 확인
-                val selected = currentDestination.isTopLevelDestinationInHierarchy(destination)
+                val isSelected = destination.routeName == currentDestination?.route
 
-                // 각 네비게이션 바 아이템을 설정합니다.
                 ExpoNavigationBarItem(
-                    selected = selected,
+                    selected = isSelected,
                     onClick = { onNavigateToDestination(destination) },
-                    icon = {
-                        Icon(
-                            painter = painterResource(id = destination.unSelectedIcon),
-                            contentDescription = null
-                        )
-                    },
-                    selectedIcon = {
-                        Icon(
-                            painter = painterResource(id = destination.unSelectedIcon),
-                            contentDescription = null
-                        )
-                    },
+                    icon = { Icon(painter = iconPainter, contentDescription = null) },
+                    selectedIcon = { Icon(painter = iconPainter, contentDescription = null) },
                     label = {
                         Text(
                             text = destination.iconText,
@@ -121,9 +112,3 @@ fun ExpoBottomBar(
         }
     }
 }
-
-// 현재 네비게이션 목적지가 최상위 목적지 계층에 속해 있는지 확인하는 함수
-private fun NavDestination?.isTopLevelDestinationInHierarchy(destination: TopLevelDestination) =
-    this?.hierarchy?.any {
-        it.route?.contains(destination.name, true) ?: false // 목적지의 경로에 해당 최상위 목적지가 포함되어 있는지 확인
-    } ?: false

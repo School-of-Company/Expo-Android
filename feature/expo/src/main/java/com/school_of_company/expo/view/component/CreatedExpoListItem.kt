@@ -7,7 +7,7 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.requiredWidthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -65,7 +65,7 @@ internal fun CreatedExpoListItem(
                         CircleIcon(tint = colors.black)
                     }
                     Text(
-                        modifier = Modifier.width(136.dp),
+                        modifier = Modifier.requiredWidthIn(136.dp),
                         text = title,
                         style = typography.captionRegular2,
                         fontWeight = FontWeight.W400,
@@ -73,7 +73,7 @@ internal fun CreatedExpoListItem(
                         textAlign = TextAlign.Center,
                     )
                     Text(
-                        modifier = Modifier.width(70.dp),
+                        modifier = Modifier.requiredWidthIn(70.dp),
                         text = "${formatDateToMonthDay(startedDay)}~${formatDateToMonthDay(finishedDay)}",
                         style = typography.captionRegular2,
                         fontWeight = FontWeight.W400,

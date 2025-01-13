@@ -15,6 +15,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.school_of_company.expo.navigation.navigateToExpoCreate
+import com.school_of_company.expo.navigation.navigateToExpoCreated
 import com.school_of_company.expo.navigation.navigateToHome
 import com.school_of_company.expo_android.navigation.TopLevelDestination
 import com.school_of_company.user.navigation.navigateToProfile
@@ -25,7 +26,7 @@ fun rememberExpoAppState(
     windowSizeClass: WindowSizeClass, // 화면 크기 분류 정보를 받습니다.
     navController: NavHostController = rememberNavController(), // 네비게이션 컨트롤러를 생성합니다.
     coroutineScope: CoroutineScope = rememberCoroutineScope() // 코루틴 스코프를 생성합니다.
-) : ExpoAppState {
+): ExpoAppState {
     // windowSizeClass와 navController, coroutineScope가 변경될 때만 재생성하는 ExpoAppState를 기억합니다.
     return remember(
         windowSizeClass,
@@ -76,7 +77,7 @@ class ExpoAppState(
             when (topLevelDestination) {
                 TopLevelDestination.HOME -> navController.navigateToHome(topLevelNavOptions)
                 TopLevelDestination.EXPO -> navController.navigateToExpoCreate(topLevelNavOptions)
-                TopLevelDestination.EXPO_CREATED, // todo : Add Navigation Code
+                TopLevelDestination.EXPO_CREATED -> navController.navigateToExpoCreated(topLevelNavOptions)
                 TopLevelDestination.PROFILE -> navController.navigateToProfile(topLevelNavOptions)
             }
         }

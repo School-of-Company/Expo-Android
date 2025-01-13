@@ -38,9 +38,13 @@ import com.school_of_company.model.model.standard.StandardRequestModel
 import com.school_of_company.model.model.training.TrainingDtoModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -133,6 +137,15 @@ internal class ExpoViewModel @Inject constructor(
     internal var location = savedStateHandle.getStateFlow(key = LOCATION, initialValue = "")
 
     internal var cover_image = savedStateHandle.getStateFlow(key = COVER_IMAGE, initialValue = "")
+
+    val expoListSize: StateFlow<Int> = getExpoListUiState
+        .map { state ->
+            when (state) {
+                is GetExpoListUiState.Success -> state.data.size
+                else -> 0
+            }
+        }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0)
 
     internal fun getExpoInformation(expoId: String) = viewModelScope.launch {
         getExpoInformationUseCase(expoId = expoId)
@@ -228,6 +241,7 @@ internal class ExpoViewModel @Inject constructor(
                     _deleteExpoInformationUiState.value = DeleteExpoInformationUiState.Error(remoteError)
                 }.collect {
                     _deleteExpoInformationUiState.value = DeleteExpoInformationUiState.Success
+                    getExpoList()
                 }
             }
             .onFailure { error ->

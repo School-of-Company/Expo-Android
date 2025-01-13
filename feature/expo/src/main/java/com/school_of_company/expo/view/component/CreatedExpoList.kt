@@ -1,6 +1,8 @@
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -18,10 +20,11 @@ import kotlinx.collections.immutable.persistentListOf
 @Composable
 internal fun CreatedExpoList(
     modifier: Modifier = Modifier,
+    scrollState: ScrollState,
     expoList: ImmutableList<ExpoListResponseEntity>,
-    selectedIndex: Long,
+    selectedIndex: Int,
     swipeRefreshState: SwipeRefreshState, // 상위에서 전달받은 SwipeRefreshState
-    onItemClick: (Boolean, Long) -> Unit,
+    onItemClick: (Boolean, Int) -> Unit,
     onRefresh: () -> Unit, // 새로고침 콜백
 ) {
     ExpoAndroidTheme { colors, _ ->
@@ -40,13 +43,14 @@ internal fun CreatedExpoList(
                 modifier = modifier,
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
-                items(expoList) { item ->
+                itemsIndexed(expoList) { index, item ->
                     CreatedExpoListItem(
+                        modifier = Modifier.fillMaxWidth(),
+                        scrollState = scrollState,
                         selectedIndex = selectedIndex,
                         item = item,
-                        onClick = { isSelected ->
-                            onItemClick(isSelected, item.id.toLong())
-                        }
+                        index = index,
+                        onClick = { onItemClick(selectedIndex == index, index) }
                     )
                 }
             }
@@ -73,6 +77,7 @@ fun CreatedExpoListPreview() {
         onItemClick = { _, _ -> },
         selectedIndex = 1,
         onRefresh = { /* 새로고침 시 동작할 함수 */ },
-        swipeRefreshState = swipeRefreshState // 상위에서 전달한 상태
-    )
+        swipeRefreshState = swipeRefreshState,// 상위에서 전달한 상태
+        scrollState = ScrollState(1)
+        )
 }

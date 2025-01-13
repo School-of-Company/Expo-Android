@@ -24,7 +24,7 @@ import com.school_of_company.design_system.theme.color.ColorTheme
 @Composable
 fun ExpoCreatedTopCard(
     modifier: Modifier = Modifier,
-    participantCount: Int,
+    totalExpo: Int,
 ) {
     ExpoAndroidTheme { colors: ColorTheme, typography: ExpoTypography ->
         Column(
@@ -67,13 +67,13 @@ fun ExpoCreatedTopCard(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
-                        text = "참가자 전체 인원",
+                        text = "등록된 박람회",
                         style = typography.captionRegular2,
                         fontWeight = FontWeight.W400,
                         color = colors.gray500,
                     )
                     Text(
-                        text = "${participantCount}명",
+                        text = "${totalExpo}개",
                         style = typography.captionRegular2,
                         fontWeight = FontWeight.W400,
                         color = colors.main,
@@ -88,6 +88,6 @@ fun ExpoCreatedTopCard(
 @Composable
 fun ExpoCreatedTopCardPreview(){
     ExpoCreatedTopCard(
-        participantCount = 30
+        totalExpo = 30
     )
 }

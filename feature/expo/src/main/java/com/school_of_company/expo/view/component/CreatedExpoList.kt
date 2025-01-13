@@ -1,5 +1,6 @@
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
@@ -44,6 +45,7 @@ internal fun CreatedExpoList(
             ) {
                 itemsIndexed(expoList) { index, item ->
                     CreatedExpoListItem(
+                        modifier = Modifier.fillMaxWidth(),
                         scrollState = scrollState,
                         selectedIndex = selectedIndex,
                         item = item,

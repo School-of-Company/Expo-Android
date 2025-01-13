@@ -10,9 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -27,9 +25,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.school_of_company.design_system.R
-import com.school_of_company.design_system.component.uistate.empty.EmptyState
-import com.school_of_company.design_system.component.uistate.error.ErrorState
-import com.school_of_company.design_system.icon.WarnIcon
+import com.school_of_company.design_system.component.uistate.empty.ShowEmptyState
+import com.school_of_company.design_system.component.uistate.error.ShowErrorState
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.expo.view.component.ExpoCreatedDeleteButton
 import com.school_of_company.expo.view.component.ExpoCreatedTable
@@ -131,14 +128,14 @@ private fun ExpoCreatedScreen(
                     }
 
                     is GetExpoListUiState.Empty -> {
-                        EmptyState(
+                        ShowEmptyState(
                             scrollState = scrollState,
                             emptyMessage = "등뢱된 박람회가 없습니다.."
                         )
                     }
 
                     is GetExpoListUiState.Error -> {
-                        ErrorState(
+                        ShowErrorState(
                             scrollState = scrollState,
                             errorText = "등록된 박람회를 불러올 수 없습니다.."
                         )

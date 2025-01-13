@@ -16,7 +16,7 @@ import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 
 @Composable
-fun ErrorState(
+fun ShowErrorState(
     modifier: Modifier = Modifier,
     errorText: String,
     scrollState: ScrollState

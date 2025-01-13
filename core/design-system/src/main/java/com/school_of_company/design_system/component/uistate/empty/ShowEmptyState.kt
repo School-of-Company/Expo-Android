@@ -16,7 +16,7 @@ import com.school_of_company.design_system.icon.ExpoIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 
 @Composable
-fun EmptyState(
+fun ShowEmptyState(
     modifier: Modifier = Modifier,
     scrollState: ScrollState,
     emptyMessage: String,

@@ -17,10 +17,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
@@ -37,9 +35,8 @@ import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.school_of_company.design_system.R
 import com.school_of_company.design_system.component.modifier.padding.paddingHorizontal
-import com.school_of_company.design_system.component.uistate.empty.EmptyState
-import com.school_of_company.design_system.component.uistate.error.ErrorState
-import com.school_of_company.design_system.icon.ExpoIcon
+import com.school_of_company.design_system.component.uistate.empty.ShowEmptyState
+import com.school_of_company.design_system.component.uistate.error.ShowErrorState
 import com.school_of_company.design_system.icon.UserIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
@@ -391,14 +388,14 @@ private fun UserScreen(
                     }
 
                     is GetAdminRequestAllowListUiState.Error -> {
-                        ErrorState(
+                        ShowErrorState(
                             scrollState = scrollState,
                             errorText = "데이터를 불러올 수 없어요!",
                         )
                     }
 
                     is GetAdminRequestAllowListUiState.Empty -> {
-                        EmptyState(
+                        ShowEmptyState(
                             scrollState = scrollState,
                             emptyMessage = "회원가입 요청이 없어요.."
                         )

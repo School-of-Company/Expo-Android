@@ -11,10 +11,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -39,8 +37,7 @@ import com.school_of_company.expo.enum.ArrayHomeListEnum
 import com.school_of_company.expo.viewmodel.ExpoViewModel
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.school_of_company.design_system.component.shimmer.shimmerEffect
-import com.school_of_company.design_system.component.uistate.error.ErrorState
-import com.school_of_company.design_system.icon.WarnIcon
+import com.school_of_company.design_system.component.uistate.error.ShowErrorState
 import com.school_of_company.expo.view.component.ExpoList
 import com.school_of_company.expo.view.component.HomeBottomSheet
 import com.school_of_company.expo.view.component.HomeFilterButton
@@ -182,7 +179,7 @@ private fun ExpoScreen(
                     }
 
                     is GetExpoListUiState.Error -> {
-                        ErrorState(
+                        ShowErrorState(
                             scrollState = scrollState,
                             errorText = "네트워크가 불안정해요.."
                         )

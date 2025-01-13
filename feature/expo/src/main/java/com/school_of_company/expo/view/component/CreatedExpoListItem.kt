@@ -1,7 +1,9 @@
 package com.school_of_company.expo.view.component
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -26,6 +28,7 @@ import com.school_of_company.model.entity.expo.ExpoListResponseEntity
 @Composable
 internal fun CreatedExpoListItem(
     modifier: Modifier = Modifier,
+    scrollState: ScrollState,
     selectedIndex: Int,
     index: Int,
     item: ExpoListResponseEntity,
@@ -37,6 +40,7 @@ internal fun CreatedExpoListItem(
                 horizontalArrangement = Arrangement.spacedBy(38.dp, Alignment.Start),
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = modifier
+                    .horizontalScroll(scrollState)
                     .background(
                         color = if (selectedIndex == index) colors.main100 else colors.white,
                         shape = RoundedCornerShape(size = 4.dp)
@@ -97,6 +101,7 @@ private fun CreatedExpoListItemNotSelectedPreview() {
         selectedIndex = 0,
         index = 1,
         onClick = { },
+        scrollState = ScrollState(6)
     )
 }
 
@@ -115,5 +120,6 @@ private fun CreatedExpoListItemSelectedPreview() {
         index = 1,
         selectedIndex = 1,
         onClick = { },
+        scrollState = ScrollState(6)
     )
 }

@@ -1,3 +1,4 @@
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -18,6 +19,7 @@ import kotlinx.collections.immutable.persistentListOf
 @Composable
 internal fun CreatedExpoList(
     modifier: Modifier = Modifier,
+    scrollState: ScrollState,
     expoList: ImmutableList<ExpoListResponseEntity>,
     selectedIndex: Int,
     swipeRefreshState: SwipeRefreshState, // 상위에서 전달받은 SwipeRefreshState
@@ -42,6 +44,7 @@ internal fun CreatedExpoList(
             ) {
                 itemsIndexed(expoList) { index, item ->
                     CreatedExpoListItem(
+                        scrollState = scrollState,
                         selectedIndex = selectedIndex,
                         item = item,
                         index = index,
@@ -72,6 +75,7 @@ fun CreatedExpoListPreview() {
         onItemClick = { _, _ -> },
         selectedIndex = 1,
         onRefresh = { /* 새로고침 시 동작할 함수 */ },
-        swipeRefreshState = swipeRefreshState // 상위에서 전달한 상태
-    )
+        swipeRefreshState = swipeRefreshState,// 상위에서 전달한 상태
+        scrollState = ScrollState(1)
+        )
 }

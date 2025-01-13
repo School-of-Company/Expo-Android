@@ -145,6 +145,7 @@ private fun ExpoCreatedScreen(
                     GetExpoListUiState.Loading -> Unit
                     is GetExpoListUiState.Success -> {
                         CreatedExpoList(
+                            scrollState = scrollState,
                             expoList = getExpoListUiState.data.toPersistentList(),
                             onItemClick = { isSelected, index ->
                                 setSelectedIndex(if (isSelected) -1 else index)

@@ -41,9 +41,9 @@ import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.component.topbar.ExpoTopBar
-import com.school_of_company.design_system.icon.ExpoIcon
+import com.school_of_company.design_system.component.uistate.empty.ShowEmptyState
+import com.school_of_company.design_system.component.uistate.error.ShowErrorState
 import com.school_of_company.design_system.icon.LeftArrowIcon
-import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.program.view.component.ProgramList
 import com.school_of_company.program.view.component.ProgramTabRowItem
@@ -258,47 +258,17 @@ private fun ProgramDetailProgramScreen(
                                 }
 
                                 is StandardProgramListUiState.Empty -> {
-                                    Column(
-                                        verticalArrangement = Arrangement.spacedBy(28.dp, Alignment.CenterVertically),
-                                        horizontalAlignment = Alignment.CenterHorizontally,
-                                        modifier = Modifier
-                                            .fillMaxSize()
-                                            .verticalScroll(scrollState)
-                                            .background(color = colors.white)
-                                    ) {
-                                        ExpoIcon(
-                                            tint = colors.black,
-                                            modifier = Modifier.size(100.dp)
-                                        )
-                                        Text(
-                                            text = "아직 일반 프로그램이 등장하지 않았아요..",
-                                            style = typography.bodyRegular2,
-                                            color = colors.gray400
-                                        )
-                                    }
+                                    ShowEmptyState(
+                                        scrollState = scrollState,
+                                        emptyMessage = "아직 일반 프로그램이 등장하지 않았아요.."
+                                    )
                                 }
+
                                 is StandardProgramListUiState.Error -> {
-                                    Column(
-                                        verticalArrangement = Arrangement.spacedBy(
-                                            28.dp,
-                                            Alignment.CenterVertically
-                                        ),
-                                        horizontalAlignment = Alignment.CenterHorizontally,
-                                        modifier = Modifier
-                                            .fillMaxSize()
-                                            .background(color = colors.white)
-                                            .verticalScroll(scrollState)
-                                    ) {
-                                        WarnIcon(
-                                            tint = colors.black,
-                                            modifier = Modifier.size(100.dp)
-                                        )
-                                        Text(
-                                            text = "데이터를 불러올 수 없어요!",
-                                            style = typography.bodyRegular2,
-                                            color = colors.gray400
-                                        )
-                                    }
+                                    ShowErrorState(
+                                        scrollState = scrollState,
+                                        errorText = "데이터를 불러올 수 없어요!"
+                                    )
                                 }
                             }
                         }
@@ -315,47 +285,17 @@ private fun ProgramDetailProgramScreen(
                                 }
 
                                 is TrainingProgramListUiState.Empty -> {
-                                    Column(
-                                        verticalArrangement = Arrangement.spacedBy(28.dp, Alignment.CenterVertically),
-                                        horizontalAlignment = Alignment.CenterHorizontally,
-                                        modifier = Modifier
-                                            .fillMaxSize()
-                                            .verticalScroll(scrollState)
-                                            .background(color = colors.white)
-                                    ) {
-                                        ExpoIcon(
-                                            tint = colors.black,
-                                            modifier = Modifier.size(100.dp)
-                                        )
-                                        Text(
-                                            text = "아직 연수 프로그램이 등장하지 않았아요..",
-                                            style = typography.bodyRegular2,
-                                            color = colors.gray400
-                                        )
-                                    }
+                                    ShowEmptyState(
+                                        scrollState = scrollState,
+                                        emptyMessage = "아직 연수 프로그램이 등장하지 않았아요.."
+                                    )
                                 }
+
                                 is TrainingProgramListUiState.Error -> {
-                                    Column(
-                                        verticalArrangement = Arrangement.spacedBy(
-                                            28.dp,
-                                            Alignment.CenterVertically
-                                        ),
-                                        horizontalAlignment = Alignment.CenterHorizontally,
-                                        modifier = Modifier
-                                            .fillMaxSize()
-                                            .background(color = colors.white)
-                                            .verticalScroll(scrollState)
-                                    ) {
-                                        WarnIcon(
-                                            tint = colors.black,
-                                            modifier = Modifier.size(100.dp)
-                                        )
-                                        Text(
-                                            text = "데이터를 불러올 수 없어요!",
-                                            style = typography.bodyRegular2,
-                                            color = colors.gray400
-                                        )
-                                    }
+                                    ShowErrorState(
+                                        scrollState = scrollState,
+                                        errorText = "데이터를 불러올 수 없어요!"
+                                    )
                                 }
                             }
                         }

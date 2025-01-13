@@ -90,7 +90,9 @@ fun ExpoBottomBar(
         // 커스텀 네비게이션 바 구성 요소
         ExpoNavigationBar {
             // 각 최상위 목적지에 대한 아이템을 생성합니다.
-            destinations.forEach { destination ->
+            topLevelDestinations.forEach { destination ->
+                // icon painter를 미리 변수로 추출
+                val iconPainter = painterResource(id = destination.unSelectedIcon)
                 // 현재 목적지가 선택된 상태인지 확인
                 val isSelected = destination.routeName == currentDestination?.route
 
@@ -98,18 +100,8 @@ fun ExpoBottomBar(
                 ExpoNavigationBarItem(
                     selected = selected,
                     onClick = { onNavigateToDestination(destination) },
-                    icon = {
-                        Icon(
-                            painter = painterResource(id = destination.unSelectedIcon),
-                            contentDescription = null
-                        )
-                    },
-                    selectedIcon = {
-                        Icon(
-                            painter = painterResource(id = destination.unSelectedIcon),
-                            contentDescription = null
-                        )
-                    },
+                    icon = { Icon(painter = iconPainter, contentDescription = null) },
+                    selectedIcon = { Icon(painter = iconPainter, contentDescription = null) },
                     label = {
                         Text(
                             text = destination.iconText,

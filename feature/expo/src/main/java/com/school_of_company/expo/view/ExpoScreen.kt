@@ -39,6 +39,7 @@ import com.school_of_company.expo.enum.ArrayHomeListEnum
 import com.school_of_company.expo.viewmodel.ExpoViewModel
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.school_of_company.design_system.component.shimmer.shimmerEffect
+import com.school_of_company.design_system.component.uistate.error.ErrorState
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.expo.view.component.ExpoList
 import com.school_of_company.expo.view.component.HomeBottomSheet
@@ -181,27 +182,10 @@ private fun ExpoScreen(
                     }
 
                     is GetExpoListUiState.Error -> {
-                        Column(
-                            verticalArrangement = Arrangement.spacedBy(
-                                28.dp,
-                                Alignment.CenterVertically
-                            ),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(color = colors.white)
-                                .verticalScroll(scrollState)
-                        ) {
-                            WarnIcon(
-                                tint = colors.black,
-                                modifier = Modifier.size(100.dp)
-                            )
-                            Text(
-                                text = "네트워크가 불안정해요..",
-                                style = typography.bodyRegular2,
-                                color = colors.gray400
-                            )
-                        }
+                        ErrorState(
+                            scrollState = scrollState,
+                            errorText = "네트워크가 불안정해요.."
+                        )
                     }
                 }
             }

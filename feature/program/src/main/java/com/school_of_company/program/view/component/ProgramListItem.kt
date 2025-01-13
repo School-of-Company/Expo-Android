@@ -85,40 +85,20 @@ internal fun ProgramListItem(
                     modifier = Modifier.width(150.dp)
                 )
 
-                when (data.category) {
-                    "ESSENTIAL" -> {
-                        CircleIcon(
-                            tint = colors.black,
-                            modifier = Modifier
-                                .size(16.dp)
-                                .width(25.dp)
-                        )
-                        XIcon(
-                            tint = colors.error,
-                            modifier = Modifier
-                                .size(16.dp)
-                                .width(25.dp)
-                        )
-                    }
-
-                    "CHOICE" -> {
-                        XIcon(
-                            tint = colors.error,
-                            modifier = Modifier
-                                .size(16.dp)
-                                .width(25.dp)
-                        )
-                        CircleIcon(
-                            tint = colors.black,
-                            modifier = Modifier
-                                .size(16.dp)
-                                .width(25.dp)
-                        )
-                    }
-
-                    else -> {
-                        // 기본적으로 보여줄 UI가 있다면 여기에 작성
-                    }
+                if (data.category == "ESSENTIAL") {
+                    CircleIcon(
+                        tint = colors.black,
+                        modifier = Modifier
+                            .size(16.dp)
+                            .width(25.dp)
+                    )
+                } else {
+                    XIcon(
+                        tint = colors.error,
+                        modifier = Modifier
+                            .size(16.dp)
+                            .width(25.dp)
+                    )
                 }
             }
         }

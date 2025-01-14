@@ -65,7 +65,8 @@ fun NavGraphBuilder.programDetailParticipantManagementScreen(
 
 fun NavGraphBuilder.qrScannerScreen(
     onBackClick: () -> Unit,
-    onPermissionBlock: () -> Unit
+    onPermissionBlock: () -> Unit,
+    onErrorToast: (throwable: Throwable?, message: Int?) -> Unit
 ) {
     composable(route = "$qrScannerRoute/{id}/{screenType}") { backStackEntry ->
         val id = backStackEntry.arguments?.getString("id")?.toLongOrNull()
@@ -76,7 +77,8 @@ fun NavGraphBuilder.qrScannerScreen(
                 id = id,
                 screenType = screenType,
                 onBackClick = onBackClick,
-                onPermissionBlock = onPermissionBlock
+                onPermissionBlock = onPermissionBlock,
+                onErrorToast = onErrorToast
             )
         }
     }

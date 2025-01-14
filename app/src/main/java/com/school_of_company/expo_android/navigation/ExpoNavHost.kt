@@ -148,7 +148,8 @@ fun ExpoNavHost(
 
         qrScannerScreen(
             onBackClick = navController::popBackStack,
-            onPermissionBlock = navController::popBackStack
+            onPermissionBlock = navController::popBackStack,
+            onErrorToast = makeErrorToast
         )
 
         profileScreen(onErrorToast = makeErrorToast)

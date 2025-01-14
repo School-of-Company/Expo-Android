@@ -84,14 +84,12 @@ internal fun StandardProgramListItem(
                     modifier = Modifier.width(150.dp)
                 )
 
-                repeat(2) {
-                    XIcon(
-                        tint = colors.error,
-                        modifier = Modifier
-                            .size(16.dp)
-                            .width(25.dp)
-                    )
-                }
+                XIcon(
+                    tint = colors.error,
+                    modifier = Modifier
+                        .size(16.dp)
+                        .width(25.dp)
+                )
             }
         }
     }

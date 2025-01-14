@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
@@ -175,7 +176,10 @@ private fun ProgramDetailProgramScreen(
                     .horizontalScroll(scrollState)
             ) {
 
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
 
                     Spacer(modifier = Modifier.width(62.dp))
 
@@ -207,17 +211,10 @@ private fun ProgramDetailProgramScreen(
                         )
 
                         Text(
-                            text = "선택",
-                            style = typography.captionBold1,
-                            color = colors.gray600,
-                            modifier = Modifier.width(25.dp)
-                        )
-
-                        Text(
                             text = "필수",
                             style = typography.captionBold1,
                             color = colors.gray600,
-                            modifier = Modifier.width(25.dp)
+                            modifier = Modifier.width(40.dp)
                         )
                     }
                 }

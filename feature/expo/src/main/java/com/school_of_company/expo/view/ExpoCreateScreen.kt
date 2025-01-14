@@ -51,6 +51,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
+import com.school_of_company.common.regex.isValidDate
 import com.school_of_company.design_system.R
 import com.school_of_company.design_system.component.button.ExpoStateButton
 import com.school_of_company.design_system.component.button.state.ButtonState
@@ -62,7 +63,6 @@ import com.school_of_company.design_system.component.textfield.NoneLimitedLength
 import com.school_of_company.design_system.icon.ImageIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
-import com.school_of_company.expo.enum.TrainingCategory
 import com.school_of_company.expo.view.component.ExpoAddTextField
 import com.school_of_company.expo.view.component.ExpoSettingBottomSheet
 import com.school_of_company.expo.view.component.ExpoStandardAddTextField
@@ -101,7 +101,8 @@ internal fun ExpoCreateRoute(
 
     val context = LocalContext.current
 
-    val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+    val galleryLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             if (uri != null) {
                 val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
                 context.contentResolver.openInputStream(uri)?.use { inputStream ->
@@ -134,6 +135,7 @@ internal fun ExpoCreateRoute(
                     )
                 )
             }
+
             is ImageUpLoadUiState.Error -> {
                 onErrorToast(null, R.string.expo_image_fail)
             }
@@ -154,6 +156,7 @@ internal fun ExpoCreateRoute(
                     body = standardProgramTextState
                 )
             }
+
             is RegisterExpoInformationUiState.Error -> {
                 onErrorToast(null, R.string.expo_register_fail)
             }
@@ -493,7 +496,9 @@ private fun ExpoCreateScreen(
                         state = if (
                             modifyTitleState.isNotEmpty() &&
                             startedDateState.isNotEmpty() &&
+                            startedDateState.isValidDate() &&
                             endedDateState.isNotEmpty() &&
+                            endedDateState.isValidDate() &&
                             introduceTitleState.isNotEmpty() &&
                             addressState.isNotEmpty() &&
                             locationState.isNotEmpty() &&

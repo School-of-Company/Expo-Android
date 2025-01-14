@@ -53,6 +53,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
+import com.school_of_company.common.regex.isValidDate
 import com.school_of_company.design_system.R
 import com.school_of_company.design_system.component.bottomsheet.SettingBottomSheet
 import com.school_of_company.design_system.component.button.ExpoStateButton
@@ -599,7 +600,9 @@ private fun ExpoModifyScreen(
                         state = if (
                             modifyTitleState.isNotEmpty() &&
                             startedDateState.isNotEmpty() &&
+                            startedDateState.isValidDate() &&
                             endedDateState.isNotEmpty() &&
+                            endedDateState.isValidDate() &&
                             introduceTitleState.isNotEmpty() &&
                             addressState.isNotEmpty() &&
                             locationState.isNotEmpty() &&
@@ -627,7 +630,7 @@ private fun ExpoModifyScreen(
             val selectedTrainingItem = selectedTrainingIndex?.let { trainingProgramTextState[it] }
 
             SettingBottomSheet(
-                isOpen = openTrainingSettingBottomSheet,
+                isOpen = openTrainingSettingBottomSheet, // TODO: 항상 참인 판별식
                 onDismiss = { isOpenTrainingSettingBottomSheet(false) },
                 selectedItem = selectedTrainingItem,
                 onUpdateItem = { updateItem ->
@@ -652,7 +655,7 @@ private fun ExpoModifyScreen(
             val selectedStandardItem = selectedStandardIndex?.let { standardProgramTextState[it] }
 
             SettingBottomSheet(
-                isOpen = openStandardSettingBottomSheet,
+                isOpen = openStandardSettingBottomSheet, // TODO: 항상 참인 판별식
                 onDismiss = { isOpenStandardSettingBottomSheet(false) },
                 selectedItem = selectedStandardItem,
                 onUpdateItem = { updateItem ->

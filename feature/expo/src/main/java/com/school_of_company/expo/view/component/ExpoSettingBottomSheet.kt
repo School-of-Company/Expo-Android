@@ -38,6 +38,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.school_of_company.common.regex.isValidDateTime
 import com.school_of_company.design_system.component.button.ExpoStateButton
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.icon.CheckIcon
@@ -175,8 +176,12 @@ internal fun ExpoSettingBottomSheet(
                 ExpoStateButton(
                     text = "확인",
                     onClick = {
-                        onTrainingSettingChange(currentItem)
-                        onButtonClick()
+                        if (currentItem.startedAt.isValidDateTime() && currentItem.endedAt.isValidDateTime()) {
+                            onTrainingSettingChange(currentItem)
+                            onButtonClick()
+                        } else {
+                            // TODO: 예외 처리
+                        }
                     },
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -213,7 +218,8 @@ fun CustomCheckBox(
             }
             .clip(RoundedCornerShape(6.dp))
             .expoClickable {
-                category = if (category == TrainingCategory.ESSENTIAL.name) TrainingCategory.CHOICE.name else TrainingCategory.ESSENTIAL.name
+                category =
+                    if (category == TrainingCategory.ESSENTIAL.name) TrainingCategory.CHOICE.name else TrainingCategory.ESSENTIAL.name
                 onCategoryChange(category)
             }
     ) {

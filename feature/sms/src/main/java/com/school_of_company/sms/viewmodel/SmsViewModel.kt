@@ -2,10 +2,15 @@ package com.school_of_company.sms.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.school_of_company.domain.usecase.sms.SendSmsToParticipantTraineeUseCase
+import com.school_of_company.model.param.sms.SendSmsToParticipantTraineeParam
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 internal class SmsViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
+    private val sendSmsToParticipantTraineeUseCase: SendSmsToParticipantTraineeUseCase
 ) : ViewModel() {
     companion object {
         private const val TITLE = "title"
@@ -15,6 +20,13 @@ internal class SmsViewModel @Inject constructor(
     internal var title = savedStateHandle.getStateFlow(key = TITLE, initialValue = "")
 
     internal var content = savedStateHandle.getStateFlow(key = CONTENT, initialValue = "")
+
+    internal fun sendSmsToParticipantTrainee(
+        id: String,
+        body: SendSmsToParticipantTraineeParam
+    ) = viewModelScope.launch {
+        sendSmsToParticipantTraineeUseCase(id, body)
+    }
 
     internal fun onTitleChange(value: String) {
         savedStateHandle[TITLE] = value

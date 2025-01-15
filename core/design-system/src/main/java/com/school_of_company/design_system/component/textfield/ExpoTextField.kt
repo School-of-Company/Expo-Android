@@ -162,7 +162,7 @@ fun ExpoNoneLabelTextField(
     value: String? = null,
     visualTransformationState: Boolean = false,
     trailingIcon: @Composable (() -> Unit)? = null
-    ) {
+) {
     var text by remember { mutableStateOf(value ?: "") }
     val isFocused = remember { mutableStateOf(false) }
 
@@ -238,6 +238,7 @@ fun LimitedLengthTextField(
     overflowErrorMessage: String = "",
     isError: Boolean,
     lengthLimit: Int = 0,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     updateTextValue: (String) -> Unit,
 ) {
@@ -279,6 +280,7 @@ fun LimitedLengthTextField(
                         }
                     },
                     keyboardOptions = keyboardOptions,
+                    visualTransformation = visualTransformation,
                     value = textState,
                     textStyle = typography.captionRegular1.copy(
                         fontWeight = FontWeight.Normal,
@@ -476,11 +478,11 @@ fun ExpoOutlinedTextFieldPreview() {
                 label = "비밀번호"
             )
             LimitedLengthTextField(textState = "", placeholder = "", isError = false) {
-                
+
             }
 
             NoneLimitedLengthTextField(textState = "", placeholder = "") {
-                
+
             }
         }
     }

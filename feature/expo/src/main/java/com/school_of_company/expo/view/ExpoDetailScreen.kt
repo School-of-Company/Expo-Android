@@ -48,6 +48,7 @@ import com.school_of_company.expo.viewmodel.ExpoViewModel
 import com.school_of_company.expo.viewmodel.uistate.GetExpoInformationUiState
 import com.school_of_company.expo.viewmodel.uistate.GetStandardProgramListUiState
 import com.school_of_company.expo.viewmodel.uistate.GetTrainingProgramListUiState
+import com.school_of_company.ui.enumType.SmsType
 import com.school_of_company.ui.preview.ExpoPreviews
 import com.school_of_company.ui.util.formatServerDate
 
@@ -55,7 +56,7 @@ import com.school_of_company.ui.util.formatServerDate
 internal fun ExpoDetailRoute(
     id: String,
     onBackClick: () -> Unit,
-    onMessageClick: () -> Unit,
+    onMessageClick: (String) -> Unit,
     onCheckClick: () -> Unit,
     onModifyClick: (String) -> Unit,
     onProgramClick: (String) -> Unit,
@@ -93,7 +94,7 @@ private fun ExpoDetailScreen(
     getTrainingProgramUiState: GetTrainingProgramListUiState,
     getStandardProgramUiState: GetStandardProgramListUiState,
     onBackClick: () -> Unit,
-    onMessageClick: () -> Unit,
+    onMessageClick: (String) -> Unit,
     onCheckClick: () -> Unit,
     onModifyClick: (String) -> Unit,
     onProgramClick: (String) -> Unit
@@ -402,13 +403,11 @@ private fun ExpoDetailScreen(
                 onCancelClick = { isOpenDialog(false) },
                 onParticipantClick = {
                     isOpenDialog(false)
-                    onMessageClick()
-                    /*TODO -> SMS Logic*/
+                    onMessageClick(SmsType.Participant.name)
                 },
                 onTraineeClick = {
                     isOpenDialog(false)
-                    onMessageClick()
-                    /*TODO -> SMS Logic*/
+                    onMessageClick(SmsType.Trainee.name)
                 }
             )
         }

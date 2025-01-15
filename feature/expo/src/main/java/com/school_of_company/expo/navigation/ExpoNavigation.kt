@@ -60,7 +60,7 @@ fun NavGraphBuilder.expoScreen(
 
 fun NavGraphBuilder.expoDetailScreen(
     onBackClick: () -> Unit,
-    onMessageClick: () -> Unit,
+    onMessageClick: (String) -> Unit,
     onCheckClick: () -> Unit,
     onModifyClick: (String) -> Unit,
     onProgramClick: (String) -> Unit

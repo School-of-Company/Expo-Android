@@ -158,40 +158,39 @@ private fun SignInScreen(
     ExpoAndroidTheme { colors, typography ->
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .fillMaxSize()
+                .background(color = colors.white)
+                .padding(horizontal = 16.dp)
                 .imePadding()
                 .verticalScroll(scrollState)
-                .background(color = colors.white)
                 .pointerInput(Unit) {
                     detectTapGestures {
                         focusManager.clearFocus()
                     }
                 }
         ) {
-            Spacer(modifier = modifier.padding(top = 150.dp))
-
-            Text(
-                text = stringResource(id = R.string.main_string),
-                style = typography.mainTypo,
-                color = colors.main
-            )
-
-            Text(
-                text = stringResource(id = R.string.admin_sign_in),
-                style = typography.titleBold2,
-                color = colors.black,
-                fontWeight = FontWeight.Medium
-            )
-
-            Spacer(modifier = modifier.padding(40.dp))
-
             Column(
-                modifier = modifier
-                    .padding(horizontal = 16.dp)
-                    .weight(1f),
+                modifier = modifier,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                Spacer(modifier = modifier.padding(top = 150.dp))
+
+                Text(
+                    text = stringResource(id = R.string.main_string),
+                    style = typography.mainTypo,
+                    color = colors.main
+                )
+
+                Text(
+                    text = stringResource(id = R.string.admin_sign_in),
+                    style = typography.titleBold2,
+                    color = colors.black,
+                    fontWeight = FontWeight.Medium
+                )
+
+                Spacer(modifier = modifier.padding(40.dp))
                 ExpoDefaultTextField(
                     modifier = modifier
                         .fillMaxWidth()
@@ -255,18 +254,16 @@ private fun SignInScreen(
                         modifier = modifier.expoClickable { onSignUpClick() }
                     )
                 }
-
-                Spacer(modifier = modifier.weight(1f))
-
-                ExpoStateButton(
-                    text = stringResource(id = R.string.sign_in),
-                    state = if (id.isNotBlank() && password.isNotBlank()) ButtonState.Enable else ButtonState.Disable,
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 52.dp)
-                ) {
-                    signInCallBack()
-                }
+            }
+            Spacer(modifier = modifier.height(24.dp))
+            ExpoStateButton(
+                text = stringResource(id = R.string.sign_in),
+                state = if (id.isNotBlank() && password.isNotBlank()) ButtonState.Enable else ButtonState.Disable,
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 52.dp)
+            ) {
+                signInCallBack()
             }
         }
     }

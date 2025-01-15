@@ -480,11 +480,7 @@ private fun ExpoModifyScreen(
                         placeholder = "시작일",
                         isError = false,
                         visualTransformation = DateTimeVisualTransformation(),
-                        updateTextValue = { value ->
-                            if (endedDateState.length <= 8) {
-                                onStartedDateChange(value)
-                            }
-                        },
+                        updateTextValue = onStartedDateChange,
                         modifier = Modifier.weight(1f)
                     )
 
@@ -493,11 +489,7 @@ private fun ExpoModifyScreen(
                         placeholder = "마감일",
                         isError = false,
                         visualTransformation = DateTimeVisualTransformation(),
-                        updateTextValue = { value ->
-                            if (endedDateState.length <= 8) {
-                                onEndedDateChange(value)
-                            }
-                        },
+                        updateTextValue = onEndedDateChange,
                         modifier = Modifier.weight(1f)
                     )
                 }
@@ -637,7 +629,7 @@ private fun ExpoModifyScreen(
             val selectedTrainingItem = selectedTrainingIndex?.let { trainingProgramTextState[it] }
 
             SettingBottomSheet(
-                isOpen = openTrainingSettingBottomSheet, // TODO: 항상 참인식
+                isOpen = openTrainingSettingBottomSheet,
                 onDismiss = { isOpenTrainingSettingBottomSheet(false) },
                 selectedItem = selectedTrainingItem,
                 onUpdateItem = { updateItem ->
@@ -662,7 +654,7 @@ private fun ExpoModifyScreen(
             val selectedStandardItem = selectedStandardIndex?.let { standardProgramTextState[it] }
 
             SettingBottomSheet(
-                isOpen = openStandardSettingBottomSheet,// TODO: 항상 참인식
+                isOpen = openStandardSettingBottomSheet,
                 onDismiss = { isOpenStandardSettingBottomSheet(false) },
                 selectedItem = selectedStandardItem,
                 onUpdateItem = { updateItem ->

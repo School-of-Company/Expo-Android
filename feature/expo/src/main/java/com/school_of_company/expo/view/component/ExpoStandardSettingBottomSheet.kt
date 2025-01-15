@@ -107,11 +107,9 @@ internal fun ExpoStandardSettingBottomSheet(
                                 maxLines = 1
                             )
                         },
-                        onTextChange = { value ->
-                            if (currentItem.endedAt.length <= 12) {
-                                currentItem = currentItem.copy(startedAt = value)
-                            }
-                        },
+                        onTextChange = { newText ->
+                            currentItem = currentItem.copy(startedAt = newText)
+                        }
                     )
 
                     ExpoNoneLineTextField(
@@ -125,11 +123,9 @@ internal fun ExpoStandardSettingBottomSheet(
                                 maxLines = 1
                             )
                         },
-                        onTextChange = { value ->
-                            if (currentItem.endedAt.length <= 12) {
-                                currentItem = currentItem.copy(endedAt = value)
-                            }
-                        },
+                        onTextChange = { newText ->
+                            currentItem = currentItem.copy(endedAt = newText)
+                        }
                     )
 
                 ExpoStateButton(

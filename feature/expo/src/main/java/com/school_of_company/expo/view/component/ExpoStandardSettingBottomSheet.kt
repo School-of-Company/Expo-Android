@@ -32,6 +32,7 @@ import com.school_of_company.design_system.component.modifier.clickable.expoClic
 import com.school_of_company.design_system.icon.XIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.model.model.standard.StandardRequestModel
+import com.school_of_company.ui.visualTransformation.DateTimeVisualTransformation
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -97,6 +98,7 @@ internal fun ExpoStandardSettingBottomSheet(
                 }
                     ExpoNoneLineTextField(
                         textState = currentItem.startedAt,
+                        visualTransformation = DateTimeVisualTransformation(),
                         placeHolder = {
                             Text(
                                 text = "yyyy-MM-dd HH:mm",
@@ -112,6 +114,7 @@ internal fun ExpoStandardSettingBottomSheet(
 
                     ExpoNoneLineTextField(
                         textState = currentItem.endedAt,
+                        visualTransformation = DateTimeVisualTransformation(),
                         placeHolder = {
                             Text(
                                 text = "yyyy-MM-dd HH:mm",

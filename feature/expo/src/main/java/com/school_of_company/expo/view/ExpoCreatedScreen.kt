@@ -143,6 +143,7 @@ private fun ExpoCreatedScreen(
                 }
             }
             Spacer(modifier = Modifier.height(32.dp))
+            // TODO: 데이터 로딩시에 버튼 안보이게 설정
             ExpoCreatedDeleteButton(
                 enabled = selectedIndex != -1,
                 onClick = { deleteSelectedExpo(selectedIndex) }

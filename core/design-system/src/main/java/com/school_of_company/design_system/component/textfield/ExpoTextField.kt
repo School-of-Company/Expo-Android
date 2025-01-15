@@ -162,7 +162,7 @@ fun ExpoNoneLabelTextField(
     value: String? = null,
     visualTransformationState: Boolean = false,
     trailingIcon: @Composable (() -> Unit)? = null
-    ) {
+) {
     var text by remember { mutableStateOf(value ?: "") }
     val isFocused = remember { mutableStateOf(false) }
 
@@ -220,7 +220,7 @@ fun ExpoNoneLabelTextField(
                 visualTransformation = if (visualTransformationState) PasswordVisualTransformation() else VisualTransformation.None,
                 trailingIcon = trailingIcon
             )
-            if (isError) {
+            if (isError) { // TODO: 항상 참인 식 
                 Row(horizontalArrangement = if (isError) Arrangement.Start else Arrangement.End) {
                     ErrorText(text = errorText)
                 }
@@ -237,7 +237,9 @@ fun LimitedLengthTextField(
     placeholder: String,
     overflowErrorMessage: String = "",
     isError: Boolean,
+    showLengthCounter: Boolean = true,
     lengthLimit: Int = 0,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     updateTextValue: (String) -> Unit,
 ) {
@@ -279,6 +281,7 @@ fun LimitedLengthTextField(
                         }
                     },
                     keyboardOptions = keyboardOptions,
+                    visualTransformation = visualTransformation,
                     value = textState,
                     textStyle = typography.captionRegular1.copy(
                         fontWeight = FontWeight.Normal,
@@ -301,7 +304,7 @@ fun LimitedLengthTextField(
                 }
             }
 
-            if (lengthLimit != 0) {
+            if (lengthLimit != 0 && showLengthCounter) {
                 Text(
                     text = "${textState.length} / $lengthLimit",
                     style = typography.captionRegular2,
@@ -476,11 +479,11 @@ fun ExpoOutlinedTextFieldPreview() {
                 label = "비밀번호"
             )
             LimitedLengthTextField(textState = "", placeholder = "", isError = false) {
-                
+
             }
 
             NoneLimitedLengthTextField(textState = "", placeholder = "") {
-                
+
             }
         }
     }

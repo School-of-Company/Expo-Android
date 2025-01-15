@@ -76,6 +76,7 @@ import com.school_of_company.model.model.expo.ExpoRequestAndResponseModel
 import com.school_of_company.model.model.standard.StandardRequestModel
 import com.school_of_company.model.model.training.TrainingDtoModel
 import com.school_of_company.ui.toast.makeToast
+import com.school_of_company.ui.visualTransformation.DateTimeVisualTransformation
 
 @Composable
 internal fun ExpoCreateRoute(
@@ -374,16 +375,22 @@ private fun ExpoCreateScreen(
                     LimitedLengthTextField(
                         label = "모집기간",
                         textState = startedDateState,
+                        lengthLimit = 8,
+                        showLengthCounter = false,
                         placeholder = "시작일",
                         isError = false,
+                        visualTransformation = DateTimeVisualTransformation(),
                         updateTextValue = onStartedDateChange,
                         modifier = Modifier.weight(1f)
                     )
 
                     LimitedLengthTextField(
                         textState = endedDateState,
+                        lengthLimit = 8,
+                        showLengthCounter = false,
                         placeholder = "마감일",
                         isError = false,
+                        visualTransformation = DateTimeVisualTransformation(),
                         updateTextValue = onEndedDateChange,
                         modifier = Modifier.weight(1f)
                     )

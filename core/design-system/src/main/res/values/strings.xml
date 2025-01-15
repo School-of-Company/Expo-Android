@@ -82,7 +82,7 @@
     <string name="get_created_expo_list_fail">박람회 리스트를 불러오지 못했습니다.</string>
     <string name="expo_not_selected">박람회를 선택하고 삭제버튼을 눌러주세요.</string>
     <string name="get_created_expo_list_empty">박람회 리스트가 비어있습니다.</string>
-    <string name="expo_delete_fail">박람회 삭제를 실패하였습니다.</string>"
+    <string name="expo_delete_fail">박람회 삭제를 실패하였습니다.</string>
 
     <string name="expo_image_fail">박람회 이미지가 유효하지 않습니다.</string>
 

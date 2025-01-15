@@ -237,6 +237,7 @@ fun LimitedLengthTextField(
     placeholder: String,
     overflowErrorMessage: String = "",
     isError: Boolean,
+    showLengthCounter: Boolean = true,
     lengthLimit: Int = 0,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
@@ -303,7 +304,7 @@ fun LimitedLengthTextField(
                 }
             }
 
-            if (lengthLimit != 0) {
+            if (lengthLimit != 0 && showLengthCounter) {
                 Text(
                     text = "${textState.length} / $lengthLimit",
                     style = typography.captionRegular2,

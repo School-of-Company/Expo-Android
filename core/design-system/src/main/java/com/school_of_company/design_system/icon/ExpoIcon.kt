@@ -346,3 +346,16 @@ fun EyeIcon(
         tint = tint
     )
 }
+
+@Composable
+fun LogoutIcon(
+    modifier: Modifier = Modifier,
+    tint: Color = Color.Unspecified
+) {
+    Icon(
+        painter = painterResource(id = R.drawable.ic_logout),
+        contentDescription = "로그아웃 아이콘",
+        modifier = modifier,
+        tint = tint
+    )
+}

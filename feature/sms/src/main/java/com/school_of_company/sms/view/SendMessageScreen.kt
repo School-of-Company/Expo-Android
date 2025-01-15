@@ -31,7 +31,8 @@ import com.school_of_company.sms.viewmodel.SmsViewModel
 internal fun SendMessageRoute(
     onBackClick: () -> Unit,
     viewModel: SmsViewModel = hiltViewModel(),
-    smsType: String
+    id: String,
+    smsType: String,
 ) {
     val title by viewModel.title.collectAsStateWithLifecycle()
     val content by viewModel.content.collectAsStateWithLifecycle()

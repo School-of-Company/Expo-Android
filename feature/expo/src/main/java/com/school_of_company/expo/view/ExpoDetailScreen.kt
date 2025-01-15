@@ -48,7 +48,7 @@ import com.school_of_company.expo.viewmodel.ExpoViewModel
 import com.school_of_company.expo.viewmodel.uistate.GetExpoInformationUiState
 import com.school_of_company.expo.viewmodel.uistate.GetStandardProgramListUiState
 import com.school_of_company.expo.viewmodel.uistate.GetTrainingProgramListUiState
-import com.school_of_company.ui.enumType.SmsType
+import com.school_of_company.model.enum.Authority
 import com.school_of_company.ui.preview.ExpoPreviews
 import com.school_of_company.ui.util.formatServerDate
 
@@ -56,7 +56,7 @@ import com.school_of_company.ui.util.formatServerDate
 internal fun ExpoDetailRoute(
     id: String,
     onBackClick: () -> Unit,
-    onMessageClick: (String) -> Unit,
+    onMessageClick: (String, String) -> Unit,
     onCheckClick: () -> Unit,
     onModifyClick: (String) -> Unit,
     onProgramClick: (String) -> Unit,
@@ -72,7 +72,7 @@ internal fun ExpoDetailRoute(
         getTrainingProgramUiState = getTrainingProgramUiState,
         getStandardProgramUiState = getStandardProgramUiState,
         onBackClick = onBackClick,
-        onMessageClick = onMessageClick,
+        onMessageClick = { authority -> onMessageClick(id, authority) },
         onCheckClick = onCheckClick,
         onModifyClick = onModifyClick,
         onProgramClick = onProgramClick
@@ -396,18 +396,18 @@ private fun ExpoDetailScreen(
             }
         }
     }
-    
+
     if (openDialog) {
         Dialog(onDismissRequest = { isOpenDialog(false) }) {
             com.school_of_company.expo.view.component.MessageDialog(
                 onCancelClick = { isOpenDialog(false) },
                 onParticipantClick = {
                     isOpenDialog(false)
-                    onMessageClick(SmsType.Participant.name)
+                    onMessageClick(Authority.ROLE_STANDARD.name)
                 },
                 onTraineeClick = {
                     isOpenDialog(false)
-                    onMessageClick(SmsType.Trainee.name)
+                    onMessageClick(Authority.ROLE_TRAINEE.name)
                 }
             )
         }

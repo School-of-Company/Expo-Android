@@ -36,6 +36,7 @@ import com.school_of_company.expo.viewmodel.uistate.RegisterTrainingProgramListU
 import com.school_of_company.model.model.expo.ExpoRequestAndResponseModel
 import com.school_of_company.model.model.standard.StandardRequestModel
 import com.school_of_company.model.model.training.TrainingDtoModel
+import com.school_of_company.ui.util.autoFormatToDateTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -173,7 +174,12 @@ internal class ExpoViewModel @Inject constructor(
     internal fun registerExpoInformation(body: ExpoRequestAndResponseModel) =
         viewModelScope.launch {
             _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Loading
-            registerExpoInformationUseCase(body = body)
+            registerExpoInformationUseCase(
+                body = body.copy(
+                    startedDay = body.startedDay.autoFormatToDateTime(),
+                    finishedDay = body.finishedDay.autoFormatToDateTime(),
+                ),
+            )
                 .asResult()
                 .collectLatest { result ->
                     when (result) {
@@ -302,7 +308,12 @@ internal class ExpoViewModel @Inject constructor(
         _registerTrainingProgramListUiState.value = RegisterTrainingProgramListUiState.Loading
         registerTrainingProgramListUseCase(
             expoId = expoId,
-            body = body
+            body = body.map { list ->
+                list.copy(
+                    startedAt = list.startedAt.autoFormatToDateTime(),
+                    endedAt = list.endedAt.autoFormatToDateTime(),
+                )
+            }
         )
             .onSuccess {
                 it.catch { remoteError ->
@@ -365,7 +376,12 @@ internal class ExpoViewModel @Inject constructor(
         _registerStandardProgramListUiState.value = RegisterStandardProgramListUiState.Loading
         registerStandardProgramListUseCase(
             expoId = expoId,
-            body = body
+            body = body.map { list ->
+                list.copy(
+                    startedAt = list.startedAt.autoFormatToDateTime(),
+                    endedAt = list.endedAt.autoFormatToDateTime(),
+                )
+            }
         )
             .onSuccess {
                 it.catch { remoteError ->

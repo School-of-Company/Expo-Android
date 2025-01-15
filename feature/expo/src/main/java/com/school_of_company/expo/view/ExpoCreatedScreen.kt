@@ -18,10 +18,13 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.school_of_company.design_system.R
@@ -32,8 +35,10 @@ import com.school_of_company.expo.view.component.ExpoCreatedDeleteButton
 import com.school_of_company.expo.view.component.ExpoCreatedTable
 import com.school_of_company.expo.view.component.ExpoCreatedTopCard
 import com.school_of_company.expo.viewmodel.ExpoViewModel
+import com.school_of_company.expo.viewmodel.uistate.DeleteExpoInformationUiState
 import com.school_of_company.expo.viewmodel.uistate.GetExpoListUiState
 import com.school_of_company.model.entity.expo.ExpoListResponseEntity
+import com.school_of_company.ui.toast.makeToast
 import kotlinx.collections.immutable.immutableListOf
 import kotlinx.collections.immutable.toPersistentList
 
@@ -44,21 +49,27 @@ internal fun ExpoCreatedRoute(
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
 ) {
     val getExpoListUiState by expoViewModel.getExpoListUiState.collectAsStateWithLifecycle()
+    val deleteExpoInformationUiState by expoViewModel.deleteExpoInformationUiState.collectAsStateWithLifecycle()
     val swipeRefreshLoading by expoViewModel.swipeRefreshLoading.collectAsStateWithLifecycle()
     val expoListSize by expoViewModel.expoListSize.collectAsStateWithLifecycle()
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = swipeRefreshLoading)
     val (selectedIndex, setSelectedIndex) = rememberSaveable { mutableIntStateOf(-1) }
 
+    val context = LocalContext.current
+
     LaunchedEffect("initCreatedExpo") {
         expoViewModel.getExpoList()
     }
 
-    LaunchedEffect(getExpoListUiState) {
-        when (getExpoListUiState) {
-            GetExpoListUiState.Empty -> onErrorToast(null, R.string.get_created_expo_list_empty)
-            is GetExpoListUiState.Error -> onErrorToast(null, R.string.get_created_expo_list_fail)
-            is GetExpoListUiState.Success -> setSelectedIndex(-1)
-            else -> Unit
+    LaunchedEffect(deleteExpoInformationUiState) {
+        when (deleteExpoInformationUiState) {
+            is DeleteExpoInformationUiState.Loading -> Unit
+            is DeleteExpoInformationUiState.Success -> {
+                makeToast(context, "박람회가 삭제되었습니다.")
+            }
+            is DeleteExpoInformationUiState.Error -> {
+                onErrorToast(null, R.string.expo_delete_fail)
+            }
         }
     }
 
@@ -112,42 +123,51 @@ private fun ExpoCreatedScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 ExpoCreatedTable(modifier = Modifier.fillMaxWidth())
-                when (getExpoListUiState) {
-                    is GetExpoListUiState.Loading -> Unit
-                    is GetExpoListUiState.Success -> {
-                        CreatedExpoList(
-                            scrollState = scrollState,
-                            expoList = getExpoListUiState.data.toPersistentList(),
-                            onItemClick = { isSelected, index ->
-                                setSelectedIndex(if (isSelected) -1 else index)
-                            },
-                            selectedIndex = selectedIndex,
-                            swipeRefreshState = swipeRefreshState,
-                            onRefresh = initCreatedExpoList
+                SwipeRefresh(
+                    state = swipeRefreshState,
+                    onRefresh = { initCreatedExpoList() },
+                    indicator = { state, refreshTrigger ->
+                        SwipeRefreshIndicator(
+                            state = state,
+                            refreshTriggerDistance = refreshTrigger,
+                            contentColor = colors.main
                         )
                     }
+                ) {
+                    when (getExpoListUiState) {
+                        is GetExpoListUiState.Loading -> Unit
+                        is GetExpoListUiState.Success -> {
+                            CreatedExpoList(
+                                scrollState = scrollState,
+                                expoList = getExpoListUiState.data.toPersistentList(),
+                                onItemClick = { isSelected, index ->
+                                    setSelectedIndex(if (isSelected) -1 else index)
+                                },
+                                selectedIndex = selectedIndex,
+                            )
+                            Spacer(modifier = Modifier.height(32.dp))
+                            ExpoCreatedDeleteButton(
+                                enabled = selectedIndex != -1,
+                                onClick = { deleteSelectedExpo(selectedIndex) }
+                            )
+                        }
 
-                    is GetExpoListUiState.Empty -> {
-                        ShowEmptyState(
-                            scrollState = scrollState,
-                            emptyMessage = "등뢱된 박람회가 없습니다.."
-                        )
-                    }
+                        is GetExpoListUiState.Empty -> {
+                            ShowEmptyState(
+                                scrollState = scrollState,
+                                emptyMessage = "등뢱된 박람회가 없습니다.."
+                            )
+                        }
 
-                    is GetExpoListUiState.Error -> {
-                        ShowErrorState(
-                            scrollState = scrollState,
-                            errorText = "등록된 박람회를 불러올 수 없습니다.."
-                        )
+                        is GetExpoListUiState.Error -> {
+                            ShowErrorState(
+                                scrollState = scrollState,
+                                errorText = "등록된 박람회를 불러올 수 없습니다.."
+                            )
+                        }
                     }
                 }
             }
-            Spacer(modifier = Modifier.height(32.dp))
-            // TODO: 데이터 로딩시에 버튼 안보이게 설정
-            ExpoCreatedDeleteButton(
-                enabled = selectedIndex != -1,
-                onClick = { deleteSelectedExpo(selectedIndex) }
-            )
         }
     }
 }

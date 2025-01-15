@@ -375,7 +375,11 @@ private fun ExpoCreateScreen(
                         placeholder = "시작일",
                         isError = false,
                         visualTransformation = DateTimeVisualTransformation(),
-                        updateTextValue = onStartedDateChange,
+                        updateTextValue = { value ->
+                            if (endedDateState.length <= 8) {
+                                onStartedDateChange(value)
+                            }
+                        },
                         modifier = Modifier.weight(1f)
                     )
 
@@ -384,7 +388,11 @@ private fun ExpoCreateScreen(
                         placeholder = "마감일",
                         isError = false,
                         visualTransformation = DateTimeVisualTransformation(),
-                        updateTextValue = onEndedDateChange,
+                        updateTextValue = { value ->
+                            if (endedDateState.length <= 8) {
+                                onEndedDateChange(value)
+                            }
+                        },
                         modifier = Modifier.weight(1f)
                     )
                 }

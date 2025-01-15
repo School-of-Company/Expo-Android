@@ -58,14 +58,14 @@ internal fun UserBottomSheet(
                 UserBottomSheetOptions(
                     text = "로그아웃",
                     onClick = onLogoutClick,
-                    textColor = colors.gray500,
+                    textColor = colors.error,
                     rippleColor = colors.error
                 )
 
                 UserBottomSheetOptions(
                     text = "탈퇴하기",
                     onClick = onWithdrawClick,
-                    textColor = colors.gray500,
+                    textColor = colors.error,
                     rippleColor = colors.error
                 )
 

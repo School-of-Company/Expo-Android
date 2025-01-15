@@ -7,8 +7,10 @@ import com.school_of_company.common.result.asResult
 import com.school_of_company.domain.usecase.admin.AllowAdminRequestUseCase
 import com.school_of_company.domain.usecase.admin.GetAdminRequestAllowListUseCase
 import com.school_of_company.domain.usecase.admin.ServiceWithdrawalUseCase
+import com.school_of_company.domain.usecase.auth.AdminLogoutUseCase
 import com.school_of_company.user.viewmodel.uistate.AllowAdminRequestUiState
 import com.school_of_company.user.viewmodel.uistate.GetAdminRequestAllowListUiState
+import com.school_of_company.user.viewmodel.uistate.LogoutUiState
 import com.school_of_company.user.viewmodel.uistate.ServiceWithdrawalUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +24,8 @@ import javax.inject.Inject
 class UserViewModel @Inject constructor(
     private val getAdminRequestAllowListUseCase: GetAdminRequestAllowListUseCase,
     private val allowAdminRequestUseCase: AllowAdminRequestUseCase,
-    private val serviceWithdrawalUseCase: ServiceWithdrawalUseCase
+    private val serviceWithdrawalUseCase: ServiceWithdrawalUseCase,
+    private val logoutUseCase: AdminLogoutUseCase
 ) : ViewModel() {
 
     private val _swipeRefreshLoading = MutableStateFlow(false)
@@ -36,6 +39,9 @@ class UserViewModel @Inject constructor(
 
     private val _serviceWithdrawalUiState = MutableStateFlow<ServiceWithdrawalUiState>(ServiceWithdrawalUiState.Loading)
     internal val serviceWithdrawalUiState = _serviceWithdrawalUiState.asStateFlow()
+
+    private val _logoutUiState = MutableStateFlow<LogoutUiState>(LogoutUiState.Loading)
+    internal val logoutUiState = _logoutUiState.asStateFlow()
 
     internal fun getAdminRequestAllowList() = viewModelScope.launch {
         _swipeRefreshLoading.value = true
@@ -89,6 +95,21 @@ class UserViewModel @Inject constructor(
             }
             .onFailure { error ->
                 _serviceWithdrawalUiState.value = ServiceWithdrawalUiState.Error(error)
+            }
+    }
+
+    internal fun logout() = viewModelScope.launch {
+        _logoutUiState.value = LogoutUiState.Loading
+        logoutUseCase()
+            .onSuccess {
+                it.catch { remoteError ->
+                    _logoutUiState.value = LogoutUiState.Error(remoteError)
+                }.collect {
+                    _logoutUiState.value = LogoutUiState.Success
+                }
+            }
+            .onFailure { error ->
+                _logoutUiState.value = LogoutUiState.Error(error)
             }
     }
 }

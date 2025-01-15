@@ -15,6 +15,7 @@ import com.school_of_company.expo.navigation.navigateToExpoDetail
 import com.school_of_company.expo.navigation.navigateToExpoModify
 import com.school_of_company.expo.navigation.navigateToHome
 import com.school_of_company.expo_android.ui.ExpoAppState
+import com.school_of_company.expo_android.ui.navigationPopUpToLogin
 import com.school_of_company.program.navigation.navigateQrScanner
 import com.school_of_company.program.navigation.qrScannerScreen
 import com.school_of_company.navigation.navigateToSignIn
@@ -152,6 +153,9 @@ fun ExpoNavHost(
             onErrorToast = makeErrorToast
         )
 
-        profileScreen(onErrorToast = makeErrorToast)
+        profileScreen(
+            onErrorToast = makeErrorToast,
+            onMainNavigate = { navController.navigationPopUpToLogin(loginRoute = sigInRoute) }
+        )
     }
 }

@@ -83,7 +83,7 @@ import com.school_of_company.model.model.expo.ExpoRequestAndResponseModel
 import com.school_of_company.model.model.standard.StandardRequestModel
 import com.school_of_company.model.model.training.TrainingDtoModel
 import com.school_of_company.ui.toast.makeToast
-import java.util.Locale.Category
+import com.school_of_company.ui.visualTransformation.DateTimeVisualTransformation
 
 @Composable
 internal fun ExpoModifyRoute(
@@ -479,6 +479,7 @@ private fun ExpoModifyScreen(
                         textState = startedDateState,
                         placeholder = "시작일",
                         isError = false,
+                        visualTransformation = DateTimeVisualTransformation(),
                         updateTextValue = onStartedDateChange,
                         modifier = Modifier.weight(1f)
                     )
@@ -487,6 +488,7 @@ private fun ExpoModifyScreen(
                         textState = endedDateState,
                         placeholder = "마감일",
                         isError = false,
+                        visualTransformation = DateTimeVisualTransformation(),
                         updateTextValue = onEndedDateChange,
                         modifier = Modifier.weight(1f)
                     )

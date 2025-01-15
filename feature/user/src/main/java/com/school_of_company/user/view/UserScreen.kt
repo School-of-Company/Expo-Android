@@ -50,11 +50,14 @@ import com.school_of_company.user.view.component.UserDeleteButton
 import com.school_of_company.user.viewmodel.UserViewModel
 import com.school_of_company.user.viewmodel.uistate.AllowAdminRequestUiState
 import com.school_of_company.user.viewmodel.uistate.GetAdminRequestAllowListUiState
+import com.school_of_company.user.viewmodel.uistate.LogoutUiState
+import com.school_of_company.user.viewmodel.uistate.ServiceWithdrawalUiState
 import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 internal fun UserRoute(
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
+    onMainNavigate: () -> Unit,
     viewModel: UserViewModel = hiltViewModel()
 ) {
     val swipeRefreshLoading by viewModel.swipeRefreshLoading.collectAsStateWithLifecycle()
@@ -62,6 +65,8 @@ internal fun UserRoute(
 
     val getAdminRequestAllowListUiState by viewModel.getAdminRequestAllowListUiState.collectAsStateWithLifecycle()
     val allowAdminRequestUiState by viewModel.allowAdminRequestUiState.collectAsStateWithLifecycle()
+    val serviceWithdrawalUiState by viewModel.serviceWithdrawalUiState.collectAsStateWithLifecycle()
+    val logoutUiState by viewModel.logoutUiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.getAdminRequestAllowList()
@@ -74,8 +79,35 @@ internal fun UserRoute(
                 onErrorToast(null, R.string.sign_up_request_allow_success)
                 viewModel.getAdminRequestAllowList()
             }
+
             is AllowAdminRequestUiState.Error -> {
                 onErrorToast(null, R.string.sign_up_request_allow_fail)
+            }
+        }
+    }
+
+    LaunchedEffect(serviceWithdrawalUiState) {
+        when (serviceWithdrawalUiState) {
+            is ServiceWithdrawalUiState.Loading -> Unit
+            is ServiceWithdrawalUiState.Success -> {
+                onErrorToast(null, R.string.withdraw_success)
+                onMainNavigate()
+            }
+            is ServiceWithdrawalUiState.Error -> {
+                onErrorToast(null, R.string.withdraw_fail)
+            }
+        }
+    }
+
+    LaunchedEffect(logoutUiState) {
+        when (logoutUiState) {
+            is LogoutUiState.Loading -> Unit
+            is LogoutUiState.Success -> {
+                onErrorToast(null, R.string.logout_success)
+                onMainNavigate()
+            }
+            is LogoutUiState.Error -> {
+                onErrorToast(null, R.string.logout_fail)
             }
         }
     }
@@ -86,7 +118,9 @@ internal fun UserRoute(
         getSignUpRequestList = { viewModel.getAdminRequestAllowList() },
         swipeRefreshState = swipeRefreshState,
         deleteCallBack = {},
-        successCallBack = viewModel::allowAdminRequest
+        successCallBack = viewModel::allowAdminRequest,
+        withdrawalCallBack = viewModel::serviceWithdrawal,
+        logoutCallBack = viewModel::logout
     )
 }
 
@@ -99,7 +133,9 @@ private fun UserScreen(
     swipeRefreshState: SwipeRefreshState,
     scrollState: ScrollState = rememberScrollState(),
     deleteCallBack: (Long) -> Unit,
-    successCallBack: (Long) -> Unit
+    successCallBack: (Long) -> Unit,
+    withdrawalCallBack: () -> Unit,
+    logoutCallBack: () -> Unit
 ) {
     val (selectedId, setSelectedId) = rememberSaveable { mutableLongStateOf(0L) }
     val (openBottomSheet, isOpenBottomSheet) = rememberSaveable { mutableStateOf(false) }
@@ -266,7 +302,7 @@ private fun UserScreen(
             }
 
             Spacer(modifier = Modifier.height(26.dp))
-            
+
             Spacer(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -366,7 +402,10 @@ private fun UserScreen(
                                     enabled = selectedId != 0L,
                                     onClick = {
                                         if (selectedId == 0L) {
-                                            onErrorToast(null, R.string.check_sign_up_request_list_item)
+                                            onErrorToast(
+                                                null,
+                                                R.string.check_sign_up_request_list_item
+                                            )
                                         } else {
                                             successCallBack(selectedId)
                                         }
@@ -404,10 +443,12 @@ private fun UserScreen(
     if (openBottomSheet) {
         UserBottomSheet(
             onLogoutClick = {
-
+                logoutCallBack()
+                isOpenBottomSheet(false)
             },
             onWithdrawClick = {
-
+                withdrawalCallBack()
+                isOpenBottomSheet(false)
             },
             onCancelClick = { isOpenBottomSheet(false) }
         )

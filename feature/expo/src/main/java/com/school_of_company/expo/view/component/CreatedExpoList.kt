@@ -23,36 +23,23 @@ internal fun CreatedExpoList(
     scrollState: ScrollState,
     expoList: ImmutableList<ExpoListResponseEntity>,
     selectedIndex: Int,
-    swipeRefreshState: SwipeRefreshState, // 상위에서 전달받은 SwipeRefreshState
     onItemClick: (Boolean, Int) -> Unit,
-    onRefresh: () -> Unit, // 새로고침 콜백
 ) {
     ExpoAndroidTheme { colors, _ ->
-        SwipeRefresh(
-            state = swipeRefreshState,
-            onRefresh = onRefresh,// 새로고침 시 호출되는 함수
-            indicator = { state, refreshTrigger ->
-                SwipeRefreshIndicator(
-                    state = state,
-                    refreshTriggerDistance = refreshTrigger,
-                    contentColor = colors.main
-                )
-            }
+
+        LazyColumn(
+            modifier = modifier,
+            verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            LazyColumn(
-                modifier = modifier,
-                verticalArrangement = Arrangement.spacedBy(20.dp)
-            ) {
-                itemsIndexed(expoList) { index, item ->
-                    CreatedExpoListItem(
-                        modifier = Modifier.fillMaxWidth(),
-                        scrollState = scrollState,
-                        selectedIndex = selectedIndex,
-                        item = item,
-                        index = index,
-                        onClick = { onItemClick(selectedIndex == index, index) }
-                    )
-                }
+            itemsIndexed(expoList) { index, item ->
+                CreatedExpoListItem(
+                    modifier = Modifier.fillMaxWidth(),
+                    scrollState = scrollState,
+                    selectedIndex = selectedIndex,
+                    item = item,
+                    index = index,
+                    onClick = { onItemClick(selectedIndex == index, index) }
+                )
             }
         }
     }
@@ -76,8 +63,6 @@ fun CreatedExpoListPreview() {
         ),
         onItemClick = { _, _ -> },
         selectedIndex = 1,
-        onRefresh = { /* 새로고침 시 동작할 함수 */ },
-        swipeRefreshState = swipeRefreshState,// 상위에서 전달한 상태
         scrollState = ScrollState(1)
-        )
+    )
 }

@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,14 +35,17 @@ import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.school_of_company.design_system.R
+import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.component.modifier.padding.paddingHorizontal
 import com.school_of_company.design_system.component.uistate.empty.ShowEmptyState
 import com.school_of_company.design_system.component.uistate.error.ShowErrorState
+import com.school_of_company.design_system.icon.LogoutIcon
 import com.school_of_company.design_system.icon.UserIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.user.view.component.SignUpRequestList
 import com.school_of_company.user.view.component.UserAllowButton
+import com.school_of_company.user.view.component.UserBottomSheet
 import com.school_of_company.user.view.component.UserDeleteButton
 import com.school_of_company.user.viewmodel.UserViewModel
 import com.school_of_company.user.viewmodel.uistate.AllowAdminRequestUiState
@@ -98,6 +102,7 @@ private fun UserScreen(
     successCallBack: (Long) -> Unit
 ) {
     val (selectedId, setSelectedId) = rememberSaveable { mutableLongStateOf(0L) }
+    val (openBottomSheet, isOpenBottomSheet) = rememberSaveable { mutableStateOf(false) }
 
     ExpoAndroidTheme { colors, typography ->
         Column(
@@ -108,27 +113,9 @@ private fun UserScreen(
         ) {
 
             Row(
-                horizontalArrangement = Arrangement.spacedBy(20.dp, Alignment.Start),
-                verticalAlignment = Alignment.CenterVertically,
+                verticalAlignment = Alignment.Top,
                 modifier = Modifier.padding(horizontal = 16.dp)
             ) {
-                Box(
-                    modifier = Modifier
-                        .width(70.dp)
-                        .height(70.dp)
-                        .background(
-                            color = colors.main,
-                            shape = RoundedCornerShape(size = 35.dp)
-                        )
-                ) {
-                    UserIcon(
-                        tint = colors.white,
-                        modifier = Modifier
-                            .align(Alignment.Center)
-                            .size(36.dp)
-                    )
-                }
-
                 Column(
                     verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top),
                     horizontalAlignment = Alignment.Start,
@@ -184,6 +171,13 @@ private fun UserScreen(
                         )
                     }
                 }
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                LogoutIcon(
+                    tint = colors.error,
+                    modifier = Modifier.expoClickable { isOpenBottomSheet(true) }
+                )
             }
 
             Spacer(modifier = Modifier.height(72.dp))
@@ -405,6 +399,18 @@ private fun UserScreen(
                 }
             }
         }
+    }
+
+    if (openBottomSheet) {
+        UserBottomSheet(
+            onLogoutClick = {
+
+            },
+            onWithdrawClick = {
+
+            },
+            onCancelClick = { isOpenBottomSheet(false) }
+        )
     }
 }
 

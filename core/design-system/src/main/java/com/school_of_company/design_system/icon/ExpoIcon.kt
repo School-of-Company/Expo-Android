@@ -229,15 +229,6 @@ fun BellIcon(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun LogoutIcon(modifier: Modifier = Modifier) {
-    Icon(
-        painter = painterResource(id = R.drawable.ic_logout),
-        contentDescription = stringResource(id = R.string.logout_description),
-        modifier = modifier
-    )
-}
-
-@Composable
 fun SettingIcon(modifier: Modifier = Modifier) {
     Icon(
         painter = painterResource(id = R.drawable.ic_setting),
@@ -342,6 +333,19 @@ fun EyeIcon(
             id = R.drawable.ic_eye_close
         ),
         contentDescription = "눈 아이콘",
+        modifier = modifier,
+        tint = tint
+    )
+}
+
+@Composable
+fun LogoutIcon(
+    modifier: Modifier = Modifier,
+    tint: Color = Color.Unspecified
+) {
+    Icon(
+        painter = painterResource(id = R.drawable.ic_logout),
+        contentDescription = "로그아웃 아이콘",
         modifier = modifier,
         tint = tint
     )

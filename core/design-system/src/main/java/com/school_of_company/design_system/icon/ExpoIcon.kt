@@ -229,15 +229,6 @@ fun BellIcon(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun LogoutIcon(modifier: Modifier = Modifier) {
-    Icon(
-        painter = painterResource(id = R.drawable.ic_logout),
-        contentDescription = stringResource(id = R.string.logout_description),
-        modifier = modifier
-    )
-}
-
-@Composable
 fun SettingIcon(modifier: Modifier = Modifier) {
     Icon(
         painter = painterResource(id = R.drawable.ic_setting),

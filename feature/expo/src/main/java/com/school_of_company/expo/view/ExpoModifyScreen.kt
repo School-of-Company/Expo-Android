@@ -477,6 +477,7 @@ private fun ExpoModifyScreen(
                     LimitedLengthTextField(
                         label = "모집기간",
                         textState = startedDateState,
+                        lengthLimit = 8,
                         placeholder = "시작일",
                         isError = false,
                         visualTransformation = DateTimeVisualTransformation(),
@@ -486,6 +487,7 @@ private fun ExpoModifyScreen(
 
                     LimitedLengthTextField(
                         textState = endedDateState,
+                        lengthLimit = 8,
                         placeholder = "마감일",
                         isError = false,
                         visualTransformation = DateTimeVisualTransformation(),

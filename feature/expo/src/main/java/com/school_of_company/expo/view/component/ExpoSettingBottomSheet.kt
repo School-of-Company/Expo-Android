@@ -120,6 +120,7 @@ internal fun ExpoSettingBottomSheet(
                     ) {
                         ExpoNoneLineTextField(
                             textState = currentItem.startedAt,
+                            lengthLimit = 12,
                             visualTransformation = DateTimeVisualTransformation(),
                             placeHolder = {
                                 Text(
@@ -136,6 +137,7 @@ internal fun ExpoSettingBottomSheet(
 
                         ExpoNoneLineTextField(
                             textState = currentItem.endedAt,
+                            lengthLimit = 12,
                             visualTransformation = DateTimeVisualTransformation(),
                             placeHolder = {
                                 Text(

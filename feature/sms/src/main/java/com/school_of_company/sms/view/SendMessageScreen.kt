@@ -24,6 +24,8 @@ import com.school_of_company.design_system.component.modifier.padding.paddingHor
 import com.school_of_company.design_system.component.textfield.LimitedLengthTextField
 import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
+import com.school_of_company.model.enum.Authority
+import com.school_of_company.model.param.sms.SendSmsToParticipantTraineeParam
 import com.school_of_company.sms.view.component.HomeSendMessageTopBar
 import com.school_of_company.sms.viewmodel.SmsViewModel
 
@@ -42,19 +44,30 @@ internal fun SendMessageRoute(
         title = title,
         content = content,
         onTitleChange = viewModel::onTitleChange,
-        onContentChange = viewModel::onContentChange
+        onContentChange = viewModel::onContentChange,
+        sendRequest = {
+            viewModel.sendSmsToParticipantTrainee(
+                id = id,
+                body = SendSmsToParticipantTraineeParam(
+                    title,
+                    content,
+                    authority = Authority.valueOf(smsType)
+                )
+            )
+        }
     )
 }
 
 @Composable
 private fun SendMessageScreen(
     modifier: Modifier = Modifier,
-    onBackClick: () -> Unit,
+    focusManager: FocusManager = LocalFocusManager.current,
     title: String,
     content: String,
+    onBackClick: () -> Unit,
     onTitleChange: (String) -> Unit,
     onContentChange: (String) -> Unit,
-    focusManager: FocusManager = LocalFocusManager.current
+    sendRequest: () -> Unit,
 ) {
     ExpoAndroidTheme { colors, _ ->
 
@@ -113,13 +126,11 @@ private fun SendMessageScreen(
             ExpoStateButton(
                 text = "보내기",
                 state = if (title.isNotEmpty() && content.isNotEmpty()) ButtonState.Enable else ButtonState.Disable,
-                onClick = onBackClick, // Temporary Code
+                onClick = sendRequest, // Temporary Code
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 48.dp)
-              ) // {
-//                // Add ExpoState CallBack
-//            }
+            )
         }
     }
 }
@@ -132,6 +143,7 @@ private fun SendMessageScreenPreview() {
         title = "",
         content = "",
         onTitleChange = {},
-        onContentChange = {}
+        onContentChange = {},
+        sendRequest = {},
     )
 }

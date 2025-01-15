@@ -255,18 +255,16 @@ private fun SignInScreen(
                         modifier = modifier.expoClickable { onSignUpClick() }
                     )
                 }
-
-                Spacer(modifier = modifier.weight(1f))
-
-                ExpoStateButton(
-                    text = stringResource(id = R.string.sign_in),
-                    state = if (id.isNotBlank() && password.isNotBlank()) ButtonState.Enable else ButtonState.Disable,
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 52.dp)
-                ) {
-                    signInCallBack()
-                }
+            }
+            Spacer(modifier = modifier.height(24.dp))
+            ExpoStateButton(
+                text = stringResource(id = R.string.sign_in),
+                state = if (id.isNotBlank() && password.isNotBlank()) ButtonState.Enable else ButtonState.Disable,
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 52.dp)
+            ) {
+                signInCallBack()
             }
         }
     }

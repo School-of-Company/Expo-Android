@@ -182,7 +182,10 @@ internal fun ExpoSettingBottomSheet(
                 ExpoStateButton(
                     text = "확인",
                     onClick = {
-                        if (currentItem.startedAt.isValidDateTime() && currentItem.endedAt.isValidDateTime()) {
+                        if (
+                            currentItem.startedAt.isValidDateTime()
+                            && currentItem.endedAt.isValidDateTime()
+                        ) {
                             onTrainingSettingChange(currentItem)
                             onButtonClick()
                         } else {

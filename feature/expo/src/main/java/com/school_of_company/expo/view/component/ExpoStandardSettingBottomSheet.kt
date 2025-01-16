@@ -27,6 +27,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.school_of_company.common.regex.isValidDateTime
 import com.school_of_company.design_system.component.button.ExpoStateButton
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.icon.XIcon
@@ -96,45 +97,52 @@ internal fun ExpoStandardSettingBottomSheet(
                         modifier = Modifier.expoClickable { onCancelClick() }
                     )
                 }
-                    ExpoNoneLineTextField(
-                        textState = currentItem.startedAt,
-                        lengthLimit = 12,
-                        visualTransformation = DateTimeVisualTransformation(),
-                        placeHolder = {
-                            Text(
-                                text = "yyyy-MM-dd HH:mm",
-                                style = typography.titleBold2,
-                                color = colors.gray300,
-                                maxLines = 1
-                            )
-                        },
-                        onTextChange = { newText ->
-                            currentItem = currentItem.copy(startedAt = newText)
-                        }
-                    )
+                ExpoNoneLineTextField(
+                    textState = currentItem.startedAt,
+                    lengthLimit = 12,
+                    visualTransformation = DateTimeVisualTransformation(),
+                    placeHolder = {
+                        Text(
+                            text = "yyyy-MM-dd HH:mm",
+                            style = typography.titleBold2,
+                            color = colors.gray300,
+                            maxLines = 1
+                        )
+                    },
+                    onTextChange = { newText ->
+                        currentItem = currentItem.copy(startedAt = newText)
+                    }
+                )
 
-                    ExpoNoneLineTextField(
-                        textState = currentItem.endedAt,
-                        lengthLimit = 12,
-                        visualTransformation = DateTimeVisualTransformation(),
-                        placeHolder = {
-                            Text(
-                                text = "yyyy-MM-dd HH:mm",
-                                style = typography.titleBold2,
-                                color = colors.gray300,
-                                maxLines = 1
-                            )
-                        },
-                        onTextChange = { newText ->
-                            currentItem = currentItem.copy(endedAt = newText)
-                        }
-                    )
+                ExpoNoneLineTextField(
+                    textState = currentItem.endedAt,
+                    lengthLimit = 12,
+                    visualTransformation = DateTimeVisualTransformation(),
+                    placeHolder = {
+                        Text(
+                            text = "yyyy-MM-dd HH:mm",
+                            style = typography.titleBold2,
+                            color = colors.gray300,
+                            maxLines = 1
+                        )
+                    },
+                    onTextChange = { newText ->
+                        currentItem = currentItem.copy(endedAt = newText)
+                    }
+                )
 
                 ExpoStateButton(
                     text = "확인",
                     onClick = {
-                        onTrainingSettingChange(currentItem)
-                        onButtonClick()
+                        if (
+                            currentItem.startedAt.isValidDateTime()
+                            && currentItem.endedAt.isValidDateTime()
+                        ) {
+                            onTrainingSettingChange(currentItem)
+                            onButtonClick()
+                        } else {
+                            // TODO: 예외 처리
+                        }
                     },
                     modifier = Modifier.fillMaxWidth()
                 )

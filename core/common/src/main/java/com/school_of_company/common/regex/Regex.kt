@@ -10,34 +10,48 @@ fun String.checkEmailRegex() =
 fun String.checkPasswordRegex() =
     this.matches("^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[@\$!%*?&])[A-Za-z\\d\$!%*?&]{8,24}$".toRegex())
 
-fun String.isValidDate(): Boolean =
-    // 먼저, 문자열이 "yyyy-MM-dd" 형식에 맞는지 정규식을 사용하여 확인
-    this.matches(Regex("\\d{4}-\\d{2}-\\d{2}")) &&
 
-            // 형식이 맞다면 날짜가 실제로 유효한지 확인
-            runCatching {
-                // 입력된 문자열을 LocalDate로 파싱하여 날짜가 유효한지 확인
-                LocalDate.parse(this, DateTimeFormatter.ISO_LOCAL_DATE)
-            }.isSuccess // 파싱이 성공하면 유효한 날짜, 실패하면 유효하지 않음
+fun String.isValidDate(): Boolean {
+    if (this.length != 8 || !this.matches(Regex("\\d{8}"))) return false
+    val year = this.substring(0, 4).toInt()
+    val month = this.substring(4, 6).toInt()
+    val day = this.substring(6, 8).toInt()
+
+    if (month !in 1..12 || day !in 1..31) return false
+
+    val daysInMonth = when (month) {
+        1, 3, 5, 7, 8, 10, 12 -> 31
+        4, 6, 9, 11 -> 30
+        2 -> if (isLeapYear(year)) 29 else 28
+        else -> return false
+    }
+
+    return day <= daysInMonth
+}
+
+private fun isLeapYear(year: Int): Boolean {
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)
+}
 
 fun String.isValidDateTime(): Boolean =
-    // 먼저, 문자열이 "yyyy-MM-dd HH:mm" 형식에 맞는지 확인
-    this.matches(Regex("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}")) &&
+    this.matches(Regex("\\d{12}")) &&
 
-            // 예외가 발생하지 않으면 유효한 날짜와 시간을 확인
+            // 날짜와 시간의 유효성을 각각 확인
             runCatching {
-                // 날짜와 시간을 파싱하여 LocalDateTime 객체로 변환
-                val dateTime = LocalDateTime.parse(this, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
+                val datePart = this.substring(0, 8)
+                val timePart = this.substring(8)
 
-                // 날짜 부분을 잘라서 실제 날짜로 변환하고, 해당 날짜가 유효한지 확인
-                val parsedDate = LocalDate.parse(this.substring(0, 10), DateTimeFormatter.ISO_LOCAL_DATE)
+                if (!datePart.isValidDate()) {
+                    return@runCatching false // 날짜가 유효하지 않으면 false 반환
+                }
 
-                // 파싱된 날짜가 실제로 존재하는 날짜와 일치하는지 확인
-                dateTime.toLocalDate() == parsedDate &&
+                // 시간 검증
+                val hour = timePart.substring(0, 2).toInt() // 시간 (HH)
+                val minute = timePart.substring(2, 4).toInt() // 분 (mm)
 
-                        // 시간과 분이 유효한 범위(0~23시, 0~59분)에 있는지 확인
-                        dateTime.hour in 0..23 && dateTime.minute in 0..59
+                // 시간이 유효한 범위(0~23시, 0~59분)에 있는지 확인
+                hour in 0..23 && minute in 0..59
             }.getOrElse {
-                // 예외가 발생하면 유효하지 않은 값으로 간주하고 false 반환
+                // 예외가 발생하면 유효하지 않은 값으로 간주
                 false
             }

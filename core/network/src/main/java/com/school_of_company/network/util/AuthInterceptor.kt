@@ -14,7 +14,7 @@ class AuthInterceptor @Inject constructor(
     private val authTokenDataSource: AuthTokenDataSource
 ) : Interceptor {
     // 인증 없이 접근할 수 있도록 하는 경로입니다.
-    private val ignorePath = "/auth"
+    private val ignorePath = setOf("/auth")
 
     private companion object {
         const val POST = "POST"
@@ -36,7 +36,7 @@ class AuthInterceptor @Inject constructor(
         // 새로운 요청을 생성하고, 특정 조건에 따라 헤더에 토큰을 추가합니다.
         val newRequest = when {
             // 인증이 필요없는 경로에 대해서는 토큰을 추가하지 않습니다.
-            ignorePath.any { path.contains(it) && method in listOf(POST) } -> {
+            path in ignorePath && method in listOf(POST) -> {
                 request
             }
 

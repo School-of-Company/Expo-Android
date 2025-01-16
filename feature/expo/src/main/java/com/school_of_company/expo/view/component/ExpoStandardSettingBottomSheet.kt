@@ -33,6 +33,7 @@ import com.school_of_company.design_system.component.modifier.clickable.expoClic
 import com.school_of_company.design_system.icon.XIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.model.model.standard.StandardRequestModel
+import com.school_of_company.ui.keyBoardOption.numericKeyboardOptions
 import com.school_of_company.ui.visualTransformation.DateTimeVisualTransformation
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -100,6 +101,7 @@ internal fun ExpoStandardSettingBottomSheet(
                 ExpoNoneLineTextField(
                     textState = currentItem.startedAt,
                     lengthLimit = 12,
+                    keyboardOptions = numericKeyboardOptions(),
                     visualTransformation = DateTimeVisualTransformation(),
                     placeHolder = {
                         Text(
@@ -117,6 +119,7 @@ internal fun ExpoStandardSettingBottomSheet(
                 ExpoNoneLineTextField(
                     textState = currentItem.endedAt,
                     lengthLimit = 12,
+                    keyboardOptions = numericKeyboardOptions(),
                     visualTransformation = DateTimeVisualTransformation(),
                     placeHolder = {
                         Text(

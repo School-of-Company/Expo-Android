@@ -75,6 +75,7 @@ import com.school_of_company.expo.viewmodel.uistate.RegisterTrainingProgramListU
 import com.school_of_company.model.model.expo.ExpoRequestAndResponseModel
 import com.school_of_company.model.model.standard.StandardRequestModel
 import com.school_of_company.model.model.training.TrainingDtoModel
+import com.school_of_company.ui.keyBoardOption.numericKeyboardOptions
 import com.school_of_company.ui.toast.makeToast
 import com.school_of_company.ui.visualTransformation.DateTimeVisualTransformation
 
@@ -379,6 +380,7 @@ private fun ExpoCreateScreen(
                         showLengthCounter = false,
                         placeholder = "시작일",
                         isError = false,
+                        keyboardOptions = numericKeyboardOptions(),
                         visualTransformation = DateTimeVisualTransformation(),
                         updateTextValue = onStartedDateChange,
                         modifier = Modifier.weight(1f)
@@ -390,6 +392,7 @@ private fun ExpoCreateScreen(
                         showLengthCounter = false,
                         placeholder = "마감일",
                         isError = false,
+                        keyboardOptions = numericKeyboardOptions(),
                         visualTransformation = DateTimeVisualTransformation(),
                         updateTextValue = onEndedDateChange,
                         modifier = Modifier.weight(1f)

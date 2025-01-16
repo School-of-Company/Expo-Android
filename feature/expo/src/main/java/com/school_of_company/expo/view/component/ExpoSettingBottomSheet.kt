@@ -48,6 +48,7 @@ import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.design_system.theme.color.ExpoColor
 import com.school_of_company.expo.enum.TrainingCategory
 import com.school_of_company.model.model.training.TrainingDtoModel
+import com.school_of_company.ui.keyBoardOption.numericKeyboardOptions
 import com.school_of_company.ui.visualTransformation.DateTimeVisualTransformation
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -122,6 +123,7 @@ internal fun ExpoSettingBottomSheet(
                         ExpoNoneLineTextField(
                             textState = currentItem.startedAt,
                             lengthLimit = 12,
+                            keyboardOptions = numericKeyboardOptions(),
                             visualTransformation = DateTimeVisualTransformation(),
                             placeHolder = {
                                 Text(
@@ -139,6 +141,7 @@ internal fun ExpoSettingBottomSheet(
                         ExpoNoneLineTextField(
                             textState = currentItem.endedAt,
                             lengthLimit = 12,
+                            keyboardOptions = numericKeyboardOptions(),
                             visualTransformation = DateTimeVisualTransformation(),
                             placeHolder = {
                                 Text(

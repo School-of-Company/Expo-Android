@@ -34,6 +34,7 @@ import com.school_of_company.design_system.icon.XIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.model.model.standard.StandardRequestModel
 import com.school_of_company.ui.keyBoardOption.numericKeyboardOptions
+import com.school_of_company.ui.util.filterNonDigits
 import com.school_of_company.ui.visualTransformation.DateTimeVisualTransformation
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -112,7 +113,7 @@ internal fun ExpoStandardSettingBottomSheet(
                         )
                     },
                     onTextChange = { newText ->
-                        currentItem = currentItem.copy(startedAt = newText)
+                        currentItem = currentItem.copy(startedAt = newText.filterNonDigits())
                     }
                 )
 
@@ -130,7 +131,7 @@ internal fun ExpoStandardSettingBottomSheet(
                         )
                     },
                     onTextChange = { newText ->
-                        currentItem = currentItem.copy(endedAt = newText)
+                        currentItem = currentItem.copy(endedAt = newText.filterNonDigits())
                     }
                 )
 

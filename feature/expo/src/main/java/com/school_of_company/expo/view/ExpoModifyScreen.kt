@@ -85,6 +85,7 @@ import com.school_of_company.model.model.standard.StandardRequestModel
 import com.school_of_company.model.model.training.TrainingDtoModel
 import com.school_of_company.ui.keyBoardOption.numericKeyboardOptions
 import com.school_of_company.ui.toast.makeToast
+import com.school_of_company.ui.util.filterNonDigits
 import com.school_of_company.ui.visualTransformation.DateTimeVisualTransformation
 
 @Composable
@@ -123,8 +124,8 @@ internal fun ExpoModifyRoute(
                 val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
                 context.contentResolver.openInputStream(uri)?.use { inputStream ->
                     BitmapFactory.decodeStream(inputStream, null, options)
-                        selectedImageUri = uri
-                        viewModel.onCoverImageChange(uri.toString())
+                    selectedImageUri = uri
+                    viewModel.onCoverImageChange(uri.toString())
                 }
             }
         }
@@ -208,9 +209,10 @@ internal fun ExpoModifyRoute(
         modifyTrainingProgramUiState,
         modifyStandardProgramUiState
     ) {
-        val allTasksSuccess = modifyExpoInformationUiState is ModifyExpoInformationUiState.Success &&
-                modifyTrainingProgramUiState is ModifyTrainingProgramUiState.Success &&
-                modifyStandardProgramUiState is ModifyStandardProgramUiState.Success
+        val allTasksSuccess =
+            modifyExpoInformationUiState is ModifyExpoInformationUiState.Success &&
+                    modifyTrainingProgramUiState is ModifyTrainingProgramUiState.Success &&
+                    modifyStandardProgramUiState is ModifyStandardProgramUiState.Success
 
         val anyTaskError = modifyExpoInformationUiState is ModifyExpoInformationUiState.Error ||
                 modifyTrainingProgramUiState is ModifyTrainingProgramUiState.Error ||
@@ -224,6 +226,7 @@ internal fun ExpoModifyRoute(
                 viewModel.initModifyExpo()
                 makeToast(context, "박람회 수정을 완료하였습니다.")
             }
+
             anyTaskError && !hasErrorBeenHandled -> {
                 hasErrorBeenHandled = true
                 onErrorToast(null, R.string.expo_modify_fail)
@@ -484,7 +487,7 @@ private fun ExpoModifyScreen(
                         isError = false,
                         keyboardOptions = numericKeyboardOptions(),
                         visualTransformation = DateTimeVisualTransformation(),
-                        updateTextValue = onStartedDateChange,
+                        updateTextValue = { newText -> onStartedDateChange(newText.filterNonDigits()) },
                         modifier = Modifier.weight(1f)
                     )
 
@@ -495,7 +498,7 @@ private fun ExpoModifyScreen(
                         isError = false,
                         keyboardOptions = numericKeyboardOptions(),
                         visualTransformation = DateTimeVisualTransformation(),
-                        updateTextValue = onEndedDateChange,
+                        updateTextValue = { newText -> onEndedDateChange(newText.filterNonDigits()) },
                         modifier = Modifier.weight(1f)
                     )
                 }

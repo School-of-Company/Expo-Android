@@ -77,6 +77,7 @@ import com.school_of_company.model.model.standard.StandardRequestModel
 import com.school_of_company.model.model.training.TrainingDtoModel
 import com.school_of_company.ui.keyBoardOption.numericKeyboardOptions
 import com.school_of_company.ui.toast.makeToast
+import com.school_of_company.ui.util.filterNonDigits
 import com.school_of_company.ui.visualTransformation.DateTimeVisualTransformation
 
 @Composable
@@ -382,7 +383,7 @@ private fun ExpoCreateScreen(
                         isError = false,
                         keyboardOptions = numericKeyboardOptions(),
                         visualTransformation = DateTimeVisualTransformation(),
-                        updateTextValue = onStartedDateChange,
+                        updateTextValue = { newText -> onStartedDateChange(newText.filterNonDigits()) },
                         modifier = Modifier.weight(1f)
                     )
 
@@ -394,7 +395,7 @@ private fun ExpoCreateScreen(
                         isError = false,
                         keyboardOptions = numericKeyboardOptions(),
                         visualTransformation = DateTimeVisualTransformation(),
-                        updateTextValue = onEndedDateChange,
+                        updateTextValue = { newText -> onEndedDateChange(newText.filterNonDigits()) },
                         modifier = Modifier.weight(1f)
                     )
                 }

@@ -49,6 +49,7 @@ import com.school_of_company.design_system.theme.color.ExpoColor
 import com.school_of_company.expo.enum.TrainingCategory
 import com.school_of_company.model.model.training.TrainingDtoModel
 import com.school_of_company.ui.keyBoardOption.numericKeyboardOptions
+import com.school_of_company.ui.util.filterNonDigits
 import com.school_of_company.ui.visualTransformation.DateTimeVisualTransformation
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -134,7 +135,7 @@ internal fun ExpoSettingBottomSheet(
                                 )
                             },
                             onTextChange = { newText ->
-                                currentItem = currentItem.copy(startedAt = newText)
+                                currentItem = currentItem.copy(startedAt = newText.filterNonDigits())
                             }
                         )
 
@@ -152,7 +153,7 @@ internal fun ExpoSettingBottomSheet(
                                 )
                             },
                             onTextChange = { newText ->
-                                currentItem = currentItem.copy(endedAt = newText)
+                                currentItem = currentItem.copy(endedAt = newText.filterNonDigits())
                             }
                         )
                     }

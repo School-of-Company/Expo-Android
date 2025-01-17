@@ -47,3 +47,10 @@ fun String.isValidDateTime(): Boolean =
                 // 시간이 유효한 범위(0~23시, 0~59분)에 있는지 확인
                 hour in 0..23 && minute in 0..59
             }
+
+fun String.isValidDateSequence(laterTime: String): Boolean =
+    this.matches(Regex("\\d{8}"))
+            && laterTime.matches(Regex("\\d{8}"))
+            && this.isValidDate()
+            && laterTime.isValidDate()
+            && this <= laterTime

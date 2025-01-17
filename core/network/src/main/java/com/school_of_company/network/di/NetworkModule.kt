@@ -9,8 +9,10 @@ import com.school_of_company.network.api.AttendanceAPI
 import com.school_of_company.network.api.AuthAPI
 import com.school_of_company.network.api.ExpoAPI
 import com.school_of_company.network.api.ImageAPI
+import com.school_of_company.network.api.ParticipantAPI
 import com.school_of_company.network.api.SmsAPI
 import com.school_of_company.network.api.StandardAPI
+import com.school_of_company.network.api.TraineeAPI
 import com.school_of_company.network.api.TrainingAPI
 import com.school_of_company.network.util.AuthInterceptor
 import com.school_of_company.network.util.TokenAuthenticator
@@ -123,4 +125,12 @@ object NetworkModule {
     @Provides
     fun provideAdminAPI(retrofit: Retrofit) : AdminAPI =
         retrofit.create(AdminAPI::class.java)
+
+    @Provides
+    fun provideTraineeAPI(retrofit: Retrofit) : TraineeAPI =
+        retrofit.create(TraineeAPI::class.java)
+
+    @Provides
+    fun provideParticipant(retrofit: Retrofit) : ParticipantAPI =
+        retrofit.create(ParticipantAPI::class.java)
 }

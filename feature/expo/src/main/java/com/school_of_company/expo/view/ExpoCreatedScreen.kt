@@ -137,19 +137,21 @@ private fun ExpoCreatedScreen(
                     when (getExpoListUiState) {
                         is GetExpoListUiState.Loading -> Unit
                         is GetExpoListUiState.Success -> {
-                            CreatedExpoList(
-                                scrollState = scrollState,
-                                expoList = getExpoListUiState.data.toPersistentList(),
-                                onItemClick = { isSelected, index ->
-                                    setSelectedIndex(if (isSelected) -1 else index)
-                                },
-                                selectedIndex = selectedIndex,
-                            )
-                            Spacer(modifier = Modifier.height(32.dp))
-                            ExpoCreatedDeleteButton(
-                                enabled = selectedIndex != -1,
-                                onClick = { deleteSelectedExpo(selectedIndex) }
-                            )
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                CreatedExpoList(
+                                    scrollState = scrollState,
+                                    expoList = getExpoListUiState.data.toPersistentList(),
+                                    onItemClick = { isSelected, index ->
+                                        setSelectedIndex(if (isSelected) -1 else index)
+                                    },
+                                    selectedIndex = selectedIndex,
+                                )
+                                Spacer(modifier = Modifier.height(32.dp))
+                                ExpoCreatedDeleteButton(
+                                    enabled = selectedIndex != -1,
+                                    onClick = { deleteSelectedExpo(selectedIndex) }
+                                )
+                            }
                         }
 
                         is GetExpoListUiState.Empty -> {

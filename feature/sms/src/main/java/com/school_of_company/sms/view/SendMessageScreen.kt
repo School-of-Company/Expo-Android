@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
@@ -17,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.school_of_company.design_system.R
 import com.school_of_company.design_system.component.button.ExpoStateButton
 import com.school_of_company.design_system.component.button.state.ButtonState
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
@@ -38,8 +40,22 @@ internal fun SendMessageRoute(
     smsType: String,
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
 ) {
+    val sendSmsUiState by viewModel.sendSmsUiState.collectAsStateWithLifecycle()
     val title by viewModel.title.collectAsStateWithLifecycle()
     val content by viewModel.content.collectAsStateWithLifecycle()
+
+    LaunchedEffect("sendSmsUiState") {
+        when (sendSmsUiState) {
+            is SendSmsUiState.Error ->
+                onErrorToast(
+                    (sendSmsUiState as SendSmsUiState.Error).exception,
+                    R.string.sme_send_fail
+                )
+
+            SendSmsUiState.Success -> onErrorToast(null, R.string.sme_send_fail)
+            SendSmsUiState.Loading -> Unit
+        }
+    }
 
     SendMessageScreen(
         onBackClick = onBackClick,
@@ -128,7 +144,7 @@ private fun SendMessageScreen(
             ExpoStateButton(
                 text = "보내기",
                 state = if (title.isNotEmpty() && content.isNotEmpty()) ButtonState.Enable else ButtonState.Disable,
-                onClick = sendRequest, // Temporary Code
+                onClick = sendRequest,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 48.dp)
@@ -141,9 +157,9 @@ private fun SendMessageScreen(
 @Composable
 private fun SendMessageScreenPreview() {
     SendMessageScreen(
-        onBackClick = { /*TODO*/ },
         title = "",
         content = "",
+        onBackClick = {},
         onTitleChange = {},
         onContentChange = {},
         sendRequest = {},

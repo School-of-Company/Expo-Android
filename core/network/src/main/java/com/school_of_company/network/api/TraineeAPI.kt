@@ -6,7 +6,7 @@ import retrofit2.http.Path
 
 interface TraineeAPI {
 
-    @GET("/trainee")
+    @GET("/trainee/{expo_id}")
     suspend fun getTraineeList(
         @Path("expo_id") expoId: String
     ) : List<TraineeResponse>

@@ -7,7 +7,7 @@ import retrofit2.http.Query
 
 interface ParticipantAPI {
 
-    @GET("/participant")
+    @GET("/participant/{expo_id}")
     suspend fun getParticipantInformationList(
         @Query("type") type: String,
         @Path("expo_id") expoId: String

@@ -63,11 +63,15 @@ fun LeftArrowIcon(
 }
 
 @Composable
-fun UpArrowIcon(modifier: Modifier = Modifier) {
+fun UpArrowIcon(
+    modifier: Modifier = Modifier,
+    tint: Color = Color.Unspecified
+) {
     Icon(
         painter = painterResource(id = R.drawable.ic_up_arrow),
         contentDescription = stringResource(id = R.string.up_arrow_description),
-        modifier = modifier
+        modifier = modifier,
+        tint = tint
     )
 }
 

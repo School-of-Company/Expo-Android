@@ -54,3 +54,11 @@ fun String.isValidDateSequence(laterTime: String): Boolean =
             && this.isValidDate()
             && laterTime.isValidDate()
             && this <= laterTime
+
+fun String.isValidDateTimeSequence(laterTime: String): Boolean =
+    this.matches(Regex("\\d{12}"))
+            && laterTime.matches(Regex("\\d{12}"))
+            && this.isValidDateTime()
+            && laterTime.isValidDateTime()
+            && this <= laterTime
+

@@ -1,9 +1,5 @@
 package com.school_of_company.common.regex
 
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-
 fun String.checkEmailRegex() =
     this.matches(".*@.*".toRegex())
 
@@ -35,14 +31,13 @@ private fun isLeapYear(year: Int): Boolean {
 
 fun String.isValidDateTime(): Boolean =
     this.matches(Regex("\\d{12}")) &&
-
-            // 날짜와 시간의 유효성을 각각 확인
-            runCatching {
+            run {
+                // 날짜와 시간의 유효성을 각각 확인
                 val datePart = this.substring(0, 8)
                 val timePart = this.substring(8)
 
                 if (!datePart.isValidDate()) {
-                    return@runCatching false // 날짜가 유효하지 않으면 false 반환
+                    return@run false // 날짜가 유효하지 않으면 false 반환
                 }
 
                 // 시간 검증
@@ -51,7 +46,4 @@ fun String.isValidDateTime(): Boolean =
 
                 // 시간이 유효한 범위(0~23시, 0~59분)에 있는지 확인
                 hour in 0..23 && minute in 0..59
-            }.getOrElse {
-                // 예외가 발생하면 유효하지 않은 값으로 간주
-                false
             }

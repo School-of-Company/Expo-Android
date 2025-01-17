@@ -1,6 +1,5 @@
 package com.school_of_company.network.util
 
-import android.util.Log
 import com.school_of_company.datastore.datasource.AuthTokenDataSource
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking

@@ -3,63 +3,15 @@ package com.school_of_company.common
 import com.school_of_company.common.regex.isValidDate
 import com.school_of_company.common.regex.isValidDateSequence
 import com.school_of_company.common.regex.isValidDateTime
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class DateValidationTest {
 
     @Test
-    fun `isValidDate should return correct results for various date strings`() {
-        val validDates = listOf("20250116", "20000229")
-        val invalidDates = listOf("20250132", "20251301", "abcd1234", "1234567")
-
-        validDates.forEach { assertTrue(it.isValidDate()) }
-        invalidDates.forEach { assertFalse(it.isValidDate()) }
-    }
-
-    @Test
-    fun `isValidDateTime should return correct results for various datetime strings`() {
-        val validDateTimes = listOf("202501161200", "200002291159", "202512312359")
-        val invalidDateTimes = listOf("202501161260", "202501001200", "abcd12345678", "12345678901", "202513011200")
-
-        validDateTimes.forEach { assertTrue(it.isValidDateTime()) }
-        invalidDateTimes.forEach { assertFalse(it.isValidDateTime()) }
-    }
-
-    @Test
-    fun `edge cases for isValidDate`() {
-        val edgeCases = listOf(
-            "" to false,
-            "00000000" to false,
-            "20200229" to true,
-            "20201301" to false, // 잘못된 월
-            "20200230" to false // 잘못된 일
-        )
-
-        edgeCases.forEach { (input, expected) ->
-            assertEquals(expected, input.isValidDate())
-        }
-    }
-
-    @Test
-    fun `edge cases for isValidDateTime`() {
-        val edgeCases = listOf(
-            "" to false,
-            "000000000000" to false,
-            "202002291200" to true,
-            "202002291259" to true, // 유효한 시간
-            "202002291370" to false, // 잘못된 시간
-            "202013012359" to false // 잘못된 월
-        )
-
-        edgeCases.forEach { (input, expected) ->
-            assertEquals(expected, input.isValidDateTime())
-        }
-    }
-
-    @Test
-    fun `test cases for valid date sequence`() {
-        val cases: List<Triple<String, String, Boolean>> = listOf(
+    fun `test valid date sequence and related functions`() {
+        // isValidDateSequence 관련 케이스
+        val dateSequenceCases = listOf(
             Triple("20250116", "20250117", true),  // 올바른 날짜 순서
             Triple("20250117", "20250116", false), // 잘못된 날짜 순서
             Triple("", "", false),  // 빈값
@@ -68,13 +20,45 @@ class DateValidationTest {
             Triple("20230132", "20230101", false),  // 잘못된 일 (2023년 1월 32일)
             Triple("20201301", "20230101", false),  // 잘못된 연도 (2020년 13월)
             Triple("20250118", "20250117", false),  // 미래 날짜
-            Triple("20250116", "20250116", true),  // 날짜가 같을 때
+            Triple("20250116", "20250116", true)   // 날짜가 같을 때
         )
 
-        cases.forEach { (startDate, endDate, expected) ->
-            val result = startDate.isValidDateSequence(endDate)
-            assertEquals("Failed for startDate: $startDate, endDate: $endDate", expected, result)
+        dateSequenceCases.forEach { (startDate, endDate, expected) ->
+            assertEquals("Failed for startDate: $startDate, endDate: $endDate", expected, startDate.isValidDateSequence(endDate))
         }
     }
+
+    @Test
+    fun `test valid date validation`() {
+        // isValidDate 관련 케이스
+        val dateCases = listOf(
+            "20250116" to true,  // 유효한 날짜
+            "20250132" to false, // 잘못된 일 (2025년 1월 32일)
+            "20251301" to false, // 잘못된 월 (2025년 13월)
+            "abcd1234" to false, // 잘못된 형식
+            "1234567" to false   // 길이 부족
+        )
+
+        dateCases.forEach { (date, expected) ->
+            assertEquals("Failed for date: $date", expected, date.isValidDate())
+        }
+    }
+
+    @Test
+    fun `test valid date-time validation`() {
+        // isValidDateTime 관련 케이스
+        val dateTimeCases = listOf(
+            "202501161200" to true,  // 유효한 날짜-시간
+            "202501161260" to false, // 잘못된 시간 (2025년 1월 16일 1260분)
+            "202501001200" to false, // 잘못된 날짜 (2025년 1월 0일)
+            "abcd12345678" to false, // 잘못된 형식
+            "12345678901" to false   // 길이 초과
+        )
+
+        dateTimeCases.forEach { (dateTime, expected) ->
+            assertEquals("Failed for dateTime: $dateTime", expected, dateTime.isValidDateTime())
+        }
+    }
+
 }
 

@@ -30,7 +30,7 @@ internal fun ProgramList(
             modifier = modifier
                 .fillMaxSize()
                 .background(color = colors.white)
-                .padding(horizontal = 16.dp)
+                .padding(start = 16.dp)
         ) {
             itemsIndexed(trainingItem) { index, item ->
                 ProgramListItem(
@@ -57,7 +57,7 @@ internal fun StandardProgramList(
             modifier = modifier
                 .fillMaxSize()
                 .background(color = colors.white)
-                .padding(horizontal = 16.dp)
+                .padding(start = 16.dp)
         ) {
             itemsIndexed(standardItem) { index, item ->
                 StandardProgramListItem(

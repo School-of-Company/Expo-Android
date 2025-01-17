@@ -52,7 +52,7 @@ internal fun SendMessageRoute(
                     R.string.sms_send_fail
                 )
 
-            SendSmsUiState.Success -> onErrorToast(null, R.string.sme_send_fail)
+            SendSmsUiState.Success -> onErrorToast(null, R.string.sms_send_success)
             SendSmsUiState.Loading -> Unit
         }
     }

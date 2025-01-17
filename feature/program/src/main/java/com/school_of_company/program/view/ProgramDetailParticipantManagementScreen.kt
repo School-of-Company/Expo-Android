@@ -17,17 +17,29 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
+import com.google.accompanist.swiperefresh.SwipeRefreshState
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.component.topbar.ExpoTopBar
+import com.school_of_company.design_system.icon.DownArrowIcon
 import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.program.view.component.HomeDetailParticipantManagementData
-import com.school_of_company.program.view.component.ProgramDetailParticipantManagementList
+import com.school_of_company.program.view.component.ProgramDetailParticipantDropdownMenu
+import com.school_of_company.program.viewmodel.ProgramViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 
@@ -47,11 +59,16 @@ internal fun generateParticipantManagementSampleData(): ImmutableList<HomeDetail
 
 @Composable
 internal fun ProgramDetailParticipantManagementRoute(
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    viewModel: ProgramViewModel = hiltViewModel()
 ) {
+    val swipeRefreshLoading by viewModel.swipeRefreshLoading.collectAsStateWithLifecycle()
+    val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = swipeRefreshLoading)
+
     ProgramDetailParticipantManagementScreen(
         onBackClick = onBackClick,
-        participantManagementData = generateParticipantManagementSampleData()
+        participantManagementData = generateParticipantManagementSampleData(),
+        swipeRefreshState = swipeRefreshState
     )
 }
 
@@ -59,9 +76,16 @@ internal fun ProgramDetailParticipantManagementRoute(
 private fun ProgramDetailParticipantManagementScreen(
     modifier: Modifier = Modifier,
     participantManagementData: ImmutableList<HomeDetailParticipantManagementData>,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    swipeRefreshState: SwipeRefreshState
 ) {
+    var participantTextState by remember { mutableStateOf("사전 행사 참가자") }
+    var isDropdownExpanded by remember { mutableStateOf(false) }
+    var selectedItem by remember { mutableStateOf<Int?>(0) }
+
+
     ExpoAndroidTheme { colors, typography ->
+
         Column(
             modifier = modifier
                 .fillMaxSize()
@@ -79,14 +103,45 @@ private fun ProgramDetailParticipantManagementScreen(
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
 
-            Spacer(modifier = Modifier.height(28.dp))
+            Spacer(modifier = Modifier.height(25.dp))
 
-            Text(
-                text = "참가자 조회하기",
-                style = typography.bodyBold2,
-                color = colors.black,
-                modifier = Modifier.padding(start = 16.dp)
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.expoClickable { isDropdownExpanded = true }
+            ) {
+                Text(
+                    text = participantTextState,
+                    style = typography.bodyBold2,
+                    color = colors.black,
+                    modifier = Modifier.padding(start = 16.dp)
+                )
+
+                DownArrowIcon(
+                    tint = colors.black,
+                    modifier = Modifier.padding(start = 10.dp)
+                )
+            }
+
+            Box(modifier = Modifier.padding(start = 16.dp, top = 10.dp)) {
+                if (isDropdownExpanded) {
+                    ProgramDetailParticipantDropdownMenu(
+                        onCancelClick = { isDropdownExpanded = false },
+                        onExpandClick = isDropdownExpanded,
+                        selectedItem = selectedItem,
+                        onItemSelected = { index ->
+                            selectedItem = index
+                            isDropdownExpanded = false
+
+                            participantTextState = when (index) {
+                                0 -> "사전 행사 참가자"
+                                1 -> "현장 행사 참가자"
+                                2 -> "사전 교원 원수 참가자"
+                                else -> participantTextState
+                            }
+                        },
+                    )
+                }
+            }
 
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -204,7 +259,31 @@ private fun ProgramDetailParticipantManagementScreen(
                 }
             }
 
-            ProgramDetailParticipantManagementList(item = participantManagementData)
+            SwipeRefresh(
+                state = swipeRefreshState,
+                onRefresh = {  },
+                indicator = { state, refreshTrigger ->
+                    SwipeRefreshIndicator(
+                        state = state,
+                        refreshTriggerDistance = refreshTrigger,
+                        contentColor = colors.main
+                    )
+                }
+            ) {
+                when (selectedItem) {
+                    0 -> {
+
+                    }
+
+                    1 -> {
+
+                    }
+
+                    2 -> {
+
+                    }
+                }
+            }
         }
     }
 }
@@ -214,6 +293,7 @@ private fun ProgramDetailParticipantManagementScreen(
 private fun HomeDetailParticipantManagementScreenPreview() {
     ProgramDetailParticipantManagementScreen(
         onBackClick = {},
-        participantManagementData = generateParticipantManagementSampleData()
+        participantManagementData = generateParticipantManagementSampleData(),
+        swipeRefreshState = rememberSwipeRefreshState(isRefreshing = false)
     )
 }

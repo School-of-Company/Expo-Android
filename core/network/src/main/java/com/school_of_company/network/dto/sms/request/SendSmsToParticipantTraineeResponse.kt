@@ -7,5 +7,5 @@ import com.squareup.moshi.JsonClass
 data class SendSmsToParticipantTraineeResponse(
     @Json(name = "title") val title: String,
     @Json(name = "content") val content: String,
-    @Json(name = "content") val authority: String,
+    @Json(name = "authority") val authority: String,
 )

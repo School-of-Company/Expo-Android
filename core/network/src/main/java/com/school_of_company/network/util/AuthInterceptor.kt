@@ -1,5 +1,6 @@
 package com.school_of_company.network.util
 
+import android.util.Log
 import com.school_of_company.datastore.datasource.AuthTokenDataSource
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -36,7 +37,7 @@ class AuthInterceptor @Inject constructor(
         // 새로운 요청을 생성하고, 특정 조건에 따라 헤더에 토큰을 추가합니다.
         val newRequest = when {
             // 인증이 필요없는 경로에 대해서는 토큰을 추가하지 않습니다.
-            ignorePath.any { path.contains(it) && method in listOf(POST) } -> {
+            path.contains(ignorePath) && method in listOf(POST) -> {
                 request
             }
 
@@ -46,8 +47,8 @@ class AuthInterceptor @Inject constructor(
                 request
             }
 
-            // 특정 경로와 DELETE 메서드 요청에는 리프레시 토큰을 추가합니다.
-            path.endsWith("/auth") && method in listOf(DELETE, PATCH) -> {
+            // 특정 경로와 PATCH 메서드 요청에는 리프레시 토큰을 추가합니다.
+            path.endsWith("/auth") && method in listOf(PATCH) -> {
                 request.newBuilder().addHeader("Authorization", "Bearer $refreshToken" ).build()
             }
 

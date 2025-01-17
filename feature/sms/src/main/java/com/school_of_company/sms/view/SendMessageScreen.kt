@@ -49,7 +49,7 @@ internal fun SendMessageRoute(
             is SendSmsUiState.Error ->
                 onErrorToast(
                     (sendSmsUiState as SendSmsUiState.Error).exception,
-                    R.string.sme_send_fail
+                    R.string.sms_send_fail
                 )
 
             SendSmsUiState.Success -> onErrorToast(null, R.string.sme_send_fail)

@@ -79,8 +79,8 @@
     <string name="expo_modify_fail">박람회 수정을 실패하였습니다.</string>
     <string name="expo_register_fail">박람회 생성을 실패하였습니다.</string>
 
-    <string name="sme_send_fail">문자 전송을 실패하였습니다.</string>
-    <string name="sme_send_success">문자 전송을 성공하였습니다.</string>
+    <string name="sms_send_fail">문자 전송을 실패하였습니다.</string>
+    <string name="sms_send_success">문자 전송을 성공하였습니다.</string>
 
     <string name="get_created_expo_list_fail">박람회 리스트를 불러오지 못했습니다.</string>
     <string name="expo_not_selected">박람회를 선택하고 삭제버튼을 눌러주세요.</string>

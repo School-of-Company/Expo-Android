@@ -10,10 +10,14 @@ import com.school_of_company.network.datasource.expo.ExpoDataSource
 import com.school_of_company.network.datasource.expo.ExpoDataSourceImpl
 import com.school_of_company.network.datasource.image.ImageDataSource
 import com.school_of_company.network.datasource.image.ImageDataSourceImpl
+import com.school_of_company.network.datasource.participant.ParticipantDataSource
+import com.school_of_company.network.datasource.participant.ParticipantDataSourceImpl
 import com.school_of_company.network.datasource.sms.SmsDataSource
 import com.school_of_company.network.datasource.sms.SmsDataSourceImpl
 import com.school_of_company.network.datasource.standard.StandardDataSource
 import com.school_of_company.network.datasource.standard.StandardDataSourceImpl
+import com.school_of_company.network.datasource.trainee.TraineeDataSource
+import com.school_of_company.network.datasource.trainee.TraineeDataSourceImpl
 import com.school_of_company.network.datasource.training.TrainingDataSource
 import com.school_of_company.network.datasource.training.TrainingDataSourceImpl
 import dagger.Binds
@@ -64,4 +68,14 @@ abstract class RemoteDataSourceModule {
     abstract fun bindAdminRemoteDataSource(
         adminDataSourceImpl: AdminDataSourceImpl
     ) : AdminDataSource
+
+    @Binds
+    abstract fun bindTraineeRemoteDataSource(
+        traineeDataSourceImpl: TraineeDataSourceImpl
+    ) : TraineeDataSource
+
+    @Binds
+    abstract fun bindParticipantDataSource(
+        participantDataSourceImpl: ParticipantDataSourceImpl
+    ) : ParticipantDataSource
 }

@@ -5,9 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.school_of_company.domain.usecase.sms.SendSmsToParticipantTraineeUseCase
 import com.school_of_company.model.param.sms.SendSmsToParticipantTraineeParam
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 internal class SmsViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val sendSmsToParticipantTraineeUseCase: SendSmsToParticipantTraineeUseCase

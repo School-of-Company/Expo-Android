@@ -1,6 +1,7 @@
 package com.school_of_company.common
 
 import com.school_of_company.common.regex.isValidDate
+import com.school_of_company.common.regex.isValidDateSequence
 import com.school_of_company.common.regex.isValidDateTime
 import org.junit.Assert.*
 import org.junit.Test
@@ -53,6 +54,26 @@ class DateValidationTest {
 
         edgeCases.forEach { (input, expected) ->
             assertEquals(expected, input.isValidDateTime())
+        }
+    }
+
+    @Test
+    fun `test cases for valid date sequence`() {
+        val cases: List<Triple<String, String, Boolean>> = listOf(
+            Triple("20250116", "20250117", true),  // 올바른 날짜 순서
+            Triple("20250117", "20250116", false), // 잘못된 날짜 순서
+            Triple("", "", false),  // 빈값
+            Triple("34232432432432432", "432432432432423432", false),  // 길이 초과
+            Triple("20221301", "20230101", false),  // 잘못된 월 (2022년 13월)
+            Triple("20230132", "20230101", false),  // 잘못된 일 (2023년 1월 32일)
+            Triple("20201301", "20230101", false),  // 잘못된 연도 (2020년 13월)
+            Triple("20250118", "20250117", false),  // 미래 날짜
+            Triple("20250116", "20250116", true),  // 날짜가 같을 때
+        )
+
+        cases.forEach { (startDate, endDate, expected) ->
+            val result = startDate.isValidDateSequence(endDate)
+            assertEquals("Failed for startDate: $startDate, endDate: $endDate", expected, result)
         }
     }
 }

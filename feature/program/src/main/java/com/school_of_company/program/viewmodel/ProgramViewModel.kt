@@ -7,13 +7,18 @@ import com.school_of_company.common.result.Result
 import com.school_of_company.common.result.asResult
 import com.school_of_company.domain.usecase.attendance.StandardQrCodeRequestUseCase
 import com.school_of_company.domain.usecase.attendance.TrainingQrCodeRequestUseCase
+import com.school_of_company.domain.usecase.participant.ParticipantInformationResponseUseCase
 import com.school_of_company.domain.usecase.standard.StandardProgramListUseCase
+import com.school_of_company.domain.usecase.trainee.TraineeResponseListUseCase
 import com.school_of_company.domain.usecase.training.TrainingProgramListUseCase
 import com.school_of_company.model.param.attendance.StandardQrCodeRequestParam
 import com.school_of_company.program.viewmodel.uistate.StandardProgramListUiState
 import com.school_of_company.program.viewmodel.uistate.TrainingProgramListUiState
 import com.school_of_company.program.viewmodel.uistate.ReadQrCodeUiState
 import com.school_of_company.model.param.attendance.TrainingQrCodeRequestParam
+import com.school_of_company.program.enum.ParticipantEnum
+import com.school_of_company.program.viewmodel.uistate.ParticipantResponseListUiState
+import com.school_of_company.program.viewmodel.uistate.TraineeResponseListUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,6 +34,8 @@ internal class ProgramViewModel @Inject constructor(
     private val standardProgramListUseCase: StandardProgramListUseCase,
     private val trainingQrCodeRequestUseCase: TrainingQrCodeRequestUseCase,
     private val standardQrCodeRequestUseCase: StandardQrCodeRequestUseCase,
+    private val traineeResponseListUseCase: TraineeResponseListUseCase,
+    private val participantInformationResponseUseCase: ParticipantInformationResponseUseCase,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     companion object {
@@ -42,14 +49,30 @@ internal class ProgramViewModel @Inject constructor(
     private val _swipeRefreshLoading = MutableStateFlow(false)
     val swipeRefreshLoading = _swipeRefreshLoading.asStateFlow()
 
-    private val _trainingProgramListUiState = MutableStateFlow<TrainingProgramListUiState>(TrainingProgramListUiState.Loading)
+    private val _trainingProgramListUiState =
+        MutableStateFlow<TrainingProgramListUiState>(TrainingProgramListUiState.Loading)
     internal val trainingProgramListUiState = _trainingProgramListUiState.asStateFlow()
 
-    private val _standardProgramListUiState = MutableStateFlow<StandardProgramListUiState>(StandardProgramListUiState.Loading)
+    private val _standardProgramListUiState =
+        MutableStateFlow<StandardProgramListUiState>(StandardProgramListUiState.Loading)
     internal val standardProgramListUiState = _standardProgramListUiState.asStateFlow()
 
     private val _readQrCodeUiState = MutableStateFlow<ReadQrCodeUiState>(ReadQrCodeUiState.Loading)
     internal val readQrCodeUiState = _readQrCodeUiState.asStateFlow()
+
+    private val _traineeResponseListUiState =
+        MutableStateFlow<TraineeResponseListUiState>(TraineeResponseListUiState.Loading)
+    internal val traineeResponseListUiState = _traineeResponseListUiState.asStateFlow()
+
+    private val _participantFieldResponseListUiState =
+        MutableStateFlow<ParticipantResponseListUiState>(ParticipantResponseListUiState.Loading)
+    internal val participantFieldResponseListUiState =
+        _participantFieldResponseListUiState.asStateFlow()
+
+    private val _participantAheadResponseListUiState =
+        MutableStateFlow<ParticipantResponseListUiState>(ParticipantResponseListUiState.Loading)
+    internal val participantAheadResponseListUiState =
+        _participantAheadResponseListUiState.asStateFlow()
 
     internal var title = savedStateHandle.getStateFlow(key = TITLE, initialValue = "")
     internal var content = savedStateHandle.getStateFlow(key = CONTENT, initialValue = "")
@@ -68,13 +91,15 @@ internal class ProgramViewModel @Inject constructor(
                             _trainingProgramListUiState.value = TrainingProgramListUiState.Empty
                             _swipeRefreshLoading.value = false
                         } else {
-                            _trainingProgramListUiState.value = TrainingProgramListUiState.Success(result.data)
+                            _trainingProgramListUiState.value =
+                                TrainingProgramListUiState.Success(result.data)
                             _swipeRefreshLoading.value = false
                         }
                     }
 
                     is Result.Error -> {
-                        _trainingProgramListUiState.value = TrainingProgramListUiState.Error(result.exception)
+                        _trainingProgramListUiState.value =
+                            TrainingProgramListUiState.Error(result.exception)
                         _swipeRefreshLoading.value = false
                     }
                 }
@@ -95,13 +120,15 @@ internal class ProgramViewModel @Inject constructor(
                             _standardProgramListUiState.value = StandardProgramListUiState.Empty
                             _swipeRefreshLoading.value = false
                         } else {
-                            _standardProgramListUiState.value = StandardProgramListUiState.Success(result.data)
+                            _standardProgramListUiState.value =
+                                StandardProgramListUiState.Success(result.data)
                             _swipeRefreshLoading.value = false
                         }
                     }
 
                     is Result.Error -> {
-                        _standardProgramListUiState.value = StandardProgramListUiState.Error(result.exception)
+                        _standardProgramListUiState.value =
+                            StandardProgramListUiState.Error(result.exception)
                         _swipeRefreshLoading.value = false
                     }
                 }
@@ -172,6 +199,71 @@ internal class ProgramViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    internal fun getTraineeList(expoId: String) = viewModelScope.launch {
+        _swipeRefreshLoading.value = true
+        traineeResponseListUseCase(expoId = expoId)
+            .asResult()
+            .collectLatest { result ->
+                when (result) {
+                    is Result.Loading -> _traineeResponseListUiState.value =
+                        TraineeResponseListUiState.Loading
+
+                    is Result.Success -> {
+                        if (result.data.isEmpty()) {
+                            _swipeRefreshLoading.value = false
+                            _traineeResponseListUiState.value = TraineeResponseListUiState.Empty
+                        } else {
+                            _swipeRefreshLoading.value = false
+                            _traineeResponseListUiState.value =
+                                TraineeResponseListUiState.Success(result.data)
+                        }
+                    }
+
+                    is Result.Error -> {
+                        _swipeRefreshLoading.value = false
+                        _traineeResponseListUiState.value =
+                            TraineeResponseListUiState.Error(result.exception)
+                    }
+                }
+            }
+    }
+
+    internal fun getParticipantInformationList(
+        expoId: String,
+        type: ParticipantEnum
+    ) = viewModelScope.launch {
+        _swipeRefreshLoading.value = true
+
+        val enumData = when (type) {
+            ParticipantEnum.PRE -> _participantAheadResponseListUiState
+            ParticipantEnum.FIELD -> _participantFieldResponseListUiState
+        }
+
+        participantInformationResponseUseCase(
+            type = type.name,
+            expoId = expoId
+        )
+            .asResult()
+            .collectLatest { result ->
+                when (result) {
+                    is Result.Loading -> enumData.value = ParticipantResponseListUiState.Loading
+                    is Result.Success -> {
+                        if (result.data.isEmpty()) {
+                            _swipeRefreshLoading.value = false
+                            enumData.value = ParticipantResponseListUiState.Empty
+                        } else {
+                            _swipeRefreshLoading.value = false
+                            enumData.value = ParticipantResponseListUiState.Success(result.data)
+                        }
+                    }
+                    is Result.Error -> {
+                        _swipeRefreshLoading.value = false
+                        enumData.value = ParticipantResponseListUiState.Error(result.exception)
+                    }
+                }
+            }
     }
 
     internal fun onTitleChange(value: String) {

@@ -1,4 +1,4 @@
-package com.school_of_company.common
+package com.school_of_company.expo
 
 import org.junit.Test
 

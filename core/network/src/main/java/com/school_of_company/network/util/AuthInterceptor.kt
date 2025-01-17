@@ -36,7 +36,7 @@ class AuthInterceptor @Inject constructor(
         // 새로운 요청을 생성하고, 특정 조건에 따라 헤더에 토큰을 추가합니다.
         val newRequest = when {
             // 인증이 필요없는 경로에 대해서는 토큰을 추가하지 않습니다.
-            ignorePath in path && method == POST -> {
+            path.contains(ignorePath) && method in listOf(POST) -> {
                 request
             }
 

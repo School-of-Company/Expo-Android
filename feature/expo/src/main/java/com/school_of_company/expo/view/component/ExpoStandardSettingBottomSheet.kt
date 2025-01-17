@@ -5,11 +5,9 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
@@ -27,12 +25,14 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.school_of_company.common.regex.isValidDateTime
+import com.school_of_company.common.regex.isValidDateTimeSequence
 import com.school_of_company.design_system.component.button.ExpoStateButton
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.icon.XIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.model.model.standard.StandardRequestModel
+import com.school_of_company.ui.keyBoardOption.numberKeyboardOptions
+import com.school_of_company.ui.util.filterNonDigits
 import com.school_of_company.ui.visualTransformation.DateTimeVisualTransformation
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -100,6 +100,7 @@ internal fun ExpoStandardSettingBottomSheet(
                 ExpoNoneLineTextField(
                     textState = currentItem.startedAt,
                     lengthLimit = 12,
+                    keyboardOptions = numberKeyboardOptions(),
                     visualTransformation = DateTimeVisualTransformation(),
                     placeHolder = {
                         Text(
@@ -110,13 +111,14 @@ internal fun ExpoStandardSettingBottomSheet(
                         )
                     },
                     onTextChange = { newText ->
-                        currentItem = currentItem.copy(startedAt = newText)
+                        currentItem = currentItem.copy(startedAt = newText.filterNonDigits())
                     }
                 )
 
                 ExpoNoneLineTextField(
                     textState = currentItem.endedAt,
                     lengthLimit = 12,
+                    keyboardOptions = numberKeyboardOptions(),
                     visualTransformation = DateTimeVisualTransformation(),
                     placeHolder = {
                         Text(
@@ -127,17 +129,14 @@ internal fun ExpoStandardSettingBottomSheet(
                         )
                     },
                     onTextChange = { newText ->
-                        currentItem = currentItem.copy(endedAt = newText)
+                        currentItem = currentItem.copy(endedAt = newText.filterNonDigits())
                     }
                 )
 
                 ExpoStateButton(
                     text = "확인",
                     onClick = {
-                        if (
-                            currentItem.startedAt.isValidDateTime()
-                            && currentItem.endedAt.isValidDateTime()
-                        ) {
+                        if (currentItem.startedAt.isValidDateTimeSequence(currentItem.endedAt)) {
                             onTrainingSettingChange(currentItem)
                             onButtonClick()
                         } else {

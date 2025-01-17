@@ -36,10 +36,9 @@ import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.school_of_company.common.regex.isValidDateTime
+import com.school_of_company.common.regex.isValidDateTimeSequence
 import com.school_of_company.design_system.component.button.ExpoStateButton
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.icon.CheckIcon
@@ -48,6 +47,8 @@ import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.design_system.theme.color.ExpoColor
 import com.school_of_company.expo.enum.TrainingCategory
 import com.school_of_company.model.model.training.TrainingDtoModel
+import com.school_of_company.ui.keyBoardOption.numberKeyboardOptions
+import com.school_of_company.ui.util.filterNonDigits
 import com.school_of_company.ui.visualTransformation.DateTimeVisualTransformation
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -122,6 +123,7 @@ internal fun ExpoSettingBottomSheet(
                         ExpoNoneLineTextField(
                             textState = currentItem.startedAt,
                             lengthLimit = 12,
+                            keyboardOptions = numberKeyboardOptions(),
                             visualTransformation = DateTimeVisualTransformation(),
                             placeHolder = {
                                 Text(
@@ -132,13 +134,14 @@ internal fun ExpoSettingBottomSheet(
                                 )
                             },
                             onTextChange = { newText ->
-                                currentItem = currentItem.copy(startedAt = newText)
+                                currentItem = currentItem.copy(startedAt = newText.filterNonDigits())
                             }
                         )
 
                         ExpoNoneLineTextField(
                             textState = currentItem.endedAt,
                             lengthLimit = 12,
+                            keyboardOptions = numberKeyboardOptions(),
                             visualTransformation = DateTimeVisualTransformation(),
                             placeHolder = {
                                 Text(
@@ -149,7 +152,7 @@ internal fun ExpoSettingBottomSheet(
                                 )
                             },
                             onTextChange = { newText ->
-                                currentItem = currentItem.copy(endedAt = newText)
+                                currentItem = currentItem.copy(endedAt = newText.filterNonDigits())
                             }
                         )
                     }
@@ -182,10 +185,7 @@ internal fun ExpoSettingBottomSheet(
                 ExpoStateButton(
                     text = "확인",
                     onClick = {
-                        if (
-                            currentItem.startedAt.isValidDateTime()
-                            && currentItem.endedAt.isValidDateTime()
-                        ) {
+                        if (currentItem.startedAt.isValidDateTimeSequence(currentItem.endedAt)) {
                             onTrainingSettingChange(currentItem)
                             onButtonClick()
                         } else {

@@ -12,17 +12,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
-import com.school_of_company.program.view.generateParticipantManagementSampleData
+import com.school_of_company.model.entity.participant.ParticipantInformationResponseEntity
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 internal fun ProgramDetailParticipantManagementList(
     modifier: Modifier = Modifier,
-    item: ImmutableList<HomeDetailParticipantManagementData> = persistentListOf(),
+    item: ImmutableList<ParticipantInformationResponseEntity> = persistentListOf(),
     scrollState: ScrollState
 ) {
     ExpoAndroidTheme { colors, _ ->
+
         LazyColumn(
             modifier = modifier
                 .fillMaxSize()
@@ -44,7 +45,7 @@ internal fun ProgramDetailParticipantManagementList(
 @Composable
 private fun HomeDetailParticipantManagementListPreview() {
     ProgramDetailParticipantManagementList(
-        item = generateParticipantManagementSampleData(),
+        item = persistentListOf(),
         scrollState = rememberScrollState()
     )
 }

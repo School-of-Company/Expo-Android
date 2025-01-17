@@ -169,10 +169,7 @@ private fun ProgramDetailProgramScreen(
                         width = 1.dp,
                         color = colors.white
                     )
-                    .padding(
-                        horizontal = 16.dp,
-                        vertical = 16.dp
-                    )
+                    .padding(all = 16.dp)
                     .horizontalScroll(scrollState)
             ) {
 

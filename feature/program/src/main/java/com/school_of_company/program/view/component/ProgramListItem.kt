@@ -88,16 +88,12 @@ internal fun ProgramListItem(
                 if (data.category == "ESSENTIAL") {
                     CircleIcon(
                         tint = colors.black,
-                        modifier = Modifier
-                            .size(16.dp)
-                            .width(25.dp)
+                        modifier = Modifier.size(16.dp)
                     )
                 } else {
                     XIcon(
                         tint = colors.error,
-                        modifier = Modifier
-                            .size(16.dp)
-                            .width(25.dp)
+                        modifier = Modifier.size(16.dp)
                     )
                 }
             }

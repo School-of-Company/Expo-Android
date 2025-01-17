@@ -1,10 +1,12 @@
 package com.school_of_company.program.view.component
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -17,7 +19,8 @@ import kotlinx.collections.immutable.persistentListOf
 @Composable
 internal fun ProgramDetailParticipantManagementList(
     modifier: Modifier = Modifier,
-    item: ImmutableList<HomeDetailParticipantManagementData> = persistentListOf()
+    item: ImmutableList<HomeDetailParticipantManagementData> = persistentListOf(),
+    scrollState: ScrollState
 ) {
     ExpoAndroidTheme { colors, _ ->
         LazyColumn(
@@ -29,7 +32,8 @@ internal fun ProgramDetailParticipantManagementList(
             itemsIndexed(item) { index, item ->
                 ProgramDetailParticipantManagementListItem(
                     index = index + 1,
-                    data = item
+                    data = item,
+                    horizontalScrollState = scrollState
                 )
             }
         }
@@ -40,6 +44,7 @@ internal fun ProgramDetailParticipantManagementList(
 @Composable
 private fun HomeDetailParticipantManagementListPreview() {
     ProgramDetailParticipantManagementList(
-        item = generateParticipantManagementSampleData()
+        item = generateParticipantManagementSampleData(),
+        scrollState = rememberScrollState()
     )
 }

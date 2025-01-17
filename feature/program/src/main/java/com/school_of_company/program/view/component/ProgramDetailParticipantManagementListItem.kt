@@ -33,7 +33,7 @@ internal fun ProgramDetailParticipantManagementListItem(
     modifier: Modifier = Modifier,
     index: Int,
     data: HomeDetailParticipantManagementData,
-    horizontalScrollState: ScrollState = rememberScrollState(),
+    horizontalScrollState: ScrollState,
 ) {
     Spacer(modifier = Modifier.height(20.dp))
 
@@ -118,6 +118,7 @@ private fun HomeDetailParticipantManagementListItemPreview() {
             checkHere = true,
             inTime = "12:00",
             outTime = "13:00"
-        )
+        ),
+        horizontalScrollState = rememberScrollState()
     )
 }

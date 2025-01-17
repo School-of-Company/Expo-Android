@@ -49,30 +49,23 @@ internal class ProgramViewModel @Inject constructor(
     private val _swipeRefreshLoading = MutableStateFlow(false)
     val swipeRefreshLoading = _swipeRefreshLoading.asStateFlow()
 
-    private val _trainingProgramListUiState =
-        MutableStateFlow<TrainingProgramListUiState>(TrainingProgramListUiState.Loading)
+    private val _trainingProgramListUiState = MutableStateFlow<TrainingProgramListUiState>(TrainingProgramListUiState.Loading)
     internal val trainingProgramListUiState = _trainingProgramListUiState.asStateFlow()
 
-    private val _standardProgramListUiState =
-        MutableStateFlow<StandardProgramListUiState>(StandardProgramListUiState.Loading)
+    private val _standardProgramListUiState = MutableStateFlow<StandardProgramListUiState>(StandardProgramListUiState.Loading)
     internal val standardProgramListUiState = _standardProgramListUiState.asStateFlow()
 
     private val _readQrCodeUiState = MutableStateFlow<ReadQrCodeUiState>(ReadQrCodeUiState.Loading)
     internal val readQrCodeUiState = _readQrCodeUiState.asStateFlow()
 
-    private val _traineeResponseListUiState =
-        MutableStateFlow<TraineeResponseListUiState>(TraineeResponseListUiState.Loading)
+    private val _traineeResponseListUiState = MutableStateFlow<TraineeResponseListUiState>(TraineeResponseListUiState.Loading)
     internal val traineeResponseListUiState = _traineeResponseListUiState.asStateFlow()
 
-    private val _participantFieldResponseListUiState =
-        MutableStateFlow<ParticipantResponseListUiState>(ParticipantResponseListUiState.Loading)
-    internal val participantFieldResponseListUiState =
-        _participantFieldResponseListUiState.asStateFlow()
+    private val _participantFieldResponseListUiState = MutableStateFlow<ParticipantResponseListUiState>(ParticipantResponseListUiState.Loading)
+    internal val participantFieldResponseListUiState = _participantFieldResponseListUiState.asStateFlow()
 
-    private val _participantAheadResponseListUiState =
-        MutableStateFlow<ParticipantResponseListUiState>(ParticipantResponseListUiState.Loading)
-    internal val participantAheadResponseListUiState =
-        _participantAheadResponseListUiState.asStateFlow()
+    private val _participantAheadResponseListUiState = MutableStateFlow<ParticipantResponseListUiState>(ParticipantResponseListUiState.Loading)
+    internal val participantAheadResponseListUiState = _participantAheadResponseListUiState.asStateFlow()
 
     internal var title = savedStateHandle.getStateFlow(key = TITLE, initialValue = "")
     internal var content = savedStateHandle.getStateFlow(key = CONTENT, initialValue = "")
@@ -83,9 +76,7 @@ internal class ProgramViewModel @Inject constructor(
             .asResult()
             .collectLatest { result ->
                 when (result) {
-                    is Result.Loading -> _trainingProgramListUiState.value =
-                        TrainingProgramListUiState.Loading
-
+                    is Result.Loading -> _trainingProgramListUiState.value = TrainingProgramListUiState.Loading
                     is Result.Success -> {
                         if (result.data.isEmpty()) {
                             _trainingProgramListUiState.value = TrainingProgramListUiState.Empty
@@ -112,23 +103,18 @@ internal class ProgramViewModel @Inject constructor(
             .asResult()
             .collectLatest { result ->
                 when (result) {
-                    is Result.Loading -> _standardProgramListUiState.value =
-                        StandardProgramListUiState.Loading
-
+                    is Result.Loading -> _standardProgramListUiState.value = StandardProgramListUiState.Loading
                     is Result.Success -> {
                         if (result.data.isEmpty()) {
                             _standardProgramListUiState.value = StandardProgramListUiState.Empty
                             _swipeRefreshLoading.value = false
                         } else {
-                            _standardProgramListUiState.value =
-                                StandardProgramListUiState.Success(result.data)
+                            _standardProgramListUiState.value = StandardProgramListUiState.Success(result.data)
                             _swipeRefreshLoading.value = false
                         }
                     }
-
                     is Result.Error -> {
-                        _standardProgramListUiState.value =
-                            StandardProgramListUiState.Error(result.exception)
+                        _standardProgramListUiState.value = StandardProgramListUiState.Error(result.exception)
                         _swipeRefreshLoading.value = false
                     }
                 }
@@ -207,24 +193,19 @@ internal class ProgramViewModel @Inject constructor(
             .asResult()
             .collectLatest { result ->
                 when (result) {
-                    is Result.Loading -> _traineeResponseListUiState.value =
-                        TraineeResponseListUiState.Loading
-
+                    is Result.Loading -> _traineeResponseListUiState.value = TraineeResponseListUiState.Loading
                     is Result.Success -> {
                         if (result.data.isEmpty()) {
                             _swipeRefreshLoading.value = false
                             _traineeResponseListUiState.value = TraineeResponseListUiState.Empty
                         } else {
                             _swipeRefreshLoading.value = false
-                            _traineeResponseListUiState.value =
-                                TraineeResponseListUiState.Success(result.data)
+                            _traineeResponseListUiState.value = TraineeResponseListUiState.Success(result.data)
                         }
                     }
-
                     is Result.Error -> {
                         _swipeRefreshLoading.value = false
-                        _traineeResponseListUiState.value =
-                            TraineeResponseListUiState.Error(result.exception)
+                        _traineeResponseListUiState.value = TraineeResponseListUiState.Error(result.exception)
                     }
                 }
             }

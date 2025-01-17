@@ -1,4 +1,4 @@
-package com.school_of_company.expo
+package com.school_of_company.common
 
 import com.school_of_company.common.regex.isValidDate
 import com.school_of_company.common.regex.isValidDateTime
@@ -56,3 +56,4 @@ class DateValidationTest {
         }
     }
 }
+

@@ -28,6 +28,7 @@ import com.school_of_company.model.enum.Authority
 import com.school_of_company.model.param.sms.SendSmsToParticipantTraineeParam
 import com.school_of_company.sms.view.component.HomeSendMessageTopBar
 import com.school_of_company.sms.viewmodel.SmsViewModel
+import com.school_of_company.sms.viewmodel.uiState.SendSmsUiState
 
 @Composable
 internal fun SendMessageRoute(
@@ -35,6 +36,7 @@ internal fun SendMessageRoute(
     viewModel: SmsViewModel = hiltViewModel(),
     id: String,
     smsType: String,
+    onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
 ) {
     val title by viewModel.title.collectAsStateWithLifecycle()
     val content by viewModel.content.collectAsStateWithLifecycle()

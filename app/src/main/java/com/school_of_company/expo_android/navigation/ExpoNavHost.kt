@@ -97,6 +97,7 @@ fun ExpoNavHost(
         )
 
         smsSendMessageScreen(
+            onErrorToast = makeErrorToast,
             onBackClick = navController::popBackStack,
         )
 

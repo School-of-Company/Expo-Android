@@ -36,7 +36,6 @@ import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.school_of_company.common.regex.isValidDateTime
@@ -48,7 +47,7 @@ import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.design_system.theme.color.ExpoColor
 import com.school_of_company.expo.enum.TrainingCategory
 import com.school_of_company.model.model.training.TrainingDtoModel
-import com.school_of_company.ui.keyBoardOption.numericKeyboardOptions
+import com.school_of_company.ui.keyBoardOption.numberKeyboardOptions
 import com.school_of_company.ui.util.filterNonDigits
 import com.school_of_company.ui.visualTransformation.DateTimeVisualTransformation
 
@@ -124,7 +123,7 @@ internal fun ExpoSettingBottomSheet(
                         ExpoNoneLineTextField(
                             textState = currentItem.startedAt,
                             lengthLimit = 12,
-                            keyboardOptions = numericKeyboardOptions(),
+                            keyboardOptions = numberKeyboardOptions(),
                             visualTransformation = DateTimeVisualTransformation(),
                             placeHolder = {
                                 Text(
@@ -142,7 +141,7 @@ internal fun ExpoSettingBottomSheet(
                         ExpoNoneLineTextField(
                             textState = currentItem.endedAt,
                             lengthLimit = 12,
-                            keyboardOptions = numericKeyboardOptions(),
+                            keyboardOptions = numberKeyboardOptions(),
                             visualTransformation = DateTimeVisualTransformation(),
                             placeHolder = {
                                 Text(

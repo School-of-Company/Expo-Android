@@ -5,11 +5,9 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
@@ -33,7 +31,7 @@ import com.school_of_company.design_system.component.modifier.clickable.expoClic
 import com.school_of_company.design_system.icon.XIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.model.model.standard.StandardRequestModel
-import com.school_of_company.ui.keyBoardOption.numericKeyboardOptions
+import com.school_of_company.ui.keyBoardOption.numberKeyboardOptions
 import com.school_of_company.ui.util.filterNonDigits
 import com.school_of_company.ui.visualTransformation.DateTimeVisualTransformation
 
@@ -102,7 +100,7 @@ internal fun ExpoStandardSettingBottomSheet(
                 ExpoNoneLineTextField(
                     textState = currentItem.startedAt,
                     lengthLimit = 12,
-                    keyboardOptions = numericKeyboardOptions(),
+                    keyboardOptions = numberKeyboardOptions(),
                     visualTransformation = DateTimeVisualTransformation(),
                     placeHolder = {
                         Text(
@@ -120,7 +118,7 @@ internal fun ExpoStandardSettingBottomSheet(
                 ExpoNoneLineTextField(
                     textState = currentItem.endedAt,
                     lengthLimit = 12,
-                    keyboardOptions = numericKeyboardOptions(),
+                    keyboardOptions = numberKeyboardOptions(),
                     visualTransformation = DateTimeVisualTransformation(),
                     placeHolder = {
                         Text(

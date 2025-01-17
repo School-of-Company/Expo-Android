@@ -36,7 +36,7 @@ class AuthInterceptor @Inject constructor(
         // 새로운 요청을 생성하고, 특정 조건에 따라 헤더에 토큰을 추가합니다.
         val newRequest = when {
             // 인증이 필요없는 경로에 대해서는 토큰을 추가하지 않습니다.
-            ignorePath.any { path.contains(it) && method in listOf(POST) } -> {
+            ignorePath in path && method == POST -> {
                 request
             }
 
@@ -48,12 +48,12 @@ class AuthInterceptor @Inject constructor(
 
             // 특정 경로와 DELETE 메서드 요청에는 리프레시 토큰을 추가합니다.
             path.endsWith("/auth") && method in listOf(DELETE, PATCH) -> {
-                request.newBuilder().addHeader("Authorization", "Bearer $refreshToken" ).build()
+                request.newBuilder().addHeader("Authorization", "Bearer $refreshToken").build()
             }
 
             // 나머지의 경우에는 전부 acessToken을 추가합니다.
             else -> {
-                request.newBuilder().addHeader("Authorization", "Bearer $accessToken" ).build()
+                request.newBuilder().addHeader("Authorization", "Bearer $accessToken").build()
             }
         }
 

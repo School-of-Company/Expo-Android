@@ -2,7 +2,6 @@ package com.school_of_company.expo.view
 
 import android.graphics.BitmapFactory
 import android.net.Uri
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -53,7 +52,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
-import com.school_of_company.common.regex.isValidDate
+import com.school_of_company.common.regex.isValidDateSequence
 import com.school_of_company.design_system.R
 import com.school_of_company.design_system.component.bottomsheet.SettingBottomSheet
 import com.school_of_company.design_system.component.button.ExpoStateButton
@@ -604,14 +603,13 @@ private fun ExpoModifyScreen(
                         state = if (
                             modifyTitleState.isNotEmpty() &&
                             startedDateState.isNotEmpty() &&
-                            startedDateState.isValidDate() &&
                             endedDateState.isNotEmpty() &&
-                            endedDateState.isValidDate() &&
                             introduceTitleState.isNotEmpty() &&
                             addressState.isNotEmpty() &&
                             locationState.isNotEmpty() &&
                             trainingProgramTextState.isNotEmpty() &&
-                            standardProgramTextState.isNotEmpty()
+                            standardProgramTextState.isNotEmpty() &&
+                            startedDateState.isValidDateSequence(endedDateState)
                         ) {
                             ButtonState.Enable
                         } else {

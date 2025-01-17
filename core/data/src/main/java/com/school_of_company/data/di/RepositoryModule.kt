@@ -10,10 +10,14 @@ import com.school_of_company.data.repository.expo.ExpoRepository
 import com.school_of_company.data.repository.expo.ExpoRepositoryImpl
 import com.school_of_company.data.repository.image.ImageRepository
 import com.school_of_company.data.repository.image.ImageRepositoryImpl
+import com.school_of_company.data.repository.participant.ParticipantRepository
+import com.school_of_company.data.repository.participant.ParticipantRepositoryImpl
 import com.school_of_company.data.repository.sms.SmsRepository
 import com.school_of_company.data.repository.sms.SmsRepositoryImpl
 import com.school_of_company.data.repository.standard.StandardRepository
 import com.school_of_company.data.repository.standard.StandardRepositoryImpl
+import com.school_of_company.data.repository.trainee.TraineeRepository
+import com.school_of_company.data.repository.trainee.TraineeRepositoryImpl
 import com.school_of_company.data.repository.training.TrainingRepository
 import com.school_of_company.data.repository.training.TrainingRepositoryImpl
 import dagger.Binds
@@ -64,4 +68,15 @@ abstract class RepositoryModule {
     abstract fun bindAdminRepository(
         adminRepositoryImpl: AdminRepositoryImpl
     ) : AdminRepository
+
+    @Binds
+    abstract fun bindTraineeRepository(
+        traineeRepositoryImpl: TraineeRepositoryImpl
+    ) : TraineeRepository
+
+    @Binds
+    abstract fun bindParticipantRepository(
+        participantRepositoryImpl: ParticipantRepositoryImpl
+    ) : ParticipantRepository
+
 }

@@ -51,7 +51,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
-import com.school_of_company.common.regex.isValidDate
+import com.school_of_company.common.regex.isValidDateSequence
 import com.school_of_company.design_system.R
 import com.school_of_company.design_system.component.button.ExpoStateButton
 import com.school_of_company.design_system.component.button.state.ButtonState
@@ -507,14 +507,13 @@ private fun ExpoCreateScreen(
                         state = if (
                             modifyTitleState.isNotEmpty() &&
                             startedDateState.isNotEmpty() &&
-                            startedDateState.isValidDate() &&
                             endedDateState.isNotEmpty() &&
-                            endedDateState.isValidDate() &&
                             introduceTitleState.isNotEmpty() &&
                             addressState.isNotEmpty() &&
                             locationState.isNotEmpty() &&
                             trainingProgramTextState.isNotEmpty() &&
-                            standardProgramTextState.isNotEmpty()
+                            standardProgramTextState.isNotEmpty() &&
+                            startedDateState.isValidDateSequence(endedDateState)
                         ) {
                             ButtonState.Enable
                         } else {

@@ -22,8 +22,14 @@ fun NavController.navigateToProgramDetailProgram(
     )
 }
 
-fun NavController.navigateToProgramDetailParticipantManagement(navOptions: NavOptions? = null) {
-    this.navigate(programDetailParticipantManagementRoute, navOptions)
+fun NavController.navigateToProgramDetailParticipantManagement(
+    id: String,
+    navOptions: NavOptions? = null
+) {
+    this.navigate(
+        route = "$programDetailParticipantManagementRoute/${id}",
+        navOptions
+    )
 }
 
 fun NavController.navigateQrScanner(
@@ -53,11 +59,11 @@ fun NavGraphBuilder.programDetailProgramScreen(
     }
 }
 
-fun NavGraphBuilder.programDetailParticipantManagementScreen(
-    onBackClick: () -> Unit
-) {
-    composable(route = programDetailParticipantManagementRoute) {
+fun NavGraphBuilder.programDetailParticipantManagementScreen(onBackClick: () -> Unit) {
+    composable(route = "$programDetailParticipantManagementRoute/{id}") { backStackEntry ->
+        val id = backStackEntry.arguments?.getString("id") ?: ""
         ProgramDetailParticipantManagementRoute(
+            id = id,
             onBackClick = onBackClick
         )
     }

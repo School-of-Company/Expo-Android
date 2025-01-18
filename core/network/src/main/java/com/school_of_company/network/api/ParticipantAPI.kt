@@ -9,7 +9,7 @@ interface ParticipantAPI {
 
     @GET("/participant/{expo_id}")
     suspend fun getParticipantInformationList(
+        @Path("expo_id") expoId: String,
         @Query("type") type: String,
-        @Path("expo_id") expoId: String
-    ) : List<ParticipantInformationResponse>
+    ): List<ParticipantInformationResponse>
 }

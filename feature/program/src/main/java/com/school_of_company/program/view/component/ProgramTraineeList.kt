@@ -30,7 +30,7 @@ internal fun ProgramTraineeList(
         ) {
             itemsIndexed(item) { index, item ->
                 ProgramTraineeListItem(
-                    index = index,
+                    index = index + 1,
                     data = item,
                     horizontalScrollState = scrollState
                 )

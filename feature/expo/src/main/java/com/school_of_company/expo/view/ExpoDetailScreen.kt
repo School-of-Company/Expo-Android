@@ -336,6 +336,7 @@ private fun ExpoDetailScreen(
                             ExpoEnableButton(
                                 text = "수정하기",
                                 onClick = { onModifyClick(id) },
+                                textColor = colors.main,
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .border(

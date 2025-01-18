@@ -34,7 +34,7 @@ fun UserEffectButton(
         var isClicked by remember { mutableStateOf(false) }
 
         LaunchedEffect(isClicked) {
-            delay(1000)
+            delay(500)
             isClicked = false
         }
 

@@ -18,7 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -109,9 +109,9 @@ private fun ProgramDetailParticipantManagementScreen(
     getFieldParticipantList: () -> Unit,
     getTraineeList: () -> Unit
 ) {
-    var participantTextState by remember { mutableStateOf("사전 행사 참가자") }
-    var isDropdownExpanded by remember { mutableStateOf(false) }
-    var selectedItem by remember { mutableStateOf<Int?>(0) }
+    var participantTextState by rememberSaveable { mutableStateOf("사전 행사 참가자") }
+    var isDropdownExpanded by rememberSaveable { mutableStateOf(false) }
+    var selectedItem by rememberSaveable { mutableStateOf<Int?>(0) }
 
 
     ExpoAndroidTheme { colors, typography ->

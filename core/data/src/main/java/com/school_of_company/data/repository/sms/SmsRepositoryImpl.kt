@@ -18,7 +18,10 @@ class SmsRepositoryImpl @Inject constructor(
         id: String,
         body: SendSmsToParticipantTraineeParam
     ): Flow<Unit> {
-        return dataSource.sendSmsToParticipantTrainee(id = id, body = body.toDto())
+        return dataSource.sendSmsToParticipantTrainee(
+            id = id,
+            body = body.toDto()
+        )
     }
 
     override fun smsSignUpCertificationNumberCertification(

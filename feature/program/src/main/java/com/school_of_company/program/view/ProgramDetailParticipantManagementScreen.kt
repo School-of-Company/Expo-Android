@@ -147,12 +147,12 @@ private fun ProgramDetailParticipantManagementScreen(
                 )
 
                 if (isDropdownExpanded) {
-                    DownArrowIcon(
+                    UpArrowIcon(
                         tint = colors.black,
                         modifier = Modifier.padding(start = 10.dp)
                     )
                 } else {
-                    UpArrowIcon(
+                    DownArrowIcon(
                         tint = colors.black,
                         modifier = Modifier.padding(start = 10.dp)
                     )

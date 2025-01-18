@@ -7,6 +7,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -15,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
+import kotlinx.coroutines.delay
 
 @Composable
 fun UserEffectButton(
@@ -26,10 +28,15 @@ fun UserEffectButton(
     clickedBackgroundColor: Color = Color.Red,
     onClick: () -> Unit,
 ) {
-    ExpoAndroidTheme { colors, typography ->
+    ExpoAndroidTheme { _, typography ->
 
         val interactionSource = remember { MutableInteractionSource() }
         var isClicked by remember { mutableStateOf(false) }
+
+        LaunchedEffect(isClicked) {
+            delay(1000)
+            isClicked = false
+        }
 
         Button(
             modifier = modifier,

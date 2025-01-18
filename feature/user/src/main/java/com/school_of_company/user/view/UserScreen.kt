@@ -28,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -47,6 +48,7 @@ import com.school_of_company.user.view.component.SignUpRequestList
 import com.school_of_company.user.view.component.UserAllowButton
 import com.school_of_company.user.view.component.UserBottomSheet
 import com.school_of_company.user.view.component.UserDeleteButton
+import com.school_of_company.user.view.component.UserDialog
 import com.school_of_company.user.viewmodel.UserViewModel
 import com.school_of_company.user.viewmodel.uistate.AllowAdminRequestUiState
 import com.school_of_company.user.viewmodel.uistate.GetAdminRequestAllowListUiState
@@ -139,6 +141,8 @@ private fun UserScreen(
 ) {
     val (selectedId, setSelectedId) = rememberSaveable { mutableLongStateOf(0L) }
     val (openBottomSheet, isOpenBottomSheet) = rememberSaveable { mutableStateOf(false) }
+    val (openLogoutDialog, isOpenLogoutDialog) = rememberSaveable { mutableStateOf(false) }
+    val (openWithdrawDialog, isOpenWithdrawDialog) = rememberSaveable { mutableStateOf(false) }
 
     ExpoAndroidTheme { colors, typography ->
         Column(
@@ -443,15 +447,47 @@ private fun UserScreen(
     if (openBottomSheet) {
         UserBottomSheet(
             onLogoutClick = {
-                logoutCallBack()
                 isOpenBottomSheet(false)
+                isOpenLogoutDialog(true)
             },
             onWithdrawClick = {
-                withdrawalCallBack()
                 isOpenBottomSheet(false)
+                isOpenWithdrawDialog(true)
             },
             onCancelClick = { isOpenBottomSheet(false) }
         )
+    }
+
+    if (openLogoutDialog) {
+        Dialog(onDismissRequest = { isOpenLogoutDialog(false) }) {
+
+            UserDialog(
+                titleText = "정말로 로그아웃 하시겠습니까?",
+                contentText = "로그아웃 했을 경우 다시 로그인 해야하는 경우가 발생합니다.",
+                buttonText = "로그아웃",
+                onConfirmClick = {
+                    logoutCallBack()
+                    isOpenLogoutDialog(false)
+                },
+                onCancelClick = { isOpenLogoutDialog(false) }
+            )
+        }
+    }
+
+    if (openWithdrawDialog) {
+        Dialog(onDismissRequest = { isOpenWithdrawDialog(false) }) {
+
+            UserDialog(
+                titleText = "정말로 탈퇴하기 하시겠습니까?",
+                contentText = "탈퇴하기 했을 경우 다시 로그인 해야하는 경우가 발생합니다",
+                buttonText = "탈퇴하기",
+                onConfirmClick = {
+                    withdrawalCallBack()
+                    isOpenWithdrawDialog(false)
+                },
+                onCancelClick = { isOpenWithdrawDialog(false) }
+            )
+        }
     }
 }
 

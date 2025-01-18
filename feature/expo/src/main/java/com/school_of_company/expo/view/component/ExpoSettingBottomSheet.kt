@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -60,9 +61,9 @@ internal fun ExpoSettingBottomSheet(
     onTrainingSettingChange: (TrainingDtoModel) -> Unit,
     onButtonClick: () -> Unit,
     focusManager: FocusManager = LocalFocusManager.current,
-    isTraining: Boolean = true
+    isTraining: Boolean = true,
+    sheetState: SheetState = rememberModalBottomSheetState()
 ) {
-    val sheetState = rememberModalBottomSheetState()
     var currentItem by remember { mutableStateOf(trainingSettingItem) }
 
     ExpoAndroidTheme { colors, typography ->
@@ -244,6 +245,7 @@ fun CustomCheckBox(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 private fun ExpoTrainingSettingBottomSheetPreview() {

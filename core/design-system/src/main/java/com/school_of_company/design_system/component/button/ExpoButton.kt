@@ -101,6 +101,7 @@ fun ExpoStateButton(
 fun ExpoEnableButton(
     modifier: Modifier = Modifier,
     text: String,
+    textColor: Color = Color.Black,
     onClick: () -> Unit,
 ) {
     ExpoAndroidTheme { colors, typography ->
@@ -121,7 +122,7 @@ fun ExpoEnableButton(
             Text(
                 text = text,
                 style = typography.bodyBold2,
-                color = colors.main
+                color = textColor
             )
         }
     }

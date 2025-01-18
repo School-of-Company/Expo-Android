@@ -61,10 +61,13 @@ internal fun UserDialog(
                 verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically)
             ) {
 
-                ExpoEnableButton(
+                UserEffectButton(
                     text = buttonText,
                     onClick = onConfirmClick,
-                    textColor = colors.error,
+                    defaultTextColor = colors.error,
+                    defaultBackgroundColor = colors.white,
+                    clickedTextColor = colors.white,
+                    clickedBackgroundColor = colors.error,
                     modifier = Modifier
                         .fillMaxWidth()
                         .border(
@@ -74,10 +77,13 @@ internal fun UserDialog(
                         )
                 )
 
-                ExpoEnableButton(
+                UserEffectButton(
                     text = "취소",
                     onClick = onCancelClick,
-                    textColor = colors.gray700,
+                    defaultTextColor = colors.gray700,
+                    defaultBackgroundColor = colors.white,
+                    clickedTextColor = colors.white,
+                    clickedBackgroundColor = colors.gray700,
                     modifier = Modifier
                         .fillMaxWidth()
                         .border(

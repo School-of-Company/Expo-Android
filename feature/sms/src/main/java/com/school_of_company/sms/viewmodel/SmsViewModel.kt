@@ -15,8 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class SmsViewModel @Inject constructor(
+    private val sendSmsToParticipantTraineeUseCase: SendSmsToParticipantTraineeUseCase,
     private val savedStateHandle: SavedStateHandle,
-    private val sendSmsToParticipantTraineeUseCase: SendSmsToParticipantTraineeUseCase
 ) : ViewModel() {
     companion object {
         private const val TITLE = "title"

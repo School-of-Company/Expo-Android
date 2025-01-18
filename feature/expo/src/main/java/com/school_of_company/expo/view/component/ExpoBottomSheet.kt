@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.ripple
@@ -31,9 +32,9 @@ internal fun HomeBottomSheet(
     modifier: Modifier = Modifier,
     onRecentClick: () -> Unit,
     onOldClick: () -> Unit,
-    onCancelClick: () -> Unit
+    onCancelClick: () -> Unit,
+    sheetState: SheetState = rememberModalBottomSheetState()
 ) {
-    val sheetState = rememberModalBottomSheetState()
 
     ExpoAndroidTheme { colors, _ ->
 
@@ -109,12 +110,13 @@ private fun HomeBottomSheetOptions(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 private fun HomeBottomSheetPreview() {
     HomeBottomSheet(
         onRecentClick = {},
         onOldClick = {},
-        onCancelClick = {}
+        onCancelClick = {},
     )
 }

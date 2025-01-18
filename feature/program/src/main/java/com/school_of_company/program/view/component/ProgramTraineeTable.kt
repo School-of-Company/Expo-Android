@@ -61,17 +61,17 @@ internal fun ProgramTraineeTable(
                 )
 
                 Text(
-                    text = "신청 방법",
-                    style = typography.captionBold1,
-                    color = colors.gray600,
-                    modifier = Modifier.requiredWidthIn(100.dp)
-                )
-
-                Text(
                     text = "휴대폰 번호",
                     style = typography.captionBold1,
                     color = colors.gray600,
                     modifier = Modifier.requiredWidthIn(130.dp)
+                )
+
+                Text(
+                    text = "현장 및 사전",
+                    style = typography.captionBold1,
+                    color = colors.gray600,
+                    modifier = Modifier.requiredWidthIn(100.dp)
                 )
             }
         }

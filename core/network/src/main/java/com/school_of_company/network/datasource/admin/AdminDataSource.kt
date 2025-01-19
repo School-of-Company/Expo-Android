@@ -6,5 +6,6 @@ import kotlinx.coroutines.flow.Flow
 interface AdminDataSource {
     fun getAdminRequestAllowList(): Flow<List<AdminRequestAllowListResponse>>
     fun allowAdmin(adminId: Long): Flow<Unit>
+    fun rejectAdmin(adminId: Long): Flow<Unit>
     fun serviceWithdrawal(): Flow<Unit>
 }

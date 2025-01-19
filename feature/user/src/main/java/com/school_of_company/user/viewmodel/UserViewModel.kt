@@ -6,11 +6,13 @@ import com.school_of_company.common.result.Result
 import com.school_of_company.common.result.asResult
 import com.school_of_company.domain.usecase.admin.AllowAdminRequestUseCase
 import com.school_of_company.domain.usecase.admin.GetAdminRequestAllowListUseCase
+import com.school_of_company.domain.usecase.admin.RejectAdminRequestUseCase
 import com.school_of_company.domain.usecase.admin.ServiceWithdrawalUseCase
 import com.school_of_company.domain.usecase.auth.AdminLogoutUseCase
 import com.school_of_company.user.viewmodel.uistate.AllowAdminRequestUiState
 import com.school_of_company.user.viewmodel.uistate.GetAdminRequestAllowListUiState
 import com.school_of_company.user.viewmodel.uistate.LogoutUiState
+import com.school_of_company.user.viewmodel.uistate.RejectAdminRequestUiState
 import com.school_of_company.user.viewmodel.uistate.ServiceWithdrawalUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,6 +26,7 @@ import javax.inject.Inject
 class UserViewModel @Inject constructor(
     private val getAdminRequestAllowListUseCase: GetAdminRequestAllowListUseCase,
     private val allowAdminRequestUseCase: AllowAdminRequestUseCase,
+    private val rejectAdminRequestUseCase: RejectAdminRequestUseCase,
     private val serviceWithdrawalUseCase: ServiceWithdrawalUseCase,
     private val logoutUseCase: AdminLogoutUseCase
 ) : ViewModel() {
@@ -36,6 +39,9 @@ class UserViewModel @Inject constructor(
 
     private val _allowAdminRequestUiState = MutableStateFlow<AllowAdminRequestUiState>(AllowAdminRequestUiState.Loading)
     internal val allowAdminRequestUiState = _allowAdminRequestUiState.asStateFlow()
+
+    private val _rejectAdminRequestUiState = MutableStateFlow<RejectAdminRequestUiState>(RejectAdminRequestUiState.Loading)
+    internal val rejectAdminRequestUiState = _rejectAdminRequestUiState.asStateFlow()
 
     private val _serviceWithdrawalUiState = MutableStateFlow<ServiceWithdrawalUiState>(ServiceWithdrawalUiState.Loading)
     internal val serviceWithdrawalUiState = _serviceWithdrawalUiState.asStateFlow()
@@ -80,6 +86,21 @@ class UserViewModel @Inject constructor(
             }
             .onFailure { error ->
                 _allowAdminRequestUiState.value = AllowAdminRequestUiState.Error(error)
+            }
+    }
+
+    internal fun rejectAdminRequest(adminId: Long) = viewModelScope.launch {
+        _rejectAdminRequestUiState.value = RejectAdminRequestUiState.Loading
+        rejectAdminRequestUseCase(adminId = adminId)
+            .onSuccess {
+                it.catch { remoteError ->
+                    _rejectAdminRequestUiState.value = RejectAdminRequestUiState.Error(remoteError)
+                }.collect {
+                    _rejectAdminRequestUiState.value = RejectAdminRequestUiState.Success
+                }
+            }
+            .onFailure { error ->
+                _rejectAdminRequestUiState.value = RejectAdminRequestUiState.Error(error)
             }
     }
 

@@ -3,6 +3,7 @@ package com.school_of_company.program.view.component
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.model.entity.trainee.TraineeResponseEntity
@@ -59,18 +61,22 @@ internal fun ProgramTraineeListItem(
             )
 
             Text(
-                text = if (data.applicationType == "FIELD") "현장 신청" else "사전 신청",
-                style = typography.captionRegular2,
-                color = colors.black,
-                modifier = Modifier.requiredWidthIn(100.dp)
-            )
-
-            Text(
                 text = data.phoneNumber,
                 style = typography.captionRegular2,
                 color = colors.black,
                 modifier = Modifier.requiredWidthIn(130.dp)
             )
+
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.requiredWidthIn(116.dp)
+            ) {
+                Text(
+                    text = if (data.applicationType == "FIELD") "현장" else "사전",
+                    style = typography.captionRegular2,
+                    color = colors.black,
+                )
+            }
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.school_of_company.standard.view.component
+package com.school_of_company.design_system.component.button
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -16,7 +16,7 @@ import com.school_of_company.design_system.component.modifier.clickable.expoClic
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 
 @Composable
-internal fun QrButton(
+fun QrButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {

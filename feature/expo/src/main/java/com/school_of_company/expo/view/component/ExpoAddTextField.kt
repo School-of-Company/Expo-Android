@@ -133,8 +133,8 @@ private fun ExpoAddTextFieldPreview() {
         placeHolder = "연수를 입력하세요.",
         trainingTextFieldList = listOf(),
         onValueChange = { _, _ ->},
-        onAddTextField = { /*TODO*/ },
-        onRemoveTextField = { /*TODO*/ },
-        onTrainingSetting = { /*TODO*/ }
+        onAddTextField = {},
+        onRemoveTextField = {},
+        onTrainingSetting = {}
     )
 }

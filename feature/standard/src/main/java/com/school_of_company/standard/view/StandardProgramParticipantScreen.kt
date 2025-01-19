@@ -30,6 +30,7 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.school_of_company.design_system.component.button.QrButton
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.component.topbar.ExpoTopBar
 import com.school_of_company.design_system.component.uistate.empty.ShowEmptyState
@@ -38,7 +39,6 @@ import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.model.entity.standard.StandardAttendListResponseEntity
-import com.school_of_company.standard.view.component.QrButton
 import com.school_of_company.standard.view.component.StandardParticipantList
 import com.school_of_company.standard.viewmodel.StandardViewModel
 import com.school_of_company.standard.viewmodel.uistate.StandardProgramAttendListUiState

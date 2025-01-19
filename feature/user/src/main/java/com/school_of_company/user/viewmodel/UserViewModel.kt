@@ -104,6 +104,11 @@ class UserViewModel @Inject constructor(
             }
     }
 
+    internal fun resetAdminRequest() {
+        _allowAdminRequestUiState.value = AllowAdminRequestUiState.Loading
+        _rejectAdminRequestUiState.value = RejectAdminRequestUiState.Loading
+    }
+
     internal fun serviceWithdrawal() = viewModelScope.launch {
         _serviceWithdrawalUiState.value = ServiceWithdrawalUiState.Loading
         serviceWithdrawalUseCase()

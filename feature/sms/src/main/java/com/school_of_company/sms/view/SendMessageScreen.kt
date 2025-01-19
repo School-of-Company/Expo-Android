@@ -34,10 +34,10 @@ import com.school_of_company.sms.viewmodel.uiState.SendSmsUiState
 
 @Composable
 internal fun SendMessageRoute(
-    onBackClick: () -> Unit,
     viewModel: SmsViewModel = hiltViewModel(),
     id: String,
     smsType: String,
+    onBackClick: () -> Unit,
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
 ) {
     val sendSmsUiState by viewModel.sendSmsUiState.collectAsStateWithLifecycle()
@@ -52,7 +52,10 @@ internal fun SendMessageRoute(
                     R.string.sms_send_fail
                 )
 
-            SendSmsUiState.Success -> onErrorToast(null, R.string.sms_send_success)
+            SendSmsUiState.Success -> {
+                onErrorToast(null, R.string.sms_send_success)
+                onBackClick()
+            }
             SendSmsUiState.Loading -> Unit
         }
     }

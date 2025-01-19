@@ -20,6 +20,10 @@ class AdminRepositoryImpl @Inject constructor(
         return dataSource.allowAdmin(adminId = adminId)
     }
 
+    override fun rejectAdmin(adminId: Long): Flow<Unit> {
+        return dataSource.rejectAdmin(adminId = adminId)
+    }
+
     override fun serviceWithdrawal(): Flow<Unit> {
         return dataSource.serviceWithdrawal()
     }

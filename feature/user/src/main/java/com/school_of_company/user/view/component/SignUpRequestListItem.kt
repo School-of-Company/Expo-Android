@@ -72,14 +72,14 @@ internal fun SignUpRequestListItem(
                 text = data.email,
                 style = typography.captionRegular2,
                 color = colors.black,
-                modifier = Modifier.width(180.dp)
+                modifier = Modifier.width(160.dp)
             )
 
             Text(
                 text = data.phoneNumber,
                 style = typography.captionRegular2,
                 color = colors.black,
-                modifier = Modifier.width(120.dp)
+                modifier = Modifier.width(150.dp)
             )
         }
     }

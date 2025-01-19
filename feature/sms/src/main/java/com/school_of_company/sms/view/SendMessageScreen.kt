@@ -44,7 +44,7 @@ internal fun SendMessageRoute(
     val title by viewModel.title.collectAsStateWithLifecycle()
     val content by viewModel.content.collectAsStateWithLifecycle()
 
-    LaunchedEffect("sendSmsUiState") {
+    LaunchedEffect(sendSmsUiState) {
         when (sendSmsUiState) {
             is SendSmsUiState.Error ->
                 onErrorToast(

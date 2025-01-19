@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.ripple
@@ -30,9 +31,9 @@ internal fun UserBottomSheet(
     modifier: Modifier = Modifier,
     onLogoutClick: () -> Unit,
     onWithdrawClick: () -> Unit,
-    onCancelClick: () -> Unit
+    onCancelClick: () -> Unit,
+    sheetState: SheetState = rememberModalBottomSheetState()
 ) {
-    val sheetState = rememberModalBottomSheetState()
 
     ExpoAndroidTheme { colors, _ ->
 

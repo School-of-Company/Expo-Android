@@ -57,7 +57,7 @@ internal fun ExpoDetailRoute(
     id: String,
     onBackClick: () -> Unit,
     onMessageClick: (String, String) -> Unit,
-    onCheckClick: () -> Unit,
+    onCheckClick: (String) -> Unit,
     onModifyClick: (String) -> Unit,
     onProgramClick: (String) -> Unit,
     viewModel: ExpoViewModel = hiltViewModel()
@@ -95,7 +95,7 @@ private fun ExpoDetailScreen(
     getStandardProgramUiState: GetStandardProgramListUiState,
     onBackClick: () -> Unit,
     onMessageClick: (String) -> Unit,
-    onCheckClick: () -> Unit,
+    onCheckClick: (String) -> Unit,
     onModifyClick: (String) -> Unit,
     onProgramClick: (String) -> Unit
 ) {
@@ -312,7 +312,7 @@ private fun ExpoDetailScreen(
                                 ExpoButton(
                                     text = "조회하기",
                                     color = colors.main,
-                                    onClick = onCheckClick,
+                                    onClick = { onCheckClick(id) },
                                     modifier = Modifier
                                         .weight(1f)
                                         .padding(
@@ -337,6 +337,7 @@ private fun ExpoDetailScreen(
                             ExpoEnableButton(
                                 text = "수정하기",
                                 onClick = { onModifyClick(id) },
+                                textColor = colors.main,
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .border(

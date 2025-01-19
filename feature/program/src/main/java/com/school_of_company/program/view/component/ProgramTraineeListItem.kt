@@ -10,25 +10,21 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredWidthIn
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.school_of_company.design_system.icon.CircleIcon
-import com.school_of_company.design_system.icon.XIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
-import com.school_of_company.model.entity.participant.ParticipantInformationResponseEntity
+import com.school_of_company.model.entity.trainee.TraineeResponseEntity
 
 @Composable
-internal fun ProgramDetailParticipantManagementListItem(
+internal fun ProgramTraineeListItem(
     modifier: Modifier = Modifier,
     index: Int,
-    data: ParticipantInformationResponseEntity,
-    horizontalScrollState: ScrollState,
+    data: TraineeResponseEntity,
+    horizontalScrollState: ScrollState
 ) {
     Spacer(modifier = Modifier.height(20.dp))
 
@@ -58,6 +54,13 @@ internal fun ProgramDetailParticipantManagementListItem(
             )
 
             Text(
+                text = data.trainingId,
+                style = typography.captionRegular2,
+                color = colors.black,
+                modifier = Modifier.requiredWidthIn(130.dp)
+            )
+
+            Text(
                 text = data.phoneNumber,
                 style = typography.captionRegular2,
                 color = colors.black,
@@ -65,36 +68,15 @@ internal fun ProgramDetailParticipantManagementListItem(
             )
 
             Box(
-                modifier = Modifier.requiredWidthIn(166.dp),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.requiredWidthIn(116.dp)
             ) {
-                if (data.informationStatus) {
-                    CircleIcon(
-                        tint = colors.black,
-                        modifier = Modifier.size(16.dp)
-                    )
-                } else {
-                    XIcon(
-                        tint = colors.error,
-                        modifier = Modifier.size(16.dp)
-                    )
-                }
+                Text(
+                    text = if (data.applicationType == "FIELD") "현장" else "사전",
+                    style = typography.captionRegular2,
+                    color = colors.black,
+                )
             }
         }
     }
-}
-
-@Preview
-@Composable
-private fun HomeDetailParticipantManagementListItemPreview() {
-    ProgramDetailParticipantManagementListItem(
-        index = 1,
-        data = ParticipantInformationResponseEntity(
-            name = "이명훈",
-            id = 0,
-            phoneNumber = "01038251716",
-            informationStatus = true,
-        ),
-        horizontalScrollState = rememberScrollState()
-    )
 }

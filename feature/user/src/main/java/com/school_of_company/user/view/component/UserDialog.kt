@@ -13,7 +13,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.school_of_company.design_system.component.button.ExpoEnableButton
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 
 @Composable
@@ -101,8 +100,8 @@ internal fun UserDialog(
 @Composable
 private fun UserDialogPreview() {
     UserDialog(
-        onCancelClick = { /*TODO*/ },
-        onConfirmClick = { /*TODO*/ },
+        onCancelClick = {},
+        onConfirmClick = {},
         titleText = "정말로 로그아웃 하시겠습니까?",
         contentText = "로그아웃 했을 경우 다시 로그인 해야하는 경우가 발생합니다",
         buttonText = "로그아웃"

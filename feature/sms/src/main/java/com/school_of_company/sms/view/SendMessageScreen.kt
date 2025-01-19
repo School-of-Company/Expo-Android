@@ -126,7 +126,7 @@ private fun SendMessageScreen(
 @Composable
 private fun SendMessageScreenPreview() {
     SendMessageScreen(
-        onBackClick = { /*TODO*/ },
+        onBackClick = {},
         title = "",
         content = "",
         onTitleChange = {},

@@ -156,13 +156,13 @@ internal fun ExpoStandardSettingBottomSheet(
 @Composable
 private fun ExpoStandardSettingBottomSheetPreview() {
     ExpoStandardSettingBottomSheet(
-        onCancelClick = { /*TODO*/ },
+        onCancelClick = {},
         trainingSettingItem = StandardRequestModel(
             title = "",
             startedAt = "",
             endedAt = ""
         ),
         onTrainingSettingChange = {},
-        onButtonClick = { /*TODO*/ }
+        onButtonClick = {}
     )
 }

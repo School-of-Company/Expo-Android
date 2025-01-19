@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -126,6 +127,7 @@ internal fun UserRoute(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun UserScreen(
     modifier: Modifier = Modifier,
@@ -489,9 +491,4 @@ private fun UserScreen(
             )
         }
     }
-}
-
-@Preview
-@Composable
-private fun UserScreenPreview() {
 }

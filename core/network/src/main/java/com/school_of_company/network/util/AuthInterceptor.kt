@@ -46,14 +46,14 @@ class AuthInterceptor @Inject constructor(
                 request
             }
 
-            // 특정 경로와 PATCH 메서드 요청에는 리프레시 토큰을 추가합니다.
-            path.endsWith("/auth") && method in listOf(PATCH) -> {
-                request.newBuilder().addHeader("Authorization", "Bearer $refreshToken" ).build()
+            // 특정 경로와 DELETE 메서드 요청에는 리프레시 토큰을 추가합니다.
+            path.endsWith("/auth") && method == PATCH -> {
+                request.newBuilder().addHeader("Authorization", "Bearer $refreshToken").build()
             }
 
             // 나머지의 경우에는 전부 acessToken을 추가합니다.
             else -> {
-                request.newBuilder().addHeader("Authorization", "Bearer $accessToken" ).build()
+                request.newBuilder().addHeader("Authorization", "Bearer $accessToken").build()
             }
         }
 

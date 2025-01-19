@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
@@ -17,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.school_of_company.design_system.R
 import com.school_of_company.design_system.component.button.ExpoStateButton
 import com.school_of_company.design_system.component.button.state.ButtonState
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
@@ -24,35 +26,69 @@ import com.school_of_company.design_system.component.modifier.padding.paddingHor
 import com.school_of_company.design_system.component.textfield.LimitedLengthTextField
 import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
+import com.school_of_company.model.enum.Authority
+import com.school_of_company.model.param.sms.SendSmsToParticipantTraineeParam
 import com.school_of_company.sms.view.component.HomeSendMessageTopBar
 import com.school_of_company.sms.viewmodel.SmsViewModel
+import com.school_of_company.sms.viewmodel.uiState.SendSmsUiState
 
 @Composable
 internal fun SendMessageRoute(
+    viewModel: SmsViewModel = hiltViewModel(),
+    id: String,
+    smsType: String,
     onBackClick: () -> Unit,
-    viewModel: SmsViewModel = hiltViewModel()
+    onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
 ) {
+    val sendSmsUiState by viewModel.sendSmsUiState.collectAsStateWithLifecycle()
     val title by viewModel.title.collectAsStateWithLifecycle()
     val content by viewModel.content.collectAsStateWithLifecycle()
+
+    LaunchedEffect(sendSmsUiState) {
+        when (sendSmsUiState) {
+            is SendSmsUiState.Error ->
+                onErrorToast(
+                    (sendSmsUiState as SendSmsUiState.Error).exception,
+                    R.string.sms_send_fail
+                )
+
+            SendSmsUiState.Success -> {
+                onErrorToast(null, R.string.sms_send_success)
+                onBackClick()
+            }
+            SendSmsUiState.Loading -> Unit
+        }
+    }
 
     SendMessageScreen(
         onBackClick = onBackClick,
         title = title,
         content = content,
         onTitleChange = viewModel::onTitleChange,
-        onContentChange = viewModel::onContentChange
+        onContentChange = viewModel::onContentChange,
+        sendRequest = {
+            viewModel.sendSmsToParticipantTrainee(
+                id = id,
+                body = SendSmsToParticipantTraineeParam(
+                    title,
+                    content,
+                    authority = Authority.valueOf(smsType)
+                )
+            )
+        }
     )
 }
 
 @Composable
 private fun SendMessageScreen(
     modifier: Modifier = Modifier,
-    onBackClick: () -> Unit,
+    focusManager: FocusManager = LocalFocusManager.current,
     title: String,
     content: String,
+    onBackClick: () -> Unit,
     onTitleChange: (String) -> Unit,
     onContentChange: (String) -> Unit,
-    focusManager: FocusManager = LocalFocusManager.current
+    sendRequest: () -> Unit,
 ) {
     ExpoAndroidTheme { colors, _ ->
 
@@ -111,13 +147,11 @@ private fun SendMessageScreen(
             ExpoStateButton(
                 text = "보내기",
                 state = if (title.isNotEmpty() && content.isNotEmpty()) ButtonState.Enable else ButtonState.Disable,
-                onClick = onBackClick, // Temporary Code
+                onClick = sendRequest,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 48.dp)
-              ) // {
-//                // Add ExpoState CallBack
-//            }
+            )
         }
     }
 }
@@ -126,10 +160,11 @@ private fun SendMessageScreen(
 @Composable
 private fun SendMessageScreenPreview() {
     SendMessageScreen(
-        onBackClick = {},
         title = "",
         content = "",
+        onBackClick = {},
         onTitleChange = {},
-        onContentChange = {}
+        onContentChange = {},
+        sendRequest = {},
     )
 }

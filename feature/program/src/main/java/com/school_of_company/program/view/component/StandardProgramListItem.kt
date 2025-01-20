@@ -29,8 +29,8 @@ internal fun StandardProgramListItem(
     modifier: Modifier = Modifier,
     index: Int,
     data: StandardProgramListResponseEntity,
+    horizontalScrollState: ScrollState,
     navigateToStandardProgramDetail: (Long) -> Unit,
-    horizontalScrollState: ScrollState
 ) {
     ExpoAndroidTheme { colors, typography ->
 

@@ -59,6 +59,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 internal fun ProgramDetailProgramRoute(
+    modifier: Modifier = Modifier,
     id: String,
     onBackClick: () -> Unit,
     navigateToTrainingProgramDetail: (Long) -> Unit,
@@ -73,6 +74,7 @@ internal fun ProgramDetailProgramRoute(
 
 
     ProgramDetailProgramScreen(
+        modifier = modifier,
         onBackClick = onBackClick,
         navigateToTrainingProgramDetail = navigateToTrainingProgramDetail,
         navigateToStandardProgramDetail = navigateToStandardProgramDetail,

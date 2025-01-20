@@ -43,6 +43,7 @@ import com.school_of_company.ui.toast.makeToast
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 internal fun QrScannerRoute(
+    modifier: Modifier = Modifier,
     id: Long,
     screenType: String,
     onBackClick: () -> Unit,
@@ -100,6 +101,7 @@ internal fun QrScannerRoute(
     when {
         showScanner -> {
             QrScannerScreen(
+                modifier = modifier,
                 onBackClick = onBackClick,
                 lifecycleOwner = lifecycleOwner,
                 onQrcodeScan = { jsonData ->
@@ -112,6 +114,7 @@ internal fun QrScannerRoute(
                                 )
                             )
                         }
+
                         QrReadScreenType.StandardProgramParticipantRoute.routeName -> {
                             val parsedData = jsonData.parseStandardQrScanModel()
                             viewModel.standardQrCode(
@@ -126,6 +129,7 @@ internal fun QrScannerRoute(
                 }
             )
         }
+
         cameraPermissionState.status.shouldShowRationale -> {
             onPermissionBlock()
         }

@@ -58,6 +58,8 @@ fun ErrorText(
     }
 }
 
+// TODO: 법용성 증가, textField 통합
+
 @Composable
 fun ExpoDefaultTextField(
     modifier: Modifier,

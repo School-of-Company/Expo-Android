@@ -121,6 +121,7 @@ internal fun UserRoute(
         getSignUpRequestList = { viewModel.getAdminRequestAllowList() },
         swipeRefreshState = swipeRefreshState,
         deleteCallBack = {},
+        deleteCallBack = { /* todo : 기능 추가 */ },
         successCallBack = viewModel::allowAdminRequest,
         withdrawalCallBack = viewModel::serviceWithdrawal,
         logoutCallBack = viewModel::logout

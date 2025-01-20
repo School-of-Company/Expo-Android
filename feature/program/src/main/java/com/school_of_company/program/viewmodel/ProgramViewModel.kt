@@ -187,9 +187,15 @@ internal class ProgramViewModel @Inject constructor(
         }
     }
 
-    internal fun getTraineeList(expoId: String) = viewModelScope.launch {
+    internal fun getTraineeList(
+        expoId: String,
+        name: String? = null
+    ) = viewModelScope.launch {
         _swipeRefreshLoading.value = true
-        traineeResponseListUseCase(expoId = expoId)
+        traineeResponseListUseCase(
+            expoId = expoId,
+            name = name
+        )
             .asResult()
             .collectLatest { result ->
                 when (result) {
@@ -213,7 +219,8 @@ internal class ProgramViewModel @Inject constructor(
 
     internal fun getParticipantInformationList(
         expoId: String,
-        type: ParticipantEnum
+        type: ParticipantEnum,
+        name: String? = null
     ) = viewModelScope.launch {
         _swipeRefreshLoading.value = true
 
@@ -224,7 +231,8 @@ internal class ProgramViewModel @Inject constructor(
 
         participantInformationResponseUseCase(
             type = type.name,
-            expoId = expoId
+            expoId = expoId,
+            name = name
         )
             .asResult()
             .collectLatest { result ->

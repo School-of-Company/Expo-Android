@@ -10,10 +10,12 @@ class ParticipantInformationResponseUseCase @Inject constructor(
 ) {
     operator fun invoke(
         type: String,
-        expoId: String
+        expoId: String,
+        name: String? = null
     ): Flow<List<ParticipantInformationResponseEntity>> =
         repository.getParticipantInformationList(
             type = type,
-            expoId = expoId
+            expoId = expoId,
+            name = name
         )
 }

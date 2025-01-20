@@ -8,6 +8,12 @@ import javax.inject.Inject
 class TraineeResponseListUseCase @Inject constructor(
     private val repository: TraineeRepository
 ) {
-    operator fun invoke(expoId: String): Flow<List<TraineeResponseEntity>> =
-        repository.getTraineeList(expoId = expoId)
+    operator fun invoke(
+        expoId: String,
+        name: String? = null
+    ): Flow<List<TraineeResponseEntity>> =
+        repository.getTraineeList(
+            expoId = expoId,
+            name = name
+        )
 }

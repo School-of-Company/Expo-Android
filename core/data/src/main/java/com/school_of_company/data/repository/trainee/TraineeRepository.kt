@@ -4,5 +4,5 @@ import com.school_of_company.model.entity.trainee.TraineeResponseEntity
 import kotlinx.coroutines.flow.Flow
 
 interface TraineeRepository {
-    fun getTraineeList(expoId: String): Flow<List<TraineeResponseEntity>>
+    fun getTraineeList(expoId: String, name: String? = null): Flow<List<TraineeResponseEntity>>
 }

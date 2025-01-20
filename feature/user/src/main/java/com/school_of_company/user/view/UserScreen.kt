@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,7 +26,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -42,7 +40,6 @@ import com.school_of_company.design_system.component.modifier.padding.paddingHor
 import com.school_of_company.design_system.component.uistate.empty.ShowEmptyState
 import com.school_of_company.design_system.component.uistate.error.ShowErrorState
 import com.school_of_company.design_system.icon.LogoutIcon
-import com.school_of_company.design_system.icon.UserIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.user.view.component.SignUpRequestList
@@ -59,7 +56,7 @@ import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 internal fun UserRoute(
-    onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
+    modifier: Modifier = Modifier,
     onMainNavigate: () -> Unit,
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
     viewModel: UserViewModel = hiltViewModel()
@@ -117,7 +114,7 @@ internal fun UserRoute(
     }
 
     UserScreen(
-        onErrorToast = onErrorToast,
+        modifier = modifier,
         getAdminRequestAllowListUiState = getAdminRequestAllowListUiState,
         swipeRefreshState = swipeRefreshState,
         logoutCallBack = viewModel::logout,

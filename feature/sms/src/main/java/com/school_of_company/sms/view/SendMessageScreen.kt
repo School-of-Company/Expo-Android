@@ -34,11 +34,12 @@ import com.school_of_company.sms.viewmodel.uiState.SendSmsUiState
 
 @Composable
 internal fun SendMessageRoute(
-    viewModel: SmsViewModel = hiltViewModel(),
+    modifier: Modifier = Modifier,
     id: String,
     smsType: String,
     onBackClick: () -> Unit,
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
+    viewModel: SmsViewModel = hiltViewModel(),
 ) {
     val sendSmsUiState by viewModel.sendSmsUiState.collectAsStateWithLifecycle()
     val title by viewModel.title.collectAsStateWithLifecycle()
@@ -56,16 +57,16 @@ internal fun SendMessageRoute(
                 onErrorToast(null, R.string.sms_send_success)
                 onBackClick()
             }
+
             SendSmsUiState.Loading -> Unit
         }
     }
 
     SendMessageScreen(
-        onBackClick = onBackClick,
+        modifier = modifier,
         title = title,
         content = content,
-        onTitleChange = viewModel::onTitleChange,
-        onContentChange = viewModel::onContentChange,
+        onBackClick = onBackClick,
         sendRequest = {
             viewModel.sendSmsToParticipantTrainee(
                 id = id,
@@ -75,20 +76,22 @@ internal fun SendMessageRoute(
                     authority = Authority.valueOf(smsType)
                 )
             )
-        }
+        },
+        onTitleChange = viewModel::onTitleChange,
+        onContentChange = viewModel::onContentChange,
     )
 }
 
 @Composable
 private fun SendMessageScreen(
     modifier: Modifier = Modifier,
-    focusManager: FocusManager = LocalFocusManager.current,
     title: String,
     content: String,
+    focusManager: FocusManager = LocalFocusManager.current,
     onBackClick: () -> Unit,
+    sendRequest: () -> Unit,
     onTitleChange: (String) -> Unit,
     onContentChange: (String) -> Unit,
-    sendRequest: () -> Unit,
 ) {
     ExpoAndroidTheme { colors, _ ->
 

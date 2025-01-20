@@ -29,9 +29,9 @@ internal fun SignUpRequestList(
                 .padding(start = 16.dp)
         ) {
             itemsIndexed(item) { index, item ->
-                SignUpRequestListItem(
-                    selectedIndex = selectedIndex,
+               SignUpRequestListItem(
                     index = index + 1,
+                    selectedIndex = selectedIndex,
                     data = item,
                     horizontalScrollState = horizontalScrollState,
                     onClick = onClick,

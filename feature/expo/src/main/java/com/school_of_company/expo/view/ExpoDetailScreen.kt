@@ -54,6 +54,7 @@ import com.school_of_company.ui.util.formatServerDate
 
 @Composable
 internal fun ExpoDetailRoute(
+    modifier: Modifier = Modifier,
     id: String,
     onBackClick: () -> Unit,
     onMessageClick: (String, String) -> Unit,

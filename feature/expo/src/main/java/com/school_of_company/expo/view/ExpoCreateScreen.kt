@@ -83,6 +83,7 @@ import com.school_of_company.ui.visualTransformation.DateTimeVisualTransformatio
 
 @Composable
 internal fun ExpoCreateRoute(
+    modifier: Modifier=Modifier,
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
     viewModel: ExpoViewModel = hiltViewModel()
 ) {
@@ -184,6 +185,7 @@ internal fun ExpoCreateRoute(
         onImageClick = { galleryLauncher.launch("image/*") },
         imageUri = selectedImageUri?.toString() ?: coverImageState,
         modifyTitleState = modifyTitleState,
+        modifier= modifier,
         startedDateState = startedDateState,
         endedDateState = endedDateState,
         introduceTitleState = introduceTitleState,

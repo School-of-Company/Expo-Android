@@ -17,10 +17,10 @@ import kotlinx.collections.immutable.persistentListOf
 @Composable
 internal fun SignUpRequestList(
     modifier: Modifier = Modifier,
+    selectedIndex: Long,
     item: ImmutableList<AdminRequestAllowListResponseEntity> = persistentListOf(),
     horizontalScrollState: ScrollState,
     onClick: (Long) -> Unit,
-    selectedIndex: Long
 ) {
     ExpoAndroidTheme { colors, _ ->
         LazyColumn(
@@ -30,11 +30,11 @@ internal fun SignUpRequestList(
         ) {
             itemsIndexed(item) { index, item ->
                 SignUpRequestListItem(
+                    selectedIndex = selectedIndex,
                     index = index + 1,
                     data = item,
                     horizontalScrollState = horizontalScrollState,
                     onClick = onClick,
-                    selectedIndex = selectedIndex
                 )
             }
         }

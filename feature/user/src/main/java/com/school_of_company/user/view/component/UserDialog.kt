@@ -18,15 +18,13 @@ import com.school_of_company.design_system.theme.ExpoAndroidTheme
 @Composable
 internal fun UserDialog(
     modifier: Modifier = Modifier,
-    onCancelClick: () -> Unit,
-    onConfirmClick: () -> Unit,
     titleText: String,
     contentText: String,
-    buttonText: String
+    buttonText: String,
+    onCancelClick: () -> Unit,
+    onConfirmClick: () -> Unit,
 ) {
-
     ExpoAndroidTheme { colors, typography ->
-
         Column(
             verticalArrangement = Arrangement.spacedBy(40.dp, Alignment.Top),
             horizontalAlignment = Alignment.CenterHorizontally,

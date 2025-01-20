@@ -26,10 +26,10 @@ import com.school_of_company.model.entity.admin.AdminRequestAllowListResponseEnt
 internal fun SignUpRequestListItem(
     modifier: Modifier = Modifier,
     index: Int,
+    selectedIndex: Long,
     data: AdminRequestAllowListResponseEntity,
     horizontalScrollState: ScrollState,
     onClick: (Long) -> Unit,
-    selectedIndex: Long
 ) {
     ExpoAndroidTheme { colors, typography ->
         Spacer(modifier = Modifier.height(20.dp))

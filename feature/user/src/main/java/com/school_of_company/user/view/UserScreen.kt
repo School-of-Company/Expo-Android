@@ -61,6 +61,7 @@ import kotlinx.collections.immutable.toImmutableList
 internal fun UserRoute(
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
     onMainNavigate: () -> Unit,
+    onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
     viewModel: UserViewModel = hiltViewModel()
 ) {
     val swipeRefreshLoading by viewModel.swipeRefreshLoading.collectAsStateWithLifecycle()
@@ -118,13 +119,13 @@ internal fun UserRoute(
     UserScreen(
         onErrorToast = onErrorToast,
         getAdminRequestAllowListUiState = getAdminRequestAllowListUiState,
-        getSignUpRequestList = { viewModel.getAdminRequestAllowList() },
         swipeRefreshState = swipeRefreshState,
-        deleteCallBack = {},
+        logoutCallBack = viewModel::logout,
+        withdrawalCallBack = viewModel::serviceWithdrawal,
+        getSignUpRequestList = { viewModel.getAdminRequestAllowList() },
         deleteCallBack = { /* todo : 기능 추가 */ },
         successCallBack = viewModel::allowAdminRequest,
-        withdrawalCallBack = viewModel::serviceWithdrawal,
-        logoutCallBack = viewModel::logout
+        onErrorToast = onErrorToast
     )
 }
 
@@ -132,15 +133,15 @@ internal fun UserRoute(
 @Composable
 private fun UserScreen(
     modifier: Modifier = Modifier,
-    onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
     getAdminRequestAllowListUiState: GetAdminRequestAllowListUiState,
-    getSignUpRequestList: () -> Unit,
     swipeRefreshState: SwipeRefreshState,
     scrollState: ScrollState = rememberScrollState(),
+    logoutCallBack: () -> Unit,
+    withdrawalCallBack: () -> Unit,
+    getSignUpRequestList: () -> Unit,
     deleteCallBack: (Long) -> Unit,
     successCallBack: (Long) -> Unit,
-    withdrawalCallBack: () -> Unit,
-    logoutCallBack: () -> Unit
+    onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
 ) {
     val (selectedId, setSelectedId) = rememberSaveable { mutableLongStateOf(0L) }
     val (openBottomSheet, isOpenBottomSheet) = rememberSaveable { mutableStateOf(false) }

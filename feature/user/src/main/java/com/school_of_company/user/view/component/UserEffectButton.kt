@@ -23,8 +23,8 @@ fun UserEffectButton(
     modifier: Modifier = Modifier,
     text: String,
     defaultTextColor: Color = Color.Black,
-    defaultBackgroundColor: Color = Color.White,
     clickedTextColor: Color = Color.White,
+    defaultBackgroundColor: Color = Color.White,
     clickedBackgroundColor: Color = Color.Red,
     onClick: () -> Unit,
 ) {

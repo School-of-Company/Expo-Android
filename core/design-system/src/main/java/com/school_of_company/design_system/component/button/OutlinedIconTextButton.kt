@@ -23,10 +23,10 @@ import com.school_of_company.design_system.theme.color.ExpoColor
 @Composable
 fun OutlinedIconTextButton(
     modifier: Modifier = Modifier,
-    textValue: String,
-    enabled: Boolean = true,
     outlineColor: Color = ExpoColor.gray200,
     contentColor: Color = ExpoColor.gray400,
+    textValue: String,
+    enabled: Boolean = true,
     onClick: () -> Unit,
     leadingIcon: @Composable (Color) -> @Composable Unit,
 ) {

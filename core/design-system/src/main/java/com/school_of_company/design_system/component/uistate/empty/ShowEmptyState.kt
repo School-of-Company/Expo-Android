@@ -18,8 +18,8 @@ import com.school_of_company.design_system.theme.ExpoAndroidTheme
 @Composable
 fun ShowEmptyState(
     modifier: Modifier = Modifier,
-    emptyMessage: String,
     scrollState: ScrollState,
+    emptyMessage: String,
 ) {
     ExpoAndroidTheme { colors, typography ->
         Column(

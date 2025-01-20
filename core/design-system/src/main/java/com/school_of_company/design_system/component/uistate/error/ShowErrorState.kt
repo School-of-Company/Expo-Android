@@ -18,8 +18,8 @@ import com.school_of_company.design_system.theme.ExpoAndroidTheme
 @Composable
 fun ShowErrorState(
     modifier: Modifier = Modifier,
-    errorText: String,
     scrollState: ScrollState,
+    errorText: String,
 ) {
     ExpoAndroidTheme { colors, typography ->
 

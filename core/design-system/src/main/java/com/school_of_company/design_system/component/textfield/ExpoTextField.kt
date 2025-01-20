@@ -63,6 +63,8 @@ fun ErrorText(
 @Composable
 fun ExpoDefaultTextField(
     modifier: Modifier,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    focusManager: FocusManager = LocalFocusManager.current,
     value: String? = null,
     label: String,
     placeholder: String,
@@ -70,8 +72,6 @@ fun ExpoDefaultTextField(
     isError: Boolean,
     isDisabled: Boolean,
     isReadOnly: Boolean = false,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    focusManager: FocusManager = LocalFocusManager.current,
     visualTransformationState: Boolean = false,
     onValueChange: (String) -> Unit,
     trailingIcon: @Composable (() -> Unit)? = null,
@@ -154,14 +154,14 @@ fun ExpoDefaultTextField(
 fun ExpoNoneLabelTextField(
     modifier: Modifier,
     value: String? = null,
+    onValueChange: (String) -> Unit,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    focusManager: FocusManager = LocalFocusManager.current,
     placeholder: String,
     errorText: String,
     isError: Boolean,
     isDisabled: Boolean,
     isReadOnly: Boolean = false,
-    onValueChange: (String) -> Unit,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    focusManager: FocusManager = LocalFocusManager.current,
     visualTransformationState: Boolean = false,
     trailingIcon: @Composable (() -> Unit)? = null
 ) {
@@ -234,16 +234,16 @@ fun ExpoNoneLabelTextField(
 @Composable
 fun LimitedLengthTextField(
     modifier: Modifier = Modifier,
+    updateTextValue: (String) -> Unit,
     value: String,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     placeholder: String,
     overflowErrorMessage: String = "",
     label: String = "",
     isError: Boolean,
     showLengthCounter: Boolean = true,
     lengthLimit: Int = 0,
-    visualTransformation: VisualTransformation = VisualTransformation.None,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    updateTextValue: (String) -> Unit,
 ) {
     val lengthCheck = remember {
         if (lengthLimit != 0) value.length >= lengthLimit else false
@@ -332,10 +332,12 @@ fun LimitedLengthTextField(
 @Composable
 fun NoneLimitedLengthTextField(
     modifier: Modifier = Modifier,
-    textState: String,
     placeholder: String,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    value: String,
     updateTextValue: (String) -> Unit,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    placeholder: String,
 ) {
 
     ExpoAndroidTheme { colors, typography ->
@@ -478,13 +480,9 @@ fun ExpoOutlinedTextFieldPreview() {
                 isReadOnly = false,
                 label = "비밀번호"
             )
-            LimitedLengthTextField(value = "", placeholder = "", isError = false) {
+            LimitedLengthTextField(value = "", placeholder = "", isError = false, updateTextValue = {})
 
-            }
-
-            NoneLimitedLengthTextField(textState = "", placeholder = "") {
-
-            }
+            NoneLimitedLengthTextField(value = "", placeholder = "",updateTextValue = {})
         }
     }
 }

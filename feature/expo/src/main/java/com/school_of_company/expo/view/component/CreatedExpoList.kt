@@ -21,8 +21,8 @@ import kotlinx.collections.immutable.persistentListOf
 internal fun CreatedExpoList(
     modifier: Modifier = Modifier,
     scrollState: ScrollState,
-    expoList: ImmutableList<ExpoListResponseEntity>,
     selectedIndex: Int,
+    expoList: ImmutableList<ExpoListResponseEntity>,
     onItemClick: (Boolean, Int) -> Unit,
 ) {
     ExpoAndroidTheme { colors, _ ->

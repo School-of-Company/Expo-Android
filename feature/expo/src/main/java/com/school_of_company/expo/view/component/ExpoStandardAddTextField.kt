@@ -32,10 +32,10 @@ internal fun ExpoStandardAddTextField(
     modifier: Modifier = Modifier,
     placeHolder: String,
     trainingTextFieldList: List<StandardRequestModel>,
-    onValueChange: (Int, StandardRequestModel) -> Unit,
     onAddTextField: () -> Unit,
     onRemoveTextField: (Int) -> Unit,
-    onTrainingSetting: (Int) -> Unit
+    onTrainingSetting: (Int) -> Unit,
+    onValueChange: (Int, StandardRequestModel) -> Unit,
 ) {
 
     ExpoAndroidTheme { colors, typography ->

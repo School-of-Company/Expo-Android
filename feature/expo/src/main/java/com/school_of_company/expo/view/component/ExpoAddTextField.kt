@@ -32,14 +32,13 @@ internal fun ExpoAddTextField(
     modifier: Modifier = Modifier,
     placeHolder: String,
     trainingTextFieldList: List<TrainingDtoModel>,
-    onValueChange: (Int, TrainingDtoModel) -> Unit,
     onAddTextField: () -> Unit,
     onRemoveTextField: (Int) -> Unit,
-    onTrainingSetting: (Int) -> Unit
+    onTrainingSetting: (Int) -> Unit,
+    onValueChange: (Int, TrainingDtoModel) -> Unit,
 ) {
 
     ExpoAndroidTheme { colors, typography ->
-
         Box(
             modifier = modifier
                 .fillMaxWidth()

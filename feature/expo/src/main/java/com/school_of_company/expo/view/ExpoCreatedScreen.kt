@@ -45,8 +45,8 @@ import kotlinx.collections.immutable.toPersistentList
 @Composable
 internal fun ExpoCreatedRoute(
     modifier: Modifier = Modifier,
-    expoViewModel: ExpoViewModel = hiltViewModel(),
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
+    expoViewModel: ExpoViewModel = hiltViewModel(),
 ) {
     val getExpoListUiState by expoViewModel.getExpoListUiState.collectAsStateWithLifecycle()
     val deleteExpoInformationUiState by expoViewModel.deleteExpoInformationUiState.collectAsStateWithLifecycle()

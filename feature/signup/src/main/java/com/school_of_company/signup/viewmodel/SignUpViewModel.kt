@@ -24,10 +24,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class SignUpViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
     private val signUpRequestUseCase: AdminSignUpRequestUseCase,
     private val smsSignUpCertificationNumberSendRequestUseCase: SmsSignUpCertificationNumberSendRequestUseCase,
-    private val smsSignUpCertificationNumberCertificationRequestUseCase: SmsSignUpCertificationNumberCertificationRequestUseCase
+    private val smsSignUpCertificationNumberCertificationRequestUseCase: SmsSignUpCertificationNumberCertificationRequestUseCase,
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     companion object {
         private const val NAME = "nickname"

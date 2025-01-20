@@ -61,18 +61,17 @@ fun ErrorText(
 @Composable
 fun ExpoDefaultTextField(
     modifier: Modifier,
+    value: String? = null,
     label: String,
     placeholder: String,
+    errorText: String,
+    isError: Boolean,
+    isDisabled: Boolean,
     isReadOnly: Boolean = false,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     focusManager: FocusManager = LocalFocusManager.current,
-    isError: Boolean,
-    isDisabled: Boolean,
-    errorText: String,
-    onValueChange: (String) -> Unit,
-    onClicked: (() -> Unit)? = null,
-    value: String? = null,
     visualTransformationState: Boolean = false,
+    onValueChange: (String) -> Unit,
     trailingIcon: @Composable (() -> Unit)? = null,
 ) {
     var text by remember { mutableStateOf(value ?: "") }
@@ -152,16 +151,15 @@ fun ExpoDefaultTextField(
 @Composable
 fun ExpoNoneLabelTextField(
     modifier: Modifier,
+    value: String? = null,
     placeholder: String,
-    isReadOnly: Boolean = false,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    focusManager: FocusManager = LocalFocusManager.current,
+    errorText: String,
     isError: Boolean,
     isDisabled: Boolean,
-    errorText: String,
+    isReadOnly: Boolean = false,
     onValueChange: (String) -> Unit,
-    onClicked: (() -> Unit)? = null,
-    value: String? = null,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    focusManager: FocusManager = LocalFocusManager.current,
     visualTransformationState: Boolean = false,
     trailingIcon: @Composable (() -> Unit)? = null
 ) {
@@ -234,10 +232,10 @@ fun ExpoNoneLabelTextField(
 @Composable
 fun LimitedLengthTextField(
     modifier: Modifier = Modifier,
-    label: String = "",
     textState: String,
     placeholder: String,
     overflowErrorMessage: String = "",
+    label: String = "",
     isError: Boolean,
     showLengthCounter: Boolean = true,
     lengthLimit: Int = 0,
@@ -391,11 +389,11 @@ fun NoneLimitedLengthTextField(
 @Composable
 fun ExpoLocationIconTextField(
     modifier: Modifier = Modifier,
+    value: String,
     placeholder: String,
     isDisabled: Boolean,
-    onValueChange: (String) -> Unit,
     onButtonClicked: () -> Unit,
-    value: String,
+    onValueChange: (String) -> Unit,
 ) {
     ExpoAndroidTheme { colors, typography ->
         Box {
@@ -464,7 +462,6 @@ fun ExpoOutlinedTextFieldPreview() {
                 isError = true,
                 isDisabled = false,
                 isReadOnly = false,
-                onClicked = {},
                 label = "이메일",
             )
             ExpoDefaultTextField(
@@ -477,7 +474,6 @@ fun ExpoOutlinedTextFieldPreview() {
                 isError = false,
                 isDisabled = false,
                 isReadOnly = false,
-                onClicked = {},
                 label = "비밀번호"
             )
             LimitedLengthTextField(textState = "", placeholder = "", isError = false) {

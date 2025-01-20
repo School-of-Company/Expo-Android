@@ -7,8 +7,8 @@ import androidx.compose.ui.window.Dialog
 @Composable
 fun <T> SettingBottomSheet(
     isOpen: Boolean,
-    onDismiss: () -> Unit,
     selectedItem: T?,
+    onDismiss: () -> Unit,
     onUpdateItem: (T) -> Unit,
     content: @Composable (item: T, updateItem: (T) -> Unit) -> Unit
 ) {

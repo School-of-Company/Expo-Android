@@ -10,8 +10,14 @@ import javax.inject.Inject
 class TraineeRepositoryImpl @Inject constructor(
     private val dataSource: TraineeDataSource
 ) : TraineeRepository {
-    override fun getTraineeList(expoId: String): Flow<List<TraineeResponseEntity>> {
-        return dataSource.getTraineeList(expoId = expoId).transform { list ->
+    override fun getTraineeList(
+        expoId: String,
+        name: String?
+    ): Flow<List<TraineeResponseEntity>> {
+        return dataSource.getTraineeList(
+            expoId = expoId,
+            name = name
+        ).transform { list ->
             emit(list.map { it.toEntity() })
         }
     }

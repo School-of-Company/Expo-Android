@@ -44,10 +44,12 @@ import com.school_of_company.design_system.theme.ExpoAndroidTheme
 
 @Composable
 fun ErrorText(
+    modifier: Modifier = Modifier,
     text: String,
 ) {
     ExpoAndroidTheme { colors, typography ->
         Text(
+            modifier = modifier,
             text = text,
             color = colors.error,
             style = typography.captionRegular2,

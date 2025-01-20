@@ -182,15 +182,15 @@ internal fun ExpoCreateRoute(
 
 
     ExpoCreateScreen(
-        onImageClick = { galleryLauncher.launch("image/*") },
-        imageUri = selectedImageUri?.toString() ?: coverImageState,
-        modifyTitleState = modifyTitleState,
         modifier= modifier,
         startedDateState = startedDateState,
         endedDateState = endedDateState,
+        modifyTitleState = modifyTitleState,
         introduceTitleState = introduceTitleState,
         addressState = addressState,
         locationState = locationState,
+        imageUri = selectedImageUri?.toString() ?: coverImageState,
+        onImageClick = { galleryLauncher.launch("image/*") },
         onModifyTitleChange = viewModel::onModifyTitleChange,
         onStartedDateChange = viewModel::onStartedDateChange,
         onEndedDateChange = viewModel::onEndedDateChange,
@@ -209,9 +209,9 @@ internal fun ExpoCreateRoute(
         onAddTrainingProgram = viewModel::addTrainingProgramText,
         onRemoveTrainingProgram = viewModel::removeTrainingProgramText,
         standardProgramTextState = standardProgramTextState,
+        onRemoveStandardProgram = viewModel::removeStandardProgramText,
         onStandardProgramChange = viewModel::updateStandardProgramText,
         onAddStandardProgram = viewModel::addStandardProgramText,
-        onRemoveStandardProgram = viewModel::removeStandardProgramText,
     )
 }
 
@@ -496,7 +496,7 @@ private fun ExpoCreateScreen(
                         )
 
                         NoneLimitedLengthTextField(
-                            textState = addressState,
+                            value = addressState,
                             placeholder = "상세주소를 입력해주세요.",
                             updateTextValue = onAddressChange
                         )

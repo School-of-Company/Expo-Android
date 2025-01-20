@@ -23,8 +23,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class SignInViewModel @Inject constructor(
-    private val signInUseCase: AdminSignInRequestUseCase,
     private val saveTokenUseCase: SaveTokenUseCase,
+    private val signInUseCase: AdminSignInRequestUseCase,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     companion object {

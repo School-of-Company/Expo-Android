@@ -9,6 +9,12 @@ import javax.inject.Inject
 class TraineeDataSourceImpl @Inject constructor(
     private val service: TraineeAPI
 ) : TraineeDataSource {
-    override fun getTraineeList(expoId: String): Flow<List<TraineeResponse>> =
-        performApiRequest { service.getTraineeList(expoId = expoId) }
+    override fun getTraineeList(
+        expoId: String,
+        name: String?
+    ): Flow<List<TraineeResponse>> =
+        performApiRequest { service.getTraineeList(
+            expoId = expoId,
+            name = name
+        ) }
 }

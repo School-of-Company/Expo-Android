@@ -59,9 +59,9 @@ internal fun TrainingProgramParticipantRoute(
     TrainingProgramParticipantScreen(
         modifier = modifier,
         id = id,
-        onBackClick = onBackClick,
         teacherTrainingProgramListUiState = teacherTrainingProgramListUiState,
         swipeRefreshState = swipeRefreshState,
+        onBackClick = onBackClick,
         getTeacherTrainingProgramList = { viewModel.teacherTrainingProgramList(id) },
         navigateToQrScanner = navigateToQrScanner,
     )
@@ -75,12 +75,12 @@ internal fun TrainingProgramParticipantRoute(
 private fun TrainingProgramParticipantScreen(
     modifier: Modifier = Modifier,
     id: Long,
-    swipeRefreshState: SwipeRefreshState,
     teacherTrainingProgramListUiState: TeacherTrainingProgramListUiState,
+    swipeRefreshState: SwipeRefreshState,
+    scrollState: ScrollState = rememberScrollState(),
+    onBackClick: () -> Unit,
     getTeacherTrainingProgramList: () -> Unit,
     navigateToQrScanner: (Long) -> Unit,
-    onBackClick: () -> Unit,
-    scrollState: ScrollState = rememberScrollState()
 ) {
     ExpoAndroidTheme { colors, typography ->
         Column(

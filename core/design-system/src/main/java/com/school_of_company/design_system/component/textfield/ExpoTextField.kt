@@ -364,7 +364,7 @@ fun NoneLimitedLengthTextField(
                         updateTextValue(newText)
                     },
                     keyboardOptions = keyboardOptions,
-                    value = textState,
+                    value = value,
                     textStyle = typography.captionRegular1.copy(
                         fontWeight = FontWeight.Normal,
                         color = colors.black,
@@ -376,7 +376,7 @@ fun NoneLimitedLengthTextField(
                         .heightIn(min = 10.dp, max = 300.dp)
                 )
 
-                if (textState.isEmpty()) {
+                if (value.isEmpty()) {
                     Text(
                         text = placeholder,
                         style = typography.captionRegular1,

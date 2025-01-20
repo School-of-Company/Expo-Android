@@ -11,5 +11,6 @@ interface ParticipantAPI {
     suspend fun getParticipantInformationList(
         @Path("expo_id") expoId: String,
         @Query("type") type: String,
+        @Query("name") name: String? = null
     ): List<ParticipantInformationResponse>
 }

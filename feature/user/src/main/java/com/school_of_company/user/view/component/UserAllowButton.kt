@@ -51,7 +51,7 @@ internal fun UserAllowButton(
             OutlinedIconTextButton(
                 textValue = "수락",
                 leadingIcon = { color -> CheckIcon(tint = color) },
-                onClick = { onClick() }
+                onClick = onClick
             )
         }
     }

@@ -15,6 +15,9 @@ class AdminDataSourceImpl @Inject constructor(
     override fun allowAdmin(adminId: Long): Flow<Unit> =
         performApiRequest { service.allowAdmin(adminId = adminId) }
 
+    override fun rejectAdmin(adminId: Long): Flow<Unit> =
+        performApiRequest { service.rejectAdmin(adminId = adminId) }
+
     override fun serviceWithdrawal(): Flow<Unit> =
         performApiRequest { service.serviceWithdrawal() }
 }

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -39,7 +40,7 @@ internal fun UserDeleteButton(
                 TrashIcon(tint = colors.white)
 
                 Text(
-                    text = "삭제",
+                    text = "거절",
                     style = typography.titleBold3,
                     fontWeight = FontWeight.W600,
                     color = colors.white,
@@ -48,9 +49,9 @@ internal fun UserDeleteButton(
             }
         } else {
             OutlinedIconTextButton(
-                textValue = "삭제",
+                textValue = "거절",
                 leadingIcon = { color -> TrashIcon(tint = color) },
-                onClick = { onClick() }
+                onClick = onClick
             )
         }
     }

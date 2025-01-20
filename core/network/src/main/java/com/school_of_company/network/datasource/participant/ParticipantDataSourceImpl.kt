@@ -11,10 +11,12 @@ class ParticipantDataSourceImpl @Inject constructor(
 ) : ParticipantDataSource {
     override fun getParticipantInformationList(
         type: String,
-        expoId: String
+        expoId: String,
+        name: String?
     ): Flow<List<ParticipantInformationResponse>> =
         performApiRequest { service.getParticipantInformationList(
             type = type,
-            expoId = expoId
+            expoId = expoId,
+            name = name
         ) }
 }

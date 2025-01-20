@@ -232,7 +232,7 @@ fun ExpoNoneLabelTextField(
 @Composable
 fun LimitedLengthTextField(
     modifier: Modifier = Modifier,
-    textState: String,
+    value: String,
     placeholder: String,
     overflowErrorMessage: String = "",
     label: String = "",
@@ -244,7 +244,7 @@ fun LimitedLengthTextField(
     updateTextValue: (String) -> Unit,
 ) {
     val lengthCheck = remember {
-        if (lengthLimit != 0) textState.length >= lengthLimit else false
+        if (lengthLimit != 0) value.length >= lengthLimit else false
     }
 
     ExpoAndroidTheme { colors, typography ->
@@ -282,7 +282,7 @@ fun LimitedLengthTextField(
                     },
                     keyboardOptions = keyboardOptions,
                     visualTransformation = visualTransformation,
-                    value = textState,
+                    value = value,
                     textStyle = typography.captionRegular1.copy(
                         fontWeight = FontWeight.Normal,
                         color = colors.black,
@@ -294,7 +294,7 @@ fun LimitedLengthTextField(
                         .heightIn(min = 10.dp, max = 300.dp)
                 )
 
-                if (textState.isEmpty()) {
+                if (value.isEmpty()) {
                     Text(
                         text = placeholder,
                         style = typography.captionRegular1,
@@ -306,7 +306,7 @@ fun LimitedLengthTextField(
 
             if (lengthLimit != 0 && showLengthCounter) {
                 Text(
-                    text = "${textState.length} / $lengthLimit",
+                    text = "${value.length} / $lengthLimit",
                     style = typography.captionRegular2,
                     fontWeight = FontWeight.Normal,
                     color = colors.main,
@@ -476,7 +476,7 @@ fun ExpoOutlinedTextFieldPreview() {
                 isReadOnly = false,
                 label = "비밀번호"
             )
-            LimitedLengthTextField(textState = "", placeholder = "", isError = false) {
+            LimitedLengthTextField(value = "", placeholder = "", isError = false) {
 
             }
 

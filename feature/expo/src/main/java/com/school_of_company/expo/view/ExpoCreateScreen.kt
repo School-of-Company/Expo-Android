@@ -367,7 +367,7 @@ private fun ExpoCreateScreen(
 
                 LimitedLengthTextField(
                     label = "제목",
-                    textState = modifyTitleState,
+                    value = modifyTitleState,
                     placeholder = "제목을 입력해주세요.",
                     isError = false,
                     updateTextValue = onModifyTitleChange,
@@ -378,7 +378,7 @@ private fun ExpoCreateScreen(
                 Row(horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.Start)) {
                     LimitedLengthTextField(
                         label = "모집기간",
-                        textState = startedDateState,
+                        value = startedDateState,
                         lengthLimit = 8,
                         showLengthCounter = false,
                         placeholder = "시작일",
@@ -390,7 +390,7 @@ private fun ExpoCreateScreen(
                     )
 
                     LimitedLengthTextField(
-                        textState = endedDateState,
+                        value = endedDateState,
                         lengthLimit = 8,
                         showLengthCounter = false,
                         placeholder = "마감일",
@@ -424,7 +424,7 @@ private fun ExpoCreateScreen(
 
                 LimitedLengthTextField(
                     label = "소개글",
-                    textState = introduceTitleState,
+                    value = introduceTitleState,
                     placeholder = "소개글을 작성해주세요.",
                     isError = false,
                     updateTextValue = onIntroduceTitleChange,

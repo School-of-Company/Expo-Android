@@ -122,7 +122,7 @@ private fun SendMessageScreen(
 
             LimitedLengthTextField(
                 label = "제목",
-                textState = title,
+                value = title,
                 placeholder = "제목을 입력해주세요.",
                 isError = false,
                 updateTextValue = onTitleChange,
@@ -134,7 +134,7 @@ private fun SendMessageScreen(
 
             LimitedLengthTextField(
                 label = "내용",
-                textState = content,
+                value = content,
                 placeholder = "내용을 입력해주세요.",
                 isError = false,
                 updateTextValue = onContentChange,

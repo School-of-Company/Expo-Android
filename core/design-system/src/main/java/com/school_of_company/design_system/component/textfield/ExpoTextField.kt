@@ -63,8 +63,6 @@ fun ErrorText(
 @Composable
 fun ExpoDefaultTextField(
     modifier: Modifier,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    focusManager: FocusManager = LocalFocusManager.current,
     value: String? = null,
     label: String,
     placeholder: String,
@@ -72,6 +70,8 @@ fun ExpoDefaultTextField(
     isError: Boolean,
     isDisabled: Boolean,
     isReadOnly: Boolean = false,
+    focusManager: FocusManager = LocalFocusManager.current,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     visualTransformationState: Boolean = false,
     onValueChange: (String) -> Unit,
     trailingIcon: @Composable (() -> Unit)? = null,
@@ -155,13 +155,13 @@ fun ExpoNoneLabelTextField(
     modifier: Modifier,
     value: String? = null,
     onValueChange: (String) -> Unit,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    focusManager: FocusManager = LocalFocusManager.current,
     placeholder: String,
     errorText: String,
     isError: Boolean,
     isDisabled: Boolean,
     isReadOnly: Boolean = false,
+    focusManager: FocusManager = LocalFocusManager.current,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     visualTransformationState: Boolean = false,
     trailingIcon: @Composable (() -> Unit)? = null
 ) {
@@ -236,13 +236,13 @@ fun LimitedLengthTextField(
     modifier: Modifier = Modifier,
     updateTextValue: (String) -> Unit,
     value: String,
-    visualTransformation: VisualTransformation = VisualTransformation.None,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     placeholder: String,
     overflowErrorMessage: String = "",
     label: String = "",
     isError: Boolean,
     showLengthCounter: Boolean = true,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
     lengthLimit: Int = 0,
 ) {
     val lengthCheck = remember {
@@ -333,11 +333,9 @@ fun LimitedLengthTextField(
 fun NoneLimitedLengthTextField(
     modifier: Modifier = Modifier,
     placeholder: String,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     value: String,
     updateTextValue: (String) -> Unit,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    placeholder: String,
 ) {
 
     ExpoAndroidTheme { colors, typography ->
@@ -394,10 +392,10 @@ fun NoneLimitedLengthTextField(
 fun ExpoLocationIconTextField(
     modifier: Modifier = Modifier,
     value: String,
+    onValueChange: (String) -> Unit,
     placeholder: String,
     isDisabled: Boolean,
     onButtonClicked: () -> Unit,
-    onValueChange: (String) -> Unit,
 ) {
     ExpoAndroidTheme { colors, typography ->
         Box {

@@ -44,10 +44,12 @@ import com.school_of_company.design_system.theme.ExpoAndroidTheme
 
 @Composable
 fun ErrorText(
+    modifier: Modifier = Modifier,
     text: String,
 ) {
     ExpoAndroidTheme { colors, typography ->
         Text(
+            modifier = modifier,
             text = text,
             color = colors.error,
             style = typography.captionRegular2,
@@ -56,21 +58,22 @@ fun ErrorText(
     }
 }
 
+// TODO: 법용성 증가, textField 통합
+
 @Composable
 fun ExpoDefaultTextField(
     modifier: Modifier,
+    value: String? = null,
     label: String,
     placeholder: String,
-    isReadOnly: Boolean = false,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    focusManager: FocusManager = LocalFocusManager.current,
+    errorText: String,
     isError: Boolean,
     isDisabled: Boolean,
-    errorText: String,
-    onValueChange: (String) -> Unit,
-    onClicked: (() -> Unit)? = null,
-    value: String? = null,
+    isReadOnly: Boolean = false,
+    focusManager: FocusManager = LocalFocusManager.current,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     visualTransformationState: Boolean = false,
+    onValueChange: (String) -> Unit,
     trailingIcon: @Composable (() -> Unit)? = null,
 ) {
     var text by remember { mutableStateOf(value ?: "") }
@@ -138,7 +141,7 @@ fun ExpoDefaultTextField(
                 visualTransformation = if (visualTransformationState) PasswordVisualTransformation() else VisualTransformation.None,
                 trailingIcon = trailingIcon
             )
-            if (isError) {
+            if (isError) {// TODO: 항상 참인 식
                 Row(horizontalArrangement = if (isError) Arrangement.Start else Arrangement.End) {
                     ErrorText(text = errorText)
                 }
@@ -150,16 +153,15 @@ fun ExpoDefaultTextField(
 @Composable
 fun ExpoNoneLabelTextField(
     modifier: Modifier,
+    value: String? = null,
+    onValueChange: (String) -> Unit,
     placeholder: String,
-    isReadOnly: Boolean = false,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    focusManager: FocusManager = LocalFocusManager.current,
+    errorText: String,
     isError: Boolean,
     isDisabled: Boolean,
-    errorText: String,
-    onValueChange: (String) -> Unit,
-    onClicked: (() -> Unit)? = null,
-    value: String? = null,
+    isReadOnly: Boolean = false,
+    focusManager: FocusManager = LocalFocusManager.current,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     visualTransformationState: Boolean = false,
     trailingIcon: @Composable (() -> Unit)? = null
 ) {
@@ -232,19 +234,19 @@ fun ExpoNoneLabelTextField(
 @Composable
 fun LimitedLengthTextField(
     modifier: Modifier = Modifier,
-    label: String = "",
-    textState: String,
+    updateTextValue: (String) -> Unit,
+    value: String,
     placeholder: String,
     overflowErrorMessage: String = "",
+    label: String = "",
     isError: Boolean,
     showLengthCounter: Boolean = true,
-    lengthLimit: Int = 0,
-    visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    updateTextValue: (String) -> Unit,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    lengthLimit: Int = 0,
 ) {
     val lengthCheck = remember {
-        if (lengthLimit != 0) textState.length >= lengthLimit else false
+        if (lengthLimit != 0) value.length >= lengthLimit else false
     }
 
     ExpoAndroidTheme { colors, typography ->
@@ -282,7 +284,7 @@ fun LimitedLengthTextField(
                     },
                     keyboardOptions = keyboardOptions,
                     visualTransformation = visualTransformation,
-                    value = textState,
+                    value = value,
                     textStyle = typography.captionRegular1.copy(
                         fontWeight = FontWeight.Normal,
                         color = colors.black,
@@ -294,7 +296,7 @@ fun LimitedLengthTextField(
                         .heightIn(min = 10.dp, max = 300.dp)
                 )
 
-                if (textState.isEmpty()) {
+                if (value.isEmpty()) {
                     Text(
                         text = placeholder,
                         style = typography.captionRegular1,
@@ -306,7 +308,7 @@ fun LimitedLengthTextField(
 
             if (lengthLimit != 0 && showLengthCounter) {
                 Text(
-                    text = "${textState.length} / $lengthLimit",
+                    text = "${value.length} / $lengthLimit",
                     style = typography.captionRegular2,
                     fontWeight = FontWeight.Normal,
                     color = colors.main,
@@ -330,10 +332,10 @@ fun LimitedLengthTextField(
 @Composable
 fun NoneLimitedLengthTextField(
     modifier: Modifier = Modifier,
-    textState: String,
     placeholder: String,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    value: String,
     updateTextValue: (String) -> Unit,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
 ) {
 
     ExpoAndroidTheme { colors, typography ->
@@ -360,7 +362,7 @@ fun NoneLimitedLengthTextField(
                         updateTextValue(newText)
                     },
                     keyboardOptions = keyboardOptions,
-                    value = textState,
+                    value = value,
                     textStyle = typography.captionRegular1.copy(
                         fontWeight = FontWeight.Normal,
                         color = colors.black,
@@ -372,7 +374,7 @@ fun NoneLimitedLengthTextField(
                         .heightIn(min = 10.dp, max = 300.dp)
                 )
 
-                if (textState.isEmpty()) {
+                if (value.isEmpty()) {
                     Text(
                         text = placeholder,
                         style = typography.captionRegular1,
@@ -389,11 +391,11 @@ fun NoneLimitedLengthTextField(
 @Composable
 fun ExpoLocationIconTextField(
     modifier: Modifier = Modifier,
+    value: String,
+    onValueChange: (String) -> Unit,
     placeholder: String,
     isDisabled: Boolean,
-    onValueChange: (String) -> Unit,
     onButtonClicked: () -> Unit,
-    value: String,
 ) {
     ExpoAndroidTheme { colors, typography ->
         Box {
@@ -462,7 +464,6 @@ fun ExpoOutlinedTextFieldPreview() {
                 isError = true,
                 isDisabled = false,
                 isReadOnly = false,
-                onClicked = {},
                 label = "이메일",
             )
             ExpoDefaultTextField(
@@ -475,16 +476,11 @@ fun ExpoOutlinedTextFieldPreview() {
                 isError = false,
                 isDisabled = false,
                 isReadOnly = false,
-                onClicked = {},
                 label = "비밀번호"
             )
-            LimitedLengthTextField(textState = "", placeholder = "", isError = false) {
+            LimitedLengthTextField(value = "", placeholder = "", isError = false, updateTextValue = {})
 
-            }
-
-            NoneLimitedLengthTextField(textState = "", placeholder = "") {
-
-            }
+            NoneLimitedLengthTextField(value = "", placeholder = "",updateTextValue = {})
         }
     }
 }

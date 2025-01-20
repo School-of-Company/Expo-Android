@@ -28,8 +28,8 @@ internal fun ExpoList(
     modifier: Modifier = Modifier,
     emptyList: Boolean = false,
     item: ImmutableList<ExpoListResponseEntity> = persistentListOf(),
+    scrollState: ScrollState = rememberScrollState(),
     navigateToExpoDetail: (String) -> Unit,
-    scrollState: ScrollState = rememberScrollState()
 ) {
     ExpoAndroidTheme { colors, typography ->
         if (emptyList) {

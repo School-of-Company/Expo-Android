@@ -17,9 +17,9 @@ import com.school_of_company.design_system.theme.ExpoAndroidTheme
 @Composable
 internal fun ProgramTabRowItem(
     modifier: Modifier = Modifier,
+    isCurrentIndex: Boolean,
     title: String,
     onClick: () -> Unit,
-    isCurrentIndex: Boolean,
 ) {
     ExpoAndroidTheme { colors, typography ->
         Row(

@@ -16,7 +16,7 @@ fun NavGraphBuilder.signInScreen(
     onSignInClick: () -> Unit,
     onSignUpClick: () -> Unit,
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
-    ) {
+) {
     composable(route = sigInRoute) {
         SignInRoute(
             onSignInClick = onSignInClick,

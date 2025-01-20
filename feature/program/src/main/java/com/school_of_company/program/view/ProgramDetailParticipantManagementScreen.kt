@@ -52,6 +52,7 @@ import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 internal fun ProgramDetailParticipantManagementRoute(
+    modifier: Modifier = Modifier,
     id: String,
     onBackClick: () -> Unit,
     viewModel: ProgramViewModel = hiltViewModel()
@@ -79,11 +80,12 @@ internal fun ProgramDetailParticipantManagementRoute(
     }
 
     ProgramDetailParticipantManagementScreen(
+        modifier = modifier,
         onBackClick = onBackClick,
-        swipeRefreshState = swipeRefreshState,
         participantAheadResponseListUiState = participantAheadResponseListUiState,
         participantFieldResponseListUiState = participantFieldResponseListUiState,
         traineeInformationUiState = traineeInformationUiState,
+        swipeRefreshState = swipeRefreshState,
         getAheadParticipantList = { viewModel.getParticipantInformationList(
             expoId = id,
             type = ParticipantEnum.PRE
@@ -100,11 +102,11 @@ internal fun ProgramDetailParticipantManagementRoute(
 private fun ProgramDetailParticipantManagementScreen(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
-    swipeRefreshState: SwipeRefreshState,
-    scrollState: ScrollState = rememberScrollState(),
     participantAheadResponseListUiState: ParticipantResponseListUiState,
     participantFieldResponseListUiState: ParticipantResponseListUiState,
     traineeInformationUiState: TraineeResponseListUiState,
+    swipeRefreshState: SwipeRefreshState,
+    scrollState: ScrollState = rememberScrollState(),
     getAheadParticipantList: () -> Unit,
     getFieldParticipantList: () -> Unit,
     getTraineeList: () -> Unit
@@ -224,6 +226,7 @@ private fun ProgramDetailParticipantManagementScreen(
                                         color = colors.main
                                     )
                                 }
+
                                 is ParticipantResponseListUiState.Success -> {
                                     Text(
                                         text = "${participantAheadResponseListUiState.data.size}명",
@@ -231,6 +234,7 @@ private fun ProgramDetailParticipantManagementScreen(
                                         color = colors.main
                                     )
                                 }
+
                                 is ParticipantResponseListUiState.Error -> {
                                     Text(
                                         text = "데이터를 불러올 수 없습니다..",
@@ -238,6 +242,7 @@ private fun ProgramDetailParticipantManagementScreen(
                                         color = colors.main
                                     )
                                 }
+
                                 is ParticipantResponseListUiState.Empty -> {
                                     Text(
                                         text = "0명",
@@ -257,6 +262,7 @@ private fun ProgramDetailParticipantManagementScreen(
                                         color = colors.main
                                     )
                                 }
+
                                 is ParticipantResponseListUiState.Success -> {
                                     Text(
                                         text = "${participantFieldResponseListUiState.data.size}명",
@@ -264,6 +270,7 @@ private fun ProgramDetailParticipantManagementScreen(
                                         color = colors.main
                                     )
                                 }
+
                                 is ParticipantResponseListUiState.Error -> {
                                     Text(
                                         text = "데이터를 불러올 수 없습니다..",
@@ -271,6 +278,7 @@ private fun ProgramDetailParticipantManagementScreen(
                                         color = colors.main
                                     )
                                 }
+
                                 is ParticipantResponseListUiState.Empty -> {
                                     Text(
                                         text = "0명",
@@ -290,6 +298,7 @@ private fun ProgramDetailParticipantManagementScreen(
                                         color = colors.main
                                     )
                                 }
+
                                 is TraineeResponseListUiState.Success -> {
                                     Text(
                                         text = "${traineeInformationUiState.data.size}명",
@@ -297,6 +306,7 @@ private fun ProgramDetailParticipantManagementScreen(
                                         color = colors.main
                                     )
                                 }
+
                                 is TraineeResponseListUiState.Error -> {
                                     Text(
                                         text = "데이터를 불러올 수 없습니다..",
@@ -304,6 +314,7 @@ private fun ProgramDetailParticipantManagementScreen(
                                         color = colors.main
                                     )
                                 }
+
                                 is TraineeResponseListUiState.Empty -> {
                                     Text(
                                         text = "0명",
@@ -352,12 +363,14 @@ private fun ProgramDetailParticipantManagementScreen(
                                     )
                                 }
                             }
+
                             is ParticipantResponseListUiState.Error -> {
                                 ShowErrorState(
                                     errorText = "사전 행사 참가자를 불러올 수 없습니다..",
                                     scrollState = scrollState
                                 )
                             }
+
                             is ParticipantResponseListUiState.Empty -> {
                                 ShowEmptyState(
                                     emptyMessage = "사전 행사 참가자가 존재하지 않습니다..",
@@ -383,12 +396,14 @@ private fun ProgramDetailParticipantManagementScreen(
                                     )
                                 }
                             }
+
                             is ParticipantResponseListUiState.Error -> {
                                 ShowErrorState(
                                     errorText = "현장 행사 참가자를 불러올 수 없습니다..",
                                     scrollState = scrollState
                                 )
                             }
+
                             is ParticipantResponseListUiState.Empty -> {
                                 ShowEmptyState(
                                     emptyMessage = "현장 행사 참가자가 존재하지 않습니다..",
@@ -414,12 +429,14 @@ private fun ProgramDetailParticipantManagementScreen(
                                     )
                                 }
                             }
+
                             is TraineeResponseListUiState.Error -> {
                                 ShowErrorState(
                                     errorText = "사전 교원 원수를 불러올 수 없습니다..",
                                     scrollState = scrollState
                                 )
                             }
+
                             is TraineeResponseListUiState.Empty -> {
                                 ShowEmptyState(
                                     emptyMessage = "사전 교원 원수가 존재하지 않습니다..",

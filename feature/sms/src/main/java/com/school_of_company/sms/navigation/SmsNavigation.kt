@@ -20,8 +20,8 @@ fun NavController.navigateToSmsSendMessage(
 }
 
 fun NavGraphBuilder.smsSendMessageScreen(
-    onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
     onBackClick: () -> Unit,
+    onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
 ) {
     composable(route = "$smsSendMessageRoute/{id}/{smsType}") { backStackEntry ->
         val id = backStackEntry.arguments?.getString("id") ?: ""

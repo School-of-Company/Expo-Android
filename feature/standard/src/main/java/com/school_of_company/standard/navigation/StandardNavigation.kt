@@ -28,7 +28,7 @@ fun NavGraphBuilder.standardProgramParticipantScreen(
             StandardProgramParticipantRoute(
                 id = id,
                 onBackClick = onBackClick,
-                navigateToQrScanner = navigateToQrScanner
+                navigateToQrScanner = navigateToQrScanner,
             )
         }
     }

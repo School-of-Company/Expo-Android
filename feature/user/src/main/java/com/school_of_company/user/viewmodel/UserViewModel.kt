@@ -24,11 +24,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UserViewModel @Inject constructor(
-    private val getAdminRequestAllowListUseCase: GetAdminRequestAllowListUseCase,
+    private val logoutUseCase: AdminLogoutUseCase,
     private val allowAdminRequestUseCase: AllowAdminRequestUseCase,
     private val rejectAdminRequestUseCase: RejectAdminRequestUseCase,
     private val serviceWithdrawalUseCase: ServiceWithdrawalUseCase,
-    private val logoutUseCase: AdminLogoutUseCase
+    private val getAdminRequestAllowListUseCase: GetAdminRequestAllowListUseCase
 ) : ViewModel() {
 
     private val _swipeRefreshLoading = MutableStateFlow(false)

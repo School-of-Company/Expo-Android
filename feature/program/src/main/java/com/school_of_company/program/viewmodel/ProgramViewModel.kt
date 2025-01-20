@@ -32,9 +32,9 @@ import javax.inject.Inject
 internal class ProgramViewModel @Inject constructor(
     private val trainingProgramListUseCase: TrainingProgramListUseCase,
     private val standardProgramListUseCase: StandardProgramListUseCase,
+    private val traineeResponseListUseCase: TraineeResponseListUseCase,
     private val trainingQrCodeRequestUseCase: TrainingQrCodeRequestUseCase,
     private val standardQrCodeRequestUseCase: StandardQrCodeRequestUseCase,
-    private val traineeResponseListUseCase: TraineeResponseListUseCase,
     private val participantInformationResponseUseCase: ParticipantInformationResponseUseCase,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {

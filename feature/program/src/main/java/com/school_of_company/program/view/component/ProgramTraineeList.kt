@@ -18,7 +18,7 @@ import kotlinx.collections.immutable.persistentListOf
 internal fun ProgramTraineeList(
     modifier: Modifier = Modifier,
     item: ImmutableList<TraineeResponseEntity> = persistentListOf(),
-    scrollState: ScrollState
+    scrollState: ScrollState,
 ) {
     ExpoAndroidTheme { colors, _ ->
 

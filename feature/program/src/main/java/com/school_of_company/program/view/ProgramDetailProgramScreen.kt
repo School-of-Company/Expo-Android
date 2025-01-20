@@ -59,6 +59,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 internal fun ProgramDetailProgramRoute(
+    modifier: Modifier = Modifier,
     id: String,
     onBackClick: () -> Unit,
     navigateToTrainingProgramDetail: (Long) -> Unit,
@@ -73,14 +74,15 @@ internal fun ProgramDetailProgramRoute(
 
 
     ProgramDetailProgramScreen(
+        modifier = modifier,
         onBackClick = onBackClick,
-        navigateToTrainingProgramDetail = navigateToTrainingProgramDetail,
-        navigateToStandardProgramDetail = navigateToStandardProgramDetail,
+        swipeRefreshState = swipeRefreshState,
         trainingProgramUiState = trainingProgramListUiState,
         standardProgramListUiState = standardProgramListUiState,
-        swipeRefreshState = swipeRefreshState,
         getTrainingProgramList = { viewModel.trainingProgramList(id) },
-        getStandardProgramList = { viewModel.standardProgramList(id) }
+        getStandardProgramList = { viewModel.standardProgramList(id) },
+        navigateToTrainingProgramDetail = navigateToTrainingProgramDetail,
+        navigateToStandardProgramDetail = navigateToStandardProgramDetail,
     )
 
     LaunchedEffect(id) {
@@ -95,14 +97,14 @@ private fun ProgramDetailProgramScreen(
     swipeRefreshState: SwipeRefreshState,
     trainingProgramUiState: TrainingProgramListUiState,
     standardProgramListUiState: StandardProgramListUiState,
-    pagerState: PagerState = rememberPagerState(pageCount = { 2 }),
+    scrollState: ScrollState = rememberScrollState(),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
+    pagerState: PagerState = rememberPagerState(pageCount = { 2 }),
     onBackClick: () -> Unit,
-    navigateToTrainingProgramDetail: (Long) -> Unit,
-    navigateToStandardProgramDetail: (Long) -> Unit,
     getTrainingProgramList: () -> Unit,
     getStandardProgramList: () -> Unit,
-    scrollState: ScrollState = rememberScrollState()
+    navigateToTrainingProgramDetail: (Long) -> Unit,
+    navigateToStandardProgramDetail: (Long) -> Unit,
 ) {
     ExpoAndroidTheme { colors, typography ->
         Column(

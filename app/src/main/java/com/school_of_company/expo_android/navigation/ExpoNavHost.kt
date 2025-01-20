@@ -86,7 +86,6 @@ fun ExpoNavHost(
 
         expoDetailScreen(
             onBackClick = navController::popBackStack,
-            onMessageClick = navController::navigateToSmsSendMessage,
             onCheckClick = { id ->
                 navController.navigateToProgramDetailParticipantManagement(id)
             },
@@ -95,7 +94,8 @@ fun ExpoNavHost(
             },
             onProgramClick = { id ->
                 navController.navigateToProgramDetailProgram(id)
-            }
+            },
+            onMessageClick = navController::navigateToSmsSendMessage,
         )
 
         smsSendMessageScreen(

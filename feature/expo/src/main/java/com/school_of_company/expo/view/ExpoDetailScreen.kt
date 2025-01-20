@@ -54,19 +54,21 @@ import com.school_of_company.ui.util.formatServerDate
 
 @Composable
 internal fun ExpoDetailRoute(
+    modifier: Modifier = Modifier,
     id: String,
     onBackClick: () -> Unit,
-    onMessageClick: (String, String) -> Unit,
     onCheckClick: (String) -> Unit,
     onModifyClick: (String) -> Unit,
     onProgramClick: (String) -> Unit,
-    viewModel: ExpoViewModel = hiltViewModel()
+    onMessageClick: (String, String) -> Unit,
+    viewModel: ExpoViewModel = hiltViewModel(),
 ) {
     val getExpoInformationUiState by viewModel.getExpoInformationUiState.collectAsStateWithLifecycle()
     val getTrainingProgramUiState by viewModel.getTrainingProgramListUiState.collectAsStateWithLifecycle()
     val getStandardProgramUiState by viewModel.getStandardProgramListUiState.collectAsStateWithLifecycle()
 
     ExpoDetailScreen(
+        modifier = modifier,
         id = id,
         getExpoInformationUiState = getExpoInformationUiState,
         getTrainingProgramUiState = getTrainingProgramUiState,
@@ -87,12 +89,12 @@ internal fun ExpoDetailRoute(
 
 @Composable
 private fun ExpoDetailScreen(
-    id: String,
     modifier: Modifier = Modifier,
-    scrollState: ScrollState = rememberScrollState(),
+    id: String,
     getExpoInformationUiState: GetExpoInformationUiState,
     getTrainingProgramUiState: GetTrainingProgramListUiState,
     getStandardProgramUiState: GetStandardProgramListUiState,
+    scrollState: ScrollState = rememberScrollState(),
     onBackClick: () -> Unit,
     onMessageClick: (String) -> Unit,
     onCheckClick: (String) -> Unit,

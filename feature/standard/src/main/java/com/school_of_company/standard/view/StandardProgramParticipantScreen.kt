@@ -46,10 +46,11 @@ import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 internal fun StandardProgramParticipantRoute(
+    modifier: Modifier = Modifier,
     id: Long,
     onBackClick: () -> Unit,
     navigateToQrScanner: (Long) -> Unit,
-    viewModel: StandardViewModel = hiltViewModel()
+    viewModel: StandardViewModel = hiltViewModel(),
 ) {
     val swipeRefreshLoading by viewModel.swipeRefreshLoading.collectAsStateWithLifecycle()
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = swipeRefreshLoading)
@@ -58,10 +59,11 @@ internal fun StandardProgramParticipantRoute(
         viewModel.standardProgramAttendListUiState.collectAsStateWithLifecycle().value
 
     StandardProgramParticipantScreen(
+        modifier = modifier,
         id = id,
-        onBackClick = onBackClick,
         standardProgramAttendListUiState = standardProgramAttendListUiState,
         swipeRefreshState = swipeRefreshState,
+        onBackClick = onBackClick,
         getTeacherTrainingProgramList = { viewModel.standardProgramList(id) },
         navigateToQrScanner = navigateToQrScanner,
     )
@@ -73,14 +75,14 @@ internal fun StandardProgramParticipantRoute(
 
 @Composable
 private fun StandardProgramParticipantScreen(
-    id: Long,
     modifier: Modifier = Modifier,
-    swipeRefreshState: SwipeRefreshState,
+    id: Long,
     standardProgramAttendListUiState: StandardProgramAttendListUiState,
+    swipeRefreshState: SwipeRefreshState,
+    scrollState: ScrollState = rememberScrollState(),
+    onBackClick: () -> Unit,
     getTeacherTrainingProgramList: () -> Unit,
     navigateToQrScanner: (Long) -> Unit,
-    onBackClick: () -> Unit,
-    scrollState: ScrollState = rememberScrollState()
 ) {
     ExpoAndroidTheme { colors, typography ->
         Column(

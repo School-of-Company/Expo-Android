@@ -19,8 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class StandardViewModel @Inject constructor(
+    private val standardQrCodeRequestUseCase: StandardQrCodeRequestUseCase,
     private val standardProgramAttendListUseCase: StandardProgramAttendListUseCase,
-    private val standardQrCodeRequestUseCase: StandardQrCodeRequestUseCase
 ) : ViewModel() {
 
     private val _swipeRefreshLoading = MutableStateFlow(false)

@@ -51,7 +51,7 @@ internal fun UserDeleteButton(
             OutlinedIconTextButton(
                 textValue = "거절",
                 leadingIcon = { color -> TrashIcon(tint = color) },
-                onClick = { onClick() }
+                onClick = onClick
             )
         }
     }

@@ -45,6 +45,7 @@ import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 internal fun TrainingProgramParticipantRoute(
+    modifier: Modifier = Modifier,
     id: Long,
     onBackClick: () -> Unit,
     navigateToQrScanner: (Long) -> Unit,
@@ -56,6 +57,7 @@ internal fun TrainingProgramParticipantRoute(
     val teacherTrainingProgramListUiState by viewModel.teacherTrainingProgramListUiState.collectAsStateWithLifecycle()
 
     TrainingProgramParticipantScreen(
+        modifier = modifier,
         id = id,
         onBackClick = onBackClick,
         teacherTrainingProgramListUiState = teacherTrainingProgramListUiState,
@@ -71,8 +73,8 @@ internal fun TrainingProgramParticipantRoute(
 
 @Composable
 private fun TrainingProgramParticipantScreen(
-    id: Long,
     modifier: Modifier = Modifier,
+    id: Long,
     swipeRefreshState: SwipeRefreshState,
     teacherTrainingProgramListUiState: TeacherTrainingProgramListUiState,
     getTeacherTrainingProgramList: () -> Unit,

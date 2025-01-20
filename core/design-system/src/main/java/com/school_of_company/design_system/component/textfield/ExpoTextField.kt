@@ -138,7 +138,7 @@ fun ExpoDefaultTextField(
                 visualTransformation = if (visualTransformationState) PasswordVisualTransformation() else VisualTransformation.None,
                 trailingIcon = trailingIcon
             )
-            if (isError) {
+            if (isError) {// TODO: 항상 참인 식
                 Row(horizontalArrangement = if (isError) Arrangement.Start else Arrangement.End) {
                     ErrorText(text = errorText)
                 }

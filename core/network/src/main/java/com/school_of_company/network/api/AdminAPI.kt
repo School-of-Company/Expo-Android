@@ -16,6 +16,11 @@ interface AdminAPI {
         @Path("admin_id") adminId: Long
     )
 
+    @DELETE("/admin/{admin_id}")
+    suspend fun rejectAdmin(
+        @Path("admin_id") adminId: Long
+    )
+
     @DELETE("/admin")
     suspend fun serviceWithdrawal()
 }

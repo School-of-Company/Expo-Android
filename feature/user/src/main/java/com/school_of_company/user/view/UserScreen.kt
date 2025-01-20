@@ -16,10 +16,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
@@ -27,7 +27,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -42,7 +41,6 @@ import com.school_of_company.design_system.component.modifier.padding.paddingHor
 import com.school_of_company.design_system.component.uistate.empty.ShowEmptyState
 import com.school_of_company.design_system.component.uistate.error.ShowErrorState
 import com.school_of_company.design_system.icon.LogoutIcon
-import com.school_of_company.design_system.icon.UserIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.user.view.component.SignUpRequestList
@@ -54,6 +52,7 @@ import com.school_of_company.user.viewmodel.UserViewModel
 import com.school_of_company.user.viewmodel.uistate.AllowAdminRequestUiState
 import com.school_of_company.user.viewmodel.uistate.GetAdminRequestAllowListUiState
 import com.school_of_company.user.viewmodel.uistate.LogoutUiState
+import com.school_of_company.user.viewmodel.uistate.RejectAdminRequestUiState
 import com.school_of_company.user.viewmodel.uistate.ServiceWithdrawalUiState
 import kotlinx.collections.immutable.toImmutableList
 
@@ -63,16 +62,25 @@ internal fun UserRoute(
     onMainNavigate: () -> Unit,
     viewModel: UserViewModel = hiltViewModel()
 ) {
+    val (selectedId, setSelectedId) = rememberSaveable { mutableLongStateOf(0L) }
+
     val swipeRefreshLoading by viewModel.swipeRefreshLoading.collectAsStateWithLifecycle()
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = swipeRefreshLoading)
 
     val getAdminRequestAllowListUiState by viewModel.getAdminRequestAllowListUiState.collectAsStateWithLifecycle()
     val allowAdminRequestUiState by viewModel.allowAdminRequestUiState.collectAsStateWithLifecycle()
+    val rejectAdminRequestUiState by viewModel.rejectAdminRequestUiState.collectAsStateWithLifecycle()
     val serviceWithdrawalUiState by viewModel.serviceWithdrawalUiState.collectAsStateWithLifecycle()
     val logoutUiState by viewModel.logoutUiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.getAdminRequestAllowList()
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            viewModel.resetAdminRequest()
+        }
     }
 
     LaunchedEffect(allowAdminRequestUiState) {
@@ -81,10 +89,24 @@ internal fun UserRoute(
             is AllowAdminRequestUiState.Success -> {
                 onErrorToast(null, R.string.sign_up_request_allow_success)
                 viewModel.getAdminRequestAllowList()
+                setSelectedId(0L)
             }
-
             is AllowAdminRequestUiState.Error -> {
                 onErrorToast(null, R.string.sign_up_request_allow_fail)
+            }
+        }
+    }
+
+    LaunchedEffect(rejectAdminRequestUiState) {
+        when (rejectAdminRequestUiState) {
+            is RejectAdminRequestUiState.Loading -> Unit
+            is RejectAdminRequestUiState.Success -> {
+                onErrorToast(null, R.string.sign_up_request_reject_success)
+                viewModel.getAdminRequestAllowList()
+                setSelectedId(0L)
+            }
+            is RejectAdminRequestUiState.Error -> {
+                onErrorToast(null, R.string.sign_up_request_reject_fail)
             }
         }
     }
@@ -117,10 +139,12 @@ internal fun UserRoute(
 
     UserScreen(
         onErrorToast = onErrorToast,
+        selectedId = selectedId,
+        setSelectedId = setSelectedId,
         getAdminRequestAllowListUiState = getAdminRequestAllowListUiState,
         getSignUpRequestList = { viewModel.getAdminRequestAllowList() },
         swipeRefreshState = swipeRefreshState,
-        deleteCallBack = {},
+        deleteCallBack = viewModel::rejectAdminRequest,
         successCallBack = viewModel::allowAdminRequest,
         withdrawalCallBack = viewModel::serviceWithdrawal,
         logoutCallBack = viewModel::logout
@@ -131,6 +155,8 @@ internal fun UserRoute(
 @Composable
 private fun UserScreen(
     modifier: Modifier = Modifier,
+    selectedId: Long,
+    setSelectedId: (Long) -> Unit,
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
     getAdminRequestAllowListUiState: GetAdminRequestAllowListUiState,
     getSignUpRequestList: () -> Unit,
@@ -141,7 +167,6 @@ private fun UserScreen(
     withdrawalCallBack: () -> Unit,
     logoutCallBack: () -> Unit
 ) {
-    val (selectedId, setSelectedId) = rememberSaveable { mutableLongStateOf(0L) }
     val (openBottomSheet, isOpenBottomSheet) = rememberSaveable { mutableStateOf(false) }
     val (openLogoutDialog, isOpenLogoutDialog) = rememberSaveable { mutableStateOf(false) }
     val (openWithdrawDialog, isOpenWithdrawDialog) = rememberSaveable { mutableStateOf(false) }
@@ -352,14 +377,14 @@ private fun UserScreen(
                         text = "이메일",
                         style = typography.captionBold1,
                         color = colors.gray600,
-                        modifier = Modifier.width(180.dp)
+                        modifier = Modifier.width(160.dp)
                     )
 
                     Text(
                         text = "전화번호",
                         style = typography.captionBold1,
                         color = colors.gray600,
-                        modifier = Modifier.width(120.dp)
+                        modifier = Modifier.width(150.dp)
                     )
                 }
             }
@@ -394,7 +419,7 @@ private fun UserScreen(
                                 }
                             )
 
-                            Spacer(modifier = Modifier.height(16.dp))
+                            Spacer(modifier = Modifier.height(48.dp))
 
                             Row(
                                 horizontalArrangement = Arrangement.spacedBy(
@@ -408,10 +433,7 @@ private fun UserScreen(
                                     enabled = selectedId != 0L,
                                     onClick = {
                                         if (selectedId == 0L) {
-                                            onErrorToast(
-                                                null,
-                                                R.string.check_sign_up_request_list_item
-                                            )
+                                            onErrorToast(null, R.string.check_sign_up_request_list_item)
                                         } else {
                                             successCallBack(selectedId)
                                         }
@@ -420,7 +442,13 @@ private fun UserScreen(
 
                                 UserDeleteButton(
                                     enabled = selectedId != 0L,
-                                    onClick = { deleteCallBack(selectedId) },
+                                    onClick = {
+                                        if (selectedId == 0L) {
+                                            onErrorToast(null, R.string.check_sign_up_request_list_item)
+                                        } else {
+                                            deleteCallBack(selectedId)
+                                        }
+                                    },
                                 )
                             }
                         }

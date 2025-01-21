@@ -93,7 +93,7 @@ internal fun ProgramDetailParticipantManagementRoute(
 
     ProgramDetailParticipantManagementScreen(
         modifier = modifier,
-        onBackClick = onBackClick,
+        swipeRefreshState = swipeRefreshState,
         participantAheadResponseListUiState = participantAheadResponseListUiState,
         participantFieldResponseListUiState = participantFieldResponseListUiState,
         traineeInformationUiState = traineeInformationUiState,

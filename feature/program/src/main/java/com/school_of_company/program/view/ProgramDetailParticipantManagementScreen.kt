@@ -91,7 +91,6 @@ internal fun ProgramDetailParticipantManagementRoute(
     }
 
     ProgramDetailParticipantManagementScreen(
-        onBackClick = onBackClick,
         swipeRefreshState = swipeRefreshState,
         participantAheadResponseListUiState = participantAheadResponseListUiState,
         participantFieldResponseListUiState = participantFieldResponseListUiState,
@@ -99,6 +98,7 @@ internal fun ProgramDetailParticipantManagementRoute(
         fieldParticipantName = fieldParticipantName,
         preParticipantName = preParticipantName,
         traineeName = traineeName,
+        onBackClick = onBackClick,
         onFieldParticipantNameChange = viewModel::onFieldParticipantNameChange,
         onPreParticipantNameChange = viewModel::onPreParticipantNameChange,
         onTraineeNameChange = viewModel::onTraineeNameChange,
@@ -128,16 +128,16 @@ internal fun ProgramDetailParticipantManagementRoute(
 @Composable
 private fun ProgramDetailParticipantManagementScreen(
     modifier: Modifier = Modifier,
-    onBackClick: () -> Unit,
     swipeRefreshState: SwipeRefreshState,
     scrollState: ScrollState = rememberScrollState(),
     focusManager: FocusManager = LocalFocusManager.current,
-    participantAheadResponseListUiState: ParticipantResponseListUiState,
-    participantFieldResponseListUiState: ParticipantResponseListUiState,
-    traineeInformationUiState: TraineeResponseListUiState,
     fieldParticipantName: String,
     preParticipantName: String,
     traineeName: String,
+    participantAheadResponseListUiState: ParticipantResponseListUiState,
+    participantFieldResponseListUiState: ParticipantResponseListUiState,
+    traineeInformationUiState: TraineeResponseListUiState,
+    onBackClick: () -> Unit,
     onFieldParticipantNameChange: (String) -> Unit,
     onPreParticipantNameChange: (String) -> Unit,
     onTraineeNameChange: (String) -> Unit,

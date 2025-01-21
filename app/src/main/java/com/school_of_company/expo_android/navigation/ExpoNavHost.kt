@@ -40,8 +40,8 @@ import com.school_of_company.user.navigation.profileScreen
 @Composable
 fun ExpoNavHost(
     modifier: Modifier = Modifier,
+    startDestination: String = sigInRoute,
     appState: ExpoAppState, // 네비게이션의 상태를 포함하는 앱의 상태
-    startDestination: String = sigInRoute
 ) {
     val navController = appState.navController
     val context = LocalContext.current

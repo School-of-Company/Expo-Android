@@ -24,15 +24,15 @@ import com.school_of_company.design_system.theme.color.ExpoColor
 internal fun ExpoNoneLineTextField(
     modifier: Modifier = Modifier,
     textState: String,
-    placeHolder: @Composable () -> Unit,
+    onTextChange: (String) -> Unit,
     singleLine: Boolean = false,
     lengthLimit: Int = 0,
-    maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
     minLines: Int = 1,
-    visualTransformation: VisualTransformation = VisualTransformation.None,
+    maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
-    onTextChange: (String) -> Unit,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    placeHolder: @Composable () -> Unit,
 ) {
     ExpoAndroidTheme { colors, typography ->
 

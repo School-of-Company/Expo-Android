@@ -30,8 +30,8 @@ internal fun ProgramListItem(
     modifier: Modifier = Modifier,
     index: Int,
     data: TrainingProgramListResponseEntity,
+    horizontalScrollState: ScrollState,
     navigateToTrainingProgramDetail: (Long) -> Unit,
-    horizontalScrollState: ScrollState
 ) {
     ExpoAndroidTheme { colors, typography ->
 

@@ -235,21 +235,7 @@ internal fun ExpoModifyRoute(
     }
 
     ExpoModifyScreen(
-        onBackClick = onBackClick,
-        onImageClick = { galleryLauncher.launch("image/*") },
         imageUri = selectedImageUri?.toString() ?: coverImageState,
-        modifyTitleState = modifyTitleState,
-        startedDateState = startedDateState,
-        endedDateState = endedDateState,
-        introduceTitleState = introduceTitleState,
-        addressState = addressState,
-        locationState = locationState,
-        onModifyTitleChange = viewModel::onModifyTitleChange,
-        onStartedDateChange = viewModel::onStartedDateChange,
-        onEndedDateChange = viewModel::onEndedDateChange,
-        onIntroduceTitleChange = viewModel::onIntroduceTitleChange,
-        onAddressChange = viewModel::onAddressChange,
-        onLocationChange = viewModel::onLocationChange,
         modifyCallBack = {
             if (selectedImageUri != null) {
                 viewModel.imageUpLoad(context, selectedImageUri!!)
@@ -257,14 +243,28 @@ internal fun ExpoModifyRoute(
                 onErrorToast(null, R.string.expo_image_size_fail)
             }
         },
+        onBackClick = onBackClick,
+        onImageClick = { galleryLauncher.launch("image/*") },
+        startedDateState = startedDateState,
+        endedDateState = endedDateState,
+        modifyTitleState = modifyTitleState,
+        addressState = addressState,
+        locationState = locationState,
+        introduceTitleState = introduceTitleState,
         trainingProgramTextState = trainingProgramTextState,
-        onTrainingProgramChange = viewModel::updateTrainingProgramText,
-        onAddTrainingProgram = viewModel::addTrainingProgramText,
-        onRemoveTrainingProgram = viewModel::removeTrainingProgramText,
         standardProgramTextState = standardProgramTextState,
-        onStandardProgramChange = viewModel::updateStandardProgramText,
         onAddStandardProgram = viewModel::addStandardProgramText,
+        onAddTrainingProgram = viewModel::addTrainingProgramText,
+        onStartedDateChange = viewModel::onStartedDateChange,
+        onEndedDateChange = viewModel::onEndedDateChange,
+        onModifyTitleChange = viewModel::onModifyTitleChange,
+        onAddressChange = viewModel::onAddressChange,
+        onLocationChange = viewModel::onLocationChange,
+        onIntroduceTitleChange = viewModel::onIntroduceTitleChange,
+        onRemoveTrainingProgram = viewModel::removeTrainingProgramText,
         onRemoveStandardProgram = viewModel::removeStandardProgramText,
+        onTrainingProgramChange = viewModel::updateTrainingProgramText,
+        onStandardProgramChange = viewModel::updateStandardProgramText,
         updateExistingTrainingProgram = viewModel::updateExistingTrainingProgram,
         updateExistingStandardProgram = viewModel::updateExistingStandardProgram
     )
@@ -280,29 +280,30 @@ private fun ExpoModifyScreen(
     modifyCallBack: () -> Unit,
     onBackClick: () -> Unit,
     onImageClick: () -> Unit,
-    modifyTitleState: String,
     startedDateState: String,
     endedDateState: String,
-    introduceTitleState: String,
+    modifyTitleState: String,
     addressState: String,
     locationState: String,
-    onModifyTitleChange: (String) -> Unit,
+    introduceTitleState: String,
+    trainingProgramTextState: List<TrainingDtoModel>,
+    standardProgramTextState: List<StandardRequestModel>,
+    onAddStandardProgram: () -> Unit,
+    onAddTrainingProgram: () -> Unit,
     onStartedDateChange: (String) -> Unit,
     onEndedDateChange: (String) -> Unit,
-    onIntroduceTitleChange: (String) -> Unit,
+    onModifyTitleChange: (String) -> Unit,
     onAddressChange: (String) -> Unit,
     onLocationChange: (String) -> Unit,
-    trainingProgramTextState: List<TrainingDtoModel>,
-    onTrainingProgramChange: (Int, TrainingDtoModel) -> Unit,
-    onAddTrainingProgram: () -> Unit,
+    onIntroduceTitleChange: (String) -> Unit,
     onRemoveTrainingProgram: (Int) -> Unit,
-    standardProgramTextState: List<StandardRequestModel>,
-    onStandardProgramChange: (Int, StandardRequestModel) -> Unit,
-    onAddStandardProgram: () -> Unit,
     onRemoveStandardProgram: (Int) -> Unit,
+    onTrainingProgramChange: (Int, TrainingDtoModel) -> Unit,
+    onStandardProgramChange: (Int, StandardRequestModel) -> Unit,
     updateExistingTrainingProgram: (Int, TrainingDtoModel) -> Unit,
     updateExistingStandardProgram: (Int, StandardRequestModel) -> Unit
 ) {
+
     val (openTrainingSettingBottomSheet, isOpenTrainingSettingBottomSheet) = rememberSaveable {
         mutableStateOf(
             false
@@ -471,7 +472,7 @@ private fun ExpoModifyScreen(
 
                 LimitedLengthTextField(
                     label = "제목",
-                    textState = modifyTitleState,
+                    value = modifyTitleState,
                     placeholder = "제목을 입력해주세요.",
                     isError = false,
                     updateTextValue = onModifyTitleChange,
@@ -482,7 +483,7 @@ private fun ExpoModifyScreen(
                 Row(horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.Start)) {
                     LimitedLengthTextField(
                         label = "모집기간",
-                        textState = startedDateState,
+                        value = startedDateState,
                         lengthLimit = 8,
                         placeholder = "시작일",
                         isError = false,
@@ -493,7 +494,7 @@ private fun ExpoModifyScreen(
                     )
 
                     LimitedLengthTextField(
-                        textState = endedDateState,
+                        value = endedDateState,
                         lengthLimit = 8,
                         placeholder = "마감일",
                         isError = false,
@@ -526,7 +527,7 @@ private fun ExpoModifyScreen(
 
                 LimitedLengthTextField(
                     label = "소개글",
-                    textState = introduceTitleState,
+                    value = introduceTitleState,
                     placeholder = "소개글을 작성해주세요.",
                     isError = false,
                     updateTextValue = onIntroduceTitleChange,
@@ -596,7 +597,7 @@ private fun ExpoModifyScreen(
                         )
 
                         NoneLimitedLengthTextField(
-                            textState = addressState,
+                            value = addressState,
                             placeholder = "상세주소를 입력해주세요.",
                             updateTextValue = onAddressChange
                         )

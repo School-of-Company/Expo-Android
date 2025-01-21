@@ -24,8 +24,8 @@ import com.school_of_company.design_system.theme.ExpoAndroidTheme
 internal fun MessageDialog(
     modifier: Modifier = Modifier,
     onCancelClick: () -> Unit,
+    onTraineeClick: () -> Unit,
     onParticipantClick: () -> Unit,
-    onTraineeClick: () -> Unit
 ) {
     ExpoAndroidTheme { colors, typography ->
 

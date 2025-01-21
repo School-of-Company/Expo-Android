@@ -28,10 +28,10 @@ import com.school_of_company.model.entity.expo.ExpoListResponseEntity
 @Composable
 internal fun CreatedExpoListItem(
     modifier: Modifier = Modifier,
-    scrollState: ScrollState,
     selectedIndex: Int,
     index: Int,
     item: ExpoListResponseEntity,
+    scrollState: ScrollState,
     onClick: () -> Unit,
 ) {
     with(item) {

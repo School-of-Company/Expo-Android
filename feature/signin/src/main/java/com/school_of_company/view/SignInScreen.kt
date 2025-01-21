@@ -49,6 +49,7 @@ import com.school_of_company.ui.toast.makeToast
 
 @Composable
 internal fun SignInRoute(
+    modifier: Modifier = Modifier,
     onSignInClick: () -> Unit,
     onSignUpClick: () -> Unit,
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
@@ -121,12 +122,11 @@ internal fun SignInRoute(
     }
 
     SignInScreen(
+        modifier = modifier,
         isEmailError = isEmailError,
         isPasswordError = isPasswordError,
         id = idState,
         password = passwordState,
-        onIdChange = viewModel::onIdChange,
-        onPasswordChange = viewModel::onPasswordChange,
         onSignUpClick = onSignUpClick,
         signInCallBack = {
             viewModel.signIn(
@@ -136,22 +136,24 @@ internal fun SignInRoute(
                 )
             )
         },
+        onIdChange = viewModel::onIdChange,
+        onPasswordChange = viewModel::onPasswordChange,
     )
 }
 
 @Composable
 private fun SignInScreen(
     modifier: Modifier = Modifier,
-    focusManager: FocusManager = LocalFocusManager.current,
-    scrollState: ScrollState = rememberScrollState(),
     isEmailError: Boolean,
     isPasswordError: Boolean,
     id: String,
     password: String,
-    onIdChange: (String) -> Unit,
-    onPasswordChange: (String) -> Unit,
+    focusManager: FocusManager = LocalFocusManager.current,
+    scrollState: ScrollState = rememberScrollState(),
     onSignUpClick: () -> Unit,
     signInCallBack: () -> Unit,
+    onIdChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
 ) {
     var isPasswordVisible by remember { mutableStateOf(false) }
 

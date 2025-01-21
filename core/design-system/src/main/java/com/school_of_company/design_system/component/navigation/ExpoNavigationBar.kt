@@ -21,12 +21,12 @@ import com.school_of_company.design_system.theme.color.ExpoColor
 fun RowScope.ExpoNavigationBarItem(
     modifier: Modifier = Modifier,
     selected: Boolean,
+    enabled: Boolean = true,
+    alwaysShowLabel: Boolean = true,
     onClick: () -> Unit,
     icon: @Composable () -> Unit,
-    selectedIcon: @Composable () -> Unit = icon,
     label: @Composable () -> Unit,
-    enabled: Boolean = true,
-    alwaysShowLabel: Boolean = true
+    selectedIcon: @Composable () -> Unit = icon,
 ) {
     NavigationBarItem(
         modifier = modifier,

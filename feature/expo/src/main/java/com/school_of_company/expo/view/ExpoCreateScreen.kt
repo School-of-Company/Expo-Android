@@ -83,6 +83,7 @@ import com.school_of_company.ui.visualTransformation.DateTimeVisualTransformatio
 
 @Composable
 internal fun ExpoCreateRoute(
+    modifier: Modifier=Modifier,
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
     viewModel: ExpoViewModel = hiltViewModel()
 ) {
@@ -181,14 +182,15 @@ internal fun ExpoCreateRoute(
 
 
     ExpoCreateScreen(
-        onImageClick = { galleryLauncher.launch("image/*") },
-        imageUri = selectedImageUri?.toString() ?: coverImageState,
-        modifyTitleState = modifyTitleState,
+        modifier= modifier,
         startedDateState = startedDateState,
         endedDateState = endedDateState,
+        modifyTitleState = modifyTitleState,
         introduceTitleState = introduceTitleState,
         addressState = addressState,
         locationState = locationState,
+        imageUri = selectedImageUri?.toString() ?: coverImageState,
+        onImageClick = { galleryLauncher.launch("image/*") },
         onModifyTitleChange = viewModel::onModifyTitleChange,
         onStartedDateChange = viewModel::onStartedDateChange,
         onEndedDateChange = viewModel::onEndedDateChange,
@@ -207,9 +209,9 @@ internal fun ExpoCreateRoute(
         onAddTrainingProgram = viewModel::addTrainingProgramText,
         onRemoveTrainingProgram = viewModel::removeTrainingProgramText,
         standardProgramTextState = standardProgramTextState,
+        onRemoveStandardProgram = viewModel::removeStandardProgramText,
         onStandardProgramChange = viewModel::updateStandardProgramText,
         onAddStandardProgram = viewModel::addStandardProgramText,
-        onRemoveStandardProgram = viewModel::removeStandardProgramText,
     )
 }
 
@@ -217,31 +219,31 @@ internal fun ExpoCreateRoute(
 @Composable
 private fun ExpoCreateScreen(
     modifier: Modifier = Modifier,
-    imageUri: String?,
-    onImageClick: () -> Unit,
-    focusManager: FocusManager = LocalFocusManager.current,
-    scrollState: ScrollState = rememberScrollState(),
-    modifyTitleState: String,
     startedDateState: String,
     endedDateState: String,
+    modifyTitleState: String,
     introduceTitleState: String,
     addressState: String,
     locationState: String,
-    onModifyTitleChange: (String) -> Unit,
+    imageUri: String?,
+    trainingProgramTextState: List<TrainingDtoModel>,
+    standardProgramTextState: List<StandardRequestModel>,
+    focusManager: FocusManager = LocalFocusManager.current,
+    scrollState: ScrollState = rememberScrollState(),
+    onImageClick: () -> Unit,
+    onExpoCreateCallBack: () -> Unit,
+    onAddTrainingProgram: () -> Unit,
+    onAddStandardProgram: () -> Unit,
     onStartedDateChange: (String) -> Unit,
     onEndedDateChange: (String) -> Unit,
+    onModifyTitleChange: (String) -> Unit,
     onIntroduceTitleChange: (String) -> Unit,
     onAddressChange: (String) -> Unit,
     onLocationChange: (String) -> Unit,
-    onExpoCreateCallBack: () -> Unit,
-    trainingProgramTextState: List<TrainingDtoModel>,
-    onTrainingProgramChange: (Int, TrainingDtoModel) -> Unit,
-    onAddTrainingProgram: () -> Unit,
     onRemoveTrainingProgram: (Int) -> Unit,
-    standardProgramTextState: List<StandardRequestModel>,
-    onStandardProgramChange: (Int, StandardRequestModel) -> Unit,
-    onAddStandardProgram: () -> Unit,
     onRemoveStandardProgram: (Int) -> Unit,
+    onTrainingProgramChange: (Int, TrainingDtoModel) -> Unit,
+    onStandardProgramChange: (Int, StandardRequestModel) -> Unit,
 ) {
     val (openTrainingSettingBottomSheet, isOpenTrainingSettingBottomSheet) = rememberSaveable { mutableStateOf(false) }
     val (openStandardSettingBottomSheet, isOpenStandardSettingBottomSheet) = rememberSaveable { mutableStateOf(false) }
@@ -367,7 +369,7 @@ private fun ExpoCreateScreen(
 
                 LimitedLengthTextField(
                     label = "제목",
-                    textState = modifyTitleState,
+                    value = modifyTitleState,
                     placeholder = "제목을 입력해주세요.",
                     isError = false,
                     updateTextValue = onModifyTitleChange,
@@ -378,7 +380,7 @@ private fun ExpoCreateScreen(
                 Row(horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.Start)) {
                     LimitedLengthTextField(
                         label = "모집기간",
-                        textState = startedDateState,
+                        value = startedDateState,
                         lengthLimit = 8,
                         showLengthCounter = false,
                         placeholder = "시작일",
@@ -390,7 +392,7 @@ private fun ExpoCreateScreen(
                     )
 
                     LimitedLengthTextField(
-                        textState = endedDateState,
+                        value = endedDateState,
                         lengthLimit = 8,
                         showLengthCounter = false,
                         placeholder = "마감일",
@@ -424,7 +426,7 @@ private fun ExpoCreateScreen(
 
                 LimitedLengthTextField(
                     label = "소개글",
-                    textState = introduceTitleState,
+                    value = introduceTitleState,
                     placeholder = "소개글을 작성해주세요.",
                     isError = false,
                     updateTextValue = onIntroduceTitleChange,
@@ -494,7 +496,7 @@ private fun ExpoCreateScreen(
                         )
 
                         NoneLimitedLengthTextField(
-                            textState = addressState,
+                            value = addressState,
                             placeholder = "상세주소를 입력해주세요.",
                             updateTextValue = onAddressChange
                         )

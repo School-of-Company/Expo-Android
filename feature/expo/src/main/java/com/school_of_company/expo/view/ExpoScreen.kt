@@ -70,9 +70,9 @@ internal fun ExpoRoute(
 @Composable
 private fun ExpoScreen(
     modifier: Modifier = Modifier,
-    scrollState: ScrollState = rememberScrollState(),
     swipeRefreshState: SwipeRefreshState,
     getExpoListData: GetExpoListUiState,
+    scrollState: ScrollState = rememberScrollState(),
     getExpoList: () -> Unit,
     navigationToDetail: (String) -> Unit
 ) {

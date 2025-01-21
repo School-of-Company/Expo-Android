@@ -56,13 +56,13 @@ import com.school_of_company.ui.visualTransformation.DateTimeVisualTransformatio
 @Composable
 internal fun ExpoSettingBottomSheet(
     modifier: Modifier = Modifier,
+    isTraining: Boolean = true,
     onCancelClick: () -> Unit,
     trainingSettingItem: TrainingDtoModel,
-    onTrainingSettingChange: (TrainingDtoModel) -> Unit,
-    onButtonClick: () -> Unit,
     focusManager: FocusManager = LocalFocusManager.current,
-    isTraining: Boolean = true,
-    sheetState: SheetState = rememberModalBottomSheetState()
+    sheetState: SheetState = rememberModalBottomSheetState(),
+    onButtonClick: () -> Unit,
+    onTrainingSettingChange: (TrainingDtoModel) -> Unit,
 ) {
     var currentItem by remember { mutableStateOf(trainingSettingItem) }
 

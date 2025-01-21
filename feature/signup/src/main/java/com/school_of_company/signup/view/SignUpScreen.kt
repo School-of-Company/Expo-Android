@@ -54,6 +54,7 @@ import com.school_of_company.ui.toast.makeToast
 
 @Composable
 internal fun SignUpRoute(
+    modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
     onSignUpClick: () -> Unit,
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
@@ -112,7 +113,11 @@ internal fun SignUpRoute(
     }
 
     SignUpScreen(
-        onBackClick = onBackClick,
+        modifier = modifier,
+        isPasswordValidError = isPasswordValidError,
+        isPasswordMismatchError = isPasswordMismatchError,
+        isEmailValidError = isEmailValidError,
+        isCertificationCodeError = isCertificationCodeError,
         name = name,
         nickname = nickname,
         email = email,
@@ -120,17 +125,18 @@ internal fun SignUpRoute(
         rePassword = rePassword,
         phoneNumber = phoneNumber,
         certificationNumber = certificationNumber,
-        onNameChange = viewModel::onNameChange,
-        onNicknameChange = viewModel::onNicknameChange,
-        onEmailChange = viewModel::onEmailChange,
-        onPasswordChange = viewModel::onPasswordChange,
-        onRePasswordChange = viewModel::onRePasswordChange,
-        onPhoneNumberChange = viewModel::onPhoneNumberChange,
-        onCertificationNumberChange = viewModel::onCertificationNumberChange,
-        isPasswordValidError = isPasswordValidError,
-        isPasswordMismatchError = isPasswordMismatchError,
-        isEmailValidError = isEmailValidError,
-        isCertificationCodeError = isCertificationCodeError,
+        onBackClick = onBackClick,
+        signUpCallBack = {
+            viewModel.signUp(
+                body = AdminSignUpRequestParam(
+                    name = name,
+                    nickname = nickname,
+                    email = email,
+                    password = password,
+                    phoneNumber = phoneNumber
+                )
+            )
+        },
         certificationCallBack = {
             viewModel.certificationCode(
                 phoneNumber = phoneNumber,
@@ -145,26 +151,24 @@ internal fun SignUpRoute(
             )
             viewModel.setCertificationResent(true)
         },
-        signUpCallBack = {
-            viewModel.signUp(
-                body = AdminSignUpRequestParam(
-                    name = name,
-                    nickname = nickname,
-                    email = email,
-                    password = password,
-                    phoneNumber = phoneNumber
-                )
-            )
-        }
+        onNameChange = viewModel::onNameChange,
+        onNicknameChange = viewModel::onNicknameChange,
+        onEmailChange = viewModel::onEmailChange,
+        onPasswordChange = viewModel::onPasswordChange,
+        onRePasswordChange = viewModel::onRePasswordChange,
+        onPhoneNumberChange = viewModel::onPhoneNumberChange,
+        onCertificationNumberChange = viewModel::onCertificationNumberChange,
+
     )
 }
 
 @Composable
 private fun SignUpScreen(
     modifier: Modifier = Modifier,
-    focusManager: FocusManager = LocalFocusManager.current,
-    scrollState: ScrollState = rememberScrollState(),
-    onBackClick: () -> Unit,
+    isPasswordValidError: Boolean,
+    isPasswordMismatchError: Boolean,
+    isEmailValidError: Boolean,
+    isCertificationCodeError: Boolean,
     name: String,
     nickname: String,
     email: String,
@@ -172,6 +176,12 @@ private fun SignUpScreen(
     rePassword: String,
     phoneNumber: String,
     certificationNumber: String,
+    focusManager: FocusManager = LocalFocusManager.current,
+    scrollState: ScrollState = rememberScrollState(),
+    onBackClick: () -> Unit,
+    signUpCallBack: () -> Unit,
+    certificationCallBack: () -> Unit,
+    sendCertificationCodeCallBack: () -> Unit,
     onNameChange: (String) -> Unit,
     onNicknameChange: (String) -> Unit,
     onEmailChange: (String) -> Unit,
@@ -179,13 +189,6 @@ private fun SignUpScreen(
     onRePasswordChange: (String) -> Unit,
     onPhoneNumberChange: (String) -> Unit,
     onCertificationNumberChange: (String) -> Unit,
-    isPasswordValidError: Boolean,
-    isPasswordMismatchError: Boolean,
-    isEmailValidError: Boolean,
-    isCertificationCodeError: Boolean,
-    signUpCallBack: () -> Unit,
-    certificationCallBack: () -> Unit,
-    sendCertificationCodeCallBack: () -> Unit
 ) {
     var isPasswordVisible by remember { mutableStateOf(false) }
     var isCheckPasswordVisible by remember { mutableStateOf(false) }

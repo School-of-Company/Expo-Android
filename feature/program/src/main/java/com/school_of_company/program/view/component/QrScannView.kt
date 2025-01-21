@@ -11,8 +11,8 @@ import com.school_of_company.program.util.setupQrScanCamera
 @Composable
 internal fun QrcodeScanView(
     modifier: Modifier = Modifier,
+    lifecycleOwner: LifecycleOwner,
     onQrcodeScan: (String) -> Unit,
-    lifecycleOwner: LifecycleOwner
 ) {
     AndroidView(
         modifier = modifier.fillMaxSize(),

@@ -58,8 +58,9 @@ import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 internal fun UserRoute(
-    onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
+    modifier: Modifier = Modifier,
     onMainNavigate: () -> Unit,
+    onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
     viewModel: UserViewModel = hiltViewModel()
 ) {
     val (selectedId, setSelectedId) = rememberSaveable { mutableLongStateOf(0L) }
@@ -138,16 +139,17 @@ internal fun UserRoute(
     }
 
     UserScreen(
-        onErrorToast = onErrorToast,
+        modifier = modifier,
         selectedId = selectedId,
-        setSelectedId = setSelectedId,
         getAdminRequestAllowListUiState = getAdminRequestAllowListUiState,
-        getSignUpRequestList = { viewModel.getAdminRequestAllowList() },
         swipeRefreshState = swipeRefreshState,
+        logoutCallBack = viewModel::logout,
+        withdrawalCallBack = viewModel::serviceWithdrawal,
+        getSignUpRequestList = { viewModel.getAdminRequestAllowList() },
+        setSelectedId = setSelectedId,
         deleteCallBack = viewModel::rejectAdminRequest,
         successCallBack = viewModel::allowAdminRequest,
-        withdrawalCallBack = viewModel::serviceWithdrawal,
-        logoutCallBack = viewModel::logout
+        onErrorToast = onErrorToast,
     )
 }
 
@@ -156,16 +158,16 @@ internal fun UserRoute(
 private fun UserScreen(
     modifier: Modifier = Modifier,
     selectedId: Long,
-    setSelectedId: (Long) -> Unit,
-    onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
     getAdminRequestAllowListUiState: GetAdminRequestAllowListUiState,
-    getSignUpRequestList: () -> Unit,
     swipeRefreshState: SwipeRefreshState,
     scrollState: ScrollState = rememberScrollState(),
+    logoutCallBack: () -> Unit,
+    withdrawalCallBack: () -> Unit,
+    getSignUpRequestList: () -> Unit,
+    setSelectedId: (Long) -> Unit,
     deleteCallBack: (Long) -> Unit,
     successCallBack: (Long) -> Unit,
-    withdrawalCallBack: () -> Unit,
-    logoutCallBack: () -> Unit
+    onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
 ) {
     val (openBottomSheet, isOpenBottomSheet) = rememberSaveable { mutableStateOf(false) }
     val (openLogoutDialog, isOpenLogoutDialog) = rememberSaveable { mutableStateOf(false) }

@@ -19,8 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class StandardViewModel @Inject constructor(
+    private val standardQrCodeRequestUseCase: StandardQrCodeRequestUseCase,
     private val standardProgramAttendListUseCase: StandardProgramAttendListUseCase,
-    private val standardQrCodeRequestUseCase: StandardQrCodeRequestUseCase
 ) : ViewModel() {
 
     private val _swipeRefreshLoading = MutableStateFlow(false)
@@ -29,6 +29,7 @@ internal class StandardViewModel @Inject constructor(
     private val _standardProgramAttendListUiState = MutableStateFlow<StandardProgramAttendListUiState>(StandardProgramAttendListUiState.Loading)
     internal val standardProgramAttendListUiState = _standardProgramAttendListUiState.asStateFlow()
 
+    // TODO: 사용 여부 확인
     private val _standardQrCodeUiState = MutableStateFlow<StandardQrCodeUiState>(StandardQrCodeUiState.Loading)
     internal val standardQrCodeUiState = _standardQrCodeUiState.asStateFlow()
 
@@ -55,6 +56,7 @@ internal class StandardViewModel @Inject constructor(
                 }
             }
     }
+    // TODO: 사용 여부 확인
 
     internal fun standardQrCode(
         standardProId: Long,

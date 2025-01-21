@@ -13,13 +13,19 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
 
-internal fun getMultipartFile(context: Context, uri: Uri): MultipartBody.Part? {
+internal fun getMultipartFile(
+    context: Context,
+    uri: Uri
+): MultipartBody.Part? {
     val jpegFile = uriToJpeg(context, uri) ?: return null
 
     return fileToMultipartFile(jpegFile)
 }
 
-private fun uriToJpeg(context: Context, uri: Uri): File? {
+private fun uriToJpeg(
+    context: Context,
+    uri: Uri
+): File? {
     val inputStream = context.contentResolver.openInputStream(uri) ?: return null
     val bitmap = getExifData(context = context, uri = uri)?.let { exifData ->
         rotateImage(BitmapFactory.decodeStream(inputStream), exifData)
@@ -35,6 +41,7 @@ private fun uriToJpeg(context: Context, uri: Uri): File? {
 
     return outputFile
 }
+
 private fun fileToMultipartFile(file: File): MultipartBody.Part {
     val requestFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
 

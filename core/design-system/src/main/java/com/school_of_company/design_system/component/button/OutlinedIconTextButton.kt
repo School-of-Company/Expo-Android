@@ -27,8 +27,8 @@ fun OutlinedIconTextButton(
     enabled: Boolean = true,
     outlineColor: Color = ExpoColor.gray200,
     contentColor: Color = ExpoColor.gray400,
-    leadingIcon: @Composable (Color) -> @Composable Unit,
     onClick: () -> Unit,
+    leadingIcon: @Composable (Color) -> @Composable Unit,
 ) {
     ExpoAndroidTheme { colors, typography ->
         Row(

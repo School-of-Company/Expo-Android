@@ -51,19 +51,19 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class ExpoViewModel @Inject constructor(
-    private val getExpoInformationUseCase: GetExpoInformationUseCase,
-    private val registerExpoInformationUseCase: RegisterExpoInformationUseCase,
-    private val modifyExpoInformationUseCase: ModifyExpoInformationUseCase,
-    private val deleteExpoInformationUseCase: DeleteExpoInformationUseCase,
     private val getExpoListUseCase: GetExpoListUseCase,
     private val imageUpLoadUseCase: ImageUpLoadUseCase,
-    private val registerTrainingProgramListUseCase: RegisterTrainingProgramListUseCase,
-    private val modifyTrainingProgramUseCase: ModifyTrainingProgramUseCase,
-    private val modifyStandardProgramUseCase: ModifyStandardProgramUseCase,
-    private val registerStandardProgramListUseCase: RegisterStandardListProgramUseCase,
+    private val getExpoInformationUseCase: GetExpoInformationUseCase,
     private val standardProgramListUseCase: StandardProgramListUseCase,
     private val trainingProgramListUseCase: TrainingProgramListUseCase,
-    private val savedStateHandle: SavedStateHandle
+    private val deleteExpoInformationUseCase: DeleteExpoInformationUseCase,
+    private val modifyExpoInformationUseCase: ModifyExpoInformationUseCase,
+    private val modifyTrainingProgramUseCase: ModifyTrainingProgramUseCase,
+    private val modifyStandardProgramUseCase: ModifyStandardProgramUseCase,
+    private val registerExpoInformationUseCase: RegisterExpoInformationUseCase,
+    private val registerStandardProgramListUseCase: RegisterStandardListProgramUseCase,
+    private val registerTrainingProgramListUseCase: RegisterTrainingProgramListUseCase,
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     companion object {
         private const val MODIFY_TITLE = "modify_title"

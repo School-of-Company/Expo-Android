@@ -41,11 +41,15 @@ fun DownArrowIcon(
 }
 
 @Composable
-fun RightArrowIcon(modifier: Modifier = Modifier) {
+fun RightArrowIcon(
+    modifier: Modifier = Modifier,
+    tint: Color = Color.Unspecified,
+) {
     Icon(
         painter = painterResource(id = R.drawable.ic_right_arrow),
         contentDescription = stringResource(id = R.string.right_arrow_description),
-        modifier = modifier
+        modifier = modifier,
+        tint = tint
     )
 }
 
@@ -193,20 +197,28 @@ fun WarnIcon(
 }
 
 @Composable
-fun WonderIcon(modifier: Modifier = Modifier) {
+fun WonderIcon(
+    modifier: Modifier = Modifier,
+    tint: Color = Color.Unspecified,
+) {
     Icon(
         painter = painterResource(id = R.drawable.ic_wonder),
         contentDescription = stringResource(id = R.string.wonder_description),
-        modifier = modifier
+        modifier = modifier,
+        tint = tint
     )
 }
 
 @Composable
-fun CopyIcon(modifier: Modifier = Modifier) {
+fun CopyIcon(
+    modifier: Modifier = Modifier,
+    tint: Color = Color.Unspecified,
+) {
     Icon(
         painter = painterResource(id = R.drawable.ic_copy),
         contentDescription = stringResource(id = R.string.copy_description),
-        modifier = modifier
+        modifier = modifier,
+        tint = tint
     )
 }
 
@@ -224,92 +236,132 @@ fun CircleIcon(
 }
 
 @Composable
-fun BellIcon(modifier: Modifier = Modifier) {
+fun BellIcon(
+    modifier: Modifier = Modifier,
+    tint: Color = Color.Unspecified,
+) {
     Icon(
         painter = painterResource(id = R.drawable.ic_bell),
         contentDescription = stringResource(id = R.string.bell_description),
-        modifier = modifier
+        modifier = modifier,
+        tint = tint
     )
 }
 
 @Composable
-fun SettingIcon(modifier: Modifier = Modifier) {
+fun SettingIcon(
+    modifier: Modifier = Modifier,
+    tint: Color = Color.Unspecified,
+) {
     Icon(
         painter = painterResource(id = R.drawable.ic_setting),
         contentDescription = stringResource(id = R.string.setting_description),
-        modifier = modifier
+        modifier = modifier,
+        tint = tint
     )
 }
 
 @Composable
-fun CheckBoxIcon(modifier: Modifier = Modifier) {
+fun CheckBoxIcon(
+    modifier: Modifier = Modifier,
+    tint: Color = Color.Unspecified,
+) {
     Icon(
         painter = painterResource(id = R.drawable.ic_check_box),
         contentDescription = stringResource(id = R.string.checkbox_description),
-        modifier = modifier
+        modifier = modifier,
+        tint = tint
     )
 }
 
 @Composable
-fun DropDownIcon(modifier: Modifier = Modifier) {
+fun DropDownIcon(
+    modifier: Modifier = Modifier,
+    tint: Color = Color.Unspecified,
+) {
     Icon(
         painter = painterResource(id = R.drawable.ic_drop_down),
         contentDescription = stringResource(id = R.string.drop_down_description),
-        modifier = modifier
+        modifier = modifier,
+        tint = tint
     )
 }
 
 @Composable
-fun TwoCircleIcon(modifier: Modifier = Modifier) {
+fun TwoCircleIcon(
+    modifier: Modifier = Modifier,
+    tint: Color = Color.Unspecified,
+) {
     Icon(
         painter = painterResource(id = R.drawable.ic_two_circle),
         contentDescription = stringResource(id = R.string.two_circle_description),
-        modifier = modifier
+        modifier = modifier,
+        tint = tint
     )
 }
 
 @Composable
-fun LongContentIcon(modifier: Modifier = Modifier) {
+fun LongContentIcon(
+    modifier: Modifier = Modifier,
+    tint: Color = Color.Unspecified,
+) {
     Icon(
         painter = painterResource(id = R.drawable.ic_long_content),
         contentDescription = stringResource(id = R.string.long_content_description),
-        modifier = modifier
+        modifier = modifier,
+        tint = tint
     )
 }
 
 @Composable
-fun ShortContentIcon(modifier: Modifier = Modifier) {
+fun ShortContentIcon(
+    modifier: Modifier = Modifier,
+    tint: Color = Color.Unspecified,
+) {
     Icon(
         painter = painterResource(id = R.drawable.ic_short_content),
         contentDescription = stringResource(id = R.string.short_content_description),
-        modifier = modifier
+        modifier = modifier,
+        tint = tint
     )
 }
 
 @Composable
-fun HomeIcon(modifier: Modifier = Modifier) {
+fun HomeIcon(
+    modifier: Modifier = Modifier,
+    tint: Color = Color.Unspecified,
+) {
     Icon(
         painter = painterResource(id = R.drawable.ic_house),
         contentDescription = stringResource(id = R.string.home_description),
-        modifier = modifier
+        modifier = modifier,
+        tint = tint
     )
 }
 
 @Composable
-fun AppendIcon(modifier: Modifier = Modifier) {
+fun AppendIcon(
+    modifier: Modifier = Modifier,
+    tint: Color = Color.Unspecified,
+) {
     Icon(
         painter = painterResource(id = R.drawable.ic_append),
         contentDescription = stringResource(id = R.string.append_description),
-        modifier = modifier
+        modifier = modifier,
+        tint = tint
     )
 }
 
 @Composable
-fun ProgramIcon(modifier: Modifier = Modifier) {
+fun ProgramIcon(
+    modifier: Modifier = Modifier,
+    tint: Color = Color.Unspecified,
+) {
     Icon(
         painter = painterResource(id = R.drawable.ic_program),
         contentDescription = stringResource(id = R.string.program_description),
-        modifier = modifier
+        modifier = modifier,
+        tint = tint
     )
 }
 

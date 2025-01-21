@@ -4,14 +4,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
-import com.google.accompanist.swiperefresh.SwipeRefreshState
-import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.expo.view.component.CreatedExpoListItem
 import com.school_of_company.model.entity.expo.ExpoListResponseEntity
 import kotlinx.collections.immutable.ImmutableList
@@ -21,26 +16,23 @@ import kotlinx.collections.immutable.persistentListOf
 internal fun CreatedExpoList(
     modifier: Modifier = Modifier,
     scrollState: ScrollState,
-    expoList: ImmutableList<ExpoListResponseEntity>,
     selectedIndex: Int,
+    expoList: ImmutableList<ExpoListResponseEntity>,
     onItemClick: (Boolean, Int) -> Unit,
 ) {
-    ExpoAndroidTheme { colors, _ ->
-
-        LazyColumn(
-            modifier = modifier,
-            verticalArrangement = Arrangement.spacedBy(20.dp)
-        ) {
-            itemsIndexed(expoList) { index, item ->
-                CreatedExpoListItem(
-                    modifier = Modifier.fillMaxWidth(),
-                    scrollState = scrollState,
-                    selectedIndex = selectedIndex,
-                    item = item,
-                    index = index,
-                    onClick = { onItemClick(selectedIndex == index, index) }
-                )
-            }
+    LazyColumn(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(20.dp)
+    ) {
+        itemsIndexed(expoList) { index, item ->
+            CreatedExpoListItem(
+                modifier = Modifier.fillMaxWidth(),
+                scrollState = scrollState,
+                selectedIndex = selectedIndex,
+                item = item,
+                index = index,
+                onClick = { onItemClick(selectedIndex == index, index) }
+            )
         }
     }
 }
@@ -48,8 +40,6 @@ internal fun CreatedExpoList(
 @Preview
 @Composable
 fun CreatedExpoListPreview() {
-    val swipeRefreshState = remember { SwipeRefreshState(false) }
-
     CreatedExpoList(
         expoList = persistentListOf(
             ExpoListResponseEntity(

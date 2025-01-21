@@ -24,10 +24,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class SignUpViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
     private val signUpRequestUseCase: AdminSignUpRequestUseCase,
     private val smsSignUpCertificationNumberSendRequestUseCase: SmsSignUpCertificationNumberSendRequestUseCase,
-    private val smsSignUpCertificationNumberCertificationRequestUseCase: SmsSignUpCertificationNumberCertificationRequestUseCase
+    private val smsSignUpCertificationNumberCertificationRequestUseCase: SmsSignUpCertificationNumberCertificationRequestUseCase,
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     companion object {
         private const val NAME = "nickname"
@@ -45,6 +45,7 @@ internal class SignUpViewModel @Inject constructor(
     private var _smsSignUpCertificationSendCodeUiState = MutableStateFlow<SmsSignUpCertificationSendCodeUiState>(SmsSignUpCertificationSendCodeUiState.Loading)
     internal val smsSignUpCertificationSendCodeUiState = _smsSignUpCertificationSendCodeUiState.asStateFlow()
 
+    // TODO: 사용 여부 확인 
     private var _smsSignUpCertificationCodeUiState = MutableStateFlow<SmsSignUpCertificationCodeUiState>(SmsSignUpCertificationCodeUiState.Loading)
     internal val smsSignUpCertificationCodeUiState = _smsSignUpCertificationCodeUiState.asStateFlow()
 

@@ -29,10 +29,10 @@ import com.school_of_company.design_system.theme.ExpoTypography
 @Composable
 internal fun UserBottomSheet(
     modifier: Modifier = Modifier,
+    sheetState: SheetState = rememberModalBottomSheetState(),
     onLogoutClick: () -> Unit,
     onWithdrawClick: () -> Unit,
     onCancelClick: () -> Unit,
-    sheetState: SheetState = rememberModalBottomSheetState()
 ) {
 
     ExpoAndroidTheme { colors, _ ->

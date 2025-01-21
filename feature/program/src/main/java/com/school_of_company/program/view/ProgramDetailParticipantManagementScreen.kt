@@ -60,6 +60,7 @@ import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 internal fun ProgramDetailParticipantManagementRoute(
+    modifier: Modifier = Modifier,
     id: String,
     onBackClick: () -> Unit,
     viewModel: ProgramViewModel = hiltViewModel()
@@ -91,8 +92,8 @@ internal fun ProgramDetailParticipantManagementRoute(
     }
 
     ProgramDetailParticipantManagementScreen(
+        modifier = modifier,
         onBackClick = onBackClick,
-        swipeRefreshState = swipeRefreshState,
         participantAheadResponseListUiState = participantAheadResponseListUiState,
         participantFieldResponseListUiState = participantFieldResponseListUiState,
         traineeInformationUiState = traineeInformationUiState,

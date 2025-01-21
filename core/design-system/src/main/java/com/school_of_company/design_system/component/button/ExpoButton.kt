@@ -29,8 +29,8 @@ import com.school_of_company.design_system.theme.ExpoAndroidTheme
 fun ExpoButton(
     modifier: Modifier = Modifier,
     text: String,
+    color: Color,
     onClick: () -> Unit,
-    color: Color
 ) {
     ExpoAndroidTheme { colors, typography ->
 

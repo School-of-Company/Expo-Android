@@ -45,8 +45,8 @@ import kotlinx.collections.immutable.toPersistentList
 @Composable
 internal fun ExpoCreatedRoute(
     modifier: Modifier = Modifier,
-    expoViewModel: ExpoViewModel = hiltViewModel(),
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
+    expoViewModel: ExpoViewModel = hiltViewModel(),
 ) {
     val getExpoListUiState by expoViewModel.getExpoListUiState.collectAsStateWithLifecycle()
     val deleteExpoInformationUiState by expoViewModel.deleteExpoInformationUiState.collectAsStateWithLifecycle()
@@ -77,10 +77,10 @@ internal fun ExpoCreatedRoute(
         modifier = modifier,
         expoListSize = expoListSize,
         selectedIndex = selectedIndex,
-        setSelectedIndex = setSelectedIndex,
         getExpoListUiState = getExpoListUiState,
         swipeRefreshState = swipeRefreshState,
         initCreatedExpoList = expoViewModel::getExpoList,
+        setSelectedIndex = setSelectedIndex,
         deleteSelectedExpo = { selectedId ->
             val currentGetExpoListUiState = getExpoListUiState
             if (selectedId == -1) {
@@ -98,10 +98,10 @@ private fun ExpoCreatedScreen(
     expoListSize: Int,
     selectedIndex: Int,
     getExpoListUiState: GetExpoListUiState,
-    scrollState: ScrollState = rememberScrollState(),
     swipeRefreshState: SwipeRefreshState,
-    setSelectedIndex: (Int) -> Unit,
+    scrollState: ScrollState = rememberScrollState(),
     initCreatedExpoList: () -> Unit,
+    setSelectedIndex: (Int) -> Unit,
     deleteSelectedExpo: (Int) -> Unit,
 ) {
     ExpoAndroidTheme { colors, _ ->
@@ -139,12 +139,12 @@ private fun ExpoCreatedScreen(
                         is GetExpoListUiState.Success -> {
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                 CreatedExpoList(
+                                    selectedIndex = selectedIndex,
                                     scrollState = scrollState,
                                     expoList = getExpoListUiState.data.toPersistentList(),
                                     onItemClick = { isSelected, index ->
                                         setSelectedIndex(if (isSelected) -1 else index)
                                     },
-                                    selectedIndex = selectedIndex,
                                 )
                                 Spacer(modifier = Modifier.height(32.dp))
                                 ExpoCreatedDeleteButton(

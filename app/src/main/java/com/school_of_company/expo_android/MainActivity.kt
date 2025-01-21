@@ -9,8 +9,10 @@ import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
+import com.school_of_company.expo.navigation.homeRoute // TODO: 둘이 다른이유 찾기  
 import com.school_of_company.expo_android.ui.ExpoApp
 import dagger.hilt.android.AndroidEntryPoint
+import com.school_of_company.navigation.sigInRoute // TODO: 둘이 다른이유 찾기 
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {

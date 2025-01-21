@@ -9,8 +9,8 @@ import javax.inject.Inject
 @HiltViewModel
 class AppViewModel @Inject constructor(
 ) : ViewModel() {
-    private val _uiState = mutableStateOf<AppLoginState>(AppLoginState.Loading)
-    val uiState: State<AppLoginState> = _uiState
+    private val _appLoginState = mutableStateOf<AppLoginState>(AppLoginState.Loading)
+    val appLoginState: State<AppLoginState> = this._appLoginState
 }
 
 sealed interface AppLoginState {

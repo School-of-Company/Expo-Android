@@ -22,17 +22,21 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         installSplashScreen().setKeepOnScreenCondition {
-            viewModel.uiState.value is AppLoginState.Loading
+            viewModel.appLoginState.value is AppLoginState.Loading
         }
 
         enableEdgeToEdge()
 
+        val startDestination = when (viewModel.appLoginState.value) {
+            is AppLoginState.Success -> homeRoute
+            else -> sigInRoute
+        }
+
         setContent {
-            CompositionLocalProvider {
-                ExpoAndroidTheme { _, _ ->
-                    ExpoApp(windowSizeClass = calculateWindowSizeClass(activity = this))
-                }
-            }
+            ExpoApp(
+                startDestination = startDestination,
+                windowSizeClass = calculateWindowSizeClass(activity = this),
+            )
         }
     }
 }

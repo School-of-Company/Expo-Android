@@ -27,12 +27,12 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
 
-        val startDestination = when (viewModel.appLoginState.value) {
-            is AppLoginState.Success -> homeRoute
-            else -> sigInRoute
-        }
-
         setContent {
+            val startDestination = when (viewModel.appLoginState.value) {
+                is AppLoginState.Success -> homeRoute
+                else -> sigInRoute
+            }
+
             ExpoApp(
                 startDestination = startDestination,
                 windowSizeClass = calculateWindowSizeClass(activity = this),

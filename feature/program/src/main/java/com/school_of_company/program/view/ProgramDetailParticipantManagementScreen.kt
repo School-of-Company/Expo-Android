@@ -2,12 +2,15 @@ package com.school_of_company.program.view
 
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -22,6 +25,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusManager
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -31,11 +37,13 @@ import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
+import com.school_of_company.design_system.component.textfield.ExpoNoneLabelTextField
 import com.school_of_company.design_system.component.topbar.ExpoTopBar
 import com.school_of_company.design_system.component.uistate.empty.ShowEmptyState
 import com.school_of_company.design_system.component.uistate.error.ShowErrorState
 import com.school_of_company.design_system.icon.DownArrowIcon
 import com.school_of_company.design_system.icon.LeftArrowIcon
+import com.school_of_company.design_system.icon.SearchIcon
 import com.school_of_company.design_system.icon.UpArrowIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
@@ -63,6 +71,10 @@ internal fun ProgramDetailParticipantManagementRoute(
     val participantFieldResponseListUiState by viewModel.participantFieldResponseListUiState.collectAsStateWithLifecycle()
     val traineeInformationUiState by viewModel.traineeResponseListUiState.collectAsStateWithLifecycle()
 
+    val fieldParticipantName by viewModel.fieldParticipantName.collectAsStateWithLifecycle()
+    val preParticipantName by viewModel.preParticipantName.collectAsStateWithLifecycle()
+    val traineeName by viewModel.traineeName.collectAsStateWithLifecycle()
+
     LaunchedEffect(id) {
 
         viewModel.getParticipantInformationList(
@@ -84,15 +96,32 @@ internal fun ProgramDetailParticipantManagementRoute(
         participantAheadResponseListUiState = participantAheadResponseListUiState,
         participantFieldResponseListUiState = participantFieldResponseListUiState,
         traineeInformationUiState = traineeInformationUiState,
-        getAheadParticipantList = { viewModel.getParticipantInformationList(
-            expoId = id,
-            type = ParticipantEnum.PRE
-        ) },
-        getFieldParticipantList = { viewModel.getParticipantInformationList(
-            expoId = id,
-            type = ParticipantEnum.FIELD
-        ) },
-        getTraineeList = { viewModel.getTraineeList(expoId = id) }
+        fieldParticipantName = fieldParticipantName,
+        preParticipantName = preParticipantName,
+        traineeName = traineeName,
+        onFieldParticipantNameChange = viewModel::onFieldParticipantNameChange,
+        onPreParticipantNameChange = viewModel::onPreParticipantNameChange,
+        onTraineeNameChange = viewModel::onTraineeNameChange,
+        getAheadParticipantList = { name ->
+            viewModel.getParticipantInformationList(
+                expoId = id,
+                type = ParticipantEnum.PRE,
+                name = name
+            )
+        },
+        getFieldParticipantList = { name ->
+            viewModel.getParticipantInformationList(
+                expoId = id,
+                type = ParticipantEnum.FIELD,
+                name = name
+            )
+        },
+        getTraineeList = { name ->
+            viewModel.getTraineeList(
+                expoId = id,
+                name = name
+            )
+        },
     )
 }
 
@@ -102,12 +131,19 @@ private fun ProgramDetailParticipantManagementScreen(
     onBackClick: () -> Unit,
     swipeRefreshState: SwipeRefreshState,
     scrollState: ScrollState = rememberScrollState(),
+    focusManager: FocusManager = LocalFocusManager.current,
     participantAheadResponseListUiState: ParticipantResponseListUiState,
     participantFieldResponseListUiState: ParticipantResponseListUiState,
     traineeInformationUiState: TraineeResponseListUiState,
-    getAheadParticipantList: () -> Unit,
-    getFieldParticipantList: () -> Unit,
-    getTraineeList: () -> Unit
+    fieldParticipantName: String,
+    preParticipantName: String,
+    traineeName: String,
+    onFieldParticipantNameChange: (String) -> Unit,
+    onPreParticipantNameChange: (String) -> Unit,
+    onTraineeNameChange: (String) -> Unit,
+    getAheadParticipantList: (String?) -> Unit,
+    getFieldParticipantList: (String?) -> Unit,
+    getTraineeList: (String?) -> Unit,
 ) {
     var participantTextState by rememberSaveable { mutableStateOf("사전 행사 참가자") }
     var isDropdownExpanded by rememberSaveable { mutableStateOf(false) }
@@ -121,6 +157,11 @@ private fun ProgramDetailParticipantManagementScreen(
                 .fillMaxSize()
                 .background(color = colors.white)
                 .padding(top = 68.dp)
+                .pointerInput(Unit) {
+                    detectTapGestures(
+                        onTap = { focusManager.clearFocus() }
+                    )
+                }
         ) {
             ExpoTopBar(
                 startIcon = {
@@ -224,6 +265,7 @@ private fun ProgramDetailParticipantManagementScreen(
                                         color = colors.main
                                     )
                                 }
+
                                 is ParticipantResponseListUiState.Success -> {
                                     Text(
                                         text = "${participantAheadResponseListUiState.data.size}명",
@@ -231,6 +273,7 @@ private fun ProgramDetailParticipantManagementScreen(
                                         color = colors.main
                                     )
                                 }
+
                                 is ParticipantResponseListUiState.Error -> {
                                     Text(
                                         text = "데이터를 불러올 수 없습니다..",
@@ -238,6 +281,7 @@ private fun ProgramDetailParticipantManagementScreen(
                                         color = colors.main
                                     )
                                 }
+
                                 is ParticipantResponseListUiState.Empty -> {
                                     Text(
                                         text = "0명",
@@ -257,6 +301,7 @@ private fun ProgramDetailParticipantManagementScreen(
                                         color = colors.main
                                     )
                                 }
+
                                 is ParticipantResponseListUiState.Success -> {
                                     Text(
                                         text = "${participantFieldResponseListUiState.data.size}명",
@@ -264,6 +309,7 @@ private fun ProgramDetailParticipantManagementScreen(
                                         color = colors.main
                                     )
                                 }
+
                                 is ParticipantResponseListUiState.Error -> {
                                     Text(
                                         text = "데이터를 불러올 수 없습니다..",
@@ -271,6 +317,7 @@ private fun ProgramDetailParticipantManagementScreen(
                                         color = colors.main
                                     )
                                 }
+
                                 is ParticipantResponseListUiState.Empty -> {
                                     Text(
                                         text = "0명",
@@ -290,6 +337,7 @@ private fun ProgramDetailParticipantManagementScreen(
                                         color = colors.main
                                     )
                                 }
+
                                 is TraineeResponseListUiState.Success -> {
                                     Text(
                                         text = "${traineeInformationUiState.data.size}명",
@@ -297,6 +345,7 @@ private fun ProgramDetailParticipantManagementScreen(
                                         color = colors.main
                                     )
                                 }
+
                                 is TraineeResponseListUiState.Error -> {
                                     Text(
                                         text = "데이터를 불러올 수 없습니다..",
@@ -304,6 +353,7 @@ private fun ProgramDetailParticipantManagementScreen(
                                         color = colors.main
                                     )
                                 }
+
                                 is TraineeResponseListUiState.Empty -> {
                                     Text(
                                         text = "0명",
@@ -321,9 +371,9 @@ private fun ProgramDetailParticipantManagementScreen(
                 state = swipeRefreshState,
                 onRefresh = {
                     when (selectedItem) {
-                        0 -> getAheadParticipantList()
-                        1 -> getFieldParticipantList()
-                        2 -> getTraineeList()
+                        0 -> getAheadParticipantList(null)
+                        1 -> getFieldParticipantList(null)
+                        2 -> getTraineeList(null)
                     }
                 },
                 indicator = { state, refreshTrigger ->
@@ -341,8 +391,32 @@ private fun ProgramDetailParticipantManagementScreen(
                             is ParticipantResponseListUiState.Success -> {
 
                                 Column {
+                                    Spacer(modifier = Modifier.height(18.dp))
 
-                                    Spacer(modifier = Modifier.height(24.dp))
+                                    ExpoNoneLabelTextField(
+                                        placeholder = "참가자 이름을 입력해주세요.",
+                                        isError = false,
+                                        isDisabled = false,
+                                        errorText = "",
+                                        value = preParticipantName,
+                                        onValueChange = onPreParticipantNameChange,
+                                        trailingIcon = {
+                                            SearchIcon(
+                                                tint = colors.black,
+                                                modifier = Modifier.clickable {
+                                                    getAheadParticipantList(
+                                                        preParticipantName
+                                                    )
+                                                }
+                                            )
+                                        },
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(44.dp)
+                                            .padding(horizontal = 16.dp)
+                                    )
+
+                                    Spacer(modifier = Modifier.height(16.dp))
 
                                     ProgramDetailParticipantTable(scrollState = scrollState)
 
@@ -352,12 +426,14 @@ private fun ProgramDetailParticipantManagementScreen(
                                     )
                                 }
                             }
+
                             is ParticipantResponseListUiState.Error -> {
                                 ShowErrorState(
                                     errorText = "사전 행사 참가자를 불러올 수 없습니다..",
                                     scrollState = scrollState
                                 )
                             }
+
                             is ParticipantResponseListUiState.Empty -> {
                                 ShowEmptyState(
                                     emptyMessage = "사전 행사 참가자가 존재하지 않습니다..",
@@ -372,8 +448,32 @@ private fun ProgramDetailParticipantManagementScreen(
                             is ParticipantResponseListUiState.Loading -> Unit
                             is ParticipantResponseListUiState.Success -> {
                                 Column {
+                                    Spacer(modifier = Modifier.height(18.dp))
 
-                                    Spacer(modifier = Modifier.height(24.dp))
+                                    ExpoNoneLabelTextField(
+                                        placeholder = "참가자 이름을 입력해주세요.",
+                                        isError = false,
+                                        isDisabled = false,
+                                        errorText = "",
+                                        value = fieldParticipantName,
+                                        onValueChange = onFieldParticipantNameChange,
+                                        trailingIcon = {
+                                            SearchIcon(
+                                                tint = colors.black,
+                                                modifier = Modifier.clickable {
+                                                    getFieldParticipantList(
+                                                        fieldParticipantName
+                                                    )
+                                                }
+                                            )
+                                        },
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(44.dp)
+                                            .padding(horizontal = 16.dp)
+                                    )
+
+                                    Spacer(modifier = Modifier.height(16.dp))
 
                                     ProgramDetailParticipantTable(scrollState = scrollState)
 
@@ -383,12 +483,14 @@ private fun ProgramDetailParticipantManagementScreen(
                                     )
                                 }
                             }
+
                             is ParticipantResponseListUiState.Error -> {
                                 ShowErrorState(
                                     errorText = "현장 행사 참가자를 불러올 수 없습니다..",
                                     scrollState = scrollState
                                 )
                             }
+
                             is ParticipantResponseListUiState.Empty -> {
                                 ShowEmptyState(
                                     emptyMessage = "현장 행사 참가자가 존재하지 않습니다..",
@@ -403,8 +505,34 @@ private fun ProgramDetailParticipantManagementScreen(
                             is TraineeResponseListUiState.Loading -> Unit
                             is TraineeResponseListUiState.Success -> {
                                 Column {
+                                    Spacer(modifier = Modifier.height(18.dp))
 
-                                    Spacer(modifier = Modifier.height(24.dp))
+
+                                    ExpoNoneLabelTextField(
+                                        placeholder = "참가자 이름을 입력해주세요.",
+                                        isError = false,
+                                        isDisabled = false,
+                                        errorText = "",
+                                        value = traineeName,
+                                        onValueChange = onTraineeNameChange,
+                                        trailingIcon = {
+                                            SearchIcon(
+                                                tint = colors.black,
+                                                modifier = Modifier.clickable {
+                                                    getTraineeList(
+                                                        traineeName
+                                                    )
+                                                }
+                                            )
+                                        },
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(44.dp)
+                                            .padding(horizontal = 16.dp)
+                                    )
+
+
+                                    Spacer(modifier = Modifier.height(16.dp))
 
                                     ProgramTraineeTable(scrollState = scrollState)
 
@@ -414,12 +542,14 @@ private fun ProgramDetailParticipantManagementScreen(
                                     )
                                 }
                             }
+
                             is TraineeResponseListUiState.Error -> {
                                 ShowErrorState(
                                     errorText = "사전 교원 원수를 불러올 수 없습니다..",
                                     scrollState = scrollState
                                 )
                             }
+
                             is TraineeResponseListUiState.Empty -> {
                                 ShowEmptyState(
                                     emptyMessage = "사전 교원 원수가 존재하지 않습니다..",
@@ -443,8 +573,14 @@ private fun HomeDetailParticipantManagementScreenPreview() {
         participantAheadResponseListUiState = ParticipantResponseListUiState.Loading,
         participantFieldResponseListUiState = ParticipantResponseListUiState.Loading,
         traineeInformationUiState = TraineeResponseListUiState.Loading,
+        fieldParticipantName = "",
+        preParticipantName = "",
+        traineeName = "",
+        onFieldParticipantNameChange = {},
+        onPreParticipantNameChange = {},
+        onTraineeNameChange = {},
         getAheadParticipantList = {},
         getFieldParticipantList = {},
-        getTraineeList = {}
+        getTraineeList = {},
     )
 }

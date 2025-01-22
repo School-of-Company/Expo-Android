@@ -125,17 +125,14 @@ class UserViewModel @Inject constructor(
     }
 
     internal fun logout() = viewModelScope.launch {
-        _logoutUiState.value = LogoutUiState.Loading
         logoutUseCase()
-            .onSuccess {
-                it.catch { remoteError ->
-                    _logoutUiState.value = LogoutUiState.Error(remoteError)
-                }.collect {
-                    _logoutUiState.value = LogoutUiState.Success
+            .asResult()
+            .collectLatest {
+                when (it) {
+                    is Result.Error -> _logoutUiState.value = LogoutUiState.Error(it.exception)
+                    Result.Loading -> _logoutUiState.value = LogoutUiState.Success
+                    is Result.Success -> _logoutUiState.value = LogoutUiState.Success
                 }
-            }
-            .onFailure { error ->
-                _logoutUiState.value = LogoutUiState.Error(error)
             }
     }
 }

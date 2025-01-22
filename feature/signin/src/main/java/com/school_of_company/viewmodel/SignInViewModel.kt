@@ -108,18 +108,6 @@ internal class SignInViewModel @Inject constructor(
         }
     }
 
-    private fun saveToken(token: AdminTokenResponseModel) = viewModelScope.launch {
-        _savedTokenUiState.value = SaveTokenUiState.Loading
-        saveTokenUseCase(token = token)
-            .onSuccess {
-                _savedTokenUiState.value = SaveTokenUiState.Success
-            }
-            .onFailure { remoteError ->
-                _savedTokenUiState.value = SaveTokenUiState.Error(remoteError)
-                setError(true)
-            }
-    }
-
     internal fun initSignIn() {
         setError(false)
         setIdError(false)

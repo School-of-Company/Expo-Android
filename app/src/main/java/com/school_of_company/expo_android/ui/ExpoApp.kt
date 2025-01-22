@@ -32,6 +32,7 @@ import com.school_of_company.user.navigation.profileRoute
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ExpoApp(
+    startDestination: String,
     windowSizeClass: WindowSizeClass, // 화면 크기 정보를 받습니다.
     appState: ExpoAppState = rememberExpoAppState(windowSizeClass = windowSizeClass) // 화면 크기에 맞게 앱 상태를 기억합니다.
 ) {
@@ -72,8 +73,9 @@ fun ExpoApp(
         ) { paddingValues ->
             // 네비게이션 호스트
             ExpoNavHost(
+                modifier = Modifier.padding(paddingValues = paddingValues),
+                startDestination = startDestination,
                 appState = appState,
-                modifier = Modifier.padding(paddingValues = paddingValues)
             )
         }
     }

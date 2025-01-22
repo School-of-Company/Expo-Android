@@ -36,9 +36,12 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
     @Provides
-    fun provideHttpLoggingInterceptor() : HttpLoggingInterceptor =
+    fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor =
         HttpLoggingInterceptor { message -> Log.v("Http", message) }
-            .setLevel(HttpLoggingInterceptor.Level.BASIC)
+            .setLevel(
+                if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY
+                else HttpLoggingInterceptor.Level.NONE
+            )
 
     @Provides
     @Singleton
@@ -47,7 +50,7 @@ object NetworkModule {
         httpLoggingInterceptor: HttpLoggingInterceptor,
         authInterceptor: AuthInterceptor,
         tokenAuthenticator: TokenAuthenticator,
-    ) : OkHttpClient {
+    ): OkHttpClient {
         return OkHttpClient.Builder()
             .cookieJar(CookieJar.NO_COOKIES)
             .connectTimeout(30, TimeUnit.SECONDS)
@@ -62,7 +65,7 @@ object NetworkModule {
                         .maxContentLength(250000)
                         .retainDataFor(ChuckInterceptor.Period.ONE_DAY)
                 } else {
-                    Interceptor {chain -> chain.proceed(chain.request()) }
+                    Interceptor { chain -> chain.proceed(chain.request()) }
                 }
             )
             .authenticator(tokenAuthenticator)
@@ -71,13 +74,13 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideMoshiInstance() : Moshi {
+    fun provideMoshiInstance(): Moshi {
         return Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
     }
 
     @Provides
     @Singleton
-    fun provideMoshiConverterFactory(moshi: Moshi) : MoshiConverterFactory {
+    fun provideMoshiConverterFactory(moshi: Moshi): MoshiConverterFactory {
         return MoshiConverterFactory.create(moshi)
     }
 
@@ -86,7 +89,7 @@ object NetworkModule {
     fun provideRetrofitInstance(
         okHttpClient: OkHttpClient,
         moshiConverterFactory: MoshiConverterFactory
-    ) : Retrofit {
+    ): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BuildConfig.BASE_URL)
             .client(okHttpClient)
@@ -95,42 +98,42 @@ object NetworkModule {
     }
 
     @Provides
-    fun provideAuthAPI(retrofit: Retrofit) : AuthAPI =
+    fun provideAuthAPI(retrofit: Retrofit): AuthAPI =
         retrofit.create(AuthAPI::class.java)
 
     @Provides
-    fun provideSmsAPI(retrofit: Retrofit) : SmsAPI =
+    fun provideSmsAPI(retrofit: Retrofit): SmsAPI =
         retrofit.create(SmsAPI::class.java)
 
     @Provides
-    fun provideExpoAPI(retrofit: Retrofit) : ExpoAPI =
+    fun provideExpoAPI(retrofit: Retrofit): ExpoAPI =
         retrofit.create(ExpoAPI::class.java)
 
     @Provides
-    fun provideImageAPI(retrofit: Retrofit) : ImageAPI =
+    fun provideImageAPI(retrofit: Retrofit): ImageAPI =
         retrofit.create(ImageAPI::class.java)
 
     @Provides
-    fun provideTrainingAPI(retrofit: Retrofit) : TrainingAPI =
+    fun provideTrainingAPI(retrofit: Retrofit): TrainingAPI =
         retrofit.create(TrainingAPI::class.java)
 
     @Provides
-    fun provideStandardAPI(retrofit: Retrofit) : StandardAPI =
+    fun provideStandardAPI(retrofit: Retrofit): StandardAPI =
         retrofit.create(StandardAPI::class.java)
 
     @Provides
-    fun provideAttendanceAPI(retrofit: Retrofit) : AttendanceAPI =
+    fun provideAttendanceAPI(retrofit: Retrofit): AttendanceAPI =
         retrofit.create(AttendanceAPI::class.java)
 
     @Provides
-    fun provideAdminAPI(retrofit: Retrofit) : AdminAPI =
+    fun provideAdminAPI(retrofit: Retrofit): AdminAPI =
         retrofit.create(AdminAPI::class.java)
 
     @Provides
-    fun provideTraineeAPI(retrofit: Retrofit) : TraineeAPI =
+    fun provideTraineeAPI(retrofit: Retrofit): TraineeAPI =
         retrofit.create(TraineeAPI::class.java)
 
     @Provides
-    fun provideParticipant(retrofit: Retrofit) : ParticipantAPI =
+    fun provideParticipant(retrofit: Retrofit): ParticipantAPI =
         retrofit.create(ParticipantAPI::class.java)
 }

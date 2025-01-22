@@ -130,7 +130,7 @@ class UserViewModel @Inject constructor(
             .collectLatest {
                 when (it) {
                     is Result.Error -> _logoutUiState.value = LogoutUiState.Error(it.exception)
-                    Result.Loading -> _logoutUiState.value = LogoutUiState.Success
+                    Result.Loading -> _logoutUiState.value = LogoutUiState.Loading
                     is Result.Success -> _logoutUiState.value = LogoutUiState.Success
                 }
             }

@@ -8,8 +8,11 @@ import javax.inject.Inject
 class AdminLogoutUseCase @Inject constructor(
     private val authRepository: AuthRepository,
 ) {
-    operator fun invoke(): Flow<Unit> = flow { // TODO: 로그아웃 테스트 
-        authRepository.adminLogout()
-        authRepository.deleteTokenData()
+    operator fun invoke(): Flow<Unit> = flow {
+        emit(
+            authRepository.adminLogout().collect {
+                authRepository.deleteTokenData()
+            }
+        )
     }
 }

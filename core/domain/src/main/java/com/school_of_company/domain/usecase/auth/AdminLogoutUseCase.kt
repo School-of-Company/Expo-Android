@@ -4,9 +4,10 @@ import com.school_of_company.data.repository.auth.AuthRepository
 import javax.inject.Inject
 
 class AdminLogoutUseCase @Inject constructor(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
 ) {
-    operator fun invoke() = runCatching {
+    suspend operator fun invoke() = runCatching {
         authRepository.adminLogout()
+        authRepository.deleteTokenData()
     }
 }

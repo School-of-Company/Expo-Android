@@ -47,6 +47,9 @@ dependencies {
     implementation(project(":feature:user"))
 
     implementation(libs.androidx.core.splashscreen)
+    implementation(project(":core:domain"))
+    implementation(project(":core:datastore"))
+    implementation(project(":core:model"))
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext)

@@ -6,6 +6,8 @@ import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.dataStoreFile
 import com.school_of_company.datastore.AuthToken
 import com.school_of_company.datastore.serializer.AuthTokenSerializer
+import com.school_of_company.datastore.serializer.KeystoreHelper
+import com.school_of_company.datastore.serializer.KeystoreHelperImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,13 +18,16 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DataStoreModule {
+    @Provides
+    @Singleton
+    fun provideKeystoreHelper(): KeystoreHelper = KeystoreHelperImpl()
 
     @Provides
     @Singleton
     fun provideAuthTokenDataSource(
         @ApplicationContext context: Context,
-        authTokenSerializer: AuthTokenSerializer
-    ) : DataStore<AuthToken> =
+        authTokenSerializer: AuthTokenSerializer,
+    ): DataStore<AuthToken> =
         // DataStoreFactory를 사용하여 DataStore을 생성하고 반환합니다.
         DataStoreFactory.create(
             // 생성된 DataStore에서 사용할 직렬화 객체를 지정합니다.

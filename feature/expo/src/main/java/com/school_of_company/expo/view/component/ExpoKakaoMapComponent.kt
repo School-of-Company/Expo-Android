@@ -14,6 +14,10 @@ import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.MapView
 import com.kakao.vectormap.camera.CameraUpdateFactory
+import com.kakao.vectormap.label.LabelOptions
+import com.kakao.vectormap.label.LabelStyle
+import com.kakao.vectormap.label.LabelStyles
+import com.school_of_company.design_system.R
 import com.school_of_company.ui.toast.makeToast
 
 @Composable
@@ -42,8 +46,32 @@ internal fun HomeKakaoMap(
 
                     object : KakaoMapReadyCallback() {
                         override fun onMapReady(kakaoMap: KakaoMap) {
-                            val cameraUpdate = CameraUpdateFactory.newCenterPosition(LatLng.from(locationX, locationY))
+                            // 카메라를 locationX, locationY로 이동
+                            val cameraUpdate = CameraUpdateFactory.newCenterPosition(
+                                LatLng.from(
+                                    locationX,
+                                    locationY
+                                )
+                            )
                             kakaoMap.moveCamera(cameraUpdate)
+
+                            // 고정 라벨 위치 (예: 특정 x, y 좌표)
+
+                            val fixedLabelLatLng = LatLng.from(locationX, locationY) // 고정 좌표 설정
+                            // 라벨 스타일 정의
+                            val styles = kakaoMap.labelManager?.addLabelStyles(
+                                LabelStyles.from(
+                                    LabelStyle.from(R.drawable.ic_downarrowicon)
+                                        .setAnchorPoint(0.5f, 1f)
+                                )
+                            )
+
+                            // 고정된 위치에 라벨 추가
+                            kakaoMap.labelManager?.layer?.addLabel(
+                                LabelOptions.from("fixedLabel", fixedLabelLatLng) // 고정 좌표로 라벨 추가
+                                    .setStyles(styles) // 스타일 적용
+                                    .setRank(1)
+                            )
                         }
 
                         override fun getPosition(): LatLng {

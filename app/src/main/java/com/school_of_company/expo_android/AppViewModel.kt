@@ -21,7 +21,7 @@ class AppViewModel @Inject constructor(
     private val adminTokenRefreshUseCase: AdminTokenRefreshUseCase,
 ) : ViewModel() {
     private val _appLoginState = mutableStateOf<AppLoginState>(AppLoginState.Loading)
-    val appLoginState: State<AppLoginState> = _appLoginState
+    internal val appLoginState: State<AppLoginState> = _appLoginState
 
     init {
         tokenRefresh()
@@ -60,7 +60,7 @@ class AppViewModel @Inject constructor(
 
 }
 
-sealed interface AppLoginState {
+internal sealed interface AppLoginState {
     object Loading : AppLoginState
     object Success : AppLoginState
     object Fail : AppLoginState

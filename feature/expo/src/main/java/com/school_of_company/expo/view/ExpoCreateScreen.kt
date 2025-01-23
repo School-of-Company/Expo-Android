@@ -269,6 +269,13 @@ private fun ExpoCreateScreen(
     onTrainingProgramChange: (Int, TrainingDtoModel) -> Unit,
     onStandardProgramChange: (Int, StandardRequestModel) -> Unit,
 ) {
+/*    LaunchedEffect(locationState) {
+        snapshotFlow { locationState }
+            .filter { it.isNotEmpty() && it.length >= 2 }
+            .debounce(400L)
+            .collectLatest(searchLocation)
+    }*/
+
     val (openTrainingSettingBottomSheet, isOpenTrainingSettingBottomSheet) = rememberSaveable { mutableStateOf(false) }
     val (openStandardSettingBottomSheet, isOpenStandardSettingBottomSheet) = rememberSaveable { mutableStateOf(false) }
 
@@ -511,14 +518,41 @@ private fun ExpoCreateScreen(
 
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top)) {
 
-                        ExpoLocationIconTextField(
-                            placeholder = "장소를 입력해주세요.",
-                            isDisabled = false,
-                            onValueChange = onLocationChange,
-                            onButtonClicked = { /* todo : Location Web Hook */ },
-                            value = locationState,
-                        )
+ /*                       Column(
+                            verticalArrangement = Arrangement.spacedBy(30.dp),
+                            horizontalAlignment = Alignment.Start,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            ExpoLocationIconTextField(
+                                placeholder = "장소를 입력해주세요.",
+                                isDisabled = false,
+                                onValueChange = onLocationChange,
+                                onButtonClicked = { *//* todo : Location Web Hook *//* },
+                                value = locationState,
+                            )
 
+                            if (searchResult.isNotEmpty()) {
+                                LazyColumn(
+                                    modifier = Modifier.padding(horizontal = 10.dp)
+                                ) {
+                                    itemsIndexed(searchResult) { index, result ->
+                                        AddressSearchResultItem(
+                                            result = result,
+                                            onClick = { onSpotChange(result.jibunAddr) }
+                                        )
+                                        Spacer(modifier = Modifier.height(16.dp))
+                                        if (index < searchResult.lastIndex) {
+                                            HorizontalDivider(
+                                                color = DoColor.GRAY100,
+                                                thickness = 1.dp,
+                                                modifier = Modifier.padding(horizontal = 16.dp)
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        }
+*/
                         NoneLimitedLengthTextField(
                             value = addressState,
                             placeholder = "상세주소를 입력해주세요.",
@@ -603,28 +637,29 @@ private fun ExpoCreateScreen(
 @Composable
 private fun ExpoCreateScreenPreview() {
     ExpoCreateScreen(
-        imageUri = null,
-        onImageClick = {},
-        modifyTitleState = "",
         startedDateState = "",
         endedDateState = "",
+        modifyTitleState = "",
         introduceTitleState = "",
         addressState = "",
         locationState = "",
-        onModifyTitleChange = {},
-        onLocationChange = {},
-        onAddressChange = {},
+        imageUri = null,
+        trainingProgramTextState = emptyList(),
+        standardProgramTextState = emptyList(),
+        onImageClick = {},
+        onExpoCreateCallBack = {},
+        onAddTrainingProgram = {},
+        onAddStandardProgram = {},
         onStartedDateChange = {},
         onEndedDateChange = {},
+        onModifyTitleChange = {},
         onIntroduceTitleChange = {},
-        onExpoCreateCallBack = {},
-        trainingProgramTextState = emptyList(),
-        onTrainingProgramChange = { _, _ -> },
-        onAddTrainingProgram = {},
+        onAddressChange = {},
+        onLocationChange = {},
         onRemoveTrainingProgram = {},
-        standardProgramTextState = emptyList(),
-        onStandardProgramChange = { _, _ -> },
-        onAddStandardProgram = {},
         onRemoveStandardProgram = {},
+        searchLocation = { _ -> },
+        onTrainingProgramChange = { _, _ -> },
+        onStandardProgramChange = { _, _ -> },
     )
 }

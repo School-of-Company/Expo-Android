@@ -2,6 +2,7 @@ package com.school_of_company.expo.viewmodel
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -33,13 +34,13 @@ import com.school_of_company.expo.viewmodel.uistate.ModifyTrainingProgramUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterExpoInformationUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterStandardProgramListUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterTrainingProgramListUiState
-import com.school_of_company.model.model.expo.ExpoRequestAndResponseModel
 import com.school_of_company.model.model.standard.StandardRequestModel
 import com.school_of_company.model.model.training.TrainingDtoModel
 import com.school_of_company.model.param.expo.ExpoAllRequestParam
 import com.school_of_company.model.param.expo.StandardProRequestParam
 import com.school_of_company.model.param.expo.TrainingProRequestParam
 import com.school_of_company.ui.util.autoFormatToDateTime
+import com.school_of_company.ui.util.formatNoneHyphenServerDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -162,8 +163,8 @@ internal class ExpoViewModel @Inject constructor(
 
                         result.data.let {
                             onModifyTitleChange(it.title)
-                            onStartedDateChange(it.startedDay)
-                            onEndedDateChange(it.finishedDay)
+                            onStartedDateChange(it.startedDay.formatNoneHyphenServerDate())
+                            onEndedDateChange(it.finishedDay.formatNoneHyphenServerDate())
                             onIntroduceTitleChange(it.description)
                             onLocationChange(it.location)
                             onCoverImageChange(it.coverImage)
@@ -198,7 +199,7 @@ internal class ExpoViewModel @Inject constructor(
                 .asResult()
                 .collectLatest { result ->
                     when (result) {
-                        Result.Loading -> _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Loading
+                        is Result.Loading -> _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Loading
                         is Result.Success -> _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Success(result.data)
                         is Result.Error -> _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Error(result.exception)
                     }
@@ -244,6 +245,7 @@ internal class ExpoViewModel @Inject constructor(
             }
             .onFailure { error ->
                 _modifyExpoInformationUiState.value = ModifyExpoInformationUiState.Error(error)
+                Log.e("getExpoInformation", error.toString())
             }
     }
 
@@ -444,8 +446,8 @@ internal class ExpoViewModel @Inject constructor(
                         _standardProgramTextState.value = result.data.map { program ->
                             StandardProRequestParam(
                                 title = program.title,
-                                startedAt = program.startedAt,
-                                endedAt = program.endedAt
+                                startedAt = program.startedAt.formatNoneHyphenServerDate(),
+                                endedAt = program.endedAt.formatNoneHyphenServerDate()
                             )
                         }
                     }
@@ -467,8 +469,8 @@ internal class ExpoViewModel @Inject constructor(
                         _trainingProgramTextState.value = result.data.map { program ->
                             TrainingProRequestParam(
                                 title = program.title,
-                                startedAt = program.startedAt,
-                                endedAt = program.endedAt,
+                                startedAt = program.startedAt.formatNoneHyphenServerDate(),
+                                endedAt = program.endedAt.formatNoneHyphenServerDate(),
                                 category = program.category
                             )
                         }

@@ -1,5 +1,6 @@
 package com.school_of_company.signin.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,10 +9,7 @@ import com.school_of_company.common.regex.checkPasswordRegex
 import com.school_of_company.common.result.Result
 import com.school_of_company.common.result.asResult
 import com.school_of_company.domain.usecase.auth.AdminSignInRequestUseCase
-import com.school_of_company.domain.usecase.auth.SaveTokenUseCase
-import com.school_of_company.model.model.auth.AdminTokenResponseModel
 import com.school_of_company.model.param.auth.AdminSignInRequestParam
-import com.school_of_company.signin.viewmodel.uistate.SaveTokenUiState
 import com.school_of_company.signin.viewmodel.uistate.SignInUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +21,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class SignInViewModel @Inject constructor(
-    private val saveTokenUseCase: SaveTokenUseCase,
     private val signInUseCase: AdminSignInRequestUseCase,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
@@ -34,9 +31,6 @@ internal class SignInViewModel @Inject constructor(
 
     private val _signInUiState = MutableStateFlow<SignInUiState>(SignInUiState.Loading)
     internal val signInUiState = _signInUiState.asStateFlow()
-
-    private val _savedTokenUiState = MutableStateFlow<SaveTokenUiState>(SaveTokenUiState.Loading)
-    internal val savedTokenUiState = _savedTokenUiState.asStateFlow()
 
     internal var id = savedStateHandle.getStateFlow(key = ID, initialValue = "")
 
@@ -85,17 +79,10 @@ internal class SignInViewModel @Inject constructor(
         } else {
             signInUseCase(body = body)
                 .asResult()
-                .collectLatest { result ->
+                .collectLatest { result->
                     when (result) {
-                        is Result.Loading -> {
-                            _signInUiState.value = SignInUiState.Loading
-                        }
-
-                        is Result.Success -> {
-                            _signInUiState.value = SignInUiState.Success(result.data)
-                            saveToken(result.data)
-                        }
-
+                        Result.Loading -> _signInUiState.value = SignInUiState.Loading
+                        is Result.Success -> _signInUiState.value = SignInUiState.Success
                         is Result.Error -> {
                             _signInUiState.value = SignInUiState.Error(result.exception)
                             result.exception.errorHandling {
@@ -106,18 +93,6 @@ internal class SignInViewModel @Inject constructor(
                     }
                 }
         }
-    }
-
-    private fun saveToken(token: AdminTokenResponseModel) = viewModelScope.launch {
-        _savedTokenUiState.value = SaveTokenUiState.Loading
-        saveTokenUseCase(token = token)
-            .onSuccess {
-                _savedTokenUiState.value = SaveTokenUiState.Success
-            }
-            .onFailure { remoteError ->
-                _savedTokenUiState.value = SaveTokenUiState.Error(remoteError)
-                setError(true)
-            }
     }
 
     internal fun initSignIn() {

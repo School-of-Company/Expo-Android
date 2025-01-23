@@ -43,7 +43,6 @@ import com.school_of_company.design_system.icon.EyeIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.model.param.auth.AdminSignInRequestParam
 import com.school_of_company.signin.viewmodel.SignInViewModel
-import com.school_of_company.signin.viewmodel.uistate.SaveTokenUiState
 import com.school_of_company.signin.viewmodel.uistate.SignInUiState
 import com.school_of_company.ui.toast.makeToast
 
@@ -56,7 +55,6 @@ internal fun SignInRoute(
     viewModel: SignInViewModel = hiltViewModel()
 ) {
     val signInUiState by viewModel.signInUiState.collectAsStateWithLifecycle()
-    val saveTokenUiState by viewModel.savedTokenUiState.collectAsStateWithLifecycle()
     val idState by viewModel.id.collectAsStateWithLifecycle()
     val passwordState by viewModel.password.collectAsStateWithLifecycle()
     val isEmailError by viewModel.isEmailError.collectAsStateWithLifecycle()
@@ -69,25 +67,12 @@ internal fun SignInRoute(
         }
     }
 
-    DisposableEffect(signInUiState, saveTokenUiState) {
+    DisposableEffect(signInUiState) {
         when (signInUiState) {
             is SignInUiState.Loading -> Unit
             is SignInUiState.Success -> {
-                when (saveTokenUiState) {
-                    is SaveTokenUiState.Loading -> Unit
-                    is SaveTokenUiState.Success -> {
-                        onSignInClick()
-                        makeToast(context, "로그인 성공")
-                    }
-
-                    is SaveTokenUiState.Error -> {
-                        viewModel.setError(true)
-                        onErrorToast(
-                            (saveTokenUiState as SaveTokenUiState.Error).exception,
-                            R.string.expection_saveToken
-                        )
-                    }
-                }
+                onSignInClick()
+                makeToast(context, "로그인 성공")
             }
 
             is SignInUiState.NotFound -> {

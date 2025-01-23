@@ -14,14 +14,14 @@ data class ExpoAllRequest(
     @Json(name = "x") val x: Float,
     @Json(name = "y") val y: Float,
     @Json(name = "addStandardProRequestDto") val addStandardProRequestDto: List<StandardProRequestDto>,
-    @Json(name = "addTrainingProRequestDto") val addTrainingProRequestDto: List<TrainingProRequestDto>
+    @Json(name = "addTrainingProRequestDto") val addTrainingProRequestDto: List<TrainingProRequestDto>,
 )
 
 @JsonClass(generateAdapter = true)
 data class StandardProRequestDto(
     @Json(name = "title") val title: String,
     @Json(name = "startedAt") val startedAt: String, // yyyy-MM-DD HH:mm
-    @Json(name = "endedAt") val endedAt: String // yyyy-MM-DD HH:mm
+    @Json(name = "endedAt") val endedAt: String, // yyyy-MM-DD HH:mm
 )
 
 @JsonClass(generateAdapter = true)
@@ -29,5 +29,5 @@ data class TrainingProRequestDto(
     @Json(name = "title") val title: String,
     @Json(name = "startedAt") val startedAt: String, // yyyy-MM-dd HH:mm
     @Json(name = "endedAt") val endedAt: String, // yyyy-MM-dd HH:mm
-    @Json(name = "category") val category: String // ESSENTIAL, CHOICE
+    @Json(name = "category") val category: String, // ESSENTIAL, CHOICE
 )

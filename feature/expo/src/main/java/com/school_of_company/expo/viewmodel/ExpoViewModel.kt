@@ -60,11 +60,7 @@ internal class ExpoViewModel @Inject constructor(
     private val trainingProgramListUseCase: TrainingProgramListUseCase,
     private val deleteExpoInformationUseCase: DeleteExpoInformationUseCase,
     private val modifyExpoInformationUseCase: ModifyExpoInformationUseCase,
-    private val modifyTrainingProgramUseCase: ModifyTrainingProgramUseCase,
-    private val modifyStandardProgramUseCase: ModifyStandardProgramUseCase,
     private val registerExpoInformationUseCase: RegisterExpoInformationUseCase,
-    private val registerStandardProgramListUseCase: RegisterStandardListProgramUseCase,
-    private val registerTrainingProgramListUseCase: RegisterTrainingProgramListUseCase,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     companion object {

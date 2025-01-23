@@ -134,4 +134,8 @@ object NetworkModule {
     @Provides
     fun provideParticipantApi(retrofit: Retrofit) : ParticipantAPI =
         retrofit.create(ParticipantAPI::class.java)
+
+    @Provides
+    fun provideAddressApi(retrofit: Retrofit) : AddressApi =
+        retrofit.create(AddressApi::class.java)
 }

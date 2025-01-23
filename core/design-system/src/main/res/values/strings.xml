@@ -92,6 +92,8 @@
     <string name="get_address_success">주소검색을 성공했습니다</string>
     <string name="get_address_fail">주소검색을 실패했습니다.</string>
 
+    <string name="get_address_lack_of_length">2글자 이상 입력해주세요</string>
+
     <string name="expo_image_size_fail">박람회 이미지를 다시 업로드 해주세요.</string>
 
     <string name="write_certification">인증 번호 입력</string>

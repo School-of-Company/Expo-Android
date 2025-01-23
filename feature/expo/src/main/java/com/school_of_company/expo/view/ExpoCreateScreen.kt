@@ -18,10 +18,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -31,6 +34,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -64,11 +68,13 @@ import com.school_of_company.design_system.component.textfield.NoneLimitedLength
 import com.school_of_company.design_system.icon.ImageIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
+import com.school_of_company.expo.view.component.AddressSearchResultItem
 import com.school_of_company.expo.view.component.ExpoAddTextField
 import com.school_of_company.expo.view.component.ExpoSettingBottomSheet
 import com.school_of_company.expo.view.component.ExpoStandardAddTextField
 import com.school_of_company.expo.view.component.ExpoStandardSettingBottomSheet
 import com.school_of_company.expo.viewmodel.ExpoViewModel
+import com.school_of_company.expo.viewmodel.uistate.GetAddressUiState
 import com.school_of_company.expo.viewmodel.uistate.ImageUpLoadUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterExpoInformationUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterStandardProgramListUiState
@@ -80,6 +86,10 @@ import com.school_of_company.ui.keyBoardOption.numberKeyboardOptions
 import com.school_of_company.ui.toast.makeToast
 import com.school_of_company.ui.util.filterNonDigits
 import com.school_of_company.ui.visualTransformation.DateTimeVisualTransformation
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.filter
 
 @Composable
 internal fun ExpoCreateRoute(
@@ -209,6 +219,7 @@ internal fun ExpoCreateRoute(
         onIntroduceTitleChange = viewModel::onIntroduceTitleChange,
         onAddressChange = viewModel::onAddressChange,
         onLocationChange = viewModel::onLocationChange,
+        searchLocation = viewModel::searchLocation,
         onExpoCreateCallBack = {
             if (selectedImageUri != null) {
                 viewModel.imageUpLoad(context, selectedImageUri!!)
@@ -227,7 +238,7 @@ internal fun ExpoCreateRoute(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, FlowPreview::class)
 @Composable
 private fun ExpoCreateScreen(
     modifier: Modifier = Modifier,
@@ -252,6 +263,7 @@ private fun ExpoCreateScreen(
     onIntroduceTitleChange: (String) -> Unit,
     onAddressChange: (String) -> Unit,
     onLocationChange: (String) -> Unit,
+    searchLocation: (String) -> Unit,
     onRemoveTrainingProgram: (Int) -> Unit,
     onRemoveStandardProgram: (Int) -> Unit,
     onTrainingProgramChange: (Int, TrainingDtoModel) -> Unit,

@@ -2,7 +2,6 @@ package com.school_of_company.expo.viewmodel
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -25,11 +24,7 @@ import com.school_of_company.expo.viewmodel.uistate.GetStandardProgramListUiStat
 import com.school_of_company.expo.viewmodel.uistate.GetTrainingProgramListUiState
 import com.school_of_company.expo.viewmodel.uistate.ImageUpLoadUiState
 import com.school_of_company.expo.viewmodel.uistate.ModifyExpoInformationUiState
-import com.school_of_company.expo.viewmodel.uistate.ModifyStandardProgramUiState
-import com.school_of_company.expo.viewmodel.uistate.ModifyTrainingProgramUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterExpoInformationUiState
-import com.school_of_company.expo.viewmodel.uistate.RegisterStandardProgramListUiState
-import com.school_of_company.expo.viewmodel.uistate.RegisterTrainingProgramListUiState
 import com.school_of_company.model.param.expo.ExpoAllRequestParam
 import com.school_of_company.model.param.expo.ExpoModifyRequestParam
 import com.school_of_company.model.param.expo.StandardProIdRequestParam
@@ -228,7 +223,6 @@ internal class ExpoViewModel @Inject constructor(
             }
             .onFailure { error ->
                 _modifyExpoInformationUiState.value = ModifyExpoInformationUiState.Error(error)
-                Log.e("getExpoInformation", error.toString())
             }
     }
 

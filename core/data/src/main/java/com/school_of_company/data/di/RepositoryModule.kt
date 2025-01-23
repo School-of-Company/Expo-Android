@@ -10,6 +10,8 @@ import com.school_of_company.data.repository.expo.ExpoRepository
 import com.school_of_company.data.repository.expo.ExpoRepositoryImpl
 import com.school_of_company.data.repository.image.ImageRepository
 import com.school_of_company.data.repository.image.ImageRepositoryImpl
+import com.school_of_company.data.repository.juso.AddressRepository
+import com.school_of_company.data.repository.juso.AddressRepositoryImpl
 import com.school_of_company.data.repository.participant.ParticipantRepository
 import com.school_of_company.data.repository.participant.ParticipantRepositoryImpl
 import com.school_of_company.data.repository.sms.SmsRepository
@@ -79,4 +81,8 @@ abstract class RepositoryModule {
         participantRepositoryImpl: ParticipantRepositoryImpl
     ) : ParticipantRepository
 
+    @Binds
+    abstract fun bindAddressRepository(
+        addressRepositoryImpl: AddressRepositoryImpl
+    ) : AddressRepository
 }

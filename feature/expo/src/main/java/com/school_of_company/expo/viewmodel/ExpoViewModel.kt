@@ -13,6 +13,7 @@ import com.school_of_company.domain.usecase.expo.GetExpoInformationUseCase
 import com.school_of_company.domain.usecase.expo.GetExpoListUseCase
 import com.school_of_company.domain.usecase.expo.ModifyExpoInformationUseCase
 import com.school_of_company.domain.usecase.expo.RegisterExpoInformationUseCase
+import com.school_of_company.domain.usecase.juso.GetAddressUseCase
 import com.school_of_company.domain.usecase.standard.ModifyStandardProgramUseCase
 import com.school_of_company.domain.usecase.standard.RegisterStandardListProgramUseCase
 import com.school_of_company.domain.usecase.standard.StandardProgramListUseCase
@@ -22,6 +23,7 @@ import com.school_of_company.domain.usecase.training.TrainingProgramListUseCase
 import com.school_of_company.expo.enum.TrainingCategory
 import com.school_of_company.expo.util.getMultipartFile
 import com.school_of_company.expo.viewmodel.uistate.DeleteExpoInformationUiState
+import com.school_of_company.expo.viewmodel.uistate.GetAddressUiState
 import com.school_of_company.expo.viewmodel.uistate.GetExpoInformationUiState
 import com.school_of_company.expo.viewmodel.uistate.GetExpoListUiState
 import com.school_of_company.expo.viewmodel.uistate.GetStandardProgramListUiState
@@ -51,6 +53,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class ExpoViewModel @Inject constructor(
+    private val getAddressUseCase: GetAddressUseCase,
     private val getExpoListUseCase: GetExpoListUseCase,
     private val imageUpLoadUseCase: ImageUpLoadUseCase,
     private val getExpoInformationUseCase: GetExpoInformationUseCase,
@@ -91,6 +94,9 @@ internal class ExpoViewModel @Inject constructor(
 
     private val _getExpoInformationUiState = MutableStateFlow<GetExpoInformationUiState>(GetExpoInformationUiState.Loading)
     internal val getExpoInformationUiState = _getExpoInformationUiState.asStateFlow()
+
+    private val _getAddressUiState = MutableStateFlow<GetAddressUiState>(GetAddressUiState.Loading)
+    internal val getAddressUiState = _getAddressUiState.asStateFlow()
 
     private val _registerExpoInformationUiState = MutableStateFlow<RegisterExpoInformationUiState>(RegisterExpoInformationUiState.Loading)
     internal val registerExpoInformationUiState = _registerExpoInformationUiState.asStateFlow()
@@ -450,6 +456,19 @@ internal class ExpoViewModel @Inject constructor(
                 }
             }
     }
+
+    internal fun searchLocation(searchText: String) =
+        viewModelScope.launch {
+            getAddressUseCase(searchText = searchText)
+                .asResult()
+                .collectLatest { result ->
+                    when (result) {
+                        is Result.Loading -> _getAddressUiState.value = GetAddressUiState.Loading
+                        is Result.Success -> _getAddressUiState.value = GetAddressUiState.Success(result.data)
+                        is Result.Error -> _getAddressUiState.value = GetAddressUiState.Error(result.exception)
+                    }
+                }
+        }
 
     internal fun updateTrainingProgramText(index: Int, updateItem: TrainingDtoModel) {
         _trainingProgramTextState.value = _trainingProgramTextState.value.toMutableList().apply {

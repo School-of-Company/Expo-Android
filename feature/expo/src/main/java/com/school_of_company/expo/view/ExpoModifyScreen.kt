@@ -83,6 +83,9 @@ import com.school_of_company.expo.viewmodel.uistate.ModifyTrainingProgramUiState
 import com.school_of_company.model.model.expo.ExpoRequestAndResponseModel
 import com.school_of_company.model.model.standard.StandardRequestModel
 import com.school_of_company.model.model.training.TrainingDtoModel
+import com.school_of_company.model.param.expo.ExpoAllRequestParam
+import com.school_of_company.model.param.expo.StandardProRequestParam
+import com.school_of_company.model.param.expo.TrainingProRequestParam
 import com.school_of_company.ui.keyBoardOption.numberKeyboardOptions
 import com.school_of_company.ui.toast.makeToast
 import com.school_of_company.ui.util.filterNonDigits
@@ -97,10 +100,6 @@ internal fun ExpoModifyRoute(
 ) {
     val modifyExpoInformationUiState by viewModel.modifyExpoInformationUiState.collectAsStateWithLifecycle()
     val imageUpLoadUiState by viewModel.imageUpLoadUiState.collectAsStateWithLifecycle()
-    val modifyTrainingProgramUiState by viewModel.modifyTrainingProgramUiState.collectAsStateWithLifecycle()
-    val modifyStandardProgramUiState by viewModel.modifyStandardProgramUiState.collectAsStateWithLifecycle()
-    val getTrainingProgramUiState by viewModel.getTrainingProgramListUiState.collectAsStateWithLifecycle()
-    val getStandardProgramUiState by viewModel.getStandardProgramListUiState.collectAsStateWithLifecycle()
 
     val modifyTitleState by viewModel.modify_title.collectAsStateWithLifecycle()
     val startedDateState by viewModel.started_date.collectAsStateWithLifecycle()
@@ -111,9 +110,6 @@ internal fun ExpoModifyRoute(
     val coverImageState by viewModel.cover_image.collectAsStateWithLifecycle()
     val trainingProgramTextState by viewModel.trainingProgramTextState.collectAsStateWithLifecycle()
     val standardProgramTextState by viewModel.standardProgramTextState.collectAsStateWithLifecycle()
-
-    var trainingProgramId by remember { mutableStateOf<Long?>(null) }
-    var standardProgramId by remember { mutableStateOf<Long?>(null) }
 
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
@@ -142,93 +138,43 @@ internal fun ExpoModifyRoute(
         }
     }
 
-    fun modifyExpoInformation(imageUrl: String) {
-        if (trainingProgramId != null && standardProgramId != null) {
-            viewModel.modifyExpoInformation(
-                expoId = id,
-                body = ExpoRequestAndResponseModel(
-                    title = modifyTitleState,
-                    startedDay = startedDateState,
-                    finishedDay = endedDateState,
-                    description = introduceTitleState,
-                    location = locationState,
-                    coverImage = imageUrl,
-                    x = 35.14308f,
-                    y = 126.80043f
-                )
-            )
-            viewModel.modifyTrainingProgram(
-                trainingProId = trainingProgramId!!,
-                body = TrainingDtoModel(
-                    title = "",
-                    startedAt = "",
-                    endedAt = "",
-                    category = TrainingCategory.CHOICE.name
-                )
-            )
-            viewModel.modifyStandardProgram(
-                standardProId = standardProgramId!!,
-                body = StandardRequestModel(
-                    title = "",
-                    startedAt = "",
-                    endedAt = ""
-                )
-            )
-        } else {
-            onErrorToast(null, R.string.expo_modify_fail)
-        }
-    }
-
-    LaunchedEffect(getTrainingProgramUiState) {
-        if (getTrainingProgramUiState is GetTrainingProgramListUiState.Success) {
-            trainingProgramId =
-                (getTrainingProgramUiState as GetTrainingProgramListUiState.Success).data.firstOrNull()?.id
-        }
-    }
-
-    LaunchedEffect(getStandardProgramUiState) {
-        if (getStandardProgramUiState is GetStandardProgramListUiState.Success) {
-            standardProgramId =
-                (getStandardProgramUiState as GetStandardProgramListUiState.Success).data.firstOrNull()?.id
-        }
-    }
-
     LaunchedEffect(imageUpLoadUiState) {
-        if (imageUpLoadUiState is ImageUpLoadUiState.Success) {
-            val imageUrl = (imageUpLoadUiState as ImageUpLoadUiState.Success).data.imageURL
-            modifyExpoInformation(imageUrl)
-        } else if (imageUpLoadUiState is ImageUpLoadUiState.Error) {
-            onErrorToast(null, R.string.expo_image_fail)
+        when (imageUpLoadUiState) {
+            is ImageUpLoadUiState.Loading -> Unit
+            is ImageUpLoadUiState.Success -> {
+                viewModel.modifyExpoInformation(
+                    expoId = id,
+                    body = ExpoAllRequestParam(
+                        title = viewModel.modify_title.value,
+                        startedDay = viewModel.started_date.value,
+                        finishedDay = viewModel.ended_date.value,
+                        description = viewModel.introduce_title.value,
+                        location = viewModel.location.value,
+                        coverImage = (imageUpLoadUiState as ImageUpLoadUiState.Success).data.imageURL,
+                        x = 37.511734f,
+                        y = 127.05905f,
+                        addStandardProRequestDto = standardProgramTextState,
+                        addTrainingProRequestDto = trainingProgramTextState
+                    )
+                )
+            }
+
+            is ImageUpLoadUiState.Error -> {
+                onErrorToast(null, R.string.expo_image_fail)
+            }
         }
     }
 
-    var hasErrorBeenHandled by remember { mutableStateOf(false) }
-
-    LaunchedEffect(
-        modifyExpoInformationUiState,
-        modifyTrainingProgramUiState,
-        modifyStandardProgramUiState
-    ) {
-        val allTasksSuccess =
-            modifyExpoInformationUiState is ModifyExpoInformationUiState.Success &&
-                    modifyTrainingProgramUiState is ModifyTrainingProgramUiState.Success &&
-                    modifyStandardProgramUiState is ModifyStandardProgramUiState.Success
-
-        val anyTaskError = modifyExpoInformationUiState is ModifyExpoInformationUiState.Error ||
-                modifyTrainingProgramUiState is ModifyTrainingProgramUiState.Error ||
-                modifyStandardProgramUiState is ModifyStandardProgramUiState.Error
-
-        when {
-            allTasksSuccess -> {
-                hasErrorBeenHandled = false
+    LaunchedEffect(modifyExpoInformationUiState) {
+        when (modifyExpoInformationUiState) {
+            is ModifyExpoInformationUiState.Loading -> Unit
+            is ModifyExpoInformationUiState.Success -> {
                 onBackClick()
                 viewModel.resetExpoInformation()
                 viewModel.initModifyExpo()
                 makeToast(context, "박람회 수정을 완료하였습니다.")
             }
-
-            anyTaskError && !hasErrorBeenHandled -> {
-                hasErrorBeenHandled = true
+            is ModifyExpoInformationUiState.Error -> {
                 onErrorToast(null, R.string.expo_modify_fail)
             }
         }
@@ -286,8 +232,8 @@ private fun ExpoModifyScreen(
     addressState: String,
     locationState: String,
     introduceTitleState: String,
-    trainingProgramTextState: List<TrainingDtoModel>,
-    standardProgramTextState: List<StandardRequestModel>,
+    trainingProgramTextState: List<TrainingProRequestParam>,
+    standardProgramTextState: List<StandardProRequestParam>,
     onAddStandardProgram: () -> Unit,
     onAddTrainingProgram: () -> Unit,
     onStartedDateChange: (String) -> Unit,
@@ -298,10 +244,10 @@ private fun ExpoModifyScreen(
     onIntroduceTitleChange: (String) -> Unit,
     onRemoveTrainingProgram: (Int) -> Unit,
     onRemoveStandardProgram: (Int) -> Unit,
-    onTrainingProgramChange: (Int, TrainingDtoModel) -> Unit,
-    onStandardProgramChange: (Int, StandardRequestModel) -> Unit,
-    updateExistingTrainingProgram: (Int, TrainingDtoModel) -> Unit,
-    updateExistingStandardProgram: (Int, StandardRequestModel) -> Unit
+    onTrainingProgramChange: (Int, TrainingProRequestParam) -> Unit,
+    onStandardProgramChange: (Int, StandardProRequestParam) -> Unit,
+    updateExistingTrainingProgram: (Int, TrainingProRequestParam) -> Unit,
+    updateExistingStandardProgram: (Int, StandardProRequestParam) -> Unit
 ) {
 
     val (openTrainingSettingBottomSheet, isOpenTrainingSettingBottomSheet) = rememberSaveable {
@@ -316,8 +262,8 @@ private fun ExpoModifyScreen(
         )
     }
 
-    var selectedTrainingIndex by remember { mutableStateOf<Int?>(null) }
-    var selectedStandardIndex by remember { mutableStateOf<Int?>(null) }
+    var selectedTrainingIndex by rememberSaveable { mutableStateOf<Int?>(null) }
+    var selectedStandardIndex by rememberSaveable { mutableStateOf<Int?>(null) }
 
     ExpoAndroidTheme { colors, typography ->
         Column(
@@ -487,6 +433,7 @@ private fun ExpoModifyScreen(
                         lengthLimit = 8,
                         placeholder = "시작일",
                         isError = false,
+                        showLengthCounter = false,
                         keyboardOptions = numberKeyboardOptions(),
                         visualTransformation = DateTimeVisualTransformation(),
                         updateTextValue = { newText -> onStartedDateChange(newText.filterNonDigits()) },
@@ -498,6 +445,7 @@ private fun ExpoModifyScreen(
                         lengthLimit = 8,
                         placeholder = "마감일",
                         isError = false,
+                        showLengthCounter = false,
                         keyboardOptions = numberKeyboardOptions(),
                         visualTransformation = DateTimeVisualTransformation(),
                         updateTextValue = { newText -> onEndedDateChange(newText.filterNonDigits()) },
@@ -610,15 +558,15 @@ private fun ExpoModifyScreen(
                     ExpoStateButton(
                         text = "수정완료",
                         state = if (
-                            modifyTitleState.isNotEmpty() &&
-                            startedDateState.isNotEmpty() &&
-                            endedDateState.isNotEmpty() &&
-                            introduceTitleState.isNotEmpty() &&
-                            addressState.isNotEmpty() &&
-                            locationState.isNotEmpty() &&
-                            trainingProgramTextState.isNotEmpty() &&
-                            standardProgramTextState.isNotEmpty() &&
-                            startedDateState.isValidDateSequence(endedDateState)
+                            modifyTitleState.isNotEmpty()
+//                            startedDateState.isNotEmpty() &&
+//                            endedDateState.isNotEmpty() &&
+//                            introduceTitleState.isNotEmpty() &&
+//                            addressState.isNotEmpty() &&
+//                            locationState.isNotEmpty() &&
+//                            trainingProgramTextState.isNotEmpty() &&
+//                            standardProgramTextState.isNotEmpty() &&
+//                            startedDateState.isValidDateSequence(endedDateState)
                         ) {
                             ButtonState.Enable
                         } else {

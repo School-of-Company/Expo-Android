@@ -54,6 +54,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import com.school_of_company.common.regex.isValidDateSequence
 import com.school_of_company.design_system.R
+import com.school_of_company.design_system.component.bottomsheet.SettingBottomSheet
 import com.school_of_company.design_system.component.button.ExpoStateButton
 import com.school_of_company.design_system.component.button.state.ButtonState
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
@@ -71,11 +72,6 @@ import com.school_of_company.expo.view.component.ExpoStandardSettingBottomSheet
 import com.school_of_company.expo.viewmodel.ExpoViewModel
 import com.school_of_company.expo.viewmodel.uistate.ImageUpLoadUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterExpoInformationUiState
-import com.school_of_company.expo.viewmodel.uistate.RegisterStandardProgramListUiState
-import com.school_of_company.expo.viewmodel.uistate.RegisterTrainingProgramListUiState
-import com.school_of_company.model.model.expo.ExpoRequestAndResponseModel
-import com.school_of_company.model.model.standard.StandardRequestModel
-import com.school_of_company.model.model.training.TrainingDtoModel
 import com.school_of_company.model.param.expo.ExpoAllRequestParam
 import com.school_of_company.model.param.expo.StandardProRequestParam
 import com.school_of_company.model.param.expo.TrainingProRequestParam
@@ -524,16 +520,21 @@ private fun ExpoCreateScreen(
 
             val selectedTrainingItem = selectedTrainingIndex?.let { trainingProgramTextState[it] }
 
-            if (selectedTrainingItem != null) {
+            SettingBottomSheet(
+                isOpen = openTrainingSettingBottomSheet, // TODO: 항상 참인 판별식
+                onDismiss = { isOpenTrainingSettingBottomSheet(false) },
+                selectedItem = selectedTrainingItem,
+                onUpdateItem = { updateItem ->
+                    selectedStandardIndex?.let { index ->
+                        onTrainingProgramChange(index, updateItem)
+                    }
+                }
+            ) { item, updateItem ->
                 ExpoSettingBottomSheet(
                     onCancelClick = { isOpenTrainingSettingBottomSheet(false) },
                     onButtonClick = { isOpenTrainingSettingBottomSheet(false) },
-                    trainingSettingItem = selectedTrainingItem,
-                    onTrainingSettingChange = { updateItem ->
-                        selectedTrainingIndex?.let { index ->
-                            onTrainingProgramChange(index, updateItem)
-                        }
-                    },
+                    trainingSettingItem = item,
+                    onTrainingSettingChange = updateItem,
                 )
             }
         }
@@ -544,16 +545,21 @@ private fun ExpoCreateScreen(
 
             val selectedStandardItem = selectedStandardIndex?.let { standardProgramTextState[it] }
 
-            if (selectedStandardItem != null) {
+            SettingBottomSheet(
+                isOpen = openStandardSettingBottomSheet, // TODO: 항상 참인 판별식
+                onDismiss = { isOpenStandardSettingBottomSheet(false) },
+                selectedItem = selectedStandardItem,
+                onUpdateItem = { updateItem ->
+                    selectedStandardIndex?.let { index ->
+                        onStandardProgramChange(index, updateItem)
+                    }
+                }
+            ) { item, updateItem ->
                 ExpoStandardSettingBottomSheet(
                     onCancelClick = { isOpenStandardSettingBottomSheet(false) },
                     onButtonClick = { isOpenStandardSettingBottomSheet(false) },
-                    trainingSettingItem = selectedStandardItem,
-                    onTrainingSettingChange = { updateItem ->
-                        selectedStandardIndex?.let { index ->
-                            onStandardProgramChange(index, updateItem)
-                        }
-                    }
+                    trainingSettingItem = item,
+                    onTrainingSettingChange = updateItem,
                 )
             }
         }

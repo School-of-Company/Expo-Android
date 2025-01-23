@@ -68,16 +68,16 @@ import com.school_of_company.design_system.icon.ImageIcon
 import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
-import com.school_of_company.expo.view.component.ExpoAddTextField
-import com.school_of_company.expo.view.component.ExpoSettingBottomSheet
-import com.school_of_company.expo.view.component.ExpoStandardAddTextField
-import com.school_of_company.expo.view.component.ExpoStandardSettingBottomSheet
+import com.school_of_company.expo.view.component.ExpoAddModifyTextField
+import com.school_of_company.expo.view.component.ExpoSettingModifyBottomSheet
+import com.school_of_company.expo.view.component.ExpoStandardAddModifyTextField
+import com.school_of_company.expo.view.component.ExpoStandardSettingModifyBottomSheet
 import com.school_of_company.expo.viewmodel.ExpoViewModel
 import com.school_of_company.expo.viewmodel.uistate.ImageUpLoadUiState
 import com.school_of_company.expo.viewmodel.uistate.ModifyExpoInformationUiState
-import com.school_of_company.model.param.expo.ExpoAllRequestParam
-import com.school_of_company.model.param.expo.StandardProRequestParam
-import com.school_of_company.model.param.expo.TrainingProRequestParam
+import com.school_of_company.model.param.expo.ExpoModifyRequestParam
+import com.school_of_company.model.param.expo.StandardProIdRequestParam
+import com.school_of_company.model.param.expo.TrainingProIdRequestParam
 import com.school_of_company.ui.keyBoardOption.numberKeyboardOptions
 import com.school_of_company.ui.toast.makeToast
 import com.school_of_company.ui.util.filterNonDigits
@@ -100,8 +100,8 @@ internal fun ExpoModifyRoute(
     val addressState by viewModel.address.collectAsStateWithLifecycle()
     val locationState by viewModel.location.collectAsStateWithLifecycle()
     val coverImageState by viewModel.cover_image.collectAsStateWithLifecycle()
-    val trainingProgramTextState by viewModel.trainingProgramTextState.collectAsStateWithLifecycle()
-    val standardProgramTextState by viewModel.standardProgramTextState.collectAsStateWithLifecycle()
+    val trainingProgramTextState by viewModel.trainingProgramModifyTextState.collectAsStateWithLifecycle()
+    val standardProgramTextState by viewModel.standardProgramModifyTextState.collectAsStateWithLifecycle()
 
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
@@ -136,7 +136,7 @@ internal fun ExpoModifyRoute(
             is ImageUpLoadUiState.Success -> {
                 viewModel.modifyExpoInformation(
                     expoId = id,
-                    body = ExpoAllRequestParam(
+                    body = ExpoModifyRequestParam(
                         title = viewModel.modify_title.value,
                         startedDay = viewModel.started_date.value,
                         finishedDay = viewModel.ended_date.value,
@@ -145,8 +145,8 @@ internal fun ExpoModifyRoute(
                         coverImage = (imageUpLoadUiState as ImageUpLoadUiState.Success).data.imageURL,
                         x = 37.511734f,
                         y = 127.05905f,
-                        addStandardProRequestDto = standardProgramTextState,
-                        addTrainingProRequestDto = trainingProgramTextState
+                        updateStandardProRequestDto = standardProgramTextState,
+                        updateTrainingProRequestDto = trainingProgramTextState
                     )
                 )
             }
@@ -191,20 +191,20 @@ internal fun ExpoModifyRoute(
         introduceTitleState = introduceTitleState,
         trainingProgramTextState = trainingProgramTextState,
         standardProgramTextState = standardProgramTextState,
-        onAddStandardProgram = viewModel::addStandardProgramText,
-        onAddTrainingProgram = viewModel::addTrainingProgramText,
+        onAddStandardProgram = viewModel::addStandardProgramModifyText,
+        onAddTrainingProgram = viewModel::addTrainingProgramModifyText,
         onStartedDateChange = viewModel::onStartedDateChange,
         onEndedDateChange = viewModel::onEndedDateChange,
         onModifyTitleChange = viewModel::onModifyTitleChange,
         onAddressChange = viewModel::onAddressChange,
         onLocationChange = viewModel::onLocationChange,
         onIntroduceTitleChange = viewModel::onIntroduceTitleChange,
-        onRemoveTrainingProgram = viewModel::removeTrainingProgramText,
-        onRemoveStandardProgram = viewModel::removeStandardProgramText,
-        onTrainingProgramChange = viewModel::updateTrainingProgramText,
-        onStandardProgramChange = viewModel::updateStandardProgramText,
-        updateExistingTrainingProgram = viewModel::updateExistingTrainingProgram,
-        updateExistingStandardProgram = viewModel::updateExistingStandardProgram
+        onRemoveTrainingProgram = viewModel::removeTrainingProgramModifyText,
+        onRemoveStandardProgram = viewModel::removeStandardProgramModifyText,
+        onTrainingProgramChange = viewModel::updateTrainingProgramModifyText,
+        onStandardProgramChange = viewModel::updateStandardProgramModifyText,
+        updateExistingTrainingProgram = viewModel::updateExistingTrainingProgramModify,
+        updateExistingStandardProgram = viewModel::updateExistingStandardProgramModify
     )
 }
 
@@ -224,8 +224,8 @@ private fun ExpoModifyScreen(
     addressState: String,
     locationState: String,
     introduceTitleState: String,
-    trainingProgramTextState: List<TrainingProRequestParam>,
-    standardProgramTextState: List<StandardProRequestParam>,
+    trainingProgramTextState: List<TrainingProIdRequestParam>,
+    standardProgramTextState: List<StandardProIdRequestParam>,
     onAddStandardProgram: () -> Unit,
     onAddTrainingProgram: () -> Unit,
     onStartedDateChange: (String) -> Unit,
@@ -236,10 +236,10 @@ private fun ExpoModifyScreen(
     onIntroduceTitleChange: (String) -> Unit,
     onRemoveTrainingProgram: (Int) -> Unit,
     onRemoveStandardProgram: (Int) -> Unit,
-    onTrainingProgramChange: (Int, TrainingProRequestParam) -> Unit,
-    onStandardProgramChange: (Int, StandardProRequestParam) -> Unit,
-    updateExistingTrainingProgram: (Int, TrainingProRequestParam) -> Unit,
-    updateExistingStandardProgram: (Int, StandardProRequestParam) -> Unit
+    onTrainingProgramChange: (Int, TrainingProIdRequestParam) -> Unit,
+    onStandardProgramChange: (Int, StandardProIdRequestParam) -> Unit,
+    updateExistingTrainingProgram: (Int, TrainingProIdRequestParam) -> Unit,
+    updateExistingStandardProgram: (Int, StandardProIdRequestParam) -> Unit
 ) {
 
     val (openTrainingSettingBottomSheet, isOpenTrainingSettingBottomSheet) = rememberSaveable {
@@ -484,7 +484,7 @@ private fun ExpoModifyScreen(
                         color = colors.black,
                     )
 
-                    ExpoStandardAddTextField(
+                    ExpoStandardAddModifyTextField(
                         trainingTextFieldList = standardProgramTextState,
                         onValueChange = { index, newState ->
                             onStandardProgramChange(index, newState)
@@ -508,7 +508,7 @@ private fun ExpoModifyScreen(
                         color = colors.black,
                     )
 
-                    ExpoAddTextField(
+                    ExpoAddModifyTextField(
                         trainingTextFieldList = trainingProgramTextState,
                         onValueChange = { index, newState ->
                             onTrainingProgramChange(index, newState)
@@ -550,15 +550,15 @@ private fun ExpoModifyScreen(
                     ExpoStateButton(
                         text = "수정완료",
                         state = if (
-                            modifyTitleState.isNotEmpty()
-//                            startedDateState.isNotEmpty() &&
-//                            endedDateState.isNotEmpty() &&
-//                            introduceTitleState.isNotEmpty() &&
-//                            addressState.isNotEmpty() &&
-//                            locationState.isNotEmpty() &&
-//                            trainingProgramTextState.isNotEmpty() &&
-//                            standardProgramTextState.isNotEmpty() &&
-//                            startedDateState.isValidDateSequence(endedDateState)
+                            modifyTitleState.isNotEmpty() &&
+                            startedDateState.isNotEmpty() &&
+                            endedDateState.isNotEmpty() &&
+                            introduceTitleState.isNotEmpty() &&
+                            addressState.isNotEmpty() &&
+                            locationState.isNotEmpty() &&
+                            trainingProgramTextState.isNotEmpty() &&
+                            standardProgramTextState.isNotEmpty() &&
+                            startedDateState.isValidDateSequence(endedDateState)
                         ) {
                             ButtonState.Enable
                         } else {
@@ -590,7 +590,7 @@ private fun ExpoModifyScreen(
                     }
                 }
             ) { item, updateItem ->
-                ExpoSettingBottomSheet(
+                ExpoSettingModifyBottomSheet(
                     onCancelClick = { isOpenTrainingSettingBottomSheet(false) },
                     onButtonClick = { isOpenTrainingSettingBottomSheet(false) },
                     trainingSettingItem = item,
@@ -615,7 +615,7 @@ private fun ExpoModifyScreen(
                     }
                 }
             ) { item, updateItem ->
-                ExpoStandardSettingBottomSheet(
+                ExpoStandardSettingModifyBottomSheet(
                     onCancelClick = { isOpenStandardSettingBottomSheet(false) },
                     onButtonClick = { isOpenStandardSettingBottomSheet(false) },
                     trainingSettingItem = item,

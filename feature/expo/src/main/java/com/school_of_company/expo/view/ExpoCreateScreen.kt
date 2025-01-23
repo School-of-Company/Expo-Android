@@ -76,6 +76,9 @@ import com.school_of_company.expo.viewmodel.uistate.RegisterTrainingProgramListU
 import com.school_of_company.model.model.expo.ExpoRequestAndResponseModel
 import com.school_of_company.model.model.standard.StandardRequestModel
 import com.school_of_company.model.model.training.TrainingDtoModel
+import com.school_of_company.model.param.expo.ExpoAllRequestParam
+import com.school_of_company.model.param.expo.StandardProRequestParam
+import com.school_of_company.model.param.expo.TrainingProRequestParam
 import com.school_of_company.ui.keyBoardOption.numberKeyboardOptions
 import com.school_of_company.ui.toast.makeToast
 import com.school_of_company.ui.util.filterNonDigits
@@ -89,8 +92,6 @@ internal fun ExpoCreateRoute(
 ) {
     val registerExpoInformationUiState by viewModel.registerExpoInformationUiState.collectAsStateWithLifecycle()
     val imageUpLoadUiState by viewModel.imageUpLoadUiState.collectAsStateWithLifecycle()
-    val registerTrainingProgramListUiState by viewModel.registerTrainingProgramListUiState.collectAsStateWithLifecycle()
-    val registerStandardProgramListUiState by viewModel.registerStandardProgramListUiState.collectAsStateWithLifecycle()
 
     val modifyTitleState by viewModel.modify_title.collectAsStateWithLifecycle()
     val startedDateState by viewModel.started_date.collectAsStateWithLifecycle()
@@ -128,7 +129,7 @@ internal fun ExpoCreateRoute(
             is ImageUpLoadUiState.Loading -> Unit
             is ImageUpLoadUiState.Success -> {
                 viewModel.registerExpoInformation(
-                    body = ExpoRequestAndResponseModel(
+                    body = ExpoAllRequestParam(
                         title = viewModel.modify_title.value,
                         startedDay = viewModel.started_date.value,
                         finishedDay = viewModel.ended_date.value,
@@ -136,7 +137,9 @@ internal fun ExpoCreateRoute(
                         location = viewModel.location.value,
                         coverImage = (imageUpLoadUiState as ImageUpLoadUiState.Success).data.imageURL,
                         x = 37.511734f,
-                        y = 127.05905f
+                        y = 127.05905f,
+                        addStandardProRequestDto = standardProgramTextState,
+                        addTrainingProRequestDto = trainingProgramTextState
                     )
                 )
             }
@@ -151,32 +154,14 @@ internal fun ExpoCreateRoute(
         when (registerExpoInformationUiState) {
             is RegisterExpoInformationUiState.Loading -> Unit
             is RegisterExpoInformationUiState.Success -> {
-                viewModel.registerTrainingProgramList(
-                    expoId = (registerExpoInformationUiState as RegisterExpoInformationUiState.Success).data.expoId,
-                    body = trainingProgramTextState
-                )
-
-                viewModel.registerStandardProgramList(
-                    expoId = (registerExpoInformationUiState as RegisterExpoInformationUiState.Success).data.expoId,
-                    body = standardProgramTextState
-                )
+                viewModel.resetExpoInformation()
+                selectedImageUri = null
+                makeToast(context, "박람회 등록을 완료하였습니다.")
+                viewModel.initRegisterExpo()
             }
-
             is RegisterExpoInformationUiState.Error -> {
                 onErrorToast(null, R.string.expo_register_fail)
             }
-        }
-    }
-
-    LaunchedEffect(registerTrainingProgramListUiState, registerStandardProgramListUiState) {
-        if (registerTrainingProgramListUiState is RegisterTrainingProgramListUiState.Loading && registerStandardProgramListUiState is RegisterStandardProgramListUiState.Loading) { Unit }
-        if (registerTrainingProgramListUiState is RegisterTrainingProgramListUiState.Success && registerStandardProgramListUiState is RegisterStandardProgramListUiState.Success) {
-            viewModel.resetExpoInformation()
-            selectedImageUri = null
-            makeToast(context, "박람회 등록을 완료하였습니다.")
-            viewModel.initRegisterExpo()
-        } else if (registerTrainingProgramListUiState is RegisterTrainingProgramListUiState.Error || registerStandardProgramListUiState is RegisterStandardProgramListUiState.Error) {
-            onErrorToast(null, R.string.expo_register_fail)
         }
     }
 
@@ -226,8 +211,8 @@ private fun ExpoCreateScreen(
     addressState: String,
     locationState: String,
     imageUri: String?,
-    trainingProgramTextState: List<TrainingDtoModel>,
-    standardProgramTextState: List<StandardRequestModel>,
+    trainingProgramTextState: List<TrainingProRequestParam>,
+    standardProgramTextState: List<StandardProRequestParam>,
     focusManager: FocusManager = LocalFocusManager.current,
     scrollState: ScrollState = rememberScrollState(),
     onImageClick: () -> Unit,
@@ -242,8 +227,8 @@ private fun ExpoCreateScreen(
     onLocationChange: (String) -> Unit,
     onRemoveTrainingProgram: (Int) -> Unit,
     onRemoveStandardProgram: (Int) -> Unit,
-    onTrainingProgramChange: (Int, TrainingDtoModel) -> Unit,
-    onStandardProgramChange: (Int, StandardRequestModel) -> Unit,
+    onTrainingProgramChange: (Int, TrainingProRequestParam) -> Unit,
+    onStandardProgramChange: (Int, StandardProRequestParam) -> Unit,
 ) {
     val (openTrainingSettingBottomSheet, isOpenTrainingSettingBottomSheet) = rememberSaveable { mutableStateOf(false) }
     val (openStandardSettingBottomSheet, isOpenStandardSettingBottomSheet) = rememberSaveable { mutableStateOf(false) }

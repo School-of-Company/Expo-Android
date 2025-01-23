@@ -34,8 +34,6 @@ import com.school_of_company.expo.viewmodel.uistate.ModifyTrainingProgramUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterExpoInformationUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterStandardProgramListUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterTrainingProgramListUiState
-import com.school_of_company.model.model.standard.StandardRequestModel
-import com.school_of_company.model.model.training.TrainingDtoModel
 import com.school_of_company.model.param.expo.ExpoAllRequestParam
 import com.school_of_company.model.param.expo.StandardProRequestParam
 import com.school_of_company.model.param.expo.TrainingProRequestParam
@@ -330,106 +328,6 @@ internal class ExpoViewModel @Inject constructor(
                     is Result.Success -> _imageUpLoadUiState.value = ImageUpLoadUiState.Success(result.data)
                     is Result.Error -> _imageUpLoadUiState.value = ImageUpLoadUiState.Error(result.exception)
                 }
-            }
-    }
-
-    internal fun registerTrainingProgramList(
-        expoId: String,
-        body: List<TrainingDtoModel>
-    ) = viewModelScope.launch {
-        _registerTrainingProgramListUiState.value = RegisterTrainingProgramListUiState.Loading
-        registerTrainingProgramListUseCase(
-            expoId = expoId,
-            body = body.map { list ->
-                list.copy(
-                    startedAt = list.startedAt.autoFormatToDateTime(),
-                    endedAt = list.endedAt.autoFormatToDateTime(),
-                )
-            }
-        )
-            .onSuccess {
-                it.catch { remoteError ->
-                    _registerTrainingProgramListUiState.value = RegisterTrainingProgramListUiState.Error(remoteError)
-                }.collect {
-                    _registerTrainingProgramListUiState.value = RegisterTrainingProgramListUiState.Success
-                }
-            }
-            .onFailure { error ->
-                _registerTrainingProgramListUiState.value = RegisterTrainingProgramListUiState.Error(error)
-            }
-    }
-
-    internal fun modifyTrainingProgram(
-        trainingProId: Long,
-        body: TrainingDtoModel
-    ) = viewModelScope.launch {
-        _modifyTrainingProgramUiState.value = ModifyTrainingProgramUiState.Loading
-        modifyTrainingProgramUseCase(
-            trainingProId = trainingProId,
-            body = body.copy(
-                startedAt = body.startedAt.autoFormatToDateTime(),
-                endedAt = body.endedAt.autoFormatToDateTime(),
-            )
-        )
-            .onSuccess {
-                it.catch { remoteError ->
-                    _modifyTrainingProgramUiState.value = ModifyTrainingProgramUiState.Error(remoteError)
-                }.collect {
-                    _modifyTrainingProgramUiState.value = ModifyTrainingProgramUiState.Success
-                }
-            }
-            .onFailure { error ->
-                _modifyTrainingProgramUiState.value = ModifyTrainingProgramUiState.Error(error)
-            }
-    }
-
-    internal fun modifyStandardProgram(
-        standardProId: Long,
-        body: StandardRequestModel
-    ) = viewModelScope.launch {
-        _modifyStandardProgramUiState.value = ModifyStandardProgramUiState.Loading
-        modifyStandardProgramUseCase(
-            standardProId = standardProId,
-            body = body.copy(
-                startedAt = body.startedAt.autoFormatToDateTime(),
-                endedAt = body.endedAt.autoFormatToDateTime(),
-            )
-        )
-            .onSuccess {
-                it.catch { remoteError ->
-                    _modifyStandardProgramUiState.value = ModifyStandardProgramUiState.Error(remoteError)
-                }.collect {
-                    _modifyStandardProgramUiState.value = ModifyStandardProgramUiState.Success
-                }
-            }
-            .onFailure { error ->
-                _modifyStandardProgramUiState.value = ModifyStandardProgramUiState.Error(error)
-            }
-    }
-
-    internal fun registerStandardProgramList(
-        expoId: String,
-        body: List<StandardRequestModel>
-    ) = viewModelScope.launch {
-        _registerStandardProgramListUiState.value = RegisterStandardProgramListUiState.Loading
-        registerStandardProgramListUseCase(
-            expoId = expoId,
-            body = body.map { list ->
-                list.copy(
-                    startedAt = list.startedAt.autoFormatToDateTime(),
-                    endedAt = list.endedAt.autoFormatToDateTime(),
-                )
-            }
-        )
-            .onSuccess {
-                it.catch { remoteError ->
-                    _registerStandardProgramListUiState.value = RegisterStandardProgramListUiState.Error(remoteError)
-                }.collect {
-                    _registerStandardProgramListUiState.value = RegisterStandardProgramListUiState.Success
-                }
-            }
-            .onFailure { error ->
-                _registerStandardProgramListUiState.value = RegisterStandardProgramListUiState.Error(error)
             }
     }
 

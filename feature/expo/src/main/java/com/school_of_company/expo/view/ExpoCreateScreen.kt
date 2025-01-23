@@ -83,7 +83,7 @@ import com.school_of_company.ui.visualTransformation.DateTimeVisualTransformatio
 
 @Composable
 internal fun ExpoCreateRoute(
-    modifier: Modifier=Modifier,
+    modifier: Modifier = Modifier,
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
     viewModel: ExpoViewModel = hiltViewModel()
 ) {
@@ -91,6 +91,7 @@ internal fun ExpoCreateRoute(
     val imageUpLoadUiState by viewModel.imageUpLoadUiState.collectAsStateWithLifecycle()
     val registerTrainingProgramListUiState by viewModel.registerTrainingProgramListUiState.collectAsStateWithLifecycle()
     val registerStandardProgramListUiState by viewModel.registerStandardProgramListUiState.collectAsStateWithLifecycle()
+    val getAddressUiState by viewModel.getAddressUiState.collectAsStateWithLifecycle()
 
     val modifyTitleState by viewModel.modify_title.collectAsStateWithLifecycle()
     val startedDateState by viewModel.started_date.collectAsStateWithLifecycle()
@@ -146,6 +147,17 @@ internal fun ExpoCreateRoute(
             }
         }
     }
+    LaunchedEffect(getAddressUiState) {
+        when (getAddressUiState) {
+            is GetAddressUiState.Error -> onErrorToast(
+                (getAddressUiState as GetAddressUiState.Error).exception,
+                R.string.get_address_fail
+            )
+
+            GetAddressUiState.Loading -> Unit
+            is GetAddressUiState.Success -> onErrorToast(null, R.string.get_address_success)
+        }
+    }
 
     LaunchedEffect(registerExpoInformationUiState) {
         when (registerExpoInformationUiState) {
@@ -182,7 +194,7 @@ internal fun ExpoCreateRoute(
 
 
     ExpoCreateScreen(
-        modifier= modifier,
+        modifier = modifier,
         startedDateState = startedDateState,
         endedDateState = endedDateState,
         modifyTitleState = modifyTitleState,

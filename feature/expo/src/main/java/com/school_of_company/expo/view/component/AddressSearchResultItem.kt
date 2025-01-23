@@ -17,13 +17,13 @@ import com.school_of_company.model.model.juso.JusoModel
 fun AddressSearchResultItem(
     modifier: Modifier = Modifier,
     result: JusoModel,
-    onClick: () -> Unit,
+    onClick: (String) -> Unit,
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         modifier = modifier
             .fillMaxWidth()
-            .expoClickable(onClick = onClick)
+            .expoClickable { onClick(result.roadAddr) }
             .padding(vertical = 16.dp)
     ) {
         Text(

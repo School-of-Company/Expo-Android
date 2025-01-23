@@ -521,7 +521,6 @@ private fun ExpoCreateScreen(
             val selectedTrainingItem = selectedTrainingIndex?.let { trainingProgramTextState[it] }
 
             SettingBottomSheet(
-                isOpen = openTrainingSettingBottomSheet, // TODO: 항상 참인 판별식
                 onDismiss = { isOpenTrainingSettingBottomSheet(false) },
                 selectedItem = selectedTrainingItem,
                 onUpdateItem = { updateItem ->
@@ -546,7 +545,6 @@ private fun ExpoCreateScreen(
             val selectedStandardItem = selectedStandardIndex?.let { standardProgramTextState[it] }
 
             SettingBottomSheet(
-                isOpen = openStandardSettingBottomSheet, // TODO: 항상 참인 판별식
                 onDismiss = { isOpenStandardSettingBottomSheet(false) },
                 selectedItem = selectedStandardItem,
                 onUpdateItem = { updateItem ->

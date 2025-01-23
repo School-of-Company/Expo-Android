@@ -154,6 +154,15 @@ internal class ExpoViewModel @Inject constructor(
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0)
 
+    val addressList: StateFlow<List<JusoModel>> = getAddressUiState
+        .map { state ->
+            when (state) {
+                is GetAddressUiState.Success -> state.data
+                else -> listOf()
+            }
+        }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), listOf())
+
     internal fun getExpoInformation(expoId: String) = viewModelScope.launch {
         getExpoInformationUseCase(expoId = expoId)
             .asResult()

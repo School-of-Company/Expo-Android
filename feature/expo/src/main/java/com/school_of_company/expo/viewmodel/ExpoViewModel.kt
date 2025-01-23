@@ -14,11 +14,7 @@ import com.school_of_company.domain.usecase.expo.GetExpoInformationUseCase
 import com.school_of_company.domain.usecase.expo.GetExpoListUseCase
 import com.school_of_company.domain.usecase.expo.ModifyExpoInformationUseCase
 import com.school_of_company.domain.usecase.expo.RegisterExpoInformationUseCase
-import com.school_of_company.domain.usecase.standard.ModifyStandardProgramUseCase
-import com.school_of_company.domain.usecase.standard.RegisterStandardListProgramUseCase
 import com.school_of_company.domain.usecase.standard.StandardProgramListUseCase
-import com.school_of_company.domain.usecase.training.ModifyTrainingProgramUseCase
-import com.school_of_company.domain.usecase.training.RegisterTrainingProgramListUseCase
 import com.school_of_company.domain.usecase.training.TrainingProgramListUseCase
 import com.school_of_company.expo.enum.TrainingCategory
 import com.school_of_company.expo.util.getMultipartFile
@@ -35,7 +31,10 @@ import com.school_of_company.expo.viewmodel.uistate.RegisterExpoInformationUiSta
 import com.school_of_company.expo.viewmodel.uistate.RegisterStandardProgramListUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterTrainingProgramListUiState
 import com.school_of_company.model.param.expo.ExpoAllRequestParam
+import com.school_of_company.model.param.expo.ExpoModifyRequestParam
+import com.school_of_company.model.param.expo.StandardProIdRequestParam
 import com.school_of_company.model.param.expo.StandardProRequestParam
+import com.school_of_company.model.param.expo.TrainingProIdRequestParam
 import com.school_of_company.model.param.expo.TrainingProRequestParam
 import com.school_of_company.ui.util.autoFormatToDateTime
 import com.school_of_company.ui.util.formatNoneHyphenServerDate
@@ -84,8 +83,11 @@ internal class ExpoViewModel @Inject constructor(
     private val _standardProgramTextState = MutableStateFlow<List<StandardProRequestParam>>(emptyList())
     internal val standardProgramTextState = _standardProgramTextState.asStateFlow()
 
-    private val _categoryState = MutableStateFlow(TrainingCategory.CHOICE)
-    val categoryState = _categoryState.asStateFlow()
+    private val _trainingProgramModifyTextState = MutableStateFlow<List<TrainingProIdRequestParam>>(emptyList())
+    internal val trainingProgramModifyTextState = _trainingProgramModifyTextState.asStateFlow()
+
+    private val _standardProgramModifyTextState = MutableStateFlow<List<StandardProIdRequestParam>>(emptyList())
+    internal val standardProgramModifyTextState = _standardProgramModifyTextState.asStateFlow()
 
     private val _getExpoInformationUiState = MutableStateFlow<GetExpoInformationUiState>(GetExpoInformationUiState.Loading)
     internal val getExpoInformationUiState = _getExpoInformationUiState.asStateFlow()
@@ -104,18 +106,6 @@ internal class ExpoViewModel @Inject constructor(
 
     private val _imageUpLoadUiState = MutableStateFlow<ImageUpLoadUiState>(ImageUpLoadUiState.Loading)
     internal val imageUpLoadUiState = _imageUpLoadUiState.asStateFlow()
-
-    private val _registerTrainingProgramListUiState = MutableStateFlow<RegisterTrainingProgramListUiState>(RegisterTrainingProgramListUiState.Loading)
-    internal val registerTrainingProgramListUiState = _registerTrainingProgramListUiState.asStateFlow()
-
-    private val _modifyTrainingProgramUiState = MutableStateFlow<ModifyTrainingProgramUiState>(ModifyTrainingProgramUiState.Loading)
-    internal val modifyTrainingProgramUiState = _modifyTrainingProgramUiState.asStateFlow()
-
-    private val _modifyStandardProgramUiState = MutableStateFlow<ModifyStandardProgramUiState>(ModifyStandardProgramUiState.Loading)
-    internal val modifyStandardProgramUiState = _modifyStandardProgramUiState.asStateFlow()
-
-    private val _registerStandardProgramListUiState = MutableStateFlow<RegisterStandardProgramListUiState>(RegisterStandardProgramListUiState.Loading)
-    internal val registerStandardProgramListUiState = _registerStandardProgramListUiState.asStateFlow()
 
     private val _getStandardProgramListUiState = MutableStateFlow<GetStandardProgramListUiState>(GetStandardProgramListUiState.Loading)
     internal val getStandardProgramListUiState = _getStandardProgramListUiState.asStateFlow()
@@ -203,12 +193,11 @@ internal class ExpoViewModel @Inject constructor(
     internal fun initRegisterExpo() {
         _imageUpLoadUiState.value = ImageUpLoadUiState.Loading
         _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Loading
-        _registerTrainingProgramListUiState.value = RegisterTrainingProgramListUiState.Loading
     }
 
     internal fun modifyExpoInformation(
         expoId: String,
-        body: ExpoAllRequestParam
+        body: ExpoModifyRequestParam
     ) = viewModelScope.launch {
         _modifyExpoInformationUiState.value = ModifyExpoInformationUiState.Loading
         modifyExpoInformationUseCase(
@@ -216,13 +205,13 @@ internal class ExpoViewModel @Inject constructor(
             body = body.copy(
                 startedDay = body.startedDay.autoFormatToDateTime(),
                 finishedDay = body.finishedDay.autoFormatToDateTime(),
-                addStandardProRequestDto = body.addStandardProRequestDto.map { list ->
+                updateStandardProRequestDto = body.updateStandardProRequestDto.map { list ->
                     list.copy(
                         startedAt = list.startedAt.autoFormatToDateTime(),
                         endedAt = list.endedAt.autoFormatToDateTime(),
                     )
                 },
-                addTrainingProRequestDto = body.addTrainingProRequestDto.map { list ->
+                updateTrainingProRequestDto = body.updateTrainingProRequestDto.map { list ->
                     list.copy(
                         startedAt = list.startedAt.autoFormatToDateTime(),
                         endedAt = list.endedAt.autoFormatToDateTime(),
@@ -245,8 +234,6 @@ internal class ExpoViewModel @Inject constructor(
 
     internal fun initModifyExpo() {
         _modifyExpoInformationUiState.value = ModifyExpoInformationUiState.Loading
-        _modifyTrainingProgramUiState.value = ModifyTrainingProgramUiState.Loading
-        _modifyStandardProgramUiState.value = ModifyStandardProgramUiState.Loading
     }
 
     internal fun resetExpoInformation() {
@@ -337,8 +324,9 @@ internal class ExpoViewModel @Inject constructor(
                     is Result.Success -> {
                         _getStandardProgramListUiState.value = GetStandardProgramListUiState.Success(result.data)
 
-                        _standardProgramTextState.value = result.data.map { program ->
-                            StandardProRequestParam(
+                        _standardProgramModifyTextState.value = result.data.map { program ->
+                            StandardProIdRequestParam(
+                                id = program.id,
                                 title = program.title,
                                 startedAt = program.startedAt.formatNoneHyphenServerDate(),
                                 endedAt = program.endedAt.formatNoneHyphenServerDate()
@@ -350,6 +338,7 @@ internal class ExpoViewModel @Inject constructor(
             }
     }
 
+
     internal fun getTrainingProgramList(expoId: String) = viewModelScope.launch {
         _getTrainingProgramListUiState.value = GetTrainingProgramListUiState.Loading
         trainingProgramListUseCase(expoId = expoId)
@@ -360,8 +349,9 @@ internal class ExpoViewModel @Inject constructor(
                     is Result.Success -> {
                         _getTrainingProgramListUiState.value = GetTrainingProgramListUiState.Success(result.data)
 
-                        _trainingProgramTextState.value = result.data.map { program ->
-                            TrainingProRequestParam(
+                        _trainingProgramModifyTextState.value = result.data.map { program ->
+                            TrainingProIdRequestParam(
+                                id = program.id,
                                 title = program.title,
                                 startedAt = program.startedAt.formatNoneHyphenServerDate(),
                                 endedAt = program.endedAt.formatNoneHyphenServerDate(),
@@ -372,6 +362,61 @@ internal class ExpoViewModel @Inject constructor(
                     is Result.Error -> _getTrainingProgramListUiState.value = GetTrainingProgramListUiState.Error(result.exception)
                 }
             }
+    }
+
+    internal fun updateTrainingProgramModifyText(index: Int, updateItem: TrainingProIdRequestParam) {
+        _trainingProgramModifyTextState.value = _trainingProgramModifyTextState.value.toMutableList().apply {
+            set(index, updateItem)
+        }
+    }
+
+    internal fun updateStandardProgramModifyText(index: Int, updateItem: StandardProIdRequestParam) {
+        _standardProgramModifyTextState.value = _standardProgramModifyTextState.value.toMutableList().apply {
+                set(index, updateItem)
+            }
+    }
+
+    internal fun addTrainingProgramModifyText() {
+        _trainingProgramModifyTextState.value += TrainingProIdRequestParam(
+            id = 0,
+            title = "",
+            startedAt = "",
+            endedAt = "",
+            category = ""
+        )
+    }
+
+    internal fun addStandardProgramModifyText() {
+        _standardProgramModifyTextState.value += StandardProIdRequestParam(
+            id = 0,
+            title = "",
+            startedAt = "",
+            endedAt = ""
+        )
+    }
+
+    internal fun removeTrainingProgramModifyText(index: Int) {
+        _trainingProgramModifyTextState.value = _trainingProgramModifyTextState.value.toMutableList().apply {
+            removeAt(index)
+        }
+    }
+
+    internal fun removeStandardProgramModifyText(index: Int) {
+        _standardProgramModifyTextState.value = _standardProgramModifyTextState.value.toMutableList().apply {
+            removeAt(index)
+        }
+    }
+
+    internal fun updateExistingTrainingProgramModify(index: Int, updatedItem: TrainingProIdRequestParam) {
+        _trainingProgramModifyTextState.value = _trainingProgramModifyTextState.value.toMutableList().apply {
+            this[index] = updatedItem
+        }
+    }
+
+    internal fun updateExistingStandardProgramModify(index: Int, updatedItem: StandardProIdRequestParam) {
+        _standardProgramModifyTextState.value = _standardProgramModifyTextState.value.toMutableList().apply {
+            this[index] = updatedItem
+        }
     }
 
     internal fun updateTrainingProgramText(index: Int, updateItem: TrainingProRequestParam) {

@@ -17,6 +17,18 @@ android {
             name = "BASE_URL",
             getApiKey("BASE_URL")
         )
+        buildConfigField(
+            type = "String",
+            name = "ADDRESS_URL",
+            getApiKey("ADDRESS_URL")
+        )
+        defaultConfig {
+            buildConfigField(
+                type = "String",
+                name = "ADDRESS_API_KEY",
+                getApiKey("ADDRESS_API_KEY")
+            )
+        }
     }
 
     namespace = "com.school_of_company.network"

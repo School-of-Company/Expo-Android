@@ -4,7 +4,9 @@ import com.school_of_company.model.entity.expo.ExpoIdResponseEntity
 import com.school_of_company.model.entity.expo.ExpoListResponseEntity
 import com.school_of_company.model.model.expo.ExpoRequestAndResponseModel
 import com.school_of_company.model.param.expo.ExpoAllRequestParam
+import com.school_of_company.model.param.expo.ExpoModifyRequestParam
 import com.school_of_company.network.datasource.expo.ExpoDataSource
+import com.school_of_company.network.dto.expo.request.ExpoModifyRequest
 import com.school_of_company.network.mapper.expo.request.toDto
 import com.school_of_company.network.mapper.expo.request.toParam
 import com.school_of_company.network.mapper.expo.response.toEntity
@@ -36,7 +38,7 @@ class ExpoRepositoryImpl @Inject constructor(
 
     override fun modifyExpoInformation(
         expoId: String,
-        body: ExpoAllRequestParam
+        body: ExpoModifyRequestParam
     ): Flow<Unit> {
         return dataSource.modifyExpoInformation(
             expoId = expoId,

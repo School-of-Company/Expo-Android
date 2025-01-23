@@ -26,16 +26,17 @@ import com.school_of_company.design_system.icon.PlusIcon
 import com.school_of_company.design_system.icon.XIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.model.model.training.TrainingDtoModel
+import com.school_of_company.model.param.expo.TrainingProRequestParam
 
 @Composable
 internal fun ExpoAddTextField(
     modifier: Modifier = Modifier,
     placeHolder: String,
-    trainingTextFieldList: List<TrainingDtoModel>,
+    trainingTextFieldList: List<TrainingProRequestParam>,
     onAddTextField: () -> Unit,
     onRemoveTextField: (Int) -> Unit,
     onTrainingSetting: (Int) -> Unit,
-    onValueChange: (Int, TrainingDtoModel) -> Unit,
+    onValueChange: (Int, TrainingProRequestParam) -> Unit,
 ) {
 
     ExpoAndroidTheme { colors, typography ->

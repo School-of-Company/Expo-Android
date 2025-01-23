@@ -32,6 +32,7 @@ import com.school_of_company.design_system.component.modifier.clickable.expoClic
 import com.school_of_company.design_system.icon.XIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.model.model.standard.StandardRequestModel
+import com.school_of_company.model.param.expo.StandardProRequestParam
 import com.school_of_company.ui.keyBoardOption.numberKeyboardOptions
 import com.school_of_company.ui.util.filterNonDigits
 import com.school_of_company.ui.visualTransformation.DateTimeVisualTransformation
@@ -40,12 +41,12 @@ import com.school_of_company.ui.visualTransformation.DateTimeVisualTransformatio
 @Composable
 internal fun ExpoStandardSettingBottomSheet(
     modifier: Modifier = Modifier,
-    trainingSettingItem: StandardRequestModel,
+    trainingSettingItem: StandardProRequestParam,
     focusManager: FocusManager = LocalFocusManager.current,
     sheetState: SheetState = rememberModalBottomSheetState(),
     onCancelClick: () -> Unit,
     onButtonClick: () -> Unit,
-    onTrainingSettingChange: (StandardRequestModel) -> Unit,
+    onTrainingSettingChange: (StandardProRequestParam) -> Unit,
 ) {
     var currentItem by remember { mutableStateOf(trainingSettingItem) }
 
@@ -157,7 +158,7 @@ internal fun ExpoStandardSettingBottomSheet(
 private fun ExpoStandardSettingBottomSheetPreview() {
     ExpoStandardSettingBottomSheet(
         onCancelClick = {},
-        trainingSettingItem = StandardRequestModel(
+        trainingSettingItem = StandardProRequestParam(
             title = "",
             startedAt = "",
             endedAt = ""

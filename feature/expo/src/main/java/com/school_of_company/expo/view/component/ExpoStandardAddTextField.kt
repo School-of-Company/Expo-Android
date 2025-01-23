@@ -26,16 +26,17 @@ import com.school_of_company.design_system.icon.PlusIcon
 import com.school_of_company.design_system.icon.XIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.model.model.standard.StandardRequestModel
+import com.school_of_company.model.param.expo.StandardProRequestParam
 
 @Composable
 internal fun ExpoStandardAddTextField(
     modifier: Modifier = Modifier,
     placeHolder: String,
-    trainingTextFieldList: List<StandardRequestModel>,
+    trainingTextFieldList: List<StandardProRequestParam>,
     onAddTextField: () -> Unit,
     onRemoveTextField: (Int) -> Unit,
     onTrainingSetting: (Int) -> Unit,
-    onValueChange: (Int, StandardRequestModel) -> Unit,
+    onValueChange: (Int, StandardProRequestParam) -> Unit,
 ) {
 
     ExpoAndroidTheme { colors, typography ->
@@ -136,7 +137,7 @@ private fun ExpoStandardAddTextFieldPreview() {
         onTrainingSetting = {},
         placeHolder = "안녕하세요",
         trainingTextFieldList = listOf(
-            StandardRequestModel(
+            StandardProRequestParam(
                 title = "제목",
                 startedAt = "9:10",
                 endedAt = "11:11"

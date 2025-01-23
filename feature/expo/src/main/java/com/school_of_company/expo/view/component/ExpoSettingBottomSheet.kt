@@ -48,6 +48,7 @@ import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.design_system.theme.color.ExpoColor
 import com.school_of_company.expo.enum.TrainingCategory
 import com.school_of_company.model.model.training.TrainingDtoModel
+import com.school_of_company.model.param.expo.TrainingProRequestParam
 import com.school_of_company.ui.keyBoardOption.numberKeyboardOptions
 import com.school_of_company.ui.util.filterNonDigits
 import com.school_of_company.ui.visualTransformation.DateTimeVisualTransformation
@@ -58,11 +59,11 @@ internal fun ExpoSettingBottomSheet(
     modifier: Modifier = Modifier,
     isTraining: Boolean = true,
     onCancelClick: () -> Unit,
-    trainingSettingItem: TrainingDtoModel,
+    trainingSettingItem: TrainingProRequestParam,
     focusManager: FocusManager = LocalFocusManager.current,
     sheetState: SheetState = rememberModalBottomSheetState(),
     onButtonClick: () -> Unit,
-    onTrainingSettingChange: (TrainingDtoModel) -> Unit,
+    onTrainingSettingChange: (TrainingProRequestParam) -> Unit,
 ) {
     var currentItem by remember { mutableStateOf(trainingSettingItem) }
 
@@ -252,7 +253,7 @@ private fun ExpoTrainingSettingBottomSheetPreview() {
     ExpoSettingBottomSheet(
         onCancelClick = {},
         onButtonClick = {},
-        trainingSettingItem = TrainingDtoModel(
+        trainingSettingItem = TrainingProRequestParam(
             title = "",
             startedAt = "",
             endedAt = "",

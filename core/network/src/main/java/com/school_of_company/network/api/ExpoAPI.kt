@@ -1,6 +1,6 @@
 package com.school_of_company.network.api
 
-import com.school_of_company.network.dto.expo.all.ExpoRequestAndResponse
+import com.school_of_company.network.dto.expo.response.ExpoResponse
 import com.school_of_company.network.dto.expo.response.ExpoIdResponse
 import com.school_of_company.network.dto.expo.response.ExpoListResponse
 import retrofit2.http.*
@@ -13,17 +13,17 @@ interface ExpoAPI {
     @GET("/expo/{expo_id}")
     suspend fun getExpoInformation(
         @Path("expo_id") expoId: String
-    ) : ExpoRequestAndResponse
+    ) : ExpoResponse
 
     @POST("/expo")
     suspend fun registerExpoInformation(
-        @Body body: ExpoRequestAndResponse
+        @Body body: ExpoResponse
     ) : ExpoIdResponse
 
     @PATCH("/expo/{expo_id}")
     suspend fun modifyExpoInformation(
         @Path("expo_id") expoId: String,
-        @Body body: ExpoRequestAndResponse
+        @Body body: ExpoResponse
     )
 
     @DELETE("/expo/{expo_id}")

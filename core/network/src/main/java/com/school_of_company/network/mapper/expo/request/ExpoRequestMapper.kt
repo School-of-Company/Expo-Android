@@ -1,10 +1,10 @@
 package com.school_of_company.network.mapper.expo.request
 
 import com.school_of_company.model.model.expo.ExpoRequestAndResponseModel
-import com.school_of_company.network.dto.expo.all.ExpoRequestAndResponse
+import com.school_of_company.network.dto.expo.response.ExpoResponse
 
-fun ExpoRequestAndResponseModel.toDto(): ExpoRequestAndResponse =
-    ExpoRequestAndResponse(
+fun ExpoRequestAndResponseModel.toDto(): ExpoResponse =
+    ExpoResponse(
         title = this.title,
         description = this.description,
         startedDay = this.startedDay,

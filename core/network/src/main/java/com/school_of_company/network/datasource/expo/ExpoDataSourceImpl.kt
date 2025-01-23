@@ -1,7 +1,7 @@
 package com.school_of_company.network.datasource.expo
 
 import com.school_of_company.network.api.ExpoAPI
-import com.school_of_company.network.dto.expo.all.ExpoRequestAndResponse
+import com.school_of_company.network.dto.expo.response.ExpoResponse
 import com.school_of_company.network.dto.expo.response.ExpoIdResponse
 import com.school_of_company.network.dto.expo.response.ExpoListResponse
 import com.school_of_company.network.util.performApiRequest
@@ -14,13 +14,13 @@ class ExpoDataSourceImpl @Inject constructor(
     override fun getExpoList(): Flow<List<ExpoListResponse>> =
         performApiRequest { service.getExpoList() }
 
-    override fun getExpoInformation(expoId: String): Flow<ExpoRequestAndResponse> =
+    override fun getExpoInformation(expoId: String): Flow<ExpoResponse> =
         performApiRequest { service.getExpoInformation(expoId = expoId) }
 
-    override fun registerExpoInformation(body: ExpoRequestAndResponse): Flow<ExpoIdResponse> =
+    override fun registerExpoInformation(body: ExpoResponse): Flow<ExpoIdResponse> =
         performApiRequest { service.registerExpoInformation(body = body) }
 
-    override fun modifyExpoInformation(expoId: String, body: ExpoRequestAndResponse): Flow<Unit> =
+    override fun modifyExpoInformation(expoId: String, body: ExpoResponse): Flow<Unit> =
         performApiRequest { service.modifyExpoInformation(
             expoId = expoId,
             body = body

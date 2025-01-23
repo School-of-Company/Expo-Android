@@ -68,21 +68,13 @@ import com.school_of_company.design_system.icon.ImageIcon
 import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
-import com.school_of_company.expo.enum.TrainingCategory
 import com.school_of_company.expo.view.component.ExpoAddTextField
 import com.school_of_company.expo.view.component.ExpoSettingBottomSheet
 import com.school_of_company.expo.view.component.ExpoStandardAddTextField
 import com.school_of_company.expo.view.component.ExpoStandardSettingBottomSheet
 import com.school_of_company.expo.viewmodel.ExpoViewModel
-import com.school_of_company.expo.viewmodel.uistate.GetStandardProgramListUiState
-import com.school_of_company.expo.viewmodel.uistate.GetTrainingProgramListUiState
 import com.school_of_company.expo.viewmodel.uistate.ImageUpLoadUiState
 import com.school_of_company.expo.viewmodel.uistate.ModifyExpoInformationUiState
-import com.school_of_company.expo.viewmodel.uistate.ModifyStandardProgramUiState
-import com.school_of_company.expo.viewmodel.uistate.ModifyTrainingProgramUiState
-import com.school_of_company.model.model.expo.ExpoRequestAndResponseModel
-import com.school_of_company.model.model.standard.StandardRequestModel
-import com.school_of_company.model.model.training.TrainingDtoModel
 import com.school_of_company.model.param.expo.ExpoAllRequestParam
 import com.school_of_company.model.param.expo.StandardProRequestParam
 import com.school_of_company.model.param.expo.TrainingProRequestParam
@@ -465,7 +457,7 @@ private fun ExpoModifyScreen(
                     )
 
                     Text(
-                        text = "시작일과 마감일 입력시 ‘ yyyy.mm.dd ‘ 형식으로 입력해주세요.",
+                        text = "시작일과 마감일 입력시 ‘ yyyy-mm-dd ‘ 형식으로 입력해주세요.",
                         style = typography.captionRegular2,
                         color = colors.gray300
                     )

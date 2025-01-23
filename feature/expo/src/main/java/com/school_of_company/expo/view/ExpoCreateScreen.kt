@@ -524,7 +524,7 @@ private fun ExpoCreateScreen(
                 onDismiss = { isOpenTrainingSettingBottomSheet(false) },
                 selectedItem = selectedTrainingItem,
                 onUpdateItem = { updateItem ->
-                    selectedStandardIndex?.let { index ->
+                    selectedTrainingIndex?.let { index ->
                         onTrainingProgramChange(index, updateItem)
                     }
                 }

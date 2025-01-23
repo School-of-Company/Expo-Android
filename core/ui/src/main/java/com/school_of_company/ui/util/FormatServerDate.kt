@@ -2,6 +2,7 @@ package com.school_of_company.ui.util
 
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 import java.util.Locale
@@ -25,7 +26,9 @@ fun String.formatServerDate(): String =
 fun String.formatNoneHyphenServerDate(): String =
     if (this.contains("T")) {
         // 날짜와 시간이 포함된 경우
-        LocalDateTime.parse(this, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm", Locale.getDefault()))
+        LocalDateTime.parse(this, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm"))
+            .atZone(ZoneId.systemDefault())
+            .withZoneSameInstant(ZoneId.of("Asia/Seoul"))
             .format(DateTimeFormatter.ofPattern("yyyyMMddHHmm", Locale.getDefault()))
     } else {
         // 날짜만 포함된 경우

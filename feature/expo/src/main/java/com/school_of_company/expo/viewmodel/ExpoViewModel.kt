@@ -36,6 +36,9 @@ import com.school_of_company.expo.viewmodel.uistate.RegisterTrainingProgramListU
 import com.school_of_company.model.model.expo.ExpoRequestAndResponseModel
 import com.school_of_company.model.model.standard.StandardRequestModel
 import com.school_of_company.model.model.training.TrainingDtoModel
+import com.school_of_company.model.param.expo.ExpoAllRequestParam
+import com.school_of_company.model.param.expo.StandardProRequestParam
+import com.school_of_company.model.param.expo.TrainingProRequestParam
 import com.school_of_company.ui.util.autoFormatToDateTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -80,10 +83,10 @@ internal class ExpoViewModel @Inject constructor(
     private val _swipeRefreshLoading = MutableStateFlow(false)
     val swipeRefreshLoading = _swipeRefreshLoading.asStateFlow()
 
-    private val _trainingProgramTextState = MutableStateFlow<List<TrainingDtoModel>>(emptyList())
+    private val _trainingProgramTextState = MutableStateFlow<List<TrainingProRequestParam>>(emptyList())
     internal val trainingProgramTextState = _trainingProgramTextState.asStateFlow()
 
-    private val _standardProgramTextState = MutableStateFlow<List<StandardRequestModel>>(emptyList())
+    private val _standardProgramTextState = MutableStateFlow<List<StandardProRequestParam>>(emptyList())
     internal val standardProgramTextState = _standardProgramTextState.asStateFlow()
 
     private val _categoryState = MutableStateFlow(TrainingCategory.CHOICE)
@@ -171,13 +174,25 @@ internal class ExpoViewModel @Inject constructor(
             }
     }
 
-    internal fun registerExpoInformation(body: ExpoRequestAndResponseModel) =
+    internal fun registerExpoInformation(body: ExpoAllRequestParam) =
         viewModelScope.launch {
             _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Loading
             registerExpoInformationUseCase(
                 body = body.copy(
                     startedDay = body.startedDay.autoFormatToDateTime(),
                     finishedDay = body.finishedDay.autoFormatToDateTime(),
+                    addStandardProRequestDto = body.addStandardProRequestDto.map { list ->
+                        list.copy(
+                            startedAt = list.startedAt.autoFormatToDateTime(),
+                            endedAt = list.endedAt.autoFormatToDateTime(),
+                        )
+                    },
+                    addTrainingProRequestDto = body.addTrainingProRequestDto.map { list ->
+                        list.copy(
+                            startedAt = list.startedAt.autoFormatToDateTime(),
+                            endedAt = list.endedAt.autoFormatToDateTime(),
+                        )
+                    }
                 ),
             )
                 .asResult()
@@ -198,7 +213,7 @@ internal class ExpoViewModel @Inject constructor(
 
     internal fun modifyExpoInformation(
         expoId: String,
-        body: ExpoRequestAndResponseModel
+        body: ExpoAllRequestParam
     ) = viewModelScope.launch {
         _modifyExpoInformationUiState.value = ModifyExpoInformationUiState.Loading
         modifyExpoInformationUseCase(
@@ -206,6 +221,18 @@ internal class ExpoViewModel @Inject constructor(
             body = body.copy(
                 startedDay = body.startedDay.autoFormatToDateTime(),
                 finishedDay = body.finishedDay.autoFormatToDateTime(),
+                addStandardProRequestDto = body.addStandardProRequestDto.map { list ->
+                    list.copy(
+                        startedAt = list.startedAt.autoFormatToDateTime(),
+                        endedAt = list.endedAt.autoFormatToDateTime(),
+                    )
+                },
+                addTrainingProRequestDto = body.addTrainingProRequestDto.map { list ->
+                    list.copy(
+                        startedAt = list.startedAt.autoFormatToDateTime(),
+                        endedAt = list.endedAt.autoFormatToDateTime(),
+                    )
+                }
             )
         )
             .onSuccess {
@@ -415,7 +442,7 @@ internal class ExpoViewModel @Inject constructor(
                         _getStandardProgramListUiState.value = GetStandardProgramListUiState.Success(result.data)
 
                         _standardProgramTextState.value = result.data.map { program ->
-                            StandardRequestModel(
+                            StandardProRequestParam(
                                 title = program.title,
                                 startedAt = program.startedAt,
                                 endedAt = program.endedAt
@@ -438,7 +465,7 @@ internal class ExpoViewModel @Inject constructor(
                         _getTrainingProgramListUiState.value = GetTrainingProgramListUiState.Success(result.data)
 
                         _trainingProgramTextState.value = result.data.map { program ->
-                            TrainingDtoModel(
+                            TrainingProRequestParam(
                                 title = program.title,
                                 startedAt = program.startedAt,
                                 endedAt = program.endedAt,
@@ -451,14 +478,14 @@ internal class ExpoViewModel @Inject constructor(
             }
     }
 
-    internal fun updateTrainingProgramText(index: Int, updateItem: TrainingDtoModel) {
+    internal fun updateTrainingProgramText(index: Int, updateItem: TrainingProRequestParam) {
         _trainingProgramTextState.value = _trainingProgramTextState.value.toMutableList().apply {
             set(index, updateItem)
         }
     }
 
     internal fun addTrainingProgramText() {
-        _trainingProgramTextState.value += TrainingDtoModel(
+        _trainingProgramTextState.value += TrainingProRequestParam(
             title = "",
             startedAt = "",
             endedAt = "",
@@ -472,14 +499,14 @@ internal class ExpoViewModel @Inject constructor(
         }
     }
 
-    internal fun updateStandardProgramText(index: Int, updateItem: StandardRequestModel) {
+    internal fun updateStandardProgramText(index: Int, updateItem: StandardProRequestParam) {
         _standardProgramTextState.value = _standardProgramTextState.value.toMutableList().apply {
             set(index, updateItem)
         }
     }
 
     internal fun addStandardProgramText() {
-        _standardProgramTextState.value += StandardRequestModel(
+        _standardProgramTextState.value += StandardProRequestParam(
             title = "",
             startedAt = "",
             endedAt = ""
@@ -492,13 +519,13 @@ internal class ExpoViewModel @Inject constructor(
         }
     }
 
-    internal fun updateExistingTrainingProgram(index: Int, updatedItem: TrainingDtoModel) {
+    internal fun updateExistingTrainingProgram(index: Int, updatedItem: TrainingProRequestParam) {
         _trainingProgramTextState.value = _trainingProgramTextState.value.toMutableList().apply {
             this[index] = updatedItem
         }
     }
 
-    internal fun updateExistingStandardProgram(index: Int, updatedItem: StandardRequestModel) {
+    internal fun updateExistingStandardProgram(index: Int, updatedItem: StandardProRequestParam) {
         _standardProgramTextState.value = _standardProgramTextState.value.toMutableList().apply {
             this[index] = updatedItem
         }

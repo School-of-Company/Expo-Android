@@ -61,7 +61,7 @@ internal fun HomeKakaoMap(
                             // 라벨 스타일 정의
                             val styles = kakaoMap.labelManager?.addLabelStyles(
                                 LabelStyles.from(
-                                    LabelStyle.from(R.drawable.ic_downarrowicon)
+                                    LabelStyle.from(R.drawable.map_label)
                                         .setAnchorPoint(0.5f, 1f)
                                 )
                             )

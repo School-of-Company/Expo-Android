@@ -36,6 +36,7 @@ import com.school_of_company.expo.viewmodel.uistate.RegisterExpoInformationUiSta
 import com.school_of_company.expo.viewmodel.uistate.RegisterStandardProgramListUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterTrainingProgramListUiState
 import com.school_of_company.model.model.expo.ExpoRequestAndResponseModel
+import com.school_of_company.model.model.juso.JusoModel
 import com.school_of_company.model.model.standard.StandardRequestModel
 import com.school_of_company.model.model.training.TrainingDtoModel
 import com.school_of_company.ui.util.autoFormatToDateTime
@@ -477,6 +478,10 @@ internal class ExpoViewModel @Inject constructor(
                         is Result.Error -> _getAddressUiState.value = GetAddressUiState.Error(result.exception)
                     }
                 }
+        }
+
+    internal fun convertJibunToXY(searchText: String) = {
+
         }
 
     internal fun updateTrainingProgramText(index: Int, updateItem: TrainingDtoModel) {

@@ -34,7 +34,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -80,16 +79,13 @@ import com.school_of_company.expo.viewmodel.uistate.RegisterExpoInformationUiSta
 import com.school_of_company.expo.viewmodel.uistate.RegisterStandardProgramListUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterTrainingProgramListUiState
 import com.school_of_company.model.model.expo.ExpoRequestAndResponseModel
+import com.school_of_company.model.model.juso.JusoModel
 import com.school_of_company.model.model.standard.StandardRequestModel
 import com.school_of_company.model.model.training.TrainingDtoModel
 import com.school_of_company.ui.keyBoardOption.numberKeyboardOptions
 import com.school_of_company.ui.toast.makeToast
 import com.school_of_company.ui.util.filterNonDigits
 import com.school_of_company.ui.visualTransformation.DateTimeVisualTransformation
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.filter
 
 @Composable
 internal fun ExpoCreateRoute(
@@ -103,6 +99,7 @@ internal fun ExpoCreateRoute(
     val registerStandardProgramListUiState by viewModel.registerStandardProgramListUiState.collectAsStateWithLifecycle()
     val getAddressUiState by viewModel.getAddressUiState.collectAsStateWithLifecycle()
 
+    val addressList by viewModel.addressList.collectAsStateWithLifecycle()
     val modifyTitleState by viewModel.modify_title.collectAsStateWithLifecycle()
     val startedDateState by viewModel.started_date.collectAsStateWithLifecycle()
     val endedDateState by viewModel.ended_date.collectAsStateWithLifecycle()
@@ -209,17 +206,25 @@ internal fun ExpoCreateRoute(
         endedDateState = endedDateState,
         modifyTitleState = modifyTitleState,
         introduceTitleState = introduceTitleState,
+        addressList = addressList,
         addressState = addressState,
         locationState = locationState,
         imageUri = selectedImageUri?.toString() ?: coverImageState,
         onImageClick = { galleryLauncher.launch("image/*") },
+        searchLocation = {
+            if (locationState.length >= 2) {
+                viewModel.searchLocation(locationState)
+            } else {
+                onErrorToast(null, R.string.get_address_lack_of_length)
+            }
+        },
         onModifyTitleChange = viewModel::onModifyTitleChange,
         onStartedDateChange = viewModel::onStartedDateChange,
         onEndedDateChange = viewModel::onEndedDateChange,
         onIntroduceTitleChange = viewModel::onIntroduceTitleChange,
         onAddressChange = viewModel::onAddressChange,
         onLocationChange = viewModel::onLocationChange,
-        searchLocation = viewModel::searchLocation,
+        convertJibunToXY = viewModel::convertJibunToXY,
         onExpoCreateCallBack = {
             if (selectedImageUri != null) {
                 viewModel.imageUpLoad(context, selectedImageUri!!)
@@ -238,7 +243,7 @@ internal fun ExpoCreateRoute(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class, FlowPreview::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ExpoCreateScreen(
     modifier: Modifier = Modifier,
@@ -249,11 +254,13 @@ private fun ExpoCreateScreen(
     addressState: String,
     locationState: String,
     imageUri: String?,
+    addressList: List<JusoModel>,
     trainingProgramTextState: List<TrainingDtoModel>,
     standardProgramTextState: List<StandardRequestModel>,
     focusManager: FocusManager = LocalFocusManager.current,
     scrollState: ScrollState = rememberScrollState(),
     onImageClick: () -> Unit,
+    searchLocation: () -> Unit,
     onExpoCreateCallBack: () -> Unit,
     onAddTrainingProgram: () -> Unit,
     onAddStandardProgram: () -> Unit,
@@ -263,18 +270,12 @@ private fun ExpoCreateScreen(
     onIntroduceTitleChange: (String) -> Unit,
     onAddressChange: (String) -> Unit,
     onLocationChange: (String) -> Unit,
-    searchLocation: (String) -> Unit,
+    convertJibunToXY: (String) -> Unit,
     onRemoveTrainingProgram: (Int) -> Unit,
     onRemoveStandardProgram: (Int) -> Unit,
     onTrainingProgramChange: (Int, TrainingDtoModel) -> Unit,
     onStandardProgramChange: (Int, StandardRequestModel) -> Unit,
 ) {
-/*    LaunchedEffect(locationState) {
-        snapshotFlow { locationState }
-            .filter { it.isNotEmpty() && it.length >= 2 }
-            .debounce(400L)
-            .collectLatest(searchLocation)
-    }*/
 
     val (openTrainingSettingBottomSheet, isOpenTrainingSettingBottomSheet) = rememberSaveable { mutableStateOf(false) }
     val (openStandardSettingBottomSheet, isOpenStandardSettingBottomSheet) = rememberSaveable { mutableStateOf(false) }
@@ -518,7 +519,7 @@ private fun ExpoCreateScreen(
 
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top)) {
 
- /*                       Column(
+                        Column(
                             verticalArrangement = Arrangement.spacedBy(30.dp),
                             horizontalAlignment = Alignment.Start,
                             modifier = Modifier.fillMaxWidth()
@@ -527,23 +528,21 @@ private fun ExpoCreateScreen(
                                 placeholder = "장소를 입력해주세요.",
                                 isDisabled = false,
                                 onValueChange = onLocationChange,
-                                onButtonClicked = { *//* todo : Location Web Hook *//* },
+                                onButtonClicked = searchLocation,
                                 value = locationState,
                             )
 
-                            if (searchResult.isNotEmpty()) {
-                                LazyColumn(
-                                    modifier = Modifier.padding(horizontal = 10.dp)
-                                ) {
-                                    itemsIndexed(searchResult) { index, result ->
+                            if (addressList.isNotEmpty()) {
+                                LazyColumn(modifier = Modifier.padding(horizontal = 10.dp)) {
+                                    itemsIndexed(addressList) { index, result ->
                                         AddressSearchResultItem(
                                             result = result,
-                                            onClick = { onSpotChange(result.jibunAddr) }
+                                            onClick = convertJibunToXY
                                         )
                                         Spacer(modifier = Modifier.height(16.dp))
-                                        if (index < searchResult.lastIndex) {
+                                        if (index < addressList.lastIndex) {
                                             HorizontalDivider(
-                                                color = DoColor.GRAY100,
+                                                color = colors.gray300,
                                                 thickness = 1.dp,
                                                 modifier = Modifier.padding(horizontal = 16.dp)
                                             )
@@ -552,7 +551,7 @@ private fun ExpoCreateScreen(
                                 }
                             }
                         }
-*/
+
                         NoneLimitedLengthTextField(
                             value = addressState,
                             placeholder = "상세주소를 입력해주세요.",
@@ -644,6 +643,7 @@ private fun ExpoCreateScreenPreview() {
         addressState = "",
         locationState = "",
         imageUri = null,
+        addressList = emptyList(),
         trainingProgramTextState = emptyList(),
         standardProgramTextState = emptyList(),
         onImageClick = {},
@@ -658,7 +658,8 @@ private fun ExpoCreateScreenPreview() {
         onLocationChange = {},
         onRemoveTrainingProgram = {},
         onRemoveStandardProgram = {},
-        searchLocation = { _ -> },
+        searchLocation = { },
+        convertJibunToXY = { _ -> },
         onTrainingProgramChange = { _, _ -> },
         onStandardProgramChange = { _, _ -> },
     )

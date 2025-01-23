@@ -37,9 +37,9 @@ class AppViewModel @Inject constructor(
                 .asResult()
                 .collectLatest { result ->
                     when (result) {
-                        is Result.Error -> _appLoginState.value = AppLoginState.Fail
                         Result.Loading -> _appLoginState.value = AppLoginState.Loading
                         is Result.Success -> _appLoginState.value = AppLoginState.Success
+                        is Result.Error -> _appLoginState.value = AppLoginState.Fail
                     }
                 }
         }

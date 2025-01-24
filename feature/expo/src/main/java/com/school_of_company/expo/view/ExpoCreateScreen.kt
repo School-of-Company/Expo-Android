@@ -42,6 +42,7 @@ import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
@@ -524,28 +525,28 @@ private fun ExpoCreateScreen(
                             horizontalAlignment = Alignment.Start,
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            ExpoLocationIconTextField(
-                                placeholder = "장소를 입력해주세요.",
-                                isDisabled = false,
-                                onValueChange = onLocationChange,
-                                onButtonClicked = searchLocation,
-                                value = locationState,
-                            )
+                                ExpoLocationIconTextField(
+                                    placeholder = "장소를 입력해주세요.",
+                                    isDisabled = false,
+                                    onValueChange = onLocationChange,
+                                    onButtonClicked = searchLocation,
+                                    value = locationState,
+                                )
 
-                            if (addressList.isNotEmpty()) {
-                                LazyColumn(modifier = Modifier.padding(horizontal = 10.dp)) {
-                                    itemsIndexed(addressList) { index, result ->
-                                        AddressSearchResultItem(
-                                            result = result,
-                                            onClick = convertJibunToXY
-                                        )
-                                        Spacer(modifier = Modifier.height(16.dp))
-                                        if (index < addressList.lastIndex) {
-                                            HorizontalDivider(
-                                                color = colors.gray300,
-                                                thickness = 1.dp,
-                                                modifier = Modifier.padding(horizontal = 16.dp)
+                                if (addressList.isNotEmpty()) {
+                                    Column(modifier = Modifier.padding(horizontal = 10.dp)) {
+                                        addressList.forEachIndexed { index, result ->
+                                            AddressSearchResultItem(
+                                                result = result,
+                                                onClick = convertJibunToXY
                                             )
+                                            Spacer(modifier = Modifier.height(16.dp))
+                                            if (index < addressList.lastIndex) {
+                                                HorizontalDivider(
+                                                    color = colors.gray300,
+                                                    thickness = 1.dp,
+                                                    modifier = Modifier.padding(horizontal = 16.dp)
+                                                )
                                         }
                                     }
                                 }

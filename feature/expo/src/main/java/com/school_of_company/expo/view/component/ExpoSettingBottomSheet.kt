@@ -57,10 +57,10 @@ import com.school_of_company.ui.visualTransformation.DateTimeVisualTransformatio
 @Composable
 internal fun ExpoSettingBottomSheet(
     modifier: Modifier = Modifier,
-    onCancelClick: () -> Unit,
-    trainingSettingItem: TrainingProRequestParam,
     focusManager: FocusManager = LocalFocusManager.current,
     sheetState: SheetState = rememberModalBottomSheetState(),
+    trainingSettingItem: TrainingProRequestParam,
+    onCancelClick: () -> Unit,
     onButtonClick: () -> Unit,
     onTrainingSettingChange: (TrainingProRequestParam) -> Unit,
 ) {
@@ -201,10 +201,10 @@ internal fun ExpoSettingBottomSheet(
 @Composable
 internal fun ExpoSettingModifyBottomSheet(
     modifier: Modifier = Modifier,
-    onCancelClick: () -> Unit,
-    trainingSettingItem: TrainingProIdRequestParam,
     focusManager: FocusManager = LocalFocusManager.current,
     sheetState: SheetState = rememberModalBottomSheetState(),
+    trainingSettingItem: TrainingProIdRequestParam,
+    onCancelClick: () -> Unit,
     onButtonClick: () -> Unit,
     onTrainingSettingChange: (TrainingProIdRequestParam) -> Unit,
 ) {

@@ -141,4 +141,8 @@ object NetworkModule {
     @Provides
     fun provideAddressApi(retrofit: Retrofit) : AddressApi =
         retrofit.create(AddressApi::class.java)
+
+    @Provides
+    fun provideKakaoLocalApi(retrofit: Retrofit): KakaoLocalApi =
+        retrofit.create(KakaoLocalApi::class.java)
 }

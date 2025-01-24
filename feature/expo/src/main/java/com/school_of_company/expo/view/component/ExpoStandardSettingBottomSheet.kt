@@ -31,7 +31,8 @@ import com.school_of_company.design_system.component.button.ExpoStateButton
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.icon.XIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
-import com.school_of_company.model.model.standard.StandardRequestModel
+import com.school_of_company.model.param.expo.StandardProIdRequestParam
+import com.school_of_company.model.param.expo.StandardProRequestParam
 import com.school_of_company.ui.keyBoardOption.numberKeyboardOptions
 import com.school_of_company.ui.util.filterNonDigits
 import com.school_of_company.ui.visualTransformation.DateTimeVisualTransformation
@@ -40,12 +41,127 @@ import com.school_of_company.ui.visualTransformation.DateTimeVisualTransformatio
 @Composable
 internal fun ExpoStandardSettingBottomSheet(
     modifier: Modifier = Modifier,
-    trainingSettingItem: StandardRequestModel,
+    trainingSettingItem: StandardProRequestParam,
     focusManager: FocusManager = LocalFocusManager.current,
     sheetState: SheetState = rememberModalBottomSheetState(),
     onCancelClick: () -> Unit,
     onButtonClick: () -> Unit,
-    onTrainingSettingChange: (StandardRequestModel) -> Unit,
+    onTrainingSettingChange: (StandardProRequestParam) -> Unit,
+) {
+    var currentItem by remember { mutableStateOf(trainingSettingItem) }
+
+    ExpoAndroidTheme { colors, typography ->
+
+        ModalBottomSheet(
+            onDismissRequest = { onCancelClick() },
+            sheetState = sheetState,
+            containerColor = colors.white,
+            shape = RoundedCornerShape(
+                topStart = 6.dp,
+                topEnd = 6.dp
+            )
+        ) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(24.dp, Alignment.Top),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = modifier
+                    .fillMaxWidth()
+                    .background(
+                        color = colors.white,
+                        shape = RoundedCornerShape(
+                            topStart = 6.dp,
+                            topEnd = 6.dp
+                        )
+                    )
+                    .padding(
+                        horizontal = 18.dp,
+                        vertical = 24.dp
+                    )
+                    .pointerInput(Unit) {
+                        detectTapGestures(
+                            onTap = {
+                                focusManager.clearFocus()
+                            }
+                        )
+                    }
+                    .imePadding()
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = "연수 설정",
+                        style = typography.titleBold3,
+                        color = colors.black,
+                        modifier = Modifier.weight(1f)
+                    )
+
+                    XIcon(
+                        tint = colors.black,
+                        modifier = Modifier.expoClickable { onCancelClick() }
+                    )
+                }
+                ExpoNoneLineTextField(
+                    textState = currentItem.startedAt,
+                    lengthLimit = 12,
+                    keyboardOptions = numberKeyboardOptions(),
+                    visualTransformation = DateTimeVisualTransformation(),
+                    placeHolder = {
+                        Text(
+                            text = "yyyy-MM-dd HH:mm",
+                            style = typography.titleBold2,
+                            color = colors.gray300,
+                            maxLines = 1
+                        )
+                    },
+                    onTextChange = { newText ->
+                        currentItem = currentItem.copy(startedAt = newText.filterNonDigits())
+                    }
+                )
+
+                ExpoNoneLineTextField(
+                    textState = currentItem.endedAt,
+                    lengthLimit = 12,
+                    keyboardOptions = numberKeyboardOptions(),
+                    visualTransformation = DateTimeVisualTransformation(),
+                    placeHolder = {
+                        Text(
+                            text = "yyyy-MM-dd HH:mm",
+                            style = typography.titleBold2,
+                            color = colors.gray300,
+                            maxLines = 1
+                        )
+                    },
+                    onTextChange = { newText ->
+                        currentItem = currentItem.copy(endedAt = newText.filterNonDigits())
+                    }
+                )
+
+                ExpoStateButton(
+                    text = "확인",
+                    onClick = {
+                        if (currentItem.startedAt.isValidDateTimeSequence(currentItem.endedAt)) {
+                            onTrainingSettingChange(currentItem)
+                            onButtonClick()
+                        } else {
+                            // TODO: 예외 처리
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+internal fun ExpoStandardSettingModifyBottomSheet(
+    modifier: Modifier = Modifier,
+    trainingSettingItem: StandardProIdRequestParam,
+    focusManager: FocusManager = LocalFocusManager.current,
+    sheetState: SheetState = rememberModalBottomSheetState(),
+    onCancelClick: () -> Unit,
+    onButtonClick: () -> Unit,
+    onTrainingSettingChange: (StandardProIdRequestParam) -> Unit,
 ) {
     var currentItem by remember { mutableStateOf(trainingSettingItem) }
 
@@ -157,7 +273,7 @@ internal fun ExpoStandardSettingBottomSheet(
 private fun ExpoStandardSettingBottomSheetPreview() {
     ExpoStandardSettingBottomSheet(
         onCancelClick = {},
-        trainingSettingItem = StandardRequestModel(
+        trainingSettingItem = StandardProRequestParam(
             title = "",
             startedAt = "",
             endedAt = ""

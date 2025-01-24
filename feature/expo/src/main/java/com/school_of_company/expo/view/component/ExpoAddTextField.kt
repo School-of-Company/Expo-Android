@@ -25,17 +25,116 @@ import com.school_of_company.design_system.component.modifier.clickable.expoClic
 import com.school_of_company.design_system.icon.PlusIcon
 import com.school_of_company.design_system.icon.XIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
-import com.school_of_company.model.model.training.TrainingDtoModel
+import com.school_of_company.model.param.expo.TrainingProIdRequestParam
+import com.school_of_company.model.param.expo.TrainingProRequestParam
 
 @Composable
 internal fun ExpoAddTextField(
     modifier: Modifier = Modifier,
     placeHolder: String,
-    trainingTextFieldList: List<TrainingDtoModel>,
+    trainingTextFieldList: List<TrainingProRequestParam>,
     onAddTextField: () -> Unit,
     onRemoveTextField: (Int) -> Unit,
     onTrainingSetting: (Int) -> Unit,
-    onValueChange: (Int, TrainingDtoModel) -> Unit,
+    onValueChange: (Int, TrainingProRequestParam) -> Unit,
+) {
+
+    ExpoAndroidTheme { colors, typography ->
+        Box(
+            modifier = modifier
+                .fillMaxWidth()
+                .border(
+                    width = 1.dp,
+                    color = colors.gray200,
+                    shape = RoundedCornerShape(size = 6.dp)
+                )
+                .background(
+                    color = Color.Transparent,
+                    shape = RoundedCornerShape(size = 6.dp)
+                )
+                .padding(horizontal = 16.dp, vertical = 26.dp)
+        ) {
+            Column(
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                trainingTextFieldList.forEachIndexed { index, text ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "${index + 1}",
+                            style = typography.bodyRegular2,
+                            color = colors.gray500,
+                        )
+
+                        Spacer(modifier = Modifier.padding(end = 12.dp))
+
+                        BasicTextField(
+                            value = text.title,
+                            onValueChange = { newState ->
+                                onValueChange(index, text.copy(title = newState))
+                            },
+                            textStyle = typography.bodyRegular2,
+                            cursorBrush = SolidColor(colors.main),
+                            decorationBox = { innerTextField ->
+                                if (text.title.isEmpty()) {
+                                    Text(
+                                        text = placeHolder,
+                                        style = typography.bodyRegular2,
+                                        color = colors.gray300
+                                    )
+                                }
+                                innerTextField()
+                            },
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(end = 8.dp)
+                        )
+
+                        TrainingSettingButton(
+                            text = "연수설정",
+                            onClick = { onTrainingSetting(index) }
+                        )
+
+                        IconButton(onClick = { onRemoveTextField(index) }) {
+                            XIcon(tint = colors.black)
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .expoClickable { onAddTextField() }
+                        .align(Alignment.CenterHorizontally)
+                ) {
+                    PlusIcon(tint = colors.main300)
+
+                    Text(
+                        text = "추가하기",
+                        style = typography.captionBold1,
+                        color = colors.main300
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+internal fun ExpoAddModifyTextField(
+    modifier: Modifier = Modifier,
+    placeHolder: String,
+    trainingTextFieldList: List<TrainingProIdRequestParam>,
+    onAddTextField: () -> Unit,
+    onRemoveTextField: (Int) -> Unit,
+    onTrainingSetting: (Int) -> Unit,
+    onValueChange: (Int, TrainingProIdRequestParam) -> Unit,
 ) {
 
     ExpoAndroidTheme { colors, typography ->

@@ -406,3 +406,16 @@ fun LogoutIcon(
         tint = tint
     )
 }
+
+@Composable
+fun SearchIcon(
+    modifier: Modifier = Modifier,
+    tint: Color = Color.Unspecified
+) {
+    Icon(
+        painter = painterResource(id = R.drawable.ic_search),
+        contentDescription = "검색 아이콘",
+        modifier = modifier,
+        tint = tint
+    )
+}

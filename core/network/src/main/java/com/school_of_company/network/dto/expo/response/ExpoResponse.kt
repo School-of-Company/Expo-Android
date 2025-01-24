@@ -1,10 +1,10 @@
-package com.school_of_company.network.dto.expo.all
+package com.school_of_company.network.dto.expo.response
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class ExpoRequestAndResponse(
+data class ExpoResponse(
     @Json(name = "title") val title: String,
     @Json(name = "description") val description: String,
     @Json(name = "startedDay") val startedDay: String, // yyyy-mm-dd

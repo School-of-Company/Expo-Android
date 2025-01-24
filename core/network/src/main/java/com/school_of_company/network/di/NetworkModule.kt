@@ -137,7 +137,6 @@ object NetworkModule {
         retrofit.create(AuthAPI::class.java)
 
     @Provides
-    @Singleton
     fun provideSmsAPI(@BaseUrl retrofit: Retrofit): SmsAPI =
         retrofit.create(SmsAPI::class.java)
 

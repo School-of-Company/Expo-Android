@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.school_of_company.common.exception.NoResponseException
 import com.school_of_company.common.result.Result
 import com.school_of_company.common.result.asResult
 import com.school_of_company.domain.usecase.Image.ImageUpLoadUseCase
@@ -14,6 +15,7 @@ import com.school_of_company.domain.usecase.expo.GetExpoListUseCase
 import com.school_of_company.domain.usecase.expo.ModifyExpoInformationUseCase
 import com.school_of_company.domain.usecase.expo.RegisterExpoInformationUseCase
 import com.school_of_company.domain.usecase.juso.GetAddressUseCase
+import com.school_of_company.domain.usecase.kakao.GetCoordinatesUseCase
 import com.school_of_company.domain.usecase.standard.ModifyStandardProgramUseCase
 import com.school_of_company.domain.usecase.standard.RegisterStandardListProgramUseCase
 import com.school_of_company.domain.usecase.standard.StandardProgramListUseCase
@@ -24,6 +26,7 @@ import com.school_of_company.expo.enum.TrainingCategory
 import com.school_of_company.expo.util.getMultipartFile
 import com.school_of_company.expo.viewmodel.uistate.DeleteExpoInformationUiState
 import com.school_of_company.expo.viewmodel.uistate.GetAddressUiState
+import com.school_of_company.expo.viewmodel.uistate.GetCoordinatesUiState
 import com.school_of_company.expo.viewmodel.uistate.GetExpoInformationUiState
 import com.school_of_company.expo.viewmodel.uistate.GetExpoListUiState
 import com.school_of_company.expo.viewmodel.uistate.GetStandardProgramListUiState
@@ -57,6 +60,7 @@ internal class ExpoViewModel @Inject constructor(
     private val getAddressUseCase: GetAddressUseCase,
     private val getExpoListUseCase: GetExpoListUseCase,
     private val imageUpLoadUseCase: ImageUpLoadUseCase,
+    private val getCoordinatesUseCase: GetCoordinatesUseCase,
     private val getExpoInformationUseCase: GetExpoInformationUseCase,
     private val standardProgramListUseCase: StandardProgramListUseCase,
     private val trainingProgramListUseCase: TrainingProgramListUseCase,
@@ -95,6 +99,9 @@ internal class ExpoViewModel @Inject constructor(
 
     private val _getExpoInformationUiState = MutableStateFlow<GetExpoInformationUiState>(GetExpoInformationUiState.Loading)
     internal val getExpoInformationUiState = _getExpoInformationUiState.asStateFlow()
+
+    private val _getCoordinatesUiState = MutableStateFlow<GetCoordinatesUiState>(GetCoordinatesUiState.Loading)
+    internal val getCoordinatesUiState = _getCoordinatesUiState.asStateFlow()
 
     private val _getAddressUiState = MutableStateFlow<GetAddressUiState>(GetAddressUiState.Loading)
     internal val getAddressUiState = _getAddressUiState.asStateFlow()
@@ -480,9 +487,21 @@ internal class ExpoViewModel @Inject constructor(
                 }
         }
 
-    internal fun convertJibunToXY(searchText: String) = {
-
-        }
+    internal fun convertJibunToXY(searchText: String) = viewModelScope.launch {
+        getCoordinatesUseCase(address = searchText)
+            .asResult()
+            .collectLatest { result ->
+                when(result){
+                    is Result.Loading -> _getCoordinatesUiState.value = GetCoordinatesUiState.Loading
+                    is Result.Success -> if (result.data.addressName == "Unknown") {
+                        _getCoordinatesUiState.value = GetCoordinatesUiState.Error(NoResponseException())
+                    } else {
+                        _getCoordinatesUiState.value = GetCoordinatesUiState.Success(result.data)
+                    }
+                    is Result.Error -> _getCoordinatesUiState.value = GetCoordinatesUiState.Error(result.exception)
+                }
+            }
+    }
 
     internal fun updateTrainingProgramText(index: Int, updateItem: TrainingDtoModel) {
         _trainingProgramTextState.value = _trainingProgramTextState.value.toMutableList().apply {

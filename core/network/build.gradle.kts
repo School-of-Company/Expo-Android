@@ -27,6 +27,16 @@ android {
             name = "ADDRESS_API_KEY",
             getApiKey("ADDRESS_API_KEY")
         )
+        buildConfigField(
+            type = "String",
+            name = "KAKAO_URL",
+            getApiKey("KAKAO_URL")
+        )
+        buildConfigField(
+            type = "String",
+            name = "KAKAO_REST_KEY",
+            getApiKey("KAKAO_REST_KEY")
+        )
     }
 
     namespace = "com.school_of_company.network"

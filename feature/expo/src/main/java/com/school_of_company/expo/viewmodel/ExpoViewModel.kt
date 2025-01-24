@@ -79,6 +79,8 @@ internal class ExpoViewModel @Inject constructor(
         private const val ENDED_DATE = "ended_date"
         private const val INTRODUCE_TITLE = "introduce_title"
         private const val ADDRESS = "address"
+        private const val COORDINATEX = "coordinatesx"
+        private const val COORDINATEY = "coordinatesy"
         private const val LOCATION = "location"
         private const val COVER_IMAGE = "cover_image"
         private const val STARTED = "started"
@@ -152,6 +154,10 @@ internal class ExpoViewModel @Inject constructor(
     internal var location = savedStateHandle.getStateFlow(key = LOCATION, initialValue = "")
 
     internal var cover_image = savedStateHandle.getStateFlow(key = COVER_IMAGE, initialValue = "")
+
+    internal var coordinateX = savedStateHandle.getStateFlow(key = COORDINATEX, initialValue = "")
+
+    internal var coordinateY = savedStateHandle.getStateFlow(key = COORDINATEY, initialValue = "")
 
     val expoListSize: StateFlow<Int> = getExpoListUiState
         .map { state ->
@@ -502,6 +508,8 @@ internal class ExpoViewModel @Inject constructor(
                     is Result.Success -> if (result.data.addressName == "Unknown") {
                         _getCoordinatesUiState.value = GetCoordinatesUiState.Error(NoResponseException())
                     } else {
+                        onCoordinatexChange(result.data.x)
+                        onCoordinateYChange(result.data.y)
                         _getCoordinatesUiState.value = GetCoordinatesUiState.Success(result.data)
                     }
                     is Result.Error -> _getCoordinatesUiState.value = GetCoordinatesUiState.Error(result.exception)
@@ -597,4 +605,13 @@ internal class ExpoViewModel @Inject constructor(
     internal fun onEndedChange(value: String) {
         savedStateHandle[ENDED] = value
     }
+
+    internal fun onCoordinatexChange(value: String) {
+        savedStateHandle[COORDINATEX] = value
+    }
+
+    internal fun onCoordinateYChange(value: String) {
+        savedStateHandle[COORDINATEY] = value
+    }
+
 }

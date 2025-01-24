@@ -13,7 +13,7 @@ class KakaoLocalDataSourceImpl @Inject constructor(
     override suspend fun getCoordinates(address: String): Flow<KakaoAddressResponse> =
         performApiRequest {
             kakaoLocalApi.getCoordinates(
-                apiKey = BuildConfig.KAKAO_API_KEY,
+                apiKey = BuildConfig.KAKAO_REST_KEY,
                 address = address,
                 size = 1,
             )

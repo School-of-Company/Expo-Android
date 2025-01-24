@@ -481,7 +481,13 @@ internal class ExpoViewModel @Inject constructor(
                 .collectLatest { result ->
                     when (result) {
                         is Result.Loading -> _getAddressUiState.value = GetAddressUiState.Loading
-                        is Result.Success -> _getAddressUiState.value = GetAddressUiState.Success(result.data)
+                        is Result.Success -> {
+                            if(result.data.isNotEmpty()){
+                                _getAddressUiState.value =  GetAddressUiState.Success(result.data)
+                            } else {
+                                _getAddressUiState.value = GetAddressUiState.Error(NoResponseException())
+                            }
+                        }
                         is Result.Error -> _getAddressUiState.value = GetAddressUiState.Error(result.exception)
                     }
                 }

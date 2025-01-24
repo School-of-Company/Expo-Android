@@ -12,6 +12,8 @@ import com.school_of_company.network.datasource.image.ImageDataSource
 import com.school_of_company.network.datasource.image.ImageDataSourceImpl
 import com.school_of_company.network.datasource.juso.AddressDataSource
 import com.school_of_company.network.datasource.juso.AddressDataSourceImpl
+import com.school_of_company.network.datasource.kakao.KakaoLocalDataSource
+import com.school_of_company.network.datasource.kakao.KakaoLocalDataSourceImpl
 import com.school_of_company.network.datasource.participant.ParticipantDataSource
 import com.school_of_company.network.datasource.participant.ParticipantDataSourceImpl
 import com.school_of_company.network.datasource.sms.SmsDataSource
@@ -85,4 +87,9 @@ abstract class RemoteDataSourceModule {
     abstract fun bindAddressDataSource(
         addressDataSourceImpl: AddressDataSourceImpl
     ) : AddressDataSource
+
+    @Binds
+    abstract fun bindAddressDataSource(
+        kakaoLocalDataSourceImpl: KakaoLocalDataSourceImpl
+    ) : KakaoLocalDataSource
 }

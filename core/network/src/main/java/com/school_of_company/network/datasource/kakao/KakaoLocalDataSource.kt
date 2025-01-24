@@ -1,0 +1,8 @@
+package com.school_of_company.network.datasource.kakao
+
+import com.school_of_company.network.dto.kakao.KakaoAddressResponse
+import kotlinx.coroutines.flow.Flow
+
+interface KakaoLocalDataSource {
+    suspend fun getCoordinates(address: String): Flow<KakaoAddressResponse>
+}

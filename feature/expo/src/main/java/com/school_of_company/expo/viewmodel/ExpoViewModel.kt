@@ -16,8 +16,6 @@ import com.school_of_company.domain.usecase.expo.ModifyExpoInformationUseCase
 import com.school_of_company.domain.usecase.expo.RegisterExpoInformationUseCase
 import com.school_of_company.domain.usecase.juso.GetAddressUseCase
 import com.school_of_company.domain.usecase.kakao.GetCoordinatesUseCase
-import com.school_of_company.domain.usecase.standard.ModifyStandardProgramUseCase
-import com.school_of_company.domain.usecase.standard.RegisterStandardListProgramUseCase
 import com.school_of_company.domain.usecase.standard.StandardProgramListUseCase
 import com.school_of_company.domain.usecase.training.TrainingProgramListUseCase
 import com.school_of_company.expo.enum.TrainingCategory
@@ -32,18 +30,13 @@ import com.school_of_company.expo.viewmodel.uistate.GetTrainingProgramListUiStat
 import com.school_of_company.expo.viewmodel.uistate.ImageUpLoadUiState
 import com.school_of_company.expo.viewmodel.uistate.ModifyExpoInformationUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterExpoInformationUiState
+import com.school_of_company.model.model.juso.JusoModel
 import com.school_of_company.model.param.expo.ExpoAllRequestParam
 import com.school_of_company.model.param.expo.ExpoModifyRequestParam
 import com.school_of_company.model.param.expo.StandardProIdRequestParam
 import com.school_of_company.model.param.expo.StandardProRequestParam
 import com.school_of_company.model.param.expo.TrainingProIdRequestParam
 import com.school_of_company.model.param.expo.TrainingProRequestParam
-import com.school_of_company.expo.viewmodel.uistate.RegisterStandardProgramListUiState
-import com.school_of_company.expo.viewmodel.uistate.RegisterTrainingProgramListUiState
-import com.school_of_company.model.model.expo.ExpoRequestAndResponseModel
-import com.school_of_company.model.model.juso.JusoModel
-import com.school_of_company.model.model.standard.StandardRequestModel
-import com.school_of_company.model.model.training.TrainingDtoModel
 import com.school_of_company.ui.util.autoFormatToDateTime
 import com.school_of_company.ui.util.formatNoneHyphenServerDate
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -224,7 +217,6 @@ internal class ExpoViewModel @Inject constructor(
     internal fun initRegisterExpo() {
         _imageUpLoadUiState.value = ImageUpLoadUiState.Loading
         _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Loading
-        _registerTrainingProgramListUiState.value = RegisterTrainingProgramListUiState.Loading
         _getCoordinatesUiState.value = GetCoordinatesUiState.Loading
         _getAddressUiState.value = GetAddressUiState.Loading
     }

@@ -223,6 +223,8 @@ internal class ExpoViewModel @Inject constructor(
         _imageUpLoadUiState.value = ImageUpLoadUiState.Loading
         _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Loading
         _registerTrainingProgramListUiState.value = RegisterTrainingProgramListUiState.Loading
+        _getCoordinatesUiState.value = GetCoordinatesUiState.Loading
+        _getAddressUiState.value = GetAddressUiState.Loading
     }
 
     internal fun modifyExpoInformation(

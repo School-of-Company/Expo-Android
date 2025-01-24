@@ -211,7 +211,7 @@ internal class ExpoViewModel @Inject constructor(
                     }
                 ),
             )
-                .asResult()
+                .asResult() // TODO: 컨벤션 확인 
                 .collectLatest { result ->
                     when (result) {
                         is Result.Loading -> _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Loading

@@ -11,6 +11,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
+import com.school_of_company.design_system.theme.color.ExpoColor
 import com.school_of_company.model.model.juso.JusoModel
 
 @Composable
@@ -28,6 +29,7 @@ fun AddressSearchResultItem(
     ) {
         Text(
             text = result.roadAddr,
+            color = ExpoColor.gray300,
             fontWeight = FontWeight(400),
             textAlign = TextAlign.Start,
             modifier = Modifier.weight(1f),

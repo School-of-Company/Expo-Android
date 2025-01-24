@@ -99,6 +99,7 @@ internal fun ExpoCreateRoute(
     val registerTrainingProgramListUiState by viewModel.registerTrainingProgramListUiState.collectAsStateWithLifecycle()
     val registerStandardProgramListUiState by viewModel.registerStandardProgramListUiState.collectAsStateWithLifecycle()
     val getAddressUiState by viewModel.getAddressUiState.collectAsStateWithLifecycle()
+    val getCoordinatesUiState by viewModel.getCoordinatesUiState.collectAsStateWithLifecycle()
 
     val addressList by viewModel.addressList.collectAsStateWithLifecycle()
     val modifyTitleState by viewModel.modify_title.collectAsStateWithLifecycle()
@@ -155,6 +156,22 @@ internal fun ExpoCreateRoute(
             }
         }
     }
+
+    LaunchedEffect(getCoordinatesUiState) {
+        when (getCoordinatesUiState) {
+            is GetCoordinatesUiState.Loading -> Unit
+            is GetCoordinatesUiState.Success -> onErrorToast(
+                null,
+                R.string.get_address_convert_success
+            )
+
+            is GetCoordinatesUiState.Error -> onErrorToast(
+                (getCoordinatesUiState as GetCoordinatesUiState.Error).exception,
+                R.string.get_address_convert_fail
+            )
+        }
+    }
+
     LaunchedEffect(getAddressUiState) {
         when (getAddressUiState) {
             is GetAddressUiState.Error -> onErrorToast(

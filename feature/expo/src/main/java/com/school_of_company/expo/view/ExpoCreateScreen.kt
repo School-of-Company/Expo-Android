@@ -18,8 +18,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -42,7 +40,6 @@ import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
@@ -75,6 +72,7 @@ import com.school_of_company.expo.view.component.ExpoStandardAddTextField
 import com.school_of_company.expo.view.component.ExpoStandardSettingBottomSheet
 import com.school_of_company.expo.viewmodel.ExpoViewModel
 import com.school_of_company.expo.viewmodel.uistate.GetAddressUiState
+import com.school_of_company.expo.viewmodel.uistate.GetCoordinatesUiState
 import com.school_of_company.expo.viewmodel.uistate.ImageUpLoadUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterExpoInformationUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterStandardProgramListUiState
@@ -145,8 +143,8 @@ internal fun ExpoCreateRoute(
                         description = viewModel.introduce_title.value,
                         location = viewModel.location.value,
                         coverImage = (imageUpLoadUiState as ImageUpLoadUiState.Success).data.imageURL,
-                        x = 37.511734f,
-                        y = 127.05905f
+                        x = viewModel.coordinateX.value.toFloat(),
+                        y = viewModel.coordinateY.value.toFloat(),
                     )
                 )
             }
@@ -542,28 +540,28 @@ private fun ExpoCreateScreen(
                             horizontalAlignment = Alignment.Start,
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                                ExpoLocationIconTextField(
-                                    placeholder = "장소를 입력해주세요.",
-                                    isDisabled = false,
-                                    onValueChange = onLocationChange,
-                                    onButtonClicked = searchLocation,
-                                    value = locationState,
-                                )
+                            ExpoLocationIconTextField(
+                                placeholder = "장소를 입력해주세요.",
+                                isDisabled = false,
+                                onValueChange = onLocationChange,
+                                onButtonClicked = searchLocation,
+                                value = locationState,
+                            )
 
-                                if (addressList.isNotEmpty()) {
-                                    Column(modifier = Modifier.padding(horizontal = 10.dp)) {
-                                        addressList.forEachIndexed { index, result ->
-                                            AddressSearchResultItem(
-                                                result = result,
-                                                onClick = convertJibunToXY
+                            if (addressList.isNotEmpty()) {
+                                Column(modifier = Modifier.padding(horizontal = 10.dp)) {
+                                    addressList.forEachIndexed { index, result ->
+                                        AddressSearchResultItem(
+                                            result = result,
+                                            onClick = convertJibunToXY
+                                        )
+                                        Spacer(modifier = Modifier.height(16.dp))
+                                        if (index < addressList.lastIndex) {
+                                            HorizontalDivider(
+                                                color = colors.gray300,
+                                                thickness = 1.dp,
+                                                modifier = Modifier.padding(horizontal = 16.dp)
                                             )
-                                            Spacer(modifier = Modifier.height(16.dp))
-                                            if (index < addressList.lastIndex) {
-                                                HorizontalDivider(
-                                                    color = colors.gray300,
-                                                    thickness = 1.dp,
-                                                    modifier = Modifier.padding(horizontal = 16.dp)
-                                                )
                                         }
                                     }
                                 }

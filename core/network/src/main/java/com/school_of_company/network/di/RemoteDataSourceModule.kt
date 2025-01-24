@@ -89,7 +89,7 @@ abstract class RemoteDataSourceModule {
     ) : AddressDataSource
 
     @Binds
-    abstract fun bindAddressDataSource(
+    abstract fun bindAKakaoDataSource(
         kakaoLocalDataSourceImpl: KakaoLocalDataSourceImpl
     ) : KakaoLocalDataSource
 }

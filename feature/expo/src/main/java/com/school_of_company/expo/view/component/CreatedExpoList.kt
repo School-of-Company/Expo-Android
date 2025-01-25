@@ -1,13 +1,18 @@
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.school_of_company.expo.view.component.CreatedExpoListItem
+import com.school_of_company.expo.view.component.ExpoCreatedDeleteButton
 import com.school_of_company.model.entity.expo.ExpoListResponseEntity
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -19,10 +24,13 @@ internal fun CreatedExpoList(
     selectedIndex: Int,
     expoList: ImmutableList<ExpoListResponseEntity>,
     onItemClick: (Boolean, Int) -> Unit,
+    enbaled: Boolean,
+    deleteSelectedExpo: (Int) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(20.dp)
+        verticalArrangement = Arrangement.spacedBy(20.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         itemsIndexed(expoList) { index, item ->
             CreatedExpoListItem(
@@ -33,6 +41,17 @@ internal fun CreatedExpoList(
                 index = index,
                 onClick = { onItemClick(selectedIndex == index, index) }
             )
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(12.dp))
+
+            ExpoCreatedDeleteButton(
+                enabled = enbaled,
+                onClick = { deleteSelectedExpo(selectedIndex) },
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
         }
     }
 }
@@ -53,6 +72,8 @@ fun CreatedExpoListPreview() {
         ),
         onItemClick = { _, _ -> },
         selectedIndex = 1,
-        scrollState = ScrollState(1)
+        scrollState = ScrollState(1),
+        deleteSelectedExpo = {},
+        enbaled = false
     )
 }

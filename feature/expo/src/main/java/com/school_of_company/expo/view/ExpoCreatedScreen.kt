@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -137,19 +138,16 @@ private fun ExpoCreatedScreen(
                     when (getExpoListUiState) {
                         is GetExpoListUiState.Loading -> Unit
                         is GetExpoListUiState.Success -> {
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Column(horizontalAlignment = Alignment.CenterHorizontally,) {
                                 CreatedExpoList(
                                     selectedIndex = selectedIndex,
-                                    scrollState = scrollState,
                                     expoList = getExpoListUiState.data.toPersistentList(),
+                                    scrollState = scrollState,
                                     onItemClick = { isSelected, index ->
                                         setSelectedIndex(if (isSelected) -1 else index)
                                     },
-                                )
-                                Spacer(modifier = Modifier.height(32.dp))
-                                ExpoCreatedDeleteButton(
-                                    enabled = selectedIndex != -1,
-                                    onClick = { deleteSelectedExpo(selectedIndex) }
+                                    deleteSelectedExpo = deleteSelectedExpo,
+                                    enbaled = selectedIndex != -1
                                 )
                             }
                         }
@@ -195,7 +193,39 @@ private fun ExpoCreatedScreenPreview() {
                     startedDay = "2024-11-23",
                     finishedDay = "2024-11-23",
                     coverImage = null,
-                )
+                ),
+                ExpoListResponseEntity(
+                    id = "2",
+                    title = "제목",
+                    description = "묘사",
+                    startedDay = "2024-11-23",
+                    finishedDay = "2024-11-23",
+                    coverImage = null,
+                ),
+                ExpoListResponseEntity(
+                    id = "2",
+                    title = "제목",
+                    description = "묘사",
+                    startedDay = "2024-11-23",
+                    finishedDay = "2024-11-23",
+                    coverImage = null,
+                ),
+                ExpoListResponseEntity(
+                    id = "2",
+                    title = "제목",
+                    description = "묘사",
+                    startedDay = "2024-11-23",
+                    finishedDay = "2024-11-23",
+                    coverImage = null,
+                ),
+                ExpoListResponseEntity(
+                    id = "2",
+                    title = "제목",
+                    description = "묘사",
+                    startedDay = "2024-11-23",
+                    finishedDay = "2024-11-23",
+                    coverImage = null,
+                ),
             )
         ),
         expoListSize = 100,

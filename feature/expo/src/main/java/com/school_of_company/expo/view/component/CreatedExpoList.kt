@@ -21,11 +21,11 @@ import kotlinx.collections.immutable.persistentListOf
 internal fun CreatedExpoList(
     modifier: Modifier = Modifier,
     scrollState: ScrollState,
+    enabled: Boolean,
     selectedIndex: Int,
     expoList: ImmutableList<ExpoListResponseEntity>,
-    onItemClick: (Boolean, Int) -> Unit,
-    enabled: Boolean,
     deleteSelectedExpo: (Int) -> Unit,
+    onItemClick: (Boolean, Int) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier,

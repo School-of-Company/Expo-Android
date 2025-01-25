@@ -19,7 +19,6 @@ class AuthInterceptor @Inject constructor(
     private companion object {
         const val POST = "POST"
         const val GET = "GET"
-        const val DELETE = "DELETE"
         const val PATCH = "PATCH"
     }
 

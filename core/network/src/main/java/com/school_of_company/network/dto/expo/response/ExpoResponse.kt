@@ -11,6 +11,6 @@ data class ExpoResponse(
     @Json(name = "finishedDay") val finishedDay: String, // yyyy-mm-dd
     @Json(name = "location") val location: String,
     @Json(name = "coverImage") val coverImage: String?,
-    @Json(name = "x") val x: Float,
-    @Json(name = "y") val y: Float
+    @Json(name = "x") val x: String,
+    @Json(name = "y") val y: String
 )

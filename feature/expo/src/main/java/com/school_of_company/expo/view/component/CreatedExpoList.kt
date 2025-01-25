@@ -24,7 +24,7 @@ internal fun CreatedExpoList(
     selectedIndex: Int,
     expoList: ImmutableList<ExpoListResponseEntity>,
     onItemClick: (Boolean, Int) -> Unit,
-    enbaled: Boolean,
+    enabled: Boolean,
     deleteSelectedExpo: (Int) -> Unit,
 ) {
     LazyColumn(
@@ -47,7 +47,7 @@ internal fun CreatedExpoList(
             Spacer(modifier = Modifier.height(12.dp))
 
             ExpoCreatedDeleteButton(
-                enabled = enbaled,
+                enabled = enabled,
                 onClick = { deleteSelectedExpo(selectedIndex) },
             )
 
@@ -74,6 +74,6 @@ fun CreatedExpoListPreview() {
         selectedIndex = 1,
         scrollState = ScrollState(1),
         deleteSelectedExpo = {},
-        enbaled = false
+        enabled = false
     )
 }

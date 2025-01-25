@@ -7,8 +7,8 @@ data class ExpoModifyRequestParam(
     val finishedDay: String, // yyyy-mm-dd
     val location: String,
     val coverImage: String?,
-    val x: Float,
-    val y: Float,
+    val x: String,
+    val y: String,
     val updateStandardProRequestDto: List<StandardProIdRequestParam>,
     val updateTrainingProRequestDto: List<TrainingProIdRequestParam>,
 )

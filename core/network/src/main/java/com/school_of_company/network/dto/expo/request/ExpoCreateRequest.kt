@@ -11,8 +11,8 @@ data class ExpoAllRequest(
     @Json(name = "finishedDay") val finishedDay: String, // yyyy-mm-dd
     @Json(name = "location") val location: String,
     @Json(name = "coverImage") val coverImage: String?,
-    @Json(name = "x") val x: Float,
-    @Json(name = "y") val y: Float,
+    @Json(name = "x") val x: String,
+    @Json(name = "y") val y: String,
     @Json(name = "addStandardProRequestDto") val addStandardProRequestDto: List<StandardProRequestDto>,
     @Json(name = "addTrainingProRequestDto") val addTrainingProRequestDto: List<TrainingProRequestDto>,
 )

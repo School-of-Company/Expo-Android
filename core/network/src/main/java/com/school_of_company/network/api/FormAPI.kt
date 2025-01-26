@@ -15,13 +15,13 @@ interface FormAPI {
     @POST("/form/{expo_id}")
     suspend fun createForm(
         @Path("expo_id") expoId: String,
-        @Body formRequest: FormRequestAndResponse
+        @Body body: FormRequestAndResponse
     )
 
     @PATCH("/form/{form_id}")
     suspend fun modifyForm(
         @Path("form_id") formId: Long,
-        @Body formRequest: FormRequestAndResponse
+        @Body body: FormRequestAndResponse
     )
 
     @GET("/form/{form_id}")

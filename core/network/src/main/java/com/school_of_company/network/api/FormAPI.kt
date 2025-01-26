@@ -1,6 +1,5 @@
 package com.school_of_company.network.api
 
-import com.school_of_company.model.model.form.FormRequestAndResponseModel
 import com.school_of_company.network.dto.form.all.FormRequestAndResponse
 import retrofit2.http.Body
 import retrofit2.http.DELETE

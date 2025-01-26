@@ -8,6 +8,7 @@ import com.school_of_company.network.api.AdminAPI
 import com.school_of_company.network.api.AttendanceAPI
 import com.school_of_company.network.api.AuthAPI
 import com.school_of_company.network.api.ExpoAPI
+import com.school_of_company.network.api.FormAPI
 import com.school_of_company.network.api.ImageAPI
 import com.school_of_company.network.api.ParticipantAPI
 import com.school_of_company.network.api.SmsAPI
@@ -134,6 +135,10 @@ object NetworkModule {
         retrofit.create(TraineeAPI::class.java)
 
     @Provides
-    fun provideParticipant(retrofit: Retrofit): ParticipantAPI =
+    fun provideParticipantAPI(retrofit: Retrofit): ParticipantAPI =
         retrofit.create(ParticipantAPI::class.java)
+
+    @Provides
+    fun provideFormAPI(retrofit: Retrofit): FormAPI =
+        retrofit.create(FormAPI::class.java)
 }

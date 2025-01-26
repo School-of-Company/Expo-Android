@@ -140,8 +140,8 @@ internal fun ExpoCreateRoute(
                         description = viewModel.introduce_title.value,
                         location = viewModel.location.value,
                         coverImage = (imageUpLoadUiState as ImageUpLoadUiState.Success).data.imageURL,
-                        x = viewModel.coordinateX.value.toFloat(),
-                        y = viewModel.coordinateY.value.toFloat(),
+                        x = viewModel.coordinateX.value,
+                        y = viewModel.coordinateY.value,
                         addStandardProRequestDto = standardProgramTextState,
                         addTrainingProRequestDto = trainingProgramTextState
                     )

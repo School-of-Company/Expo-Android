@@ -8,6 +8,8 @@ import com.school_of_company.data.repository.auth.AuthRepository
 import com.school_of_company.data.repository.auth.AuthRepositoryImpl
 import com.school_of_company.data.repository.expo.ExpoRepository
 import com.school_of_company.data.repository.expo.ExpoRepositoryImpl
+import com.school_of_company.data.repository.form.FormRepository
+import com.school_of_company.data.repository.form.FormRepositoryImpl
 import com.school_of_company.data.repository.image.ImageRepository
 import com.school_of_company.data.repository.image.ImageRepositoryImpl
 import com.school_of_company.data.repository.participant.ParticipantRepository
@@ -79,4 +81,8 @@ abstract class RepositoryModule {
         participantRepositoryImpl: ParticipantRepositoryImpl
     ) : ParticipantRepository
 
+    @Binds
+    abstract fun bindFormRepository(
+        formRepositoryImpl: FormRepositoryImpl
+    ) : FormRepository
 }

@@ -1,0 +1,13 @@
+package com.school_of_company.model.model.form
+
+data class FormRequestAndResponseModel(
+    val informationImage: String,
+    val participantType: String, // TRAINEE, STANDARD
+    val dynamicForm: List<DynamicFormModel>
+)
+
+data class DynamicFormModel(
+    val title: String,
+    val formType: String, // SENTENCE, CHECKBOX, DROPDOWN, IMAGE, MULTIPLE
+    val jsonData: String
+)

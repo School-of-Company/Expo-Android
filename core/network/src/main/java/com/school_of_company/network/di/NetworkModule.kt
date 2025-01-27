@@ -9,6 +9,7 @@ import com.school_of_company.network.api.AdminAPI
 import com.school_of_company.network.api.AttendanceAPI
 import com.school_of_company.network.api.AuthAPI
 import com.school_of_company.network.api.ExpoAPI
+import com.school_of_company.network.api.FormAPI
 import com.school_of_company.network.api.ImageAPI
 import com.school_of_company.network.api.KakaoLocalApi
 import com.school_of_company.network.api.ParticipantAPI
@@ -171,6 +172,10 @@ object NetworkModule {
     @Provides
     fun provideParticipantApi(@BaseUrl retrofit: Retrofit): ParticipantAPI =
         retrofit.create(ParticipantAPI::class.java)
+
+    @Provides
+    fun provideFormAPI(@BaseUrl retrofit: Retrofit): FormAPI =
+        retrofit.create(FormAPI::class.java)
 
     @Provides
     fun provideKakaoLocalApi(@KakaoUrl retrofit: Retrofit): KakaoLocalApi =

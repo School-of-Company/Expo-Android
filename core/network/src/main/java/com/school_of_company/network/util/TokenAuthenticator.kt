@@ -1,9 +1,9 @@
 package com.school_of_company.network.util
 
+import android.util.Log
 import com.school_of_company.datastore.datasource.AuthTokenDataSource
 import com.school_of_company.network.BuildConfig
 import com.school_of_company.network.api.AuthAPI
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
 import okhttp3.Request
@@ -14,53 +14,71 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Inject
 
 /**
- * TokenAuthenticator는 토큰이 만료될 경우 자동으로 새로운 토큰을 발급받고,
- * 해당 토큰으로 다시 요청을 시도하는 역할을 합니다.
+ * TokenAuthenticator는 서버에서 받은 액세스 토큰이 만료되었을 때,
+ * 자동으로 새로운 액세스 토큰을 갱신하고, 갱신된 토큰으로 요청을 다시 시도하는 역할을 합니다.
+ * 이 클래스는 OkHttp의 Authenticator 인터페이스를 구현하여, 인증이 필요한 요청에 대해 자동으로 토큰을 갱신합니다.
  */
 class TokenAuthenticator @Inject constructor(
-    private val authTokenDataSource: AuthTokenDataSource
+    private val authTokenDataSource: AuthTokenDataSource,
 ) : Authenticator {
+
+    /**
+     * 인증 헤더에 액세스 토큰을 추가하기 위해, 만약 토큰이 만료되었으면 새로 갱신된 토큰을 사용하여
+     * 요청을 새로 빌드합니다. 만약 토큰 갱신에 실패했다면 null을 반환하여 요청을 보내지 않습니다.
+     *
+     * @param route 현재 요청의 라우트 정보
+     * @param response 서버의 응답 객체 (401 오류가 발생하면 호출)
+     * @return 새롭게 갱신된 액세스 토큰을 포함한 요청을 반환하거나, 토큰 갱신 실패 시 null을 반환
+     */
     override fun authenticate(route: Route?, response: Response): Request? {
-        // DataSource에서 refreshToken을 가져옵니다.
-        val refreshToken = runBlocking { authTokenDataSource.getRefreshToken().first() }
+        // 액세스 토큰을 갱신합니다.
+        val newToken = refreshAccessToken()
 
-        // refreshToken을 활용해 새로운 accessToken을 발급받습니다.
-        val newAccessToken = refreshAccessToken(refreshToken)
-
-        // 새로 발급된 accessToken이 유효하다면 헤더에 추가하고, null이라면 인증 실패를 합니다.
-        return if (newAccessToken.isNullOrEmpty()) {
-            null
-        } else {
-            response.request.newBuilder()
-                .header("Authorization", "Bearer $newAccessToken")
-                .build()
+        // 토큰 갱신 실패 시 null을 반환하여 요청을 보내지 않습니다.
+        if (newToken.isNullOrEmpty()) {
+            return null
         }
+
+        // 새로 갱신된 토큰을 Authorization 헤더에 추가하여 요청을 반환합니다.
+        return response.request.newBuilder()
+            .header("Authorization", "Bearer $newToken")
+            .build()
     }
 
-    // refreshAcessToken은 refreshToken을 사용해 새로운 accessToken을 서버에서 받아옵니다.
-    private fun refreshAccessToken(refreshToken: String) : String? {
+    /**
+     * 서버에서 refreshToken을 사용하여 새로운 액세스 토큰을 받아오는 함수입니다.
+     * 만약 토큰 갱신에 실패하면 null을 반환합니다.
+     *
+     * @return 갱신된 액세스 토큰 또는 실패 시 null
+     */
+    private fun refreshAccessToken(): String? {
         return try {
-            // 서버에 요청을 보내는 AuthAPI 객체를 만듭니다.
+            // Retrofit을 사용하여 서버에 요청을 보냅니다.
             val retrofit = Retrofit.Builder()
                 .baseUrl(BuildConfig.BASE_URL)
                 .addConverterFactory(MoshiConverterFactory.create())
                 .build()
 
+            // AuthAPI 인터페이스 생성
             val authApi = retrofit.create(AuthAPI::class.java)
-            val respone = runBlocking { authApi.adminTokenRefresh() }
+            // 액세스 토큰 갱신 API 호출
+            val response = runBlocking { authApi.adminTokenRefresh() }
 
-            // 새롭게 발급을 받은 토큰을 DataSource에 저장하고, 이후 요청에 사용하도록 합니다.
+            // 갱신된 토큰 정보를 DataSource에 저장
             runBlocking {
                 with(authTokenDataSource) {
-                    setAccessToken(respone.accessToken)
-                    setAccessTokenExp(respone.accessTokenExpiresIn)
-                    setRefreshToken(respone.refreshToken)
-                    setRefreshTokenExp(respone.refreshTokenExpiresIn)
+                    setAccessToken(response.accessToken)
+                    setAccessTokenExp(response.accessTokenExpiresIn)
+                    setRefreshToken(response.refreshToken)
+                    setRefreshTokenExp(response.refreshTokenExpiresIn)
                 }
             }
 
-            respone.accessToken
+            // 새로운 액세스 토큰을 반환
+            response.accessToken
         } catch (e: Exception) {
+            // 토큰 갱신 실패 시 로그 출력
+            Log.e("TokenAuthenticator", "Failed to refresh access token")
             null
         }
     }

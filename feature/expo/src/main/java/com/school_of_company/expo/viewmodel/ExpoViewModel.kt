@@ -293,6 +293,10 @@ internal class ExpoViewModel @Inject constructor(
             }
     }
 
+   internal fun resetDeleteExpoInformationState() {
+       _deleteExpoInformationUiState.value = DeleteExpoInformationUiState.Loading
+   }
+
     internal fun getExpoList() = viewModelScope.launch {
         _swipeRefreshLoading.value = true
         getExpoListUseCase()

@@ -5,6 +5,7 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface AddressApi {
+
     @GET("addrlink/addrLinkApi.do")
     suspend fun getAddress(
         @Query("confmKey") confmKey: String,

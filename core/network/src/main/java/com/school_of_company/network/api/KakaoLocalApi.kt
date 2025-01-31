@@ -6,6 +6,7 @@ import retrofit2.http.Header
 import retrofit2.http.Query
 
 interface KakaoLocalApi {
+
     @GET("search/address.json")
     suspend fun getCoordinates(
         @Header("Authorization") apiKey: String,

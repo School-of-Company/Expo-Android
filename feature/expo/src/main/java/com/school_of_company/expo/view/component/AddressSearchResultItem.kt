@@ -15,7 +15,7 @@ import com.school_of_company.design_system.theme.color.ExpoColor
 import com.school_of_company.model.model.juso.JusoModel
 
 @Composable
-fun AddressSearchResultItem(
+internal fun AddressSearchResultItem(
     modifier: Modifier = Modifier,
     result: JusoModel,
     onClick: (String) -> Unit,

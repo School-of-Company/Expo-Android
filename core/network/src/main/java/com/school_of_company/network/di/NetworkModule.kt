@@ -82,7 +82,7 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideMoshiInstance(): Moshi {
-        return Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
+        return Moshi.Builder().build()
     }
 
     @Provides

@@ -4,14 +4,14 @@ import android.content.Context
 import android.util.Log
 import com.readystatesoftware.chuck.ChuckInterceptor
 import com.school_of_company.network.BuildConfig
-import com.school_of_company.network.api.AddressApi
+import com.school_of_company.network.api.AddressAPI
 import com.school_of_company.network.api.AdminAPI
 import com.school_of_company.network.api.AttendanceAPI
 import com.school_of_company.network.api.AuthAPI
 import com.school_of_company.network.api.ExpoAPI
 import com.school_of_company.network.api.FormAPI
 import com.school_of_company.network.api.ImageAPI
-import com.school_of_company.network.api.KakaoLocalApi
+import com.school_of_company.network.api.KakaoLocalAPI
 import com.school_of_company.network.api.ParticipantAPI
 import com.school_of_company.network.api.SmsAPI
 import com.school_of_company.network.api.StandardAPI
@@ -23,7 +23,6 @@ import com.school_of_company.network.util.BaseUrl
 import com.school_of_company.network.util.KakaoUrl
 import com.school_of_company.network.util.TokenAuthenticator
 import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -178,10 +177,10 @@ object NetworkModule {
         retrofit.create(FormAPI::class.java)
 
     @Provides
-    fun provideKakaoLocalApi(@KakaoUrl retrofit: Retrofit): KakaoLocalApi =
-        retrofit.create(KakaoLocalApi::class.java)
+    fun provideKakaoLocalAPI(@KakaoUrl retrofit: Retrofit): KakaoLocalAPI =
+        retrofit.create(KakaoLocalAPI::class.java)
 
     @Provides
-    fun provideAddressApi(@AddressUrl retrofit: Retrofit): AddressApi =
-        retrofit.create(AddressApi::class.java)
+    fun provideAddressAPI(@AddressUrl retrofit: Retrofit): AddressAPI =
+        retrofit.create(AddressAPI::class.java)
 }

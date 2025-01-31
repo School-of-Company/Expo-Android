@@ -4,7 +4,7 @@ import com.school_of_company.network.dto.juso.AddressResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface AddressApi {
+interface AddressAPI {
 
     @GET("addrlink/addrLinkApi.do")
     suspend fun getAddress(

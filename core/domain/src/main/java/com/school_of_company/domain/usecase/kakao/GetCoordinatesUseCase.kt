@@ -8,6 +8,13 @@ import javax.inject.Inject
 class GetCoordinatesUseCase @Inject constructor(
     private val repository: KakaoRepository
 ) {
+    companion object {
+        private const val DEFAULT_SIZE = 1
+    }
+
     suspend operator fun invoke(address: String): Flow<KakaoAddressModel> =
-        repository.getCoordinates(address = address)
+        repository.getCoordinates(
+            address = address,
+            size = DEFAULT_SIZE
+        )
 }

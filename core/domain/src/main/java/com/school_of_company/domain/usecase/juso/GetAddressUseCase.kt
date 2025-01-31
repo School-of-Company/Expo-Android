@@ -8,10 +8,15 @@ import javax.inject.Inject
 class GetAddressUseCase @Inject constructor(
     private val repository: AddressRepository,
 ) {
+    companion object {
+        private const val DEFAULT_PAGE = 1
+        private const val DEFAULT_PAGE_SIZE = 5
+    }
+
     suspend operator fun invoke(searchText: String): Flow<List<JusoModel>> =
         repository.getAddress(
-            currentPage = 1,
-            countPerPage = 5,
-            keyword = searchText
+            currentPage = DEFAULT_PAGE,
+            countPerPage = DEFAULT_PAGE_SIZE,
+            keyword = searchText,
         )
 }

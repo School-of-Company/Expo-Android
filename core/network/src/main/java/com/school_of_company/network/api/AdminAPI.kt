@@ -1,5 +1,6 @@
 package com.school_of_company.network.api
 
+import com.school_of_company.network.dto.admin.response.AdminInformationResponse
 import com.school_of_company.network.dto.admin.response.AdminRequestAllowListResponse
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -23,4 +24,7 @@ interface AdminAPI {
 
     @DELETE("/admin")
     suspend fun serviceWithdrawal()
+
+    @GET("/admin/my")
+    suspend fun getAdminInformation(): AdminInformationResponse
 }

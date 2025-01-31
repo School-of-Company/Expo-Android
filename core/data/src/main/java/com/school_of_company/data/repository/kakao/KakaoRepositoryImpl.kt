@@ -10,7 +10,11 @@ import javax.inject.Inject
 class KakaoRepositoryImpl @Inject constructor(
     private val kakaoLocalDataSource: KakaoLocalDataSource,
 ) : KakaoRepository {
-    override suspend fun getCoordinates(address: String): Flow<KakaoAddressModel> {
-        return kakaoLocalDataSource.getCoordinates(address = address).map { it.toModel() }
+    override suspend fun getCoordinates(address: String, size: Int): Flow<KakaoAddressModel> {
+        return kakaoLocalDataSource.getCoordinates(
+            address = address,
+            size = size
+        )
+            .map { it.toModel() }
     }
 }

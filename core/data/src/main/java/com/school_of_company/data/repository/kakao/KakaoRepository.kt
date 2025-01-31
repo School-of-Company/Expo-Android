@@ -4,5 +4,5 @@ import com.school_of_company.model.model.kakao.KakaoAddressModel
 import kotlinx.coroutines.flow.Flow
 
 interface KakaoRepository {
-    suspend fun getCoordinates(address: String): Flow<KakaoAddressModel>
+    suspend fun getCoordinates(address: String, size: Int): Flow<KakaoAddressModel>
 }

@@ -10,12 +10,12 @@ import javax.inject.Inject
 class KakaoLocalDataSourceImpl @Inject constructor(
     private val kakaoLocalApi: KakaoLocalApi
 ) : KakaoLocalDataSource {
-    override suspend fun getCoordinates(address: String): Flow<KakaoAddressResponse> =
+    override suspend fun getCoordinates(address: String, size: Int): Flow<KakaoAddressResponse> =
         performApiRequest {
             kakaoLocalApi.getCoordinates(
                 apiKey = "KakaoAK ${BuildConfig.KAKAO_REST_KEY}",
                 address = address,
-                size = 1,
+                size = size,
             )
         }
 }

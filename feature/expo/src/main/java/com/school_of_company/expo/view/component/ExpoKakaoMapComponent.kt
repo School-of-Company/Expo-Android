@@ -28,6 +28,13 @@ internal fun HomeKakaoMap(
 ) {
     val context = LocalContext.current
     val mapView = remember { MapView(context) }
+    val fixedLatLng = remember {
+        // 고정 라벨 위치 (예: 특정 x, y 좌표)
+        LatLng.from(
+            locationY,
+            locationX
+        ) // 고정 좌표 설정
+    }
 
     AndroidView(
         modifier = modifier.height(200.dp),
@@ -46,18 +53,12 @@ internal fun HomeKakaoMap(
 
                     object : KakaoMapReadyCallback() {
                         override fun onMapReady(kakaoMap: KakaoMap) {
+
                             // 카메라를 locationX, locationY로 이동
-                            val cameraUpdate = CameraUpdateFactory.newCenterPosition(
-                                LatLng.from(
-                                    locationX,
-                                    locationY
-                                )
-                            )
+                            val cameraUpdate =
+                                CameraUpdateFactory.newCenterPosition(fixedLatLng)
                             kakaoMap.moveCamera(cameraUpdate)
 
-                            // 고정 라벨 위치 (예: 특정 x, y 좌표)
-
-                            val fixedLabelLatLng = LatLng.from(locationX, locationY) // 고정 좌표 설정
                             // 라벨 스타일 정의
                             val styles = kakaoMap.labelManager?.addLabelStyles(
                                 LabelStyles.from(
@@ -68,14 +69,14 @@ internal fun HomeKakaoMap(
 
                             // 고정된 위치에 라벨 추가
                             kakaoMap.labelManager?.layer?.addLabel(
-                                LabelOptions.from("fixedLabel", fixedLabelLatLng) // 고정 좌표로 라벨 추가
+                                LabelOptions.from("fixedLabel", fixedLatLng) // 고정 좌표로 라벨 추가
                                     .setStyles(styles) // 스타일 적용
                                     .setRank(1)
                             )
                         }
 
                         override fun getPosition(): LatLng {
-                            return LatLng.from(locationX, locationY)
+                            return fixedLatLng
                         }
                     },
                 )

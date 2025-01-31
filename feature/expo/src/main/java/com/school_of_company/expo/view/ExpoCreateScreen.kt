@@ -171,13 +171,12 @@ internal fun ExpoCreateRoute(
 
     LaunchedEffect(getAddressUiState) {
         when (getAddressUiState) {
+            is GetAddressUiState.Loading -> Unit
+            is GetAddressUiState.Success -> onErrorToast(null, R.string.get_address_success)
             is GetAddressUiState.Error -> onErrorToast(
                 (getAddressUiState as GetAddressUiState.Error).exception,
                 R.string.get_address_fail
             )
-
-            GetAddressUiState.Loading -> Unit
-            is GetAddressUiState.Success -> onErrorToast(null, R.string.get_address_success)
         }
     }
 

@@ -530,12 +530,15 @@ private fun ExpoCreateScreen(
 
                             if (addressList.isNotEmpty()) {
                                 Column(modifier = Modifier.padding(horizontal = 10.dp)) {
+
                                     addressList.forEachIndexed { index, result ->
                                         AddressSearchResultItem(
                                             result = result,
                                             onClick = convertJibunToXY
                                         )
+
                                         Spacer(modifier = Modifier.height(16.dp))
+
                                         if (index < addressList.lastIndex) {
                                             HorizontalDivider(
                                                 color = colors.gray300,

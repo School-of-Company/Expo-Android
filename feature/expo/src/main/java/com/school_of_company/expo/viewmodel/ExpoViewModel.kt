@@ -421,7 +421,7 @@ internal class ExpoViewModel @Inject constructor(
                     is Result.Success -> if (result.data.addressName == "Unknown") {
                         _getCoordinatesUiState.value = GetCoordinatesUiState.Error(NoResponseException())
                     } else {
-                        onCoordinatexChange(result.data.x)
+                        onCoordinateXChange(result.data.x)
                         onCoordinateYChange(result.data.y)
                         _getCoordinatesUiState.value = GetCoordinatesUiState.Success(result.data)
                     }
@@ -574,7 +574,7 @@ internal class ExpoViewModel @Inject constructor(
         savedStateHandle[ENDED] = value
     }
 
-    internal fun onCoordinatexChange(value: String) {
+    internal fun onCoordinateXChange(value: String) {
         savedStateHandle[COORDINATEX] = value
     }
 

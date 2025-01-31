@@ -5,11 +5,13 @@ import androidx.lifecycle.viewModelScope
 import com.school_of_company.common.result.Result
 import com.school_of_company.common.result.asResult
 import com.school_of_company.domain.usecase.admin.AllowAdminRequestUseCase
+import com.school_of_company.domain.usecase.admin.GetAdminInformationUseCase
 import com.school_of_company.domain.usecase.admin.GetAdminRequestAllowListUseCase
 import com.school_of_company.domain.usecase.admin.RejectAdminRequestUseCase
 import com.school_of_company.domain.usecase.admin.ServiceWithdrawalUseCase
 import com.school_of_company.domain.usecase.auth.AdminLogoutUseCase
 import com.school_of_company.user.viewmodel.uistate.AllowAdminRequestUiState
+import com.school_of_company.user.viewmodel.uistate.GetAdminInformationUiState
 import com.school_of_company.user.viewmodel.uistate.GetAdminRequestAllowListUiState
 import com.school_of_company.user.viewmodel.uistate.LogoutUiState
 import com.school_of_company.user.viewmodel.uistate.RejectAdminRequestUiState
@@ -28,7 +30,8 @@ class UserViewModel @Inject constructor(
     private val allowAdminRequestUseCase: AllowAdminRequestUseCase,
     private val rejectAdminRequestUseCase: RejectAdminRequestUseCase,
     private val serviceWithdrawalUseCase: ServiceWithdrawalUseCase,
-    private val getAdminRequestAllowListUseCase: GetAdminRequestAllowListUseCase
+    private val getAdminRequestAllowListUseCase: GetAdminRequestAllowListUseCase,
+    private val getAdminInformationUseCase: GetAdminInformationUseCase
 ) : ViewModel() {
 
     private val _swipeRefreshLoading = MutableStateFlow(false)
@@ -48,6 +51,9 @@ class UserViewModel @Inject constructor(
 
     private val _logoutUiState = MutableStateFlow<LogoutUiState>(LogoutUiState.Loading)
     internal val logoutUiState = _logoutUiState.asStateFlow()
+
+    private val _adminInformationUiState = MutableStateFlow<GetAdminInformationUiState>(GetAdminInformationUiState.Loading)
+    internal val adminInformationUiState = _adminInformationUiState.asStateFlow()
 
     internal fun getAdminRequestAllowList() = viewModelScope.launch {
         _swipeRefreshLoading.value = true
@@ -127,11 +133,24 @@ class UserViewModel @Inject constructor(
     internal fun logout() = viewModelScope.launch {
         logoutUseCase()
             .asResult()
-            .collectLatest {
-                when (it) {
-                    is Result.Error -> _logoutUiState.value = LogoutUiState.Error(it.exception)
-                    Result.Loading -> _logoutUiState.value = LogoutUiState.Loading
+            .collectLatest { result ->
+                when (result) {
+                    is Result.Loading -> _logoutUiState.value = LogoutUiState.Loading
                     is Result.Success -> _logoutUiState.value = LogoutUiState.Success
+                    is Result.Error -> _logoutUiState.value = LogoutUiState.Error(result.exception)
+                }
+            }
+    }
+
+    internal fun adminInformation() = viewModelScope.launch {
+        _adminInformationUiState.value = GetAdminInformationUiState.Loading
+        getAdminInformationUseCase()
+            .asResult()
+            .collectLatest { result ->
+                when (result) {
+                    is Result.Loading -> _adminInformationUiState.value = GetAdminInformationUiState.Loading
+                    is Result.Success -> _adminInformationUiState.value = GetAdminInformationUiState.Success(result.data)
+                    is Result.Error -> _adminInformationUiState.value = GetAdminInformationUiState.Error(result.exception)
                 }
             }
     }

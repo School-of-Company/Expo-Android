@@ -4,13 +4,13 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class AddressResponse(
-    val results: Results
+    val results: Results,
 )
 
 @JsonClass(generateAdapter = true)
 data class Results(
     val common: Common,
-    val juso: List<Juso>?
+    val juso: List<Juso>?,
 )
 
 @JsonClass(generateAdapter = true)
@@ -19,7 +19,7 @@ data class Common(
     val currentPage: String,
     val countPerPage: String,
     val errorCode: String,
-    val errorMessage: String
+    val errorMessage: String,
 )
 
 @JsonClass(generateAdapter = true)
@@ -47,5 +47,5 @@ data class Juso(
     val mtYn: String?,
     val lnbrMnnm: String?,
     val lnbrSlno: String?,
-    val emdNo: String?
+    val emdNo: String?,
 )

@@ -55,7 +55,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.school_of_company.common.regex.isValidDateSequence
 import com.school_of_company.design_system.R
 import com.school_of_company.design_system.component.bottomsheet.SettingBottomSheet
-import com.school_of_company.design_system.component.button.ExpoStateButton
+import com.school_of_company.design_system.component.button.ExpoToggleColorButton
 import com.school_of_company.design_system.component.button.state.ButtonState
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.component.modifier.padding.paddingHorizontal
@@ -487,7 +487,7 @@ private fun ExpoCreateScreen(
 
                     Spacer(modifier = Modifier.height(28.dp))
 
-                    ExpoStateButton(
+                    ExpoToggleColorButton(
                         text = "생성하기",
                         state = if (
                             modifyTitleState.isNotEmpty() &&

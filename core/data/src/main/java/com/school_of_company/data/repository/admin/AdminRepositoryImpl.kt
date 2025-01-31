@@ -1,5 +1,6 @@
 package com.school_of_company.data.repository.admin
 
+import com.school_of_company.model.entity.admin.AdminInformationResponseEntity
 import com.school_of_company.model.entity.admin.AdminRequestAllowListResponseEntity
 import com.school_of_company.network.datasource.admin.AdminDataSource
 import com.school_of_company.network.mapper.admin.response.toEntity
@@ -26,5 +27,11 @@ class AdminRepositoryImpl @Inject constructor(
 
     override fun serviceWithdrawal(): Flow<Unit> {
         return dataSource.serviceWithdrawal()
+    }
+
+    override fun getAdminInformation(): Flow<AdminInformationResponseEntity> {
+        return dataSource.getAdminInformation().transform { response ->
+            emit(response.toEntity())
+        }
     }
 }

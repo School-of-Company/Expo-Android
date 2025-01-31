@@ -169,7 +169,7 @@ object NetworkModule {
         retrofit.create(TraineeAPI::class.java)
 
     @Provides
-    fun provideParticipantApi(@BaseUrl retrofit: Retrofit): ParticipantAPI =
+    fun provideParticipantAPI(@BaseUrl retrofit: Retrofit): ParticipantAPI =
         retrofit.create(ParticipantAPI::class.java)
 
     @Provides

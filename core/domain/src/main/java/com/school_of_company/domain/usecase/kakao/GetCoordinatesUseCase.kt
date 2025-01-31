@@ -12,7 +12,7 @@ class GetCoordinatesUseCase @Inject constructor(
         private const val DEFAULT_SIZE = 1
     }
 
-    suspend operator fun invoke(address: String): Flow<KakaoAddressModel> =
+    operator fun invoke(address: String): Flow<KakaoAddressModel> =
         repository.getCoordinates(
             address = address,
             size = DEFAULT_SIZE

@@ -13,7 +13,7 @@ class GetAddressUseCase @Inject constructor(
         private const val DEFAULT_PAGE_SIZE = 5
     }
 
-    suspend operator fun invoke(searchText: String): Flow<List<JusoModel>> =
+    operator fun invoke(searchText: String): Flow<List<JusoModel>> =
         repository.getAddress(
             currentPage = DEFAULT_PAGE,
             countPerPage = DEFAULT_PAGE_SIZE,

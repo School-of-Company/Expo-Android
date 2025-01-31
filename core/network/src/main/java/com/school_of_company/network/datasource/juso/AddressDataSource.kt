@@ -4,7 +4,7 @@ import com.school_of_company.network.dto.juso.AddressResponse
 import kotlinx.coroutines.flow.Flow
 
 interface AddressDataSource {
-    suspend fun getAddress(
+    fun getAddress(
         currentPage: Int,
         countPerPage: Int,
         keyword: String,

@@ -4,7 +4,7 @@ import com.school_of_company.model.model.juso.JusoModel
 import kotlinx.coroutines.flow.Flow
 
 interface AddressRepository {
-    suspend fun getAddress(
+    fun getAddress(
         currentPage: Int,
         countPerPage: Int,
         keyword: String,

@@ -10,7 +10,7 @@ import javax.inject.Inject
 class AddressDataSourceImpl @Inject constructor(
     private val addressApi: AddressApi,
 ) : AddressDataSource {
-    override suspend fun getAddress(
+    override fun getAddress(
         currentPage: Int,
         countPerPage: Int,
         keyword: String,

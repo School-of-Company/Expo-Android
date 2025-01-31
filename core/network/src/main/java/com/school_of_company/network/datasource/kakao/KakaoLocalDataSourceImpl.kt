@@ -8,11 +8,11 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class KakaoLocalDataSourceImpl @Inject constructor(
-    private val kakaoLocalApi: KakaoLocalApi
+    private val service: KakaoLocalApi
 ) : KakaoLocalDataSource {
     override fun getCoordinates(address: String, size: Int): Flow<KakaoAddressResponse> =
         performApiRequest {
-            kakaoLocalApi.getCoordinates(
+            service.getCoordinates(
                 apiKey = "KakaoAK ${BuildConfig.KAKAO_REST_KEY}",
                 address = address,
                 size = size,

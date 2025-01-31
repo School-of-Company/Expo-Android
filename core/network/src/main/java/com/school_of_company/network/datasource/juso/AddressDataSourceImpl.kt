@@ -8,14 +8,14 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class AddressDataSourceImpl @Inject constructor(
-    private val addressApi: AddressApi,
+    private val service: AddressApi,
 ) : AddressDataSource {
     override fun getAddress(
         currentPage: Int,
         countPerPage: Int,
         keyword: String,
     ): Flow<AddressResponse> = performApiRequest {
-        addressApi.getAddress(
+        service.getAddress(
             confmKey = BuildConfig.ADDRESS_API_KEY,
             currentPage = currentPage,
             countPerPage = countPerPage,

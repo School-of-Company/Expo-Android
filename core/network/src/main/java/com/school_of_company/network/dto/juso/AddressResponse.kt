@@ -1,14 +1,19 @@
 package com.school_of_company.network.dto.juso
 
+import com.squareup.moshi.JsonClass
+
+@JsonClass(generateAdapter = true)
 data class AddressResponse(
     val results: Results
 )
 
+@JsonClass(generateAdapter = true)
 data class Results(
     val common: Common,
     val juso: List<Juso>?
 )
 
+@JsonClass(generateAdapter = true)
 data class Common(
     val totalCount: String,
     val currentPage: String,
@@ -17,6 +22,7 @@ data class Common(
     val errorMessage: String
 )
 
+@JsonClass(generateAdapter = true)
 data class Juso(
     val roadAddr: String,
     val roadAddrPart1: String,

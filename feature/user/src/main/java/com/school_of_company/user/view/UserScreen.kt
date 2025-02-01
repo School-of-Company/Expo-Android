@@ -44,9 +44,7 @@ import com.school_of_company.design_system.icon.LogoutIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.user.view.component.SignUpRequestList
-import com.school_of_company.user.view.component.UserAllowButton
 import com.school_of_company.user.view.component.UserBottomSheet
-import com.school_of_company.user.view.component.UserDeleteButton
 import com.school_of_company.user.view.component.UserDialog
 import com.school_of_company.user.viewmodel.UserViewModel
 import com.school_of_company.user.viewmodel.uistate.AllowAdminRequestUiState
@@ -470,49 +468,18 @@ private fun UserScreen(
             ) {
                 when (getAdminRequestAllowListUiState) {
                     is GetAdminRequestAllowListUiState.Success -> {
-                        Column {
-                            SignUpRequestList(
-                                item = getAdminRequestAllowListUiState.data.toImmutableList(),
-                                horizontalScrollState = scrollState,
-                                selectedIndex = selectedId,
-                                onClick = { id ->
-                                    setSelectedId(if (selectedId == id) 0L else id)
-                                }
-                            )
-
-                            Spacer(modifier = Modifier.height(48.dp))
-
-                            Row(
-                                horizontalArrangement = Arrangement.spacedBy(
-                                    16.dp,
-                                    Alignment.CenterHorizontally
-                                ),
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                UserAllowButton(
-                                    enabled = selectedId != 0L,
-                                    onClick = {
-                                        if (selectedId == 0L) {
-                                            onErrorToast(null, R.string.check_sign_up_request_list_item)
-                                        } else {
-                                            successCallBack(selectedId)
-                                        }
-                                    },
-                                )
-
-                                UserDeleteButton(
-                                    enabled = selectedId != 0L,
-                                    onClick = {
-                                        if (selectedId == 0L) {
-                                            onErrorToast(null, R.string.check_sign_up_request_list_item)
-                                        } else {
-                                            deleteCallBack(selectedId)
-                                        }
-                                    },
-                                )
-                            }
-                        }
+                        SignUpRequestList(
+                            item = getAdminRequestAllowListUiState.data.toImmutableList(),
+                            horizontalScrollState = scrollState,
+                            selectedIndex = selectedId,
+                            onClick = { id ->
+                                setSelectedId(if (selectedId == id) 0L else id)
+                            },
+                            selectedId = selectedId,
+                            deleteCallBack = { deleteCallBack(selectedId) },
+                            successCallBack = { successCallBack(selectedId) },
+                            onErrorToast = onErrorToast
+                        )
                     }
 
                     is GetAdminRequestAllowListUiState.Error -> {

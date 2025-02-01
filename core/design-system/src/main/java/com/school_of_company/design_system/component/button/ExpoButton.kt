@@ -159,52 +159,6 @@ fun ExpoEnableDetailButton(
     }
 }
 
-@Composable
-fun ExpoToggleColorButton(
-    modifier: Modifier = Modifier,
-    text: String,
-    state: ButtonState = ButtonState.Enable,
-    enabledColor: Color = ExpoColor.main,
-    disabledColor: Color = ExpoColor.gray300,
-    onClick: () -> Unit,
-) {
-    val enabledState: (buttonState: ButtonState) -> Boolean = {
-        when (it) {
-            ButtonState.Enable -> true
-            ButtonState.Disable -> false
-        }
-    }
-
-    ExpoAndroidTheme { colors, typography ->
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterHorizontally),
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .background(
-                    color = if (enabledState(state)) {
-                        enabledColor
-                    } else {
-                        disabledColor
-                    },
-                    shape = RoundedCornerShape(6.dp),
-                )
-                .expoClickable(
-                    enabled = enabledState(state),
-                    onClick = onClick,
-                    rippleColor = colors.white
-                )
-                .then(modifier)
-        ) {
-            Text(
-                text = text,
-                style = typography.bodyBold2,
-                fontWeight = FontWeight.SemiBold,
-                color = colors.white
-            )
-        }
-    }
-}
-
 @Preview
 @Composable
 private fun ExpoButtonPreview() {

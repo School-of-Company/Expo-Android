@@ -50,6 +50,7 @@ import com.school_of_company.user.view.component.UserDeleteButton
 import com.school_of_company.user.view.component.UserDialog
 import com.school_of_company.user.viewmodel.UserViewModel
 import com.school_of_company.user.viewmodel.uistate.AllowAdminRequestUiState
+import com.school_of_company.user.viewmodel.uistate.GetAdminInformationUiState
 import com.school_of_company.user.viewmodel.uistate.GetAdminRequestAllowListUiState
 import com.school_of_company.user.viewmodel.uistate.LogoutUiState
 import com.school_of_company.user.viewmodel.uistate.RejectAdminRequestUiState
@@ -73,9 +74,11 @@ internal fun UserRoute(
     val rejectAdminRequestUiState by viewModel.rejectAdminRequestUiState.collectAsStateWithLifecycle()
     val serviceWithdrawalUiState by viewModel.serviceWithdrawalUiState.collectAsStateWithLifecycle()
     val logoutUiState by viewModel.logoutUiState.collectAsStateWithLifecycle()
+    val getAdminInformationUiState by viewModel.adminInformationUiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.getAdminRequestAllowList()
+        viewModel.adminInformation()
     }
 
     DisposableEffect(Unit) {
@@ -142,6 +145,7 @@ internal fun UserRoute(
         modifier = modifier,
         selectedId = selectedId,
         getAdminRequestAllowListUiState = getAdminRequestAllowListUiState,
+        getAdminInformationUiState = getAdminInformationUiState,
         swipeRefreshState = swipeRefreshState,
         logoutCallBack = viewModel::logout,
         withdrawalCallBack = viewModel::serviceWithdrawal,
@@ -157,10 +161,11 @@ internal fun UserRoute(
 @Composable
 private fun UserScreen(
     modifier: Modifier = Modifier,
-    selectedId: Long,
-    getAdminRequestAllowListUiState: GetAdminRequestAllowListUiState,
     swipeRefreshState: SwipeRefreshState,
     scrollState: ScrollState = rememberScrollState(),
+    selectedId: Long,
+    getAdminRequestAllowListUiState: GetAdminRequestAllowListUiState,
+    getAdminInformationUiState: GetAdminInformationUiState,
     logoutCallBack: () -> Unit,
     withdrawalCallBack: () -> Unit,
     getSignUpRequestList: () -> Unit,
@@ -199,11 +204,29 @@ private fun UserScreen(
                             color = colors.gray500
                         )
 
-                        Text(
-                            text = "이명훈", // todo : Apply UiState
-                            style = typography.captionBold2,
-                            color = colors.black
-                        )
+                        when (getAdminInformationUiState) {
+                            is GetAdminInformationUiState.Loading -> {
+                                Text(
+                                    text = "로딩중..",
+                                    style = typography.captionBold2,
+                                    color = colors.gray200
+                                )
+                            }
+                            is GetAdminInformationUiState.Success -> {
+                                Text(
+                                    text = getAdminInformationUiState.data.name,
+                                    style = typography.captionBold2,
+                                    color = colors.black
+                                )
+                            }
+                            is GetAdminInformationUiState.Error -> {
+                                Text(
+                                    text = "데이터를 불러올 수 없습니다..",
+                                    style = typography.captionBold2,
+                                    color = colors.gray200
+                                )
+                            }
+                        }
                     }
 
                     Row(
@@ -216,11 +239,29 @@ private fun UserScreen(
                             color = colors.gray500
                         )
 
-                        Text(
-                            text = "audgns3825 ", // todo : Apply UiState
-                            style = typography.captionBold2,
-                            color = colors.black
-                        )
+                        when (getAdminInformationUiState) {
+                            is GetAdminInformationUiState.Loading -> {
+                                Text(
+                                    text = "로딩중..",
+                                    style = typography.captionBold2,
+                                    color = colors.gray200
+                                )
+                            }
+                            is GetAdminInformationUiState.Success -> {
+                                Text(
+                                    text = getAdminInformationUiState.data.nickname,
+                                    style = typography.captionBold2,
+                                    color = colors.black
+                                )
+                            }
+                            is GetAdminInformationUiState.Error -> {
+                                Text(
+                                    text = "데이터를 불러올 수 없습니다..",
+                                    style = typography.captionBold2,
+                                    color = colors.gray200
+                                )
+                            }
+                        }
                     }
 
                     Row(
@@ -233,11 +274,29 @@ private fun UserScreen(
                             color = colors.gray500
                         )
 
-                        Text(
-                            text = "audgns3825@gmail.com", // todo : Apply UiState
-                            style = typography.captionBold2,
-                            color = colors.black
-                        )
+                        when (getAdminInformationUiState) {
+                            is GetAdminInformationUiState.Loading -> {
+                                Text(
+                                    text = "로딩중..",
+                                    style = typography.captionBold2,
+                                    color = colors.gray200
+                                )
+                            }
+                            is GetAdminInformationUiState.Success -> {
+                                Text(
+                                    text = getAdminInformationUiState.data.email,
+                                    style = typography.captionBold2,
+                                    color = colors.black
+                                )
+                            }
+                            is GetAdminInformationUiState.Error -> {
+                                Text(
+                                    text = "데이터를 불러올 수 없습니다..",
+                                    style = typography.captionBold2,
+                                    color = colors.gray200
+                                )
+                            }
+                        }
                     }
                 }
 

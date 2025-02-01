@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import com.school_of_company.design_system.component.button.state.ButtonState
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
-import com.school_of_company.design_system.theme.color.ExpoColor
 
 @Composable
 fun ExpoButton(

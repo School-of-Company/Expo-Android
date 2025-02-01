@@ -17,6 +17,26 @@ android {
             name = "BASE_URL",
             getApiKey("BASE_URL")
         )
+        buildConfigField(
+            type = "String",
+            name = "ADDRESS_URL",
+            getApiKey("ADDRESS_URL")
+        )
+        buildConfigField(
+            type = "String",
+            name = "ADDRESS_API_KEY",
+            getApiKey("ADDRESS_API_KEY")
+        )
+        buildConfigField(
+            type = "String",
+            name = "KAKAO_URL",
+            getApiKey("KAKAO_URL")
+        )
+        buildConfigField(
+            type = "String",
+            name = "KAKAO_REST_KEY",
+            getApiKey("KAKAO_REST_KEY")
+        )
     }
 
     namespace = "com.school_of_company.network"
@@ -41,9 +61,10 @@ dependencies {
     ksp(libs.retrofit.moshi.codegen)
 }
 
-fun getApiKey(propertyKey: String) : String {
+fun getApiKey(propertyKey: String): String {
     val propFile = rootProject.file("./local.properties")
     val properties = Properties()
     properties.load(FileInputStream(propFile))
-    return properties.getProperty(propertyKey) ?: throw IllegalArgumentException("Property $propertyKey not found in local.properties")
+    return properties.getProperty(propertyKey)
+        ?: throw IllegalArgumentException("Property $propertyKey not found in local.properties")
 }

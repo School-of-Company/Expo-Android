@@ -273,8 +273,8 @@ private fun ExpoDetailScreen(
                             )
 
                             HomeKakaoMap(
-                                locationY = 126.80042860412009,
-                                locationX = 35.14308063423194,
+                                locationY = getExpoInformationUiState.data.y.toDouble(),
+                                locationX = getExpoInformationUiState.data.x.toDouble(),
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .border(

@@ -22,6 +22,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -65,13 +66,17 @@ import com.school_of_company.design_system.component.textfield.NoneLimitedLength
 import com.school_of_company.design_system.icon.ImageIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
+import com.school_of_company.expo.view.component.AddressSearchResultItem
 import com.school_of_company.expo.view.component.ExpoAddTextField
 import com.school_of_company.expo.view.component.ExpoSettingBottomSheet
 import com.school_of_company.expo.view.component.ExpoStandardAddTextField
 import com.school_of_company.expo.view.component.ExpoStandardSettingBottomSheet
 import com.school_of_company.expo.viewmodel.ExpoViewModel
+import com.school_of_company.expo.viewmodel.uistate.GetAddressUiState
+import com.school_of_company.expo.viewmodel.uistate.GetCoordinatesUiState
 import com.school_of_company.expo.viewmodel.uistate.ImageUpLoadUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterExpoInformationUiState
+import com.school_of_company.model.model.juso.JusoModel
 import com.school_of_company.model.param.expo.ExpoAllRequestParam
 import com.school_of_company.model.param.expo.StandardProRequestParam
 import com.school_of_company.model.param.expo.TrainingProRequestParam
@@ -82,13 +87,16 @@ import com.school_of_company.ui.visualTransformation.DateTimeVisualTransformatio
 
 @Composable
 internal fun ExpoCreateRoute(
-    modifier: Modifier=Modifier,
+    modifier: Modifier = Modifier,
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
     viewModel: ExpoViewModel = hiltViewModel()
 ) {
     val registerExpoInformationUiState by viewModel.registerExpoInformationUiState.collectAsStateWithLifecycle()
     val imageUpLoadUiState by viewModel.imageUpLoadUiState.collectAsStateWithLifecycle()
+    val getAddressUiState by viewModel.getAddressUiState.collectAsStateWithLifecycle()
+    val getCoordinatesUiState by viewModel.getCoordinatesUiState.collectAsStateWithLifecycle()
 
+    val addressList by viewModel.addressList.collectAsStateWithLifecycle()
     val modifyTitleState by viewModel.modify_title.collectAsStateWithLifecycle()
     val startedDateState by viewModel.started_date.collectAsStateWithLifecycle()
     val endedDateState by viewModel.ended_date.collectAsStateWithLifecycle()
@@ -132,8 +140,8 @@ internal fun ExpoCreateRoute(
                         description = viewModel.introduce_title.value,
                         location = viewModel.location.value,
                         coverImage = (imageUpLoadUiState as ImageUpLoadUiState.Success).data.imageURL,
-                        x = "37.511734",
-                        y = "127.05905",
+                        x = viewModel.coordinateX.value,
+                        y = viewModel.coordinateY.value,
                         addStandardProRequestDto = standardProgramTextState,
                         addTrainingProRequestDto = trainingProgramTextState
                     )
@@ -143,6 +151,32 @@ internal fun ExpoCreateRoute(
             is ImageUpLoadUiState.Error -> {
                 onErrorToast(null, R.string.expo_image_fail)
             }
+        }
+    }
+
+    LaunchedEffect(getCoordinatesUiState) {
+        when (getCoordinatesUiState) {
+            is GetCoordinatesUiState.Loading -> Unit
+            is GetCoordinatesUiState.Success -> onErrorToast(
+                null,
+                R.string.get_address_convert_success
+            )
+
+            is GetCoordinatesUiState.Error -> onErrorToast(
+                (getCoordinatesUiState as GetCoordinatesUiState.Error).exception,
+                R.string.get_address_convert_fail
+            )
+        }
+    }
+
+    LaunchedEffect(getAddressUiState) {
+        when (getAddressUiState) {
+            is GetAddressUiState.Loading -> Unit
+            is GetAddressUiState.Success -> onErrorToast(null, R.string.get_address_success)
+            is GetAddressUiState.Error -> onErrorToast(
+                (getAddressUiState as GetAddressUiState.Error).exception,
+                R.string.get_address_fail
+            )
         }
     }
 
@@ -163,21 +197,30 @@ internal fun ExpoCreateRoute(
 
 
     ExpoCreateScreen(
-        modifier= modifier,
+        modifier = modifier,
         startedDateState = startedDateState,
         endedDateState = endedDateState,
         modifyTitleState = modifyTitleState,
         introduceTitleState = introduceTitleState,
+        addressList = addressList,
         addressState = addressState,
         locationState = locationState,
         imageUri = selectedImageUri?.toString() ?: coverImageState,
         onImageClick = { galleryLauncher.launch("image/*") },
+        searchLocation = {
+            if (locationState.length >= 2) {
+                viewModel.searchLocation(locationState)
+            } else {
+                onErrorToast(null, R.string.get_address_lack_of_length)
+            }
+        },
         onModifyTitleChange = viewModel::onModifyTitleChange,
         onStartedDateChange = viewModel::onStartedDateChange,
         onEndedDateChange = viewModel::onEndedDateChange,
         onIntroduceTitleChange = viewModel::onIntroduceTitleChange,
         onAddressChange = viewModel::onAddressChange,
         onLocationChange = viewModel::onLocationChange,
+        convertJibunToXY = viewModel::convertJibunToXY,
         onExpoCreateCallBack = {
             if (selectedImageUri != null) {
                 viewModel.imageUpLoad(context, selectedImageUri!!)
@@ -207,11 +250,13 @@ private fun ExpoCreateScreen(
     addressState: String,
     locationState: String,
     imageUri: String?,
+    addressList: List<JusoModel>,
     trainingProgramTextState: List<TrainingProRequestParam>,
     standardProgramTextState: List<StandardProRequestParam>,
     focusManager: FocusManager = LocalFocusManager.current,
     scrollState: ScrollState = rememberScrollState(),
     onImageClick: () -> Unit,
+    searchLocation: () -> Unit,
     onExpoCreateCallBack: () -> Unit,
     onAddTrainingProgram: () -> Unit,
     onAddStandardProgram: () -> Unit,
@@ -221,11 +266,13 @@ private fun ExpoCreateScreen(
     onIntroduceTitleChange: (String) -> Unit,
     onAddressChange: (String) -> Unit,
     onLocationChange: (String) -> Unit,
+    convertJibunToXY: (String) -> Unit,
     onRemoveTrainingProgram: (Int) -> Unit,
     onRemoveStandardProgram: (Int) -> Unit,
     onTrainingProgramChange: (Int, TrainingProRequestParam) -> Unit,
     onStandardProgramChange: (Int, StandardProRequestParam) -> Unit,
 ) {
+
     val (openTrainingSettingBottomSheet, isOpenTrainingSettingBottomSheet) = rememberSaveable { mutableStateOf(false) }
     val (openStandardSettingBottomSheet, isOpenStandardSettingBottomSheet) = rememberSaveable { mutableStateOf(false) }
 
@@ -468,13 +515,41 @@ private fun ExpoCreateScreen(
 
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top)) {
 
-                        ExpoLocationIconTextField(
-                            placeholder = "장소를 입력해주세요.",
-                            isDisabled = false,
-                            onValueChange = onLocationChange,
-                            onButtonClicked = { /* todo : Location Web Hook */ },
-                            value = locationState,
-                        )
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(30.dp),
+                            horizontalAlignment = Alignment.Start,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            ExpoLocationIconTextField(
+                                placeholder = "장소를 입력해주세요.",
+                                isDisabled = false,
+                                onValueChange = onLocationChange,
+                                onButtonClicked = searchLocation,
+                                value = locationState,
+                            )
+
+                            if (addressList.isNotEmpty()) {
+                                Column(modifier = Modifier.padding(horizontal = 10.dp)) {
+
+                                    addressList.forEachIndexed { index, result ->
+                                        AddressSearchResultItem(
+                                            result = result,
+                                            onClick = convertJibunToXY
+                                        )
+
+                                        Spacer(modifier = Modifier.height(16.dp))
+
+                                        if (index < addressList.lastIndex) {
+                                            HorizontalDivider(
+                                                color = colors.gray300,
+                                                thickness = 1.dp,
+                                                modifier = Modifier.padding(horizontal = 16.dp)
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        }
 
                         NoneLimitedLengthTextField(
                             value = addressState,
@@ -568,28 +643,31 @@ private fun ExpoCreateScreen(
 @Composable
 private fun ExpoCreateScreenPreview() {
     ExpoCreateScreen(
-        imageUri = null,
-        onImageClick = {},
-        modifyTitleState = "",
         startedDateState = "",
         endedDateState = "",
+        modifyTitleState = "",
         introduceTitleState = "",
         addressState = "",
         locationState = "",
-        onModifyTitleChange = {},
-        onLocationChange = {},
-        onAddressChange = {},
+        imageUri = null,
+        addressList = emptyList(),
+        trainingProgramTextState = emptyList(),
+        standardProgramTextState = emptyList(),
+        onImageClick = {},
+        onExpoCreateCallBack = {},
+        onAddTrainingProgram = {},
+        onAddStandardProgram = {},
         onStartedDateChange = {},
         onEndedDateChange = {},
+        onModifyTitleChange = {},
         onIntroduceTitleChange = {},
-        onExpoCreateCallBack = {},
-        trainingProgramTextState = emptyList(),
-        onTrainingProgramChange = { _, _ -> },
-        onAddTrainingProgram = {},
+        onAddressChange = {},
+        onLocationChange = {},
         onRemoveTrainingProgram = {},
-        standardProgramTextState = emptyList(),
-        onStandardProgramChange = { _, _ -> },
-        onAddStandardProgram = {},
         onRemoveStandardProgram = {},
+        searchLocation = { },
+        convertJibunToXY = { _ -> },
+        onTrainingProgramChange = { _, _ -> },
+        onStandardProgramChange = { _, _ -> },
     )
 }

@@ -22,6 +22,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,6 +30,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
@@ -160,19 +163,13 @@ fun ExpoNoneLabelTextField(
     isError: Boolean,
     isDisabled: Boolean,
     isReadOnly: Boolean = false,
-    focusManager: FocusManager = LocalFocusManager.current,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     visualTransformationState: Boolean = false,
     trailingIcon: @Composable (() -> Unit)? = null
 ) {
-    var text by remember { mutableStateOf(value ?: "") }
-    val isFocused = remember { mutableStateOf(false) }
-
-    DisposableEffect(Unit) {
-        onDispose {
-            focusManager.clearFocus()
-        }
-    }
+    val text by remember(value) { derivedStateOf { value ?: "" } }
+    var isFocused by remember { mutableStateOf(false) }
+    val focusRequester = remember { FocusRequester() }
 
     ExpoAndroidTheme { colors, typography ->
         Column(
@@ -180,23 +177,21 @@ fun ExpoNoneLabelTextField(
         ) {
             OutlinedTextField(
                 value = text,
-                onValueChange = {
-                    text = it
-                    onValueChange(it)
-                },
+                onValueChange = { onValueChange(it) },
                 modifier = modifier
+                    .focusRequester(focusRequester)
                     .border(
                         width = 1.dp,
                         color = when {
                             isDisabled -> colors.gray100
                             isError -> colors.error
-                            isFocused.value -> colors.main
+                            isFocused -> colors.main
                             text.isNotEmpty() -> colors.gray100
                             else -> colors.gray100
                         },
                         shape = RoundedCornerShape(8.dp)
                     )
-                    .onFocusChanged { isFocused.value = it.isFocused }
+                    .onFocusChanged { isFocused = it.isFocused }
                     .background(
                         color = if (isDisabled) colors.white else Color.Transparent
                     ),

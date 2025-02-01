@@ -161,11 +161,11 @@ internal fun UserRoute(
 @Composable
 private fun UserScreen(
     modifier: Modifier = Modifier,
+    swipeRefreshState: SwipeRefreshState,
+    scrollState: ScrollState = rememberScrollState(),
     selectedId: Long,
     getAdminRequestAllowListUiState: GetAdminRequestAllowListUiState,
     getAdminInformationUiState: GetAdminInformationUiState,
-    swipeRefreshState: SwipeRefreshState,
-    scrollState: ScrollState = rememberScrollState(),
     logoutCallBack: () -> Unit,
     withdrawalCallBack: () -> Unit,
     getSignUpRequestList: () -> Unit,

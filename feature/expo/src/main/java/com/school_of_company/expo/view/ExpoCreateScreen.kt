@@ -579,10 +579,12 @@ private fun ExpoCreateScreen(
                         } else {
                             ButtonState.Disable
                         },
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        onExpoCreateCallBack()
-                    }
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(14.dp),
+                        onClick = onExpoCreateCallBack
+                    )
+
 
                     Spacer(modifier = Modifier.height(48.dp))
                 }

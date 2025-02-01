@@ -82,7 +82,7 @@ import com.school_of_company.ui.visualTransformation.DateTimeVisualTransformatio
 
 @Composable
 internal fun ExpoCreateRoute(
-    modifier: Modifier=Modifier,
+    modifier: Modifier = Modifier,
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
     viewModel: ExpoViewModel = hiltViewModel()
 ) {
@@ -163,7 +163,7 @@ internal fun ExpoCreateRoute(
 
 
     ExpoCreateScreen(
-        modifier= modifier,
+        modifier = modifier,
         startedDateState = startedDateState,
         endedDateState = endedDateState,
         modifyTitleState = modifyTitleState,
@@ -504,10 +504,12 @@ private fun ExpoCreateScreen(
                         } else {
                             ButtonState.Disable
                         },
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        onExpoCreateCallBack()
-                    }
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(14.dp),
+                        onClick = onExpoCreateCallBack
+                    )
+
 
                     Spacer(modifier = Modifier.height(48.dp))
                 }

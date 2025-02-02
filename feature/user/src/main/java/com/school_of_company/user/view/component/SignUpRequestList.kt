@@ -23,14 +23,14 @@ import kotlinx.collections.immutable.persistentListOf
 @Composable
 internal fun SignUpRequestList(
     modifier: Modifier = Modifier,
+    horizontalScrollState: ScrollState,
+    item: ImmutableList<AdminRequestAllowListResponseEntity> = persistentListOf(),
     selectedIndex: Long,
     selectedId: Long,
+    onClick: (Long) -> Unit,
     deleteCallBack: (Long) -> Unit,
     successCallBack: (Long) -> Unit,
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
-    item: ImmutableList<AdminRequestAllowListResponseEntity> = persistentListOf(),
-    horizontalScrollState: ScrollState,
-    onClick: (Long) -> Unit,
 ) {
     ExpoAndroidTheme { colors, _ ->
         LazyColumn(

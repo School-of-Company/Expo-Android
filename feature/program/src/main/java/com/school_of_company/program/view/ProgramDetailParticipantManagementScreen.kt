@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -176,7 +177,7 @@ private fun ProgramDetailParticipantManagementScreen(
 ) {
     var participantTextState by rememberSaveable { mutableStateOf("사전 행사 참가자") }
     var isDropdownExpanded by rememberSaveable { mutableStateOf(false) }
-    var selectedItem by rememberSaveable { mutableStateOf<Int?>(0) }
+    var selectedItem by rememberSaveable { mutableIntStateOf(0) }
 
 
     ExpoAndroidTheme { colors, typography ->

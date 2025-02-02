@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -57,6 +58,7 @@ import com.school_of_company.program.viewmodel.ProgramViewModel
 import com.school_of_company.program.viewmodel.uistate.ParticipantResponseListUiState
 import com.school_of_company.program.viewmodel.uistate.TraineeResponseListUiState
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.delay
 
 @Composable
 internal fun ProgramDetailParticipantManagementRoute(
@@ -89,6 +91,32 @@ internal fun ProgramDetailParticipantManagementRoute(
         )
 
         viewModel.getTraineeList(expoId = id)
+    }
+
+    LaunchedEffect(preParticipantName) {
+        delay(300L)
+        viewModel.getParticipantInformationList(
+            expoId = id,
+            type = ParticipantEnum.PRE,
+            name = preParticipantName
+        )
+    }
+
+    LaunchedEffect(fieldParticipantName) {
+        delay(300L)
+        viewModel.getParticipantInformationList(
+            expoId = id,
+            type = ParticipantEnum.FIELD,
+            name = fieldParticipantName
+        )
+    }
+
+    LaunchedEffect(traineeName) {
+        delay(300L)
+        viewModel.getTraineeList(
+            expoId = id,
+            name = traineeName
+        )
     }
 
     ProgramDetailParticipantManagementScreen(
@@ -149,7 +177,7 @@ private fun ProgramDetailParticipantManagementScreen(
 ) {
     var participantTextState by rememberSaveable { mutableStateOf("사전 행사 참가자") }
     var isDropdownExpanded by rememberSaveable { mutableStateOf(false) }
-    var selectedItem by rememberSaveable { mutableStateOf<Int?>(0) }
+    var selectedItem by rememberSaveable { mutableIntStateOf(0) }
 
 
     ExpoAndroidTheme { colors, typography ->
@@ -369,6 +397,46 @@ private fun ProgramDetailParticipantManagementScreen(
                 }
             }
 
+            Spacer(modifier = Modifier.height(18.dp))
+
+            ExpoNoneLabelTextField(
+                placeholder = "참가자 이름을 입력해주세요.",
+                isError = false,
+                isDisabled = false,
+                errorText = "",
+                value = when (selectedItem) {
+                    0 -> preParticipantName
+                    1 -> fieldParticipantName
+                    2 -> traineeName
+                    else -> ""
+                },
+                onValueChange = when (selectedItem) {
+                    0 -> onPreParticipantNameChange
+                    1 -> onFieldParticipantNameChange
+                    2 -> onTraineeNameChange
+                    else -> ({})
+                },
+                trailingIcon = {
+                    SearchIcon(
+                        tint = colors.black,
+                        modifier = Modifier.clickable {
+                            when (selectedItem) {
+                                0 -> getAheadParticipantList(preParticipantName)
+                                1 -> getFieldParticipantList(fieldParticipantName)
+                                2 -> getTraineeList(traineeName)
+                            }
+                        }
+                    )
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(44.dp)
+                    .padding(horizontal = 16.dp)
+            )
+
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             SwipeRefresh(
                 state = swipeRefreshState,
                 onRefresh = {
@@ -391,35 +459,7 @@ private fun ProgramDetailParticipantManagementScreen(
                         when (participantAheadResponseListUiState) {
                             is ParticipantResponseListUiState.Loading -> Unit
                             is ParticipantResponseListUiState.Success -> {
-
                                 Column {
-                                    Spacer(modifier = Modifier.height(18.dp))
-
-                                    ExpoNoneLabelTextField(
-                                        placeholder = "참가자 이름을 입력해주세요.",
-                                        isError = false,
-                                        isDisabled = false,
-                                        errorText = "",
-                                        value = preParticipantName,
-                                        onValueChange = onPreParticipantNameChange,
-                                        trailingIcon = {
-                                            SearchIcon(
-                                                tint = colors.black,
-                                                modifier = Modifier.clickable {
-                                                    getAheadParticipantList(
-                                                        preParticipantName
-                                                    )
-                                                }
-                                            )
-                                        },
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .height(44.dp)
-                                            .padding(horizontal = 16.dp)
-                                    )
-
-                                    Spacer(modifier = Modifier.height(16.dp))
-
                                     ProgramDetailParticipantTable(scrollState = scrollState)
 
                                     ProgramDetailParticipantManagementList(
@@ -450,33 +490,6 @@ private fun ProgramDetailParticipantManagementScreen(
                             is ParticipantResponseListUiState.Loading -> Unit
                             is ParticipantResponseListUiState.Success -> {
                                 Column {
-                                    Spacer(modifier = Modifier.height(18.dp))
-
-                                    ExpoNoneLabelTextField(
-                                        placeholder = "참가자 이름을 입력해주세요.",
-                                        isError = false,
-                                        isDisabled = false,
-                                        errorText = "",
-                                        value = fieldParticipantName,
-                                        onValueChange = onFieldParticipantNameChange,
-                                        trailingIcon = {
-                                            SearchIcon(
-                                                tint = colors.black,
-                                                modifier = Modifier.clickable {
-                                                    getFieldParticipantList(
-                                                        fieldParticipantName
-                                                    )
-                                                }
-                                            )
-                                        },
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .height(44.dp)
-                                            .padding(horizontal = 16.dp)
-                                    )
-
-                                    Spacer(modifier = Modifier.height(16.dp))
-
                                     ProgramDetailParticipantTable(scrollState = scrollState)
 
                                     ProgramDetailParticipantManagementList(
@@ -494,10 +507,12 @@ private fun ProgramDetailParticipantManagementScreen(
                             }
 
                             is ParticipantResponseListUiState.Empty -> {
+
                                 ShowEmptyState(
                                     emptyMessage = "현장 행사 참가자가 존재하지 않습니다..",
                                     scrollState = scrollState
                                 )
+
                             }
                         }
                     }
@@ -507,35 +522,6 @@ private fun ProgramDetailParticipantManagementScreen(
                             is TraineeResponseListUiState.Loading -> Unit
                             is TraineeResponseListUiState.Success -> {
                                 Column {
-                                    Spacer(modifier = Modifier.height(18.dp))
-
-
-                                    ExpoNoneLabelTextField(
-                                        placeholder = "참가자 이름을 입력해주세요.",
-                                        isError = false,
-                                        isDisabled = false,
-                                        errorText = "",
-                                        value = traineeName,
-                                        onValueChange = onTraineeNameChange,
-                                        trailingIcon = {
-                                            SearchIcon(
-                                                tint = colors.black,
-                                                modifier = Modifier.clickable {
-                                                    getTraineeList(
-                                                        traineeName
-                                                    )
-                                                }
-                                            )
-                                        },
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .height(44.dp)
-                                            .padding(horizontal = 16.dp)
-                                    )
-
-
-                                    Spacer(modifier = Modifier.height(16.dp))
-
                                     ProgramTraineeTable(scrollState = scrollState)
 
                                     ProgramTraineeList(

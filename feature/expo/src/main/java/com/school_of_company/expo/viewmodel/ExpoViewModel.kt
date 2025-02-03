@@ -157,7 +157,7 @@ internal class ExpoViewModel @Inject constructor(
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0)
 
-    val convertCoordinatesToAddressState: StateFlow<String> = getCoordinatesToAddressUiState
+    val convertCoordinatesToAddressResult: StateFlow<String> = getCoordinatesToAddressUiState
         .map { state ->
             when (state) {
                 is GetCoordinatesToAddressUiState.Loading -> "로딩중.."

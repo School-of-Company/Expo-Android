@@ -45,6 +45,7 @@ import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.expo.view.component.HomeKakaoMap
 import com.school_of_company.expo.viewmodel.ExpoViewModel
+import com.school_of_company.expo.viewmodel.uistate.GetCoordinatesToAddressUiState
 import com.school_of_company.expo.viewmodel.uistate.GetExpoInformationUiState
 import com.school_of_company.expo.viewmodel.uistate.GetStandardProgramListUiState
 import com.school_of_company.expo.viewmodel.uistate.GetTrainingProgramListUiState
@@ -67,10 +68,21 @@ internal fun ExpoDetailRoute(
     val getExpoInformationUiState by viewModel.getExpoInformationUiState.collectAsStateWithLifecycle()
     val getTrainingProgramUiState by viewModel.getTrainingProgramListUiState.collectAsStateWithLifecycle()
     val getStandardProgramUiState by viewModel.getStandardProgramListUiState.collectAsStateWithLifecycle()
+    val convertCoordinatesToAddressState by viewModel.convertCoordinatesToAddressResult.collectAsStateWithLifecycle()
+    val getCoordinatesToAddressUiState by viewModel.getCoordinatesToAddressUiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(getCoordinatesToAddressUiState) {
+        when (getCoordinatesToAddressUiState) {
+            is GetCoordinatesToAddressUiState.Loading -> Unit
+            is GetCoordinatesToAddressUiState.Success -> onErrorToast(null, R.string.convert_coordinates_to_address_success)
+            is GetCoordinatesToAddressUiState.Error -> onErrorToast(null, R.string.convert_coordinates_to_address_fail)
+        }
+    }
 
     ExpoDetailScreen(
         modifier = modifier,
         id = id,
+        convertCoordinatesToAddressState = convertCoordinatesToAddressState,
         getExpoInformationUiState = getExpoInformationUiState,
         getTrainingProgramUiState = getTrainingProgramUiState,
         getStandardProgramUiState = getStandardProgramUiState,
@@ -92,6 +104,7 @@ internal fun ExpoDetailRoute(
 private fun ExpoDetailScreen(
     modifier: Modifier = Modifier,
     id: String,
+    convertCoordinatesToAddressState: String,
     getExpoInformationUiState: GetExpoInformationUiState,
     getTrainingProgramUiState: GetTrainingProgramListUiState,
     getStandardProgramUiState: GetStandardProgramListUiState,
@@ -268,7 +281,7 @@ private fun ExpoDetailScreen(
                             )
 
                             Text(
-                                text = "주소 : 광주광역시 광산구 312",
+                                text = convertCoordinatesToAddressState,
                                 style = typography.bodyRegular2,
                                 color = colors.gray400,
                             )
@@ -431,6 +444,7 @@ private fun HomeDetailScreenPreview() {
         getExpoInformationUiState = GetExpoInformationUiState.Loading,
         getTrainingProgramUiState = GetTrainingProgramListUiState.Loading,
         getStandardProgramUiState = GetStandardProgramListUiState.Loading,
-        id = ""
+        id = "",
+        convertCoordinatesToAddressState = ""
     )
 }

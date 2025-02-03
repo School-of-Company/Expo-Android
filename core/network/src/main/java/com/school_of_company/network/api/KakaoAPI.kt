@@ -5,7 +5,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Query
 
-interface KakaoLocalAPI {
+interface KakaoAPI {
 
     @GET("search/address.json")
     suspend fun getCoordinates(

@@ -1,14 +1,14 @@
 package com.school_of_company.network.datasource.kakao
 
 import com.school_of_company.network.BuildConfig
-import com.school_of_company.network.api.KakaoLocalAPI
+import com.school_of_company.network.api.KakaoAPI
 import com.school_of_company.network.dto.kakao.KakaoAddressResponse
 import com.school_of_company.network.util.performApiRequest
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class KakaoLocalDataSourceImpl @Inject constructor(
-    private val service: KakaoLocalAPI
+    private val service: KakaoAPI
 ) : KakaoLocalDataSource {
     override fun getCoordinates(address: String, size: Int): Flow<KakaoAddressResponse> =
         performApiRequest {

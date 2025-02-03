@@ -64,6 +64,7 @@ fun NavGraphBuilder.expoDetailScreen(
     onModifyClick: (String) -> Unit,
     onProgramClick: (String) -> Unit,
     onMessageClick: (String, String) -> Unit,
+    onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
 ) {
     composable(route = "$expoDetailRoute/{id}") { backStackEntry ->
         val id = backStackEntry.arguments?.getString("id") ?: ""
@@ -74,6 +75,7 @@ fun NavGraphBuilder.expoDetailScreen(
             onModifyClick = onModifyClick,
             onProgramClick = onProgramClick,
             onMessageClick = onMessageClick,
+            onErrorToast = onErrorToast,
         )
     }
 }

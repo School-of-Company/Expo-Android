@@ -15,6 +15,7 @@ import com.school_of_company.domain.usecase.expo.GetExpoListUseCase
 import com.school_of_company.domain.usecase.expo.ModifyExpoInformationUseCase
 import com.school_of_company.domain.usecase.expo.RegisterExpoInformationUseCase
 import com.school_of_company.domain.usecase.juso.GetAddressUseCase
+import com.school_of_company.domain.usecase.kakao.GetCoordinatesToAddressUseCase
 import com.school_of_company.domain.usecase.kakao.GetCoordinatesUseCase
 import com.school_of_company.domain.usecase.standard.StandardProgramListUseCase
 import com.school_of_company.domain.usecase.training.TrainingProgramListUseCase
@@ -22,6 +23,7 @@ import com.school_of_company.expo.enum.TrainingCategory
 import com.school_of_company.expo.util.getMultipartFile
 import com.school_of_company.expo.viewmodel.uistate.DeleteExpoInformationUiState
 import com.school_of_company.expo.viewmodel.uistate.GetAddressUiState
+import com.school_of_company.expo.viewmodel.uistate.GetCoordinatesToAddressUiState
 import com.school_of_company.expo.viewmodel.uistate.GetCoordinatesUiState
 import com.school_of_company.expo.viewmodel.uistate.GetExpoInformationUiState
 import com.school_of_company.expo.viewmodel.uistate.GetExpoListUiState
@@ -62,6 +64,7 @@ internal class ExpoViewModel @Inject constructor(
     private val trainingProgramListUseCase: TrainingProgramListUseCase,
     private val deleteExpoInformationUseCase: DeleteExpoInformationUseCase,
     private val modifyExpoInformationUseCase: ModifyExpoInformationUseCase,
+    private val getCoordinatesToAddressUseCase: GetCoordinatesToAddressUseCase,
     private val registerExpoInformationUseCase: RegisterExpoInformationUseCase,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
@@ -99,6 +102,9 @@ internal class ExpoViewModel @Inject constructor(
 
     private val _getCoordinatesUiState = MutableStateFlow<GetCoordinatesUiState>(GetCoordinatesUiState.Loading)
     internal val getCoordinatesUiState = _getCoordinatesUiState.asStateFlow()
+
+    private val _getCoordinatesToAddressUiState = MutableStateFlow<GetCoordinatesToAddressUiState>(GetCoordinatesToAddressUiState.Loading)
+    internal val getCoordinatesToAddressUiState = _getCoordinatesToAddressUiState.asStateFlow()
 
     private val _getAddressUiState = MutableStateFlow<GetAddressUiState>(GetAddressUiState.Loading)
     internal val getAddressUiState = _getAddressUiState.asStateFlow()
@@ -426,6 +432,22 @@ internal class ExpoViewModel @Inject constructor(
                         _getCoordinatesUiState.value = GetCoordinatesUiState.Success(result.data)
                     }
                     is Result.Error -> _getCoordinatesUiState.value = GetCoordinatesUiState.Error(result.exception)
+                }
+            }
+    }
+
+    internal fun convertXYToJibun(x: String, y: String) = viewModelScope.launch {
+        getCoordinatesToAddressUseCase(x = x, y = y)
+            .asResult()
+            .collectLatest { result ->
+                when (result) {
+                    is Result.Loading -> _getCoordinatesToAddressUiState.value = GetCoordinatesToAddressUiState.Loading
+                    is Result.Success -> if (result.data.addressName == "Unknown") {
+                        _getCoordinatesToAddressUiState.value = GetCoordinatesToAddressUiState.Error(NoResponseException())
+                    } else {
+                        _getCoordinatesToAddressUiState.value = GetCoordinatesToAddressUiState.Success(result.data)
+                    }
+                    is Result.Error -> _getCoordinatesToAddressUiState.value = GetCoordinatesToAddressUiState.Error(result.exception)
                 }
             }
     }

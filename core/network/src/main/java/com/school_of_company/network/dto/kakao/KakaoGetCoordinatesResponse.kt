@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class KakaoAddressResponse(
+data class KakaoGetCoordinatesResponse(
     @Json(name = "meta") val meta: KakaoMeta,
     @Json(name = "documents") val documents: List<KakaoDocument>,
 )

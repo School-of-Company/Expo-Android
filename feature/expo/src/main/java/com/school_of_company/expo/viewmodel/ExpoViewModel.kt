@@ -192,6 +192,7 @@ internal class ExpoViewModel @Inject constructor(
                             onIntroduceTitleChange(it.description)
                             onLocationChange(it.location)
                             onCoverImageChange(it.coverImage)
+                            convertXYToJibun(x = it.x, y = it.y)
                         }
                     }
                     is Result.Error -> _getExpoInformationUiState.value = GetExpoInformationUiState.Error(result.exception)
@@ -446,7 +447,7 @@ internal class ExpoViewModel @Inject constructor(
             }
     }
 
-    internal fun convertXYToJibun(x: String, y: String) = viewModelScope.launch {
+    private fun convertXYToJibun(x: String, y: String) = viewModelScope.launch {
         getCoordinatesToAddressUseCase(x = x, y = y)
             .asResult()
             .collectLatest { result ->

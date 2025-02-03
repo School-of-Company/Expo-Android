@@ -19,6 +19,6 @@ data class KakaoMeta(
 @JsonClass(generateAdapter = true)
 data class KakaoDocument(
     @Json(name = "address_name") val addressName: String,
-    @Json(name = "x") val longitude: String, // 경도
-    @Json(name = "y") val latitude: String, // 위도
+    @Json(name = "x") val x: String, // 경도
+    @Json(name = "y") val y: String, // 위도
 )

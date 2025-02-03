@@ -5,7 +5,7 @@ import com.school_of_company.model.model.kakao.KakaoGeocodingModel
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GetAddressUseCase @Inject constructor(
+class GetCoordinatesToAddressUseCase @Inject constructor(
     private val repository: KakaoRepository
 ) {
     operator fun invoke(x: String, y: String): Flow<KakaoGeocodingModel> =

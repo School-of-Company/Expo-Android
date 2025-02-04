@@ -10,7 +10,6 @@ interface KakaoAPI {
 
     @GET("search/address.json")
     suspend fun getCoordinates(
-        @Header("Authorization") apiKey: String,
         @Header("Content-Type") contentType: String = "application/json;charset=UTF-8",
         @Query("query") address: String,
         @Query("size") size: Int,
@@ -18,7 +17,6 @@ interface KakaoAPI {
 
     @GET("geo/coord2address.json")
     suspend fun getAddress(
-        @Header("Authorization") apiKey: String,
         @Header("Content-Type") contentType: String = "application/json;charset=UTF-8",
         @Query("x") x: String,
         @Query("y") y: String,

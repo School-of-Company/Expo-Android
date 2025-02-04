@@ -38,7 +38,7 @@ class AuthInterceptor @Inject constructor(
             }
 
             // kakao api 에 대해서는 KakaoRestApiKey 를 추가합니다
-            path in listOf("/search", "/geo") && method in listOf(GET) -> {
+            Regex("/(search|geo)").containsMatchIn(path) && method in listOf(GET) -> {
                 request.newBuilder().addHeader("Authorization", "KakaoAK ${BuildConfig.KAKAO_REST_KEY}").build()
             }
 

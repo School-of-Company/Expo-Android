@@ -102,6 +102,7 @@ fun ExpoEnableButton(
     modifier: Modifier = Modifier,
     text: String,
     textColor: Color = Color.Black,
+    backgroundColor: Color = Color.White,
     onClick: () -> Unit,
 ) {
     ExpoAndroidTheme { colors, typography ->
@@ -113,7 +114,7 @@ fun ExpoEnableButton(
             interactionSource = interactionSource,
             contentPadding = PaddingValues(vertical = 16.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = colors.white,
+                containerColor = backgroundColor,
                 contentColor = colors.white,
             ),
             shape = RoundedCornerShape(6.dp),

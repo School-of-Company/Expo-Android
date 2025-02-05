@@ -29,6 +29,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -327,26 +328,15 @@ private fun ExpoDetailScreen(
                             ExpoEnableDetailButton(
                                 text = "문자 보내기",
                                 onClick = { isOpenDialog(true) },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .border(
-                                        width = 1.dp,
-                                        color = colors.main,
-                                        shape = RoundedCornerShape(6.dp)
-                                    )
+                                modifier = Modifier.fillMaxWidth()
                             )
 
                             ExpoEnableButton(
                                 text = "수정하기",
                                 onClick = { onModifyClick(id) },
-                                textColor = colors.main,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .border(
-                                        width = 1.dp,
-                                        color = colors.main,
-                                        shape = RoundedCornerShape(6.dp)
-                                    )
+                                textColor = colors.gray700,
+                                backgroundColor = colors.gray100,
+                                modifier = Modifier.fillMaxWidth()
                             )
                         }
 
@@ -417,7 +407,7 @@ private fun ExpoDetailScreen(
     }
 }
 
-@ExpoPreviews
+@Preview
 @Composable
 private fun HomeDetailScreenPreview() {
     ExpoDetailScreen(

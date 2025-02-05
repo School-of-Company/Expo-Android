@@ -16,13 +16,13 @@ class KakaoRepositoryImpl @Inject constructor(
         return kakaoLocalDataSource.getCoordinates(
             address = address,
             size = size
-        ).map { it.toModel() }
+        ).transform { emit(it.toModel()) }
     }
 
     override fun getAddress(x: String, y: String): Flow<KakaoGeocodingModel> {
         return kakaoLocalDataSource.getAddress(
             x = x,
             y = y,
-        ).map { it.toModel() }
+        ).transform { emit(it.toModel()) }
     }
 }

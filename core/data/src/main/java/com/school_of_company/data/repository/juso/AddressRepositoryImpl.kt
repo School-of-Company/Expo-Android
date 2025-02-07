@@ -4,7 +4,6 @@ import com.school_of_company.model.model.juso.JusoModel
 import com.school_of_company.network.datasource.juso.AddressDataSource
 import com.school_of_company.network.mapper.juso.toModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.transform
 import javax.inject.Inject
 

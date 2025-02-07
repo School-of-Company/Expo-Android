@@ -268,7 +268,7 @@ private fun ExpoDetailScreen(
 
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Bottom)) {
                             Text(
-                                text = "장소 지도",
+                                text = "장소",
                                 style = typography.bodyRegular2,
                                 color = colors.gray600,
                                 fontWeight = FontWeight(600),

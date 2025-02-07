@@ -521,7 +521,7 @@ private fun ExpoCreateScreen(
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             ExpoLocationIconTextField(
-                                placeholder = "장소를 입력해주세요.",
+                                placeholder = "위치를 알려주세요.",
                                 isDisabled = false,
                                 onValueChange = onLocationChange,
                                 onButtonClicked = searchLocation,

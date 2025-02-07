@@ -275,13 +275,13 @@ private fun ExpoDetailScreen(
                             )
 
                             Text(
-                                text = "장소 : ${getExpoInformationUiState.data.location}",
+                                text = convertCoordinatesToAddressState,
                                 style = typography.bodyRegular2,
                                 color = colors.gray400,
                             )
 
                             Text(
-                                text = convertCoordinatesToAddressState,
+                                text = "상세주소 : ${getExpoInformationUiState.data.location}",
                                 style = typography.bodyRegular2,
                                 color = colors.gray400,
                             )

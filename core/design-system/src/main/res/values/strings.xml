@@ -89,6 +89,9 @@
 
     <string name="expo_image_fail">박람회 이미지가 유효하지 않습니다.</string>
 
+    <string name="convert_coordinates_to_address_fail">좌표를 주소로 변환하는 과정에서 오류가 발생했습니다.</string>
+    <string name="convert_coordinates_to_address_success">좌표를 주소로 성공적으로 변환했습니다.</string>
+
     <string name="get_address_success">주소검색을 성공했습니다</string>
     <string name="get_address_fail">주소검색을 실패했습니다.</string>
 

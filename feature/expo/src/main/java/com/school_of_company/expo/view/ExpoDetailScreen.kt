@@ -46,6 +46,7 @@ import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.expo.view.component.HomeKakaoMap
 import com.school_of_company.expo.viewmodel.ExpoViewModel
+import com.school_of_company.expo.viewmodel.uistate.GetCoordinatesToAddressUiState
 import com.school_of_company.expo.viewmodel.uistate.GetExpoInformationUiState
 import com.school_of_company.expo.viewmodel.uistate.GetStandardProgramListUiState
 import com.school_of_company.expo.viewmodel.uistate.GetTrainingProgramListUiState
@@ -62,11 +63,21 @@ internal fun ExpoDetailRoute(
     onModifyClick: (String) -> Unit,
     onProgramClick: (String) -> Unit,
     onMessageClick: (String, String) -> Unit,
+    onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
     viewModel: ExpoViewModel = hiltViewModel(),
 ) {
     val getExpoInformationUiState by viewModel.getExpoInformationUiState.collectAsStateWithLifecycle()
     val getTrainingProgramUiState by viewModel.getTrainingProgramListUiState.collectAsStateWithLifecycle()
     val getStandardProgramUiState by viewModel.getStandardProgramListUiState.collectAsStateWithLifecycle()
+    val getCoordinatesToAddressUiState by viewModel.getCoordinatesToAddressUiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(getCoordinatesToAddressUiState) {
+        when (getCoordinatesToAddressUiState) {
+            is GetCoordinatesToAddressUiState.Loading -> Unit
+            is GetCoordinatesToAddressUiState.Success -> onErrorToast(null, R.string.convert_coordinates_to_address_success)
+            is GetCoordinatesToAddressUiState.Error -> onErrorToast(null, R.string.convert_coordinates_to_address_fail)
+        }
+    }
 
     ExpoDetailScreen(
         modifier = modifier,
@@ -74,6 +85,7 @@ internal fun ExpoDetailRoute(
         getExpoInformationUiState = getExpoInformationUiState,
         getTrainingProgramUiState = getTrainingProgramUiState,
         getStandardProgramUiState = getStandardProgramUiState,
+        getCoordinatesToAddressUiState = getCoordinatesToAddressUiState,
         onBackClick = onBackClick,
         onMessageClick = { authority -> onMessageClick(id, authority) },
         onCheckClick = onCheckClick,
@@ -95,12 +107,13 @@ private fun ExpoDetailScreen(
     getExpoInformationUiState: GetExpoInformationUiState,
     getTrainingProgramUiState: GetTrainingProgramListUiState,
     getStandardProgramUiState: GetStandardProgramListUiState,
+    getCoordinatesToAddressUiState: GetCoordinatesToAddressUiState,
     scrollState: ScrollState = rememberScrollState(),
     onBackClick: () -> Unit,
     onMessageClick: (String) -> Unit,
     onCheckClick: (String) -> Unit,
     onModifyClick: (String) -> Unit,
-    onProgramClick: (String) -> Unit
+    onProgramClick: (String) -> Unit,
 ) {
     val (openDialog, isOpenDialog) = rememberSaveable { mutableStateOf(false) }
 
@@ -255,20 +268,25 @@ private fun ExpoDetailScreen(
 
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Bottom)) {
                             Text(
-                                text = "장소 지도",
+                                text = "장소",
                                 style = typography.bodyRegular2,
                                 color = colors.gray600,
                                 fontWeight = FontWeight(600),
                             )
+                            val addressMessage = when (getCoordinatesToAddressUiState) {
+                                is GetCoordinatesToAddressUiState.Error -> "오류 발생"
+                                is GetCoordinatesToAddressUiState.Loading -> "로딩중입니다.."
+                                is GetCoordinatesToAddressUiState.Success -> "주소 : ${getCoordinatesToAddressUiState.data.addressName}"
+                            }
 
                             Text(
-                                text = "장소 : ${getExpoInformationUiState.data.location}",
+                                text = addressMessage,
                                 style = typography.bodyRegular2,
                                 color = colors.gray400,
                             )
 
                             Text(
-                                text = "주소 : 광주광역시 광산구 312",
+                                text = "상세주소 : ${getExpoInformationUiState.data.location}",
                                 style = typography.bodyRegular2,
                                 color = colors.gray400,
                             )
@@ -420,6 +438,7 @@ private fun HomeDetailScreenPreview() {
         getExpoInformationUiState = GetExpoInformationUiState.Loading,
         getTrainingProgramUiState = GetTrainingProgramListUiState.Loading,
         getStandardProgramUiState = GetStandardProgramListUiState.Loading,
-        id = ""
+        id = "",
+        getCoordinatesToAddressUiState = GetCoordinatesToAddressUiState.Loading
     )
 }

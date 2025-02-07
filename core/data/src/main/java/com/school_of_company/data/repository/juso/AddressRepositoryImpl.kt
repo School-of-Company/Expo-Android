@@ -19,7 +19,7 @@ class AddressRepositoryImpl @Inject constructor(
             countPerPage = countPerPage,
             currentPage = currentPage,
             keyword = keyword
-        ).transform {
-            it.results.juso?.map { juso -> juso.toModel() } ?: emptyList()
+        ).transform { list ->
+            emit(list.results.juso?.map { juso -> juso.toModel() } ?: emptyList())
         }
 }

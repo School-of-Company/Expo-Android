@@ -1,6 +1,7 @@
 package com.school_of_company.network.util
 
 import com.school_of_company.datastore.datasource.AuthTokenDataSource
+import com.school_of_company.network.BuildConfig
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
@@ -36,9 +37,9 @@ class AuthInterceptor @Inject constructor(
                 request
             }
 
-            // kakao api 에 대해서는 토큰을 추가하지 않습니다
-            path.contains("/search") && method in listOf(GET) -> {
-                request
+            // kakao api 에 대해서는 KakaoRestApiKey 를 추가합니다
+            Regex("/(search|geo)").containsMatchIn(path) && method in listOf(GET) -> {
+                request.newBuilder().addHeader("Authorization", "KakaoAK ${BuildConfig.KAKAO_REST_KEY}").build()
             }
 
             // "/sms"의 경로에 대해서는 토큰을 추가하지 않습니다.

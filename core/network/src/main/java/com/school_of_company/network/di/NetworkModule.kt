@@ -11,7 +11,7 @@ import com.school_of_company.network.api.AuthAPI
 import com.school_of_company.network.api.ExpoAPI
 import com.school_of_company.network.api.FormAPI
 import com.school_of_company.network.api.ImageAPI
-import com.school_of_company.network.api.KakaoLocalAPI
+import com.school_of_company.network.api.KakaoAPI
 import com.school_of_company.network.api.ParticipantAPI
 import com.school_of_company.network.api.SmsAPI
 import com.school_of_company.network.api.StandardAPI
@@ -177,8 +177,8 @@ object NetworkModule {
         retrofit.create(FormAPI::class.java)
 
     @Provides
-    fun provideKakaoLocalAPI(@KakaoUrl retrofit: Retrofit): KakaoLocalAPI =
-        retrofit.create(KakaoLocalAPI::class.java)
+    fun provideKakaoAPI(@KakaoUrl retrofit: Retrofit): KakaoAPI =
+        retrofit.create(KakaoAPI::class.java)
 
     @Provides
     fun provideAddressAPI(@AddressUrl retrofit: Retrofit): AddressAPI =

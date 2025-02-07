@@ -96,6 +96,7 @@ fun ExpoNavHost(
                 navController.navigateToProgramDetailProgram(id)
             },
             onMessageClick = navController::navigateToSmsSendMessage,
+            onErrorToast = makeErrorToast,
         )
 
         smsSendMessageScreen(

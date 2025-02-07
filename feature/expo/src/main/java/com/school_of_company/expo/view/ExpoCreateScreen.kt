@@ -140,8 +140,8 @@ internal fun ExpoCreateRoute(
                         description = viewModel.introduce_title.value,
                         location = viewModel.location.value,
                         coverImage = (imageUpLoadUiState as ImageUpLoadUiState.Success).data.imageURL,
-                        x = viewModel.coordinateX.value,
-                        y = viewModel.coordinateY.value,
+                        x = viewModel.coordinateX.value.toDoubleOrNull()?.let { "%.6f".format(it) } ?: "0.000000",
+                        y = viewModel.coordinateY.value.toDoubleOrNull()?.let { "%.6f".format(it) } ?: "0.000000",
                         addStandardProRequestDto = standardProgramTextState,
                         addTrainingProRequestDto = trainingProgramTextState
                     )
@@ -521,7 +521,7 @@ private fun ExpoCreateScreen(
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             ExpoLocationIconTextField(
-                                placeholder = "장소를 입력해주세요.",
+                                placeholder = "위치를 알려주세요.",
                                 isDisabled = false,
                                 onValueChange = onLocationChange,
                                 onButtonClicked = searchLocation,

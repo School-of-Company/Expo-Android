@@ -157,16 +157,6 @@ internal class ExpoViewModel @Inject constructor(
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0)
 
-    val convertCoordinatesToAddressResult: StateFlow<String> = getCoordinatesToAddressUiState
-        .map { state ->
-            when (state) {
-                is GetCoordinatesToAddressUiState.Loading -> "로딩중.."
-                is GetCoordinatesToAddressUiState.Success -> "주소 : ${state.data.addressName}"
-                is GetCoordinatesToAddressUiState.Error, -> "오류 발생"
-            }
-        }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "로딩중..")
-
     val addressList: StateFlow<List<JusoModel>> = getAddressUiState
         .map { state ->
             when (state) {

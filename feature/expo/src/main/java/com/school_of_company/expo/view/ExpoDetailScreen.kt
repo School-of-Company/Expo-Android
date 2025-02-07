@@ -68,7 +68,6 @@ internal fun ExpoDetailRoute(
     val getExpoInformationUiState by viewModel.getExpoInformationUiState.collectAsStateWithLifecycle()
     val getTrainingProgramUiState by viewModel.getTrainingProgramListUiState.collectAsStateWithLifecycle()
     val getStandardProgramUiState by viewModel.getStandardProgramListUiState.collectAsStateWithLifecycle()
-    val convertCoordinatesToAddressState by viewModel.convertCoordinatesToAddressResult.collectAsStateWithLifecycle()
     val getCoordinatesToAddressUiState by viewModel.getCoordinatesToAddressUiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(getCoordinatesToAddressUiState) {
@@ -82,10 +81,10 @@ internal fun ExpoDetailRoute(
     ExpoDetailScreen(
         modifier = modifier,
         id = id,
-        convertCoordinatesToAddressState = convertCoordinatesToAddressState,
         getExpoInformationUiState = getExpoInformationUiState,
         getTrainingProgramUiState = getTrainingProgramUiState,
         getStandardProgramUiState = getStandardProgramUiState,
+        getCoordinatesToAddressUiState = getCoordinatesToAddressUiState,
         onBackClick = onBackClick,
         onMessageClick = { authority -> onMessageClick(id, authority) },
         onCheckClick = onCheckClick,
@@ -104,16 +103,16 @@ internal fun ExpoDetailRoute(
 private fun ExpoDetailScreen(
     modifier: Modifier = Modifier,
     id: String,
-    convertCoordinatesToAddressState: String,
     getExpoInformationUiState: GetExpoInformationUiState,
     getTrainingProgramUiState: GetTrainingProgramListUiState,
     getStandardProgramUiState: GetStandardProgramListUiState,
+    getCoordinatesToAddressUiState: GetCoordinatesToAddressUiState,
     scrollState: ScrollState = rememberScrollState(),
     onBackClick: () -> Unit,
     onMessageClick: (String) -> Unit,
     onCheckClick: (String) -> Unit,
     onModifyClick: (String) -> Unit,
-    onProgramClick: (String) -> Unit
+    onProgramClick: (String) -> Unit,
 ) {
     val (openDialog, isOpenDialog) = rememberSaveable { mutableStateOf(false) }
 
@@ -273,9 +272,14 @@ private fun ExpoDetailScreen(
                                 color = colors.gray600,
                                 fontWeight = FontWeight(600),
                             )
+                            val addressMessage = when (getCoordinatesToAddressUiState) {
+                                is GetCoordinatesToAddressUiState.Error -> "오류 발생"
+                                is GetCoordinatesToAddressUiState.Loading -> "로딩중입니다.."
+                                is GetCoordinatesToAddressUiState.Success -> "주소 : ${getCoordinatesToAddressUiState.data.addressName}"
+                            }
 
                             Text(
-                                text = convertCoordinatesToAddressState,
+                                text = addressMessage,
                                 style = typography.bodyRegular2,
                                 color = colors.gray400,
                             )
@@ -445,6 +449,6 @@ private fun HomeDetailScreenPreview() {
         getTrainingProgramUiState = GetTrainingProgramListUiState.Loading,
         getStandardProgramUiState = GetStandardProgramListUiState.Loading,
         id = "",
-        convertCoordinatesToAddressState = ""
+        getCoordinatesToAddressUiState = GetCoordinatesToAddressUiState.Loading
     )
 }

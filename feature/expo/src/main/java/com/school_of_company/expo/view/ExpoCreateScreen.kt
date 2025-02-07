@@ -93,10 +93,7 @@ internal fun ExpoCreateRoute(
 ) {
     val registerExpoInformationUiState by viewModel.registerExpoInformationUiState.collectAsStateWithLifecycle()
     val imageUpLoadUiState by viewModel.imageUpLoadUiState.collectAsStateWithLifecycle()
-    val getAddressUiState by viewModel.getAddressUiState.collectAsStateWithLifecycle()
-    val getCoordinatesUiState by viewModel.getCoordinatesUiState.collectAsStateWithLifecycle()
 
-    val addressList by viewModel.addressList.collectAsStateWithLifecycle()
     val modifyTitleState by viewModel.modify_title.collectAsStateWithLifecycle()
     val startedDateState by viewModel.started_date.collectAsStateWithLifecycle()
     val endedDateState by viewModel.ended_date.collectAsStateWithLifecycle()
@@ -154,32 +151,6 @@ internal fun ExpoCreateRoute(
         }
     }
 
-    LaunchedEffect(getCoordinatesUiState) {
-        when (getCoordinatesUiState) {
-            is GetCoordinatesUiState.Loading -> Unit
-            is GetCoordinatesUiState.Success -> onErrorToast(
-                null,
-                R.string.get_address_convert_success
-            )
-
-            is GetCoordinatesUiState.Error -> onErrorToast(
-                (getCoordinatesUiState as GetCoordinatesUiState.Error).exception,
-                R.string.get_address_convert_fail
-            )
-        }
-    }
-
-    LaunchedEffect(getAddressUiState) {
-        when (getAddressUiState) {
-            is GetAddressUiState.Loading -> Unit
-            is GetAddressUiState.Success -> onErrorToast(null, R.string.get_address_success)
-            is GetAddressUiState.Error -> onErrorToast(
-                (getAddressUiState as GetAddressUiState.Error).exception,
-                R.string.get_address_fail
-            )
-        }
-    }
-
     LaunchedEffect(registerExpoInformationUiState) {
         when (registerExpoInformationUiState) {
             is RegisterExpoInformationUiState.Loading -> Unit
@@ -202,25 +173,15 @@ internal fun ExpoCreateRoute(
         endedDateState = endedDateState,
         modifyTitleState = modifyTitleState,
         introduceTitleState = introduceTitleState,
-        addressList = addressList,
         addressState = addressState,
         locationState = locationState,
         imageUri = selectedImageUri?.toString() ?: coverImageState,
         onImageClick = { galleryLauncher.launch("image/*") },
-        searchLocation = {
-            if (locationState.length >= 2) {
-                viewModel.searchLocation(locationState)
-            } else {
-                onErrorToast(null, R.string.get_address_lack_of_length)
-            }
-        },
         onModifyTitleChange = viewModel::onModifyTitleChange,
         onStartedDateChange = viewModel::onStartedDateChange,
         onEndedDateChange = viewModel::onEndedDateChange,
         onIntroduceTitleChange = viewModel::onIntroduceTitleChange,
         onAddressChange = viewModel::onAddressChange,
-        onLocationChange = viewModel::onLocationChange,
-        convertJibunToXY = viewModel::convertJibunToXY,
         onExpoCreateCallBack = {
             if (selectedImageUri != null) {
                 viewModel.imageUpLoad(context, selectedImageUri!!)
@@ -250,13 +211,11 @@ private fun ExpoCreateScreen(
     addressState: String,
     locationState: String,
     imageUri: String?,
-    addressList: List<JusoModel>,
     trainingProgramTextState: List<TrainingProRequestParam>,
     standardProgramTextState: List<StandardProRequestParam>,
     focusManager: FocusManager = LocalFocusManager.current,
     scrollState: ScrollState = rememberScrollState(),
     onImageClick: () -> Unit,
-    searchLocation: () -> Unit,
     onExpoCreateCallBack: () -> Unit,
     onAddTrainingProgram: () -> Unit,
     onAddStandardProgram: () -> Unit,
@@ -265,8 +224,6 @@ private fun ExpoCreateScreen(
     onModifyTitleChange: (String) -> Unit,
     onIntroduceTitleChange: (String) -> Unit,
     onAddressChange: (String) -> Unit,
-    onLocationChange: (String) -> Unit,
-    convertJibunToXY: (String) -> Unit,
     onRemoveTrainingProgram: (Int) -> Unit,
     onRemoveStandardProgram: (Int) -> Unit,
     onTrainingProgramChange: (Int, TrainingProRequestParam) -> Unit,
@@ -522,33 +479,11 @@ private fun ExpoCreateScreen(
                         ) {
                             ExpoLocationIconTextField(
                                 placeholder = "위치를 알려주세요.",
-                                isDisabled = false,
-                                onValueChange = onLocationChange,
-                                onButtonClicked = searchLocation,
+                                isDisabled = true,
+                                onButtonClicked = { /* todo */ },
                                 value = locationState,
+                                onValueChange = { _ -> },
                             )
-
-                            if (addressList.isNotEmpty()) {
-                                Column(modifier = Modifier.padding(horizontal = 10.dp)) {
-
-                                    addressList.forEachIndexed { index, result ->
-                                        AddressSearchResultItem(
-                                            result = result,
-                                            onClick = convertJibunToXY
-                                        )
-
-                                        Spacer(modifier = Modifier.height(16.dp))
-
-                                        if (index < addressList.lastIndex) {
-                                            HorizontalDivider(
-                                                color = colors.gray300,
-                                                thickness = 1.dp,
-                                                modifier = Modifier.padding(horizontal = 16.dp)
-                                            )
-                                        }
-                                    }
-                                }
-                            }
                         }
 
                         NoneLimitedLengthTextField(
@@ -652,7 +587,6 @@ private fun ExpoCreateScreenPreview() {
         addressState = "",
         locationState = "",
         imageUri = null,
-        addressList = emptyList(),
         trainingProgramTextState = emptyList(),
         standardProgramTextState = emptyList(),
         onImageClick = {},
@@ -664,11 +598,8 @@ private fun ExpoCreateScreenPreview() {
         onModifyTitleChange = {},
         onIntroduceTitleChange = {},
         onAddressChange = {},
-        onLocationChange = {},
         onRemoveTrainingProgram = {},
         onRemoveStandardProgram = {},
-        searchLocation = { },
-        convertJibunToXY = { _ -> },
         onTrainingProgramChange = { _, _ -> },
         onStandardProgramChange = { _, _ -> },
     )

@@ -14,9 +14,7 @@ import com.school_of_company.domain.usecase.expo.GetExpoInformationUseCase
 import com.school_of_company.domain.usecase.expo.GetExpoListUseCase
 import com.school_of_company.domain.usecase.expo.ModifyExpoInformationUseCase
 import com.school_of_company.domain.usecase.expo.RegisterExpoInformationUseCase
-import com.school_of_company.domain.usecase.juso.GetAddressUseCase
 import com.school_of_company.domain.usecase.kakao.GetCoordinatesToAddressUseCase
-import com.school_of_company.domain.usecase.kakao.GetCoordinatesUseCase
 import com.school_of_company.domain.usecase.standard.StandardProgramListUseCase
 import com.school_of_company.domain.usecase.training.TrainingProgramListUseCase
 import com.school_of_company.expo.enum.TrainingCategory
@@ -32,7 +30,6 @@ import com.school_of_company.expo.viewmodel.uistate.GetTrainingProgramListUiStat
 import com.school_of_company.expo.viewmodel.uistate.ImageUpLoadUiState
 import com.school_of_company.expo.viewmodel.uistate.ModifyExpoInformationUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterExpoInformationUiState
-import com.school_of_company.model.model.juso.JusoModel
 import com.school_of_company.model.param.expo.ExpoAllRequestParam
 import com.school_of_company.model.param.expo.ExpoModifyRequestParam
 import com.school_of_company.model.param.expo.StandardProIdRequestParam
@@ -55,10 +52,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class ExpoViewModel @Inject constructor(
-    private val getAddressUseCase: GetAddressUseCase,
     private val getExpoListUseCase: GetExpoListUseCase,
     private val imageUpLoadUseCase: ImageUpLoadUseCase,
-    private val getCoordinatesUseCase: GetCoordinatesUseCase,
     private val getExpoInformationUseCase: GetExpoInformationUseCase,
     private val standardProgramListUseCase: StandardProgramListUseCase,
     private val trainingProgramListUseCase: TrainingProgramListUseCase,
@@ -156,15 +151,6 @@ internal class ExpoViewModel @Inject constructor(
             }
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0)
-
-    val addressList: StateFlow<List<JusoModel>> = getAddressUiState
-        .map { state ->
-            when (state) {
-                is GetAddressUiState.Success -> state.data
-                else -> listOf()
-            }
-        }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), listOf())
 
     internal fun getExpoInformation(expoId: String) = viewModelScope.launch {
         getExpoInformationUseCase(expoId = expoId)
@@ -400,43 +386,6 @@ internal class ExpoViewModel @Inject constructor(
             }
     }
 
-    internal fun searchLocation(searchText: String) =
-        viewModelScope.launch {
-            getAddressUseCase(searchText = searchText)
-                .asResult()
-                .collectLatest { result ->
-                    when (result) {
-                        is Result.Loading -> _getAddressUiState.value = GetAddressUiState.Loading
-                        is Result.Success -> {
-                            if(result.data.isNotEmpty()){
-                                _getAddressUiState.value =  GetAddressUiState.Success(result.data)
-                            } else {
-                                _getAddressUiState.value = GetAddressUiState.Error(NoResponseException())
-                            }
-                        }
-                        is Result.Error -> _getAddressUiState.value = GetAddressUiState.Error(result.exception)
-                    }
-                }
-        }
-
-    internal fun convertJibunToXY(searchText: String) = viewModelScope.launch {
-        getCoordinatesUseCase(address = searchText)
-            .asResult()
-            .collectLatest { result ->
-                when(result){
-                    is Result.Loading -> _getCoordinatesUiState.value = GetCoordinatesUiState.Loading
-                    is Result.Success -> if (result.data.addressName == "Unknown") {
-                        _getCoordinatesUiState.value = GetCoordinatesUiState.Error(NoResponseException())
-                    } else {
-                        onCoordinateXChange(result.data.x)
-                        onCoordinateYChange(result.data.y)
-                        _getCoordinatesUiState.value = GetCoordinatesUiState.Success(result.data)
-                    }
-                    is Result.Error -> _getCoordinatesUiState.value = GetCoordinatesUiState.Error(result.exception)
-                }
-            }
-    }
-
     private fun convertXYToJibun(x: String, y: String) = viewModelScope.launch {
         getCoordinatesToAddressUseCase(x = x, y = y)
             .asResult()
@@ -596,13 +545,4 @@ internal class ExpoViewModel @Inject constructor(
     internal fun onEndedChange(value: String) {
         savedStateHandle[ENDED] = value
     }
-
-    internal fun onCoordinateXChange(value: String) {
-        savedStateHandle[COORDINATEX] = value
-    }
-
-    internal fun onCoordinateYChange(value: String) {
-        savedStateHandle[COORDINATEY] = value
-    }
-
 }

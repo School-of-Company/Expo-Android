@@ -50,8 +50,9 @@ jobs:
           title: ✅ Expo-Android-CI Success! ✅
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           status: ${{ job.status }}
+          content: "<@${{ secrets.ID1 }}> <@${{ secrets.ID2 }}> CI 성공하였습니다. 확인부탁드립니다."
           image: ${{ secrets.SUCCESS_IMAGE }}
-          description: @이명훈 @문혜성
+          description: 뀨
           color: 65280
           url: "https://github.com/sarisia/actions-status-discord"
           username: Expo-CI Bot

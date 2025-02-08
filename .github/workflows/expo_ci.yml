@@ -51,7 +51,7 @@ jobs:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           status: ${{ job.status }}
           image: ${{ secrets.SUCCESS_IMAGE }}
-          description: 뀨
+          description: @이명훈 @문혜성
           color: 65280
           url: "https://github.com/sarisia/actions-status-discord"
           username: Expo-CI Bot

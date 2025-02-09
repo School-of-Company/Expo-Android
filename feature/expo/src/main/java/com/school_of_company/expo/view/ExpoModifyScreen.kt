@@ -128,6 +128,7 @@ internal fun ExpoModifyRoute(
 
     DisposableEffect(Unit) {
         onDispose {
+            viewModel.resetExpoInformation()
             viewModel.initModifyExpo()
         }
     }

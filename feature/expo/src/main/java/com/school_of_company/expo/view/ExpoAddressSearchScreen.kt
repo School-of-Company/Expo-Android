@@ -49,9 +49,9 @@ internal fun ExpoAddressSearchRoute(
     val getCoordinatesUiState by viewModel.getCoordinatesUiState.collectAsStateWithLifecycle()
 
     val addressList by viewModel.addressList.collectAsStateWithLifecycle()
-    val location by viewModel.location.collectAsStateWithLifecycle()
-    val coordinateX by viewModel.coordinateX.collectAsStateWithLifecycle()
-    val coordinateY by viewModel.coordinateY.collectAsStateWithLifecycle()
+    val location by viewModel.searched_location.collectAsStateWithLifecycle()
+    val coordinateX by viewModel.searched_coordinateX.collectAsStateWithLifecycle()
+    val coordinateY by viewModel.searched_coordinateY.collectAsStateWithLifecycle()
 
     LaunchedEffect(getCoordinatesUiState) {
         when (getCoordinatesUiState) {
@@ -86,7 +86,7 @@ internal fun ExpoAddressSearchRoute(
         onLocationChange = viewModel::onLocationChange,
         onAddressItemClick = { item ->
             viewModel.convertJibunToXY(item)
-            viewModel.onLocationChange(item)
+            viewModel.onSearchedLocationChange(item)
         },
     )
 }

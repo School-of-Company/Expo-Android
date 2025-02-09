@@ -29,7 +29,7 @@ internal class ExpoAddressSearchViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    companion object{
+    companion object {
         private const val COORDINATEX = "coordinatesx"
         private const val COORDINATEY = "coordinatesy"
         private const val LOCATION = "location"
@@ -58,14 +58,15 @@ internal class ExpoAddressSearchViewModel @Inject constructor(
 
     internal fun searchLocation(searchText: String) =
         viewModelScope.launch {
+            onCoordinateChange(x = "", y = "")
             getAddressUseCase(searchText = searchText)
                 .asResult()
                 .collectLatest { result ->
                     when (result) {
                         is Result.Loading -> _getAddressUiState.value = GetAddressUiState.Loading
                         is Result.Success -> {
-                            if(result.data.isNotEmpty()) {
-                                _getAddressUiState.value =  GetAddressUiState.Success(result.data)
+                            if (result.data.isNotEmpty()) {
+                                _getAddressUiState.value = GetAddressUiState.Success(result.data)
                             } else {
                                 _getAddressUiState.value = GetAddressUiState.Error(
                                     NoResponseException()
@@ -78,6 +79,7 @@ internal class ExpoAddressSearchViewModel @Inject constructor(
         }
 
     internal fun convertJibunToXY(searchText: String) = viewModelScope.launch {
+        _getAddressUiState.value = GetAddressUiState.Loading
         getCoordinatesUseCase(address = searchText)
             .asResult()
             .collectLatest { result ->
@@ -97,7 +99,7 @@ internal class ExpoAddressSearchViewModel @Inject constructor(
             }
     }
 
-    private fun onCoordinateChange(x: String, y:String) {
+    private fun onCoordinateChange(x: String, y: String) {
         savedStateHandle[COORDINATEX] = x
         savedStateHandle[COORDINATEY] = y
     }

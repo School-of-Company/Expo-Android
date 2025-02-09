@@ -28,7 +28,6 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -103,7 +102,7 @@ internal fun ExpoModifyRoute(
     val trainingProgramTextState by viewModel.trainingProgramModifyTextState.collectAsStateWithLifecycle()
     val standardProgramTextState by viewModel.standardProgramModifyTextState.collectAsStateWithLifecycle()
 
-    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+    var selectedImageUri by rememberSaveable { mutableStateOf<Uri?>(null) }
 
     val context = LocalContext.current
 

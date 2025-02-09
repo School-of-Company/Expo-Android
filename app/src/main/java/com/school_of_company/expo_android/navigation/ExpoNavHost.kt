@@ -12,6 +12,7 @@ import com.school_of_company.expo.navigation.expoCreatedScreen
 import com.school_of_company.expo.navigation.expoDetailScreen
 import com.school_of_company.expo.navigation.expoModifyScreen
 import com.school_of_company.expo.navigation.expoScreen
+import com.school_of_company.expo.navigation.navigateToExpoAddressSearch
 import com.school_of_company.expo.navigation.navigateToExpoDetail
 import com.school_of_company.expo.navigation.navigateToExpoModify
 import com.school_of_company.expo.navigation.navigateToHome
@@ -145,6 +146,7 @@ fun ExpoNavHost(
         )
 
         expoCreateScreen(
+            navigateToExpoAddressSearch = navController::navigateToExpoAddressSearch,
             onErrorToast = makeErrorToast
         )
 

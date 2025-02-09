@@ -101,10 +101,12 @@ fun NavGraphBuilder.expoModifyScreen(
 }
 
 fun NavGraphBuilder.expoCreateScreen(
-    onErrorToast: (throwable: Throwable?, message: Int?) -> Unit
+    navigateToExpoAddressSearch: () -> Unit,
+    onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
 ) {
     composable(route = expoCreateRoute) {
         ExpoCreateRoute(
+            navigateToExpoAddressSearch = navigateToExpoAddressSearch,
             onErrorToast = onErrorToast
         )
     }

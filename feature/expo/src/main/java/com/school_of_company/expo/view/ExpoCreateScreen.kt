@@ -22,7 +22,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -67,17 +66,13 @@ import com.school_of_company.design_system.component.textfield.NoneLimitedLength
 import com.school_of_company.design_system.icon.ImageIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
-import com.school_of_company.expo.view.component.AddressSearchResultItem
 import com.school_of_company.expo.view.component.ExpoAddTextField
 import com.school_of_company.expo.view.component.ExpoSettingBottomSheet
 import com.school_of_company.expo.view.component.ExpoStandardAddTextField
 import com.school_of_company.expo.view.component.ExpoStandardSettingBottomSheet
 import com.school_of_company.expo.viewmodel.ExpoViewModel
-import com.school_of_company.expo.viewmodel.uistate.GetAddressUiState
-import com.school_of_company.expo.viewmodel.uistate.GetCoordinatesUiState
 import com.school_of_company.expo.viewmodel.uistate.ImageUpLoadUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterExpoInformationUiState
-import com.school_of_company.model.model.juso.JusoModel
 import com.school_of_company.model.param.expo.ExpoAllRequestParam
 import com.school_of_company.model.param.expo.StandardProRequestParam
 import com.school_of_company.model.param.expo.TrainingProRequestParam
@@ -89,6 +84,7 @@ import com.school_of_company.ui.visualTransformation.DateTimeVisualTransformatio
 @Composable
 internal fun ExpoCreateRoute(
     modifier: Modifier = Modifier,
+    navigateToExpoAddressSearch: () -> Unit,
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
     viewModel: ExpoViewModel = hiltViewModel()
 ) {
@@ -161,6 +157,7 @@ internal fun ExpoCreateRoute(
                 makeToast(context, "박람회 등록을 완료하였습니다.")
                 viewModel.initRegisterExpo()
             }
+
             is RegisterExpoInformationUiState.Error -> {
                 onErrorToast(null, R.string.expo_register_fail)
             }
@@ -193,11 +190,12 @@ internal fun ExpoCreateRoute(
         trainingProgramTextState = trainingProgramTextState,
         onTrainingProgramChange = viewModel::updateTrainingProgramText,
         onAddTrainingProgram = viewModel::addTrainingProgramText,
+        onAddStandardProgram = viewModel::addStandardProgramText,
+        navigateToExpoAddressSearch = navigateToExpoAddressSearch,
         onRemoveTrainingProgram = viewModel::removeTrainingProgramText,
         standardProgramTextState = standardProgramTextState,
         onRemoveStandardProgram = viewModel::removeStandardProgramText,
         onStandardProgramChange = viewModel::updateStandardProgramText,
-        onAddStandardProgram = viewModel::addStandardProgramText,
     )
 }
 
@@ -220,6 +218,7 @@ private fun ExpoCreateScreen(
     onExpoCreateCallBack: () -> Unit,
     onAddTrainingProgram: () -> Unit,
     onAddStandardProgram: () -> Unit,
+    navigateToExpoAddressSearch: () -> Unit,
     onStartedDateChange: (String) -> Unit,
     onEndedDateChange: (String) -> Unit,
     onModifyTitleChange: (String) -> Unit,
@@ -601,7 +600,8 @@ private fun ExpoCreateScreenPreview() {
         onAddressChange = {},
         onRemoveTrainingProgram = {},
         onRemoveStandardProgram = {},
+        navigateToExpoAddressSearch = {},
         onTrainingProgramChange = { _, _ -> },
-        onStandardProgramChange = { _, _ -> },
+        onStandardProgramChange = { _, _ -> }
     )
 }

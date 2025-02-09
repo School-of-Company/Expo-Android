@@ -117,6 +117,18 @@ internal fun ExpoCreateRoute(
             }
         }
 
+    LaunchedEffect("InitSearchedState") {
+        with(viewModel) {
+            onLocationChange(searched_location.value)
+            onCoordinateChange(
+                searched_coordinateX.value,
+                searched_coordinateY.value
+            )
+            onSearchedLocationChange("")
+            onSearchedCoordinateChange("", "")
+        }
+    }
+
     DisposableEffect(Unit) {
         onDispose {
             viewModel.initRegisterExpo()

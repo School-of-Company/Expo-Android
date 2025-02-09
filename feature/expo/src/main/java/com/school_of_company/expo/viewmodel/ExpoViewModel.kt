@@ -95,14 +95,8 @@ internal class ExpoViewModel @Inject constructor(
     private val _getExpoInformationUiState = MutableStateFlow<GetExpoInformationUiState>(GetExpoInformationUiState.Loading)
     internal val getExpoInformationUiState = _getExpoInformationUiState.asStateFlow()
 
-    private val _getCoordinatesUiState = MutableStateFlow<GetCoordinatesUiState>(GetCoordinatesUiState.Loading)
-    internal val getCoordinatesUiState = _getCoordinatesUiState.asStateFlow()
-
     private val _getCoordinatesToAddressUiState = MutableStateFlow<GetCoordinatesToAddressUiState>(GetCoordinatesToAddressUiState.Loading)
     internal val getCoordinatesToAddressUiState = _getCoordinatesToAddressUiState.asStateFlow()
-
-    private val _getAddressUiState = MutableStateFlow<GetAddressUiState>(GetAddressUiState.Loading)
-    internal val getAddressUiState = _getAddressUiState.asStateFlow()
 
     private val _registerExpoInformationUiState = MutableStateFlow<RegisterExpoInformationUiState>(RegisterExpoInformationUiState.Loading)
     internal val registerExpoInformationUiState = _registerExpoInformationUiState.asStateFlow()
@@ -210,8 +204,6 @@ internal class ExpoViewModel @Inject constructor(
     internal fun initRegisterExpo() {
         _imageUpLoadUiState.value = ImageUpLoadUiState.Loading
         _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Loading
-        _getCoordinatesUiState.value = GetCoordinatesUiState.Loading
-        _getAddressUiState.value = GetAddressUiState.Loading
     }
 
     internal fun modifyExpoInformation(

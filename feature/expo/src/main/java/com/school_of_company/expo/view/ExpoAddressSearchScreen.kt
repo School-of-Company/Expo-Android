@@ -43,7 +43,50 @@ internal fun ExpoAddressSearchRoute(
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
     viewModel: ExpoAddressSearchViewModel = hiltViewModel(),
 ) {
+    val getAddressUiState by viewModel.getAddressUiState.collectAsStateWithLifecycle()
+    val getCoordinatesUiState by viewModel.getCoordinatesUiState.collectAsStateWithLifecycle()
 
+    val addressList by viewModel.addressList.collectAsStateWithLifecycle()
+    val location by viewModel.location.collectAsStateWithLifecycle()
+    val coordinateX by viewModel.coordinateX.collectAsStateWithLifecycle()
+    val coordinateY by viewModel.coordinateY.collectAsStateWithLifecycle()
+
+    LaunchedEffect(getCoordinatesUiState) {
+        when (getCoordinatesUiState) {
+            is GetCoordinatesUiState.Error -> onErrorToast(
+                (getCoordinatesUiState as GetCoordinatesUiState.Error).exception,
+                R.string.get_address_convert_fail
+            )
+
+            else -> Unit
+        }
+    }
+
+    LaunchedEffect(getAddressUiState) {
+        when (getAddressUiState) {
+            is GetAddressUiState.Error -> onErrorToast(
+                (getAddressUiState as GetAddressUiState.Error).exception,
+                R.string.get_address_fail
+            )
+
+            else -> Unit
+        }
+    }
+
+    ExpoAddressSearchScreen(
+        modifier = modifier,
+        location = location,
+        coordinateX = coordinateX,
+        coordinateY = coordinateY,
+        addressList = addressList,
+        popUpBackStack = popUpBackStack,
+        onLocationSearch = { viewModel.searchLocation(location) },
+        onLocationChange = viewModel::onLocationChange,
+        onAddressItemClick = { item ->
+            viewModel.convertJibunToXY(item)
+            viewModel.onLocationChange(item)
+        },
+    )
 }
 
 @Composable

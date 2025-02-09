@@ -184,8 +184,6 @@ private fun ExpoAddressSearchScreen(
                     .padding(14.dp),
                 onClick = popUpBackStack
             )
-
-            Spacer(modifier = Modifier.height(48.dp))
         }
     }
 }

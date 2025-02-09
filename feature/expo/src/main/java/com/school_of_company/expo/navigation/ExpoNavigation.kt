@@ -4,6 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import com.school_of_company.expo.view.ExpoAddressSearchRoute
 import com.school_of_company.expo.view.ExpoCreateRoute
 import com.school_of_company.expo.view.ExpoCreatedRoute
 import com.school_of_company.expo.view.ExpoDetailRoute
@@ -15,6 +16,7 @@ const val expoDetailRoute = "expo_detail_route"
 const val expoModifyRoute = "expo_modify_route"
 const val expoCreateRoute = "expo_create_route"
 const val expoCreatedRoute = "expo_created_route"
+const val expoAddressSearchRoute = "expo_address_search_route"
 
 fun NavController.navigateToHome(navOptions: NavOptions? = null) {
     this.navigate(homeRoute, navOptions)
@@ -46,6 +48,10 @@ fun NavController.navigateToExpoCreate(navOptions: NavOptions? = null) {
 
 fun NavController.navigateToExpoCreated(navOptions: NavOptions? = null) {
     this.navigate(expoCreatedRoute, navOptions)
+}
+
+fun NavController.navigateToExpoAddressSearchRoute(navOptions: NavOptions? = null) {
+    this.navigate(expoAddressSearchRoute, navOptions)
 }
 
 fun NavGraphBuilder.expoScreen(
@@ -111,3 +117,17 @@ fun NavGraphBuilder.expoCreatedScreen(
         ExpoCreatedRoute(onErrorToast = onErrorToast)
     }
 }
+
+fun NavGraphBuilder.expoAddressSearchScreen(
+    popUpBackStack: () -> Unit,
+    onErrorToast: (throwable: Throwable?, message: Int?) -> Unit
+) {
+    composable(route = expoAddressSearchRoute) {
+        ExpoAddressSearchRoute(
+            popUpBackStack = popUpBackStack,
+            onErrorToast = onErrorToast,
+        )
+    }
+}
+
+

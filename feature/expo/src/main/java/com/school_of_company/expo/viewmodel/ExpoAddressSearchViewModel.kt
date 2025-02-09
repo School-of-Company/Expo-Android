@@ -43,6 +43,10 @@ internal class ExpoAddressSearchViewModel @Inject constructor(
 
     internal val location = savedStateHandle.getStateFlow(key = LOCATION, initialValue = "")
 
+    internal val coordinateX = savedStateHandle.getStateFlow(key = COORDINATEX, initialValue = "")
+
+    internal val coordinateY = savedStateHandle.getStateFlow(key = COORDINATEY, initialValue = "")
+
     val addressList: StateFlow<List<JusoModel>> = getAddressUiState
         .map { state ->
             when (state) {

@@ -88,12 +88,14 @@ fun NavGraphBuilder.expoDetailScreen(
 
 fun NavGraphBuilder.expoModifyScreen(
     onBackClick: () -> Unit,
+    navigateToExpoAddressSearch: () -> Unit,
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit
 ) {
     composable(route = "$expoModifyRoute/{id}") { backStackEntry ->
         val id = backStackEntry.arguments?.getString("id") ?: ""
         ExpoModifyRoute(
             id = id,
+            navigateToExpoAddressSearch = navigateToExpoAddressSearch,
             onBackClick = onBackClick,
             onErrorToast = onErrorToast
         )

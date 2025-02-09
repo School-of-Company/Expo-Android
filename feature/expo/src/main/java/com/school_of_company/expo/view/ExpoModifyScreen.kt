@@ -2,6 +2,7 @@ package com.school_of_company.expo.view
 
 import android.graphics.BitmapFactory
 import android.net.Uri
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -87,8 +88,9 @@ import com.school_of_company.ui.visualTransformation.DateTimeVisualTransformatio
 internal fun ExpoModifyRoute(
     onBackClick: () -> Unit,
     id: String,
+    navigateToExpoAddressSearch: () -> Unit,
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
-    viewModel: ExpoViewModel = hiltViewModel()
+    viewModel: ExpoViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
 ) {
     val modifyExpoInformationUiState by viewModel.modifyExpoInformationUiState.collectAsStateWithLifecycle()
     val imageUpLoadUiState by viewModel.imageUpLoadUiState.collectAsStateWithLifecycle()
@@ -191,6 +193,7 @@ internal fun ExpoModifyRoute(
         introduceTitleState = introduceTitleState,
         trainingProgramTextState = trainingProgramTextState,
         standardProgramTextState = standardProgramTextState,
+        navigateToExpoAddressSearch = navigateToExpoAddressSearch,
         onAddStandardProgram = viewModel::addStandardProgramModifyText,
         onAddTrainingProgram = viewModel::addTrainingProgramModifyText,
         onStartedDateChange = viewModel::onStartedDateChange,
@@ -226,6 +229,7 @@ private fun ExpoModifyScreen(
     introduceTitleState: String,
     trainingProgramTextState: List<TrainingProIdRequestParam>,
     standardProgramTextState: List<StandardProIdRequestParam>,
+    navigateToExpoAddressSearch: () -> Unit,
     onAddStandardProgram: () -> Unit,
     onAddTrainingProgram: () -> Unit,
     onStartedDateChange: (String) -> Unit,
@@ -530,9 +534,9 @@ private fun ExpoModifyScreen(
 
                         ExpoLocationIconTextField(
                             placeholder = "장소를 입력해주세요.",
-                            isDisabled = false,
+                            isDisabled = true,
                             onValueChange = onLocationChange,
-                            onButtonClicked = { /* todo : Location Web Hook */ },
+                            onButtonClicked = navigateToExpoAddressSearch,
                             value = locationState,
                         )
 
@@ -645,6 +649,7 @@ private fun HomeDetailModifyScreenPreview() {
         scrollState = ScrollState(0),
         imageUri = "",
         modifyCallBack = {},
+        navigateToExpoAddressSearch = {},
         trainingProgramTextState = emptyList(),
         onTrainingProgramChange = { _, _ -> },
         onAddTrainingProgram = {},

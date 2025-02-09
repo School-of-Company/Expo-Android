@@ -141,6 +141,7 @@ fun ExpoNavHost(
         )
 
         expoModifyScreen(
+            navigateToExpoAddressSearch = navController::navigateToExpoAddressSearch,
             onErrorToast = makeErrorToast,
             onBackClick = navController::popBackStack,
         )

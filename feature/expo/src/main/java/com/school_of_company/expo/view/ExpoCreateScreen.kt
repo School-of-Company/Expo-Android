@@ -2,6 +2,7 @@ package com.school_of_company.expo.view
 
 import android.graphics.BitmapFactory
 import android.net.Uri
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -86,7 +87,7 @@ internal fun ExpoCreateRoute(
     modifier: Modifier = Modifier,
     navigateToExpoAddressSearch: () -> Unit,
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
-    viewModel: ExpoViewModel = hiltViewModel()
+    viewModel: ExpoViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
 ) {
     val registerExpoInformationUiState by viewModel.registerExpoInformationUiState.collectAsStateWithLifecycle()
     val imageUpLoadUiState by viewModel.imageUpLoadUiState.collectAsStateWithLifecycle()

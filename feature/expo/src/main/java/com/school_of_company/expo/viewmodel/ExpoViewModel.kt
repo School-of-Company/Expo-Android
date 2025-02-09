@@ -77,6 +77,9 @@ internal class ExpoViewModel @Inject constructor(
         private const val COORDINATEX = "coordinatesx"
         private const val COORDINATEY = "coordinatesy"
         private const val LOCATION = "location"
+        private const val SEARCHED_COORDINATEX = "searched_coordinatesx"
+        private const val SEARCHED_COORDINATEY = "searched_coordinatesy"
+        private const val SEARCHED_LOCATION = "searched_location"
         private const val COVER_IMAGE = "cover_image"
         private const val STARTED = "started"
         private const val ENDED = "ended"
@@ -140,13 +143,19 @@ internal class ExpoViewModel @Inject constructor(
 
     internal var address = savedStateHandle.getStateFlow(key = ADDRESS, initialValue = "")
 
-    internal var location = savedStateHandle.getStateFlow(key = LOCATION, initialValue = "")
-
     internal var cover_image = savedStateHandle.getStateFlow(key = COVER_IMAGE, initialValue = "")
+
+    internal var location = savedStateHandle.getStateFlow(key = LOCATION, initialValue = "")
 
     internal var coordinateX = savedStateHandle.getStateFlow(key = COORDINATEX, initialValue = "")
 
     internal var coordinateY = savedStateHandle.getStateFlow(key = COORDINATEY, initialValue = "")
+
+    internal var searched_location = savedStateHandle.getStateFlow(key = SEARCHED_LOCATION, initialValue = "")
+
+    internal var searched_coordinateX = savedStateHandle.getStateFlow(key = SEARCHED_COORDINATEX, initialValue = "")
+
+    internal var searched_coordinateY = savedStateHandle.getStateFlow(key = SEARCHED_COORDINATEY, initialValue = "")
 
     val expoListSize: StateFlow<Int> = getExpoListUiState
         .map { state ->
@@ -402,7 +411,7 @@ internal class ExpoViewModel @Inject constructor(
 
     internal fun searchLocation(searchText: String) =
         viewModelScope.launch {
-            onCoordinateChange(x = "", y = "")
+            onSearchedCoordinateChange(x = "", y = "")
             getAddressUseCase(searchText = searchText)
                 .asResult()
                 .collectLatest { result ->
@@ -432,7 +441,7 @@ internal class ExpoViewModel @Inject constructor(
                     is Result.Success -> if (result.data.addressName == "Unknown") {
                         _getCoordinatesUiState.value = GetCoordinatesUiState.Error(NoResponseException())
                     } else {
-                        onCoordinateChange(
+                        onSearchedCoordinateChange(
                             x = result.data.x.toDoubleOrNull()?.let { "%.6f".format(it) } ?: "0.000000",
                             y = result.data.y.toDoubleOrNull()?.let { "%.6f".format(it) } ?: "0.000000"
                         )
@@ -587,10 +596,6 @@ internal class ExpoViewModel @Inject constructor(
         savedStateHandle[ADDRESS] = value
     }
 
-    internal fun onLocationChange(value: String) {
-        savedStateHandle[LOCATION] = value
-    }
-
     internal fun onCoverImageChange(value: String?) {
         savedStateHandle[COVER_IMAGE] = value
     }
@@ -603,8 +608,21 @@ internal class ExpoViewModel @Inject constructor(
         savedStateHandle[ENDED] = value
     }
 
+    internal fun onLocationChange(value: String) {
+        savedStateHandle[LOCATION] = value
+    }
+
     private fun onCoordinateChange(x: String, y: String) {
         savedStateHandle[COORDINATEX] = x
         savedStateHandle[COORDINATEY] = y
+    }
+
+    internal fun onSearchedLocationChange(value: String) {
+        savedStateHandle[SEARCHED_LOCATION] = value
+    }
+
+    private fun onSearchedCoordinateChange(x: String, y: String) {
+        savedStateHandle[SEARCHED_COORDINATEX] = x
+        savedStateHandle[SEARCHED_COORDINATEY] = y
     }
 }

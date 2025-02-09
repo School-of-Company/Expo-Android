@@ -189,9 +189,16 @@ internal class ExpoViewModel @Inject constructor(
                             onStartedDateChange(it.startedDay.formatNoneHyphenServerDate())
                             onEndedDateChange(it.finishedDay.formatNoneHyphenServerDate())
                             onIntroduceTitleChange(it.description)
-                            onLocationChange(it.location)
+                            if (searched_location.value.isNotBlank()) {
+                                onLocationChange(searched_location.value)
+                                onCoordinateChange(x = searched_coordinateX.value, y = searched_coordinateX.value)
+                                convertXYToJibun(x = searched_coordinateX.value, y = searched_coordinateX.value)
+                            } else {
+                                onLocationChange(it.location)
+                                onCoordinateChange(x = it.x, y = it.y)
+                                convertXYToJibun(x = it.x, y = it.y)
+                            }
                             onCoverImageChange(it.coverImage)
-                            convertXYToJibun(x = it.x, y = it.y)
                         }
                     }
                     is Result.Error -> _getExpoInformationUiState.value = GetExpoInformationUiState.Error(result.exception)
@@ -274,14 +281,14 @@ internal class ExpoViewModel @Inject constructor(
     }
 
     internal fun initModifyExpo() {
+        _imageUpLoadUiState.value = ImageUpLoadUiState.Loading
         _modifyExpoInformationUiState.value = ModifyExpoInformationUiState.Loading
     }
 
     internal fun resetExpoInformation() {
-        if (_registerExpoInformationUiState.value is RegisterExpoInformationUiState.Success) {
+            onIntroduceTitleChange("")
             onStartedDateChange("")
             onEndedDateChange("")
-            onIntroduceTitleChange("")
             onAddressChange("")
             onLocationChange("")
             onCoverImageChange(null)
@@ -290,7 +297,6 @@ internal class ExpoViewModel @Inject constructor(
             onEndedChange("")
             _trainingProgramTextState.value = emptyList()
             _standardProgramTextState.value = emptyList()
-        }
     }
 
     internal fun deleteExpoInformation(expoId: String) = viewModelScope.launch {
@@ -612,7 +618,7 @@ internal class ExpoViewModel @Inject constructor(
         savedStateHandle[LOCATION] = value
     }
 
-    private fun onCoordinateChange(x: String, y: String) {
+    internal fun onCoordinateChange(x: String, y: String) {
         savedStateHandle[COORDINATEX] = x
         savedStateHandle[COORDINATEY] = y
     }
@@ -621,7 +627,7 @@ internal class ExpoViewModel @Inject constructor(
         savedStateHandle[SEARCHED_LOCATION] = value
     }
 
-    private fun onSearchedCoordinateChange(x: String, y: String) {
+    internal fun onSearchedCoordinateChange(x: String, y: String) {
         savedStateHandle[SEARCHED_COORDINATEX] = x
         savedStateHandle[SEARCHED_COORDINATEY] = y
     }

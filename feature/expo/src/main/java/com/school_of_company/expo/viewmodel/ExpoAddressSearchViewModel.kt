@@ -87,8 +87,8 @@ internal class ExpoAddressSearchViewModel @Inject constructor(
                         _getCoordinatesUiState.value = GetCoordinatesUiState.Error(NoResponseException())
                     } else {
                         onCoordinateChange(
-                            x = result.data.x,
-                            y = result.data.y
+                            x = result.data.x.toDoubleOrNull()?.let { "%.6f".format(it) } ?: "0.000000",
+                            y = result.data.y.toDoubleOrNull()?.let { "%.6f".format(it) } ?: "0.000000"
                         )
                         _getCoordinatesUiState.value = GetCoordinatesUiState.Success(result.data)
                     }

@@ -176,7 +176,7 @@ private fun ExpoAddressSearchScreen(
             Spacer(modifier = Modifier.weight(1f))
 
             ExpoStateButton(
-                text = "생성하기",
+                text = "완료",
                 state = if (
                     location.isNotEmpty() &&
                     coordinateX.isNotBlank() &&

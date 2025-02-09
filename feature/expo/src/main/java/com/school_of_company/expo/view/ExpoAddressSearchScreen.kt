@@ -53,6 +53,13 @@ internal fun ExpoAddressSearchRoute(
     val coordinateX by viewModel.searched_coordinateX.collectAsStateWithLifecycle()
     val coordinateY by viewModel.searched_coordinateY.collectAsStateWithLifecycle()
 
+    LaunchedEffect("InitSearched") {
+        with(viewModel) {
+            onSearchedLocationChange("")
+            onSearchedCoordinateChange("", "")
+        }
+    }
+
     LaunchedEffect(getCoordinatesUiState) {
         when (getCoordinatesUiState) {
             is GetCoordinatesUiState.Error -> onErrorToast(
@@ -83,7 +90,7 @@ internal fun ExpoAddressSearchRoute(
         addressList = addressList,
         popUpBackStack = popUpBackStack,
         onLocationSearch = { viewModel.searchLocation(location) },
-        onLocationChange = viewModel::onLocationChange,
+        onLocationChange = viewModel::onSearchedLocationChange,
         onAddressItemClick = { item ->
             viewModel.convertJibunToXY(item)
             viewModel.onSearchedLocationChange(item)

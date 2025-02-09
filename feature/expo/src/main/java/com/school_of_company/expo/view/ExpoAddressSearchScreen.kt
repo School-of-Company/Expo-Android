@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.school_of_company.design_system.R
 import com.school_of_company.design_system.component.button.ExpoStateButton
@@ -31,7 +32,7 @@ import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.expo.view.component.AddressSearchResultItem
 import com.school_of_company.expo.view.component.HomeKakaoMap
-import com.school_of_company.expo.viewmodel.ExpoAddressSearchViewModel
+import com.school_of_company.expo.viewmodel.ExpoViewModel
 import com.school_of_company.expo.viewmodel.uistate.GetAddressUiState
 import com.school_of_company.expo.viewmodel.uistate.GetCoordinatesUiState
 import com.school_of_company.model.model.juso.JusoModel
@@ -41,7 +42,7 @@ internal fun ExpoAddressSearchRoute(
     modifier: Modifier = Modifier,
     popUpBackStack: () -> Unit,
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
-    viewModel: ExpoAddressSearchViewModel = hiltViewModel(),
+    viewModel: ExpoViewModel = hiltViewModel(),
 ) {
     val getAddressUiState by viewModel.getAddressUiState.collectAsStateWithLifecycle()
     val getCoordinatesUiState by viewModel.getCoordinatesUiState.collectAsStateWithLifecycle()

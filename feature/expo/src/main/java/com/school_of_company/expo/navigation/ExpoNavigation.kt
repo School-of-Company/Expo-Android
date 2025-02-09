@@ -50,7 +50,7 @@ fun NavController.navigateToExpoCreated(navOptions: NavOptions? = null) {
     this.navigate(expoCreatedRoute, navOptions)
 }
 
-fun NavController.navigateToExpoAddressSearchRoute(navOptions: NavOptions? = null) {
+fun NavController.navigateToExpoAddressSearch(navOptions: NavOptions? = null) {
     this.navigate(expoAddressSearchRoute, navOptions)
 }
 

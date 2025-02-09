@@ -106,7 +106,7 @@ private fun ExpoAddressSearchScreen(
             modifier = modifier
                 .fillMaxSize()
                 .background(color = colors.white)
-                .padding(horizontal = 16.dp),
+                .padding(16.dp),
         ) {
             ExpoTopBar(
                 modifier = Modifier.padding(vertical = 16.dp),
@@ -160,10 +160,15 @@ private fun ExpoAddressSearchScreen(
                     }
                 }
 
-                HomeKakaoMap(
-                    locationX = coordinateX.toDouble(),
-                    locationY = coordinateY.toDouble(),
-                )
+                if (
+                    coordinateX.isNotBlank()
+                    && coordinateY.isNotBlank()
+                ) {
+                    HomeKakaoMap(
+                        locationX = coordinateX.toDouble(),
+                        locationY = coordinateY.toDouble(),
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.weight(1f))

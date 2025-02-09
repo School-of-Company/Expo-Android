@@ -6,6 +6,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import com.school_of_company.common.exception.*
 import com.school_of_company.design_system.R
+import com.school_of_company.expo.navigation.expoAddressSearchScreen
 import com.school_of_company.expo.navigation.expoCreateScreen
 import com.school_of_company.expo.navigation.expoCreatedScreen
 import com.school_of_company.expo.navigation.expoDetailScreen
@@ -148,6 +149,11 @@ fun ExpoNavHost(
         )
 
         expoCreatedScreen(
+            onErrorToast = makeErrorToast
+        )
+
+        expoAddressSearchScreen(
+            popUpBackStack = navController::popBackStack,
             onErrorToast = makeErrorToast
         )
 

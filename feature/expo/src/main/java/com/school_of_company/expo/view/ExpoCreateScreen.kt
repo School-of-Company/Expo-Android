@@ -481,7 +481,7 @@ private fun ExpoCreateScreen(
                         ExpoLocationIconTextField(
                             placeholder = "위치를 알려주세요.",
                             isDisabled = true,
-                            onButtonClicked = { /* todo */ },
+                            onButtonClicked = navigateToExpoAddressSearch,
                             value = locationState,
                             onValueChange = { _ -> },
                         )

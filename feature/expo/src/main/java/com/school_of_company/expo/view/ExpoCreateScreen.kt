@@ -47,6 +47,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -471,20 +472,20 @@ private fun ExpoCreateScreen(
                     Spacer(modifier = Modifier.padding(top = 28.dp))
 
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top)) {
+                        Text(
+                            text = "장소",
+                            style = typography.bodyRegular2,
+                            color = colors.gray600,
+                            fontWeight = FontWeight.W600,
+                        )
 
-                        Column(
-                            verticalArrangement = Arrangement.spacedBy(30.dp),
-                            horizontalAlignment = Alignment.Start,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            ExpoLocationIconTextField(
-                                placeholder = "위치를 알려주세요.",
-                                isDisabled = true,
-                                onButtonClicked = { /* todo */ },
-                                value = locationState,
-                                onValueChange = { _ -> },
-                            )
-                        }
+                        ExpoLocationIconTextField(
+                            placeholder = "위치를 알려주세요.",
+                            isDisabled = true,
+                            onButtonClicked = { /* todo */ },
+                            value = locationState,
+                            onValueChange = { _ -> },
+                        )
 
                         NoneLimitedLengthTextField(
                             value = addressState,

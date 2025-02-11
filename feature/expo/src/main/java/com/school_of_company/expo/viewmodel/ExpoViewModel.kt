@@ -425,6 +425,15 @@ internal class ExpoViewModel @Inject constructor(
         _getCoordinatesUiState.value = GetCoordinatesUiState.Loading
     }
 
+    internal fun initializeWithSearchedData() {
+        onLocationChange(searched_location.value)
+        onCoordinateChange(
+            searched_coordinateX.value,
+            searched_coordinateY.value
+        )
+        initSearchedData()
+    }
+
     internal fun searchLocation(searchText: String) =
         viewModelScope.launch {
             onSearchedCoordinateChange(x = "", y = "")

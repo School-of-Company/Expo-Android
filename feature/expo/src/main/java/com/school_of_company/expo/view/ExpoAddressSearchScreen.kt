@@ -62,23 +62,27 @@ internal fun ExpoAddressSearchRoute(
 
     LaunchedEffect(getCoordinatesUiState) {
         when (getCoordinatesUiState) {
+            is GetCoordinatesUiState.Loading -> Unit
+            is GetCoordinatesUiState.Success -> onErrorToast(
+                null,
+                R.string.get_address_convert_success
+            )
+
             is GetCoordinatesUiState.Error -> onErrorToast(
                 (getCoordinatesUiState as GetCoordinatesUiState.Error).exception,
                 R.string.get_address_convert_fail
             )
-
-            else -> Unit
         }
     }
 
     LaunchedEffect(getAddressUiState) {
         when (getAddressUiState) {
+            is GetAddressUiState.Loading -> Unit
+            is GetAddressUiState.Success -> onErrorToast(null, R.string.get_address_success)
             is GetAddressUiState.Error -> onErrorToast(
                 (getAddressUiState as GetAddressUiState.Error).exception,
                 R.string.get_address_fail
             )
-
-            else -> Unit
         }
     }
 

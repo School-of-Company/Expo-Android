@@ -2,6 +2,7 @@ package com.school_of_company.expo.view
 
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -17,7 +18,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusManager
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -109,6 +113,7 @@ private fun ExpoAddressSearchScreen(
     coordinateX: String,
     coordinateY: String,
     addressList: List<JusoModel>,
+    focusManager: FocusManager = LocalFocusManager.current,
     popUpBackStack: () -> Unit,
     onLocationSearch: () -> Unit,
     onLocationChange: (String) -> Unit,
@@ -119,7 +124,14 @@ private fun ExpoAddressSearchScreen(
             modifier = modifier
                 .fillMaxSize()
                 .background(color = colors.white)
-                .padding(16.dp),
+                .padding(16.dp)
+                .pointerInput(Unit) {
+                    detectTapGestures(
+                        onTap = {
+                            focusManager.clearFocus()
+                        }
+                    )
+                },
         ) {
             ExpoTopBar(
                 modifier = Modifier.padding(vertical = 16.dp),

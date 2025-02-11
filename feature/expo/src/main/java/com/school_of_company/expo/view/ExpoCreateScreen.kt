@@ -102,7 +102,7 @@ internal fun ExpoCreateRoute(
     val trainingProgramTextState by viewModel.trainingProgramTextState.collectAsStateWithLifecycle()
     val standardProgramTextState by viewModel.standardProgramTextState.collectAsStateWithLifecycle()
 
-    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+    var selectedImageUri by rememberSaveable { mutableStateOf<Uri?>(null) }
 
     val context = LocalContext.current
 

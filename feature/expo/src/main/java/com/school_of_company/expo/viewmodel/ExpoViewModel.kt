@@ -420,6 +420,11 @@ internal class ExpoViewModel @Inject constructor(
         onSearchedCoordinateChange("", "")
     }
 
+    internal fun initSearchedUiState() {
+        _getAddressUiState.value = GetAddressUiState.Loading
+        _getCoordinatesUiState.value = GetCoordinatesUiState.Loading
+    }
+
     internal fun searchLocation(searchText: String) =
         viewModelScope.launch {
             onSearchedCoordinateChange(x = "", y = "")

@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -57,11 +58,14 @@ internal fun ExpoAddressSearchRoute(
     val coordinateX by viewModel.searched_coordinateX.collectAsStateWithLifecycle()
     val coordinateY by viewModel.searched_coordinateY.collectAsStateWithLifecycle()
 
-    LaunchedEffect("InitSearched") {
-        with(viewModel) {
-            onSearchedLocationChange("")
-            onSearchedCoordinateChange("", "")
+    DisposableEffect(Unit) {
+        onDispose {
+            viewModel.initSearchedUiState()
         }
+    }
+
+    LaunchedEffect("InitSearched") {
+        viewModel.initSearchedData()
     }
 
     LaunchedEffect(getCoordinatesUiState) {

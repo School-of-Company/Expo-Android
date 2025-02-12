@@ -419,3 +419,16 @@ fun SearchIcon(
         tint = tint
     )
 }
+
+@Composable
+fun SquareIcon(
+    modifier: Modifier = Modifier,
+    tint: Color = Color.Unspecified
+) {
+    Icon(
+        painter = painterResource(id = R.drawable.ic_square),
+        contentDescription = "정사각형 아이콘",
+        modifier = modifier,
+        tint = tint
+    )
+}

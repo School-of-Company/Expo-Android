@@ -1,0 +1,165 @@
+package com.school_of_company.form.view.component
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.school_of_company.design_system.component.button.ExpoToggleButton
+import com.school_of_company.design_system.component.textfield.TransparentTextField
+import com.school_of_company.design_system.icon.PlusIcon
+import com.school_of_company.design_system.icon.SquareIcon
+import com.school_of_company.design_system.icon.TrashIcon
+import com.school_of_company.design_system.theme.ExpoAndroidTheme
+import com.school_of_company.form.enum.FormType
+
+@Composable
+fun FormCard(modifier: Modifier = Modifier) {
+    val formType = remember {
+        mutableStateOf(FormType.CHECKBOX)
+    }
+
+    ExpoAndroidTheme { colors, typography ->
+        Column(
+            modifier = modifier
+                .border(
+                    width = 1.dp,
+                    color = colors.gray200,
+                    shape = RoundedCornerShape(size = 6.dp),
+                )
+                .background(
+                    color = colors.white,
+                    shape = RoundedCornerShape(size = 6.dp),
+                )
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically),
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Column(modifier = Modifier.fillMaxWidth(0.5f)) {
+                    TransparentTextField(
+
+                        placeholder = "제목 입력",
+                        value = "임시 값",
+                        textStyle = typography.bodyBold2,
+                        updateTextValue = { /* TODO */ }
+                    )
+
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(1.dp)
+                            .background(colors.gray100),
+                    )
+                }
+
+                FormDropDown(
+                    currentItem = FormType.IMAGE,
+                    onItemClick = { formType.value = it },
+                )
+            }
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.Top),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                when (formType.value) {
+                    FormType.SENTENCE -> Unit
+                    FormType.CHECKBOX -> Unit
+                    FormType.DROPDOWN -> Unit
+                    FormType.IMAGE -> Unit
+                    FormType.MULTIPLE -> Unit
+                }
+                Row(
+                    modifier = Modifier.padding(vertical = 12.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    PlusIcon(tint = colors.main)
+
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    Text(
+                        text = "추가하기",
+                        style = typography.bodyBold2,
+                        fontWeight = FontWeight.W600,
+                        color = colors.main,
+                    )
+                }
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.End),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    SquareIcon()
+
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    Text(
+                        text = "기타",
+                        style = typography.captionRegular2,
+                        fontWeight = FontWeight.W400,
+                        color = colors.gray500,
+                    )
+                }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    TrashIcon(tint = colors.error)
+
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    Text(
+                        text = "버리기",
+                        style = typography.captionRegular2,
+                        fontWeight = FontWeight.W400,
+                        color = colors.error,
+                    )
+                }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = "필수",
+                        style = typography.captionRegular2,
+                        fontWeight = FontWeight.W400,
+                        color = colors.black,
+                    )
+                    Spacer(modifier = Modifier.width(20.dp))
+                    ExpoToggleButton(
+                        width = 45.dp,
+                        height = 18.dp,
+                        check = true,
+                        onClick = { /* todo */ },
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun FormCardPreview() {
+    FormCard()
+}

@@ -467,9 +467,7 @@ fun TransparentTextField(
                     value = value,
                     textStyle = textStyle,
                     cursorBrush = SolidColor(colors.main),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(min = 10.dp, max = 300.dp)
+                    modifier = Modifier.heightIn(min = 10.dp, max = 300.dp)
                 )
 
                 if (value.isEmpty()) {

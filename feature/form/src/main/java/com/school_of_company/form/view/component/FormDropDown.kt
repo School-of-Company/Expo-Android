@@ -26,13 +26,13 @@ import com.school_of_company.design_system.component.modifier.clickable.expoClic
 import com.school_of_company.design_system.icon.DownArrowIcon
 import com.school_of_company.design_system.icon.UpArrowIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
-import com.school_of_company.form.enum.FromType
+import com.school_of_company.form.enum.FormType
 
 @Composable
 fun FormDropDown(
     modifier: Modifier = Modifier,
-    currentItem: FromType,
-    onItemClick: (FromType) -> Unit,
+    currentItem: FormType,
+    onItemClick: (FormType) -> Unit,
 ) {
     val expanded = remember { mutableStateOf(false) }
 
@@ -88,7 +88,7 @@ fun FormDropDown(
                 expanded = expanded.value,
                 onDismissRequest = { expanded.value = false },
             ) {
-                FromType.values()
+                FormType.values()
                     .filter { item ->
                         item.typeName != currentItem.typeName
                     }
@@ -127,7 +127,7 @@ fun FormDropDown(
 @Composable
 private fun FormDropDownPreview() {
     var currentItem = remember {
-        mutableStateOf(FromType.IMAGE)
+        mutableStateOf(FormType.IMAGE)
     }
     FormDropDown(
         onItemClick = { currentItem.value = it },

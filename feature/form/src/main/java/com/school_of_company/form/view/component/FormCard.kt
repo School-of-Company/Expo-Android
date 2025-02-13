@@ -9,29 +9,45 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.school_of_company.design_system.component.button.ExpoToggleButton
+import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.component.textfield.TransparentTextField
+import com.school_of_company.design_system.icon.CheckBoxIcon
 import com.school_of_company.design_system.icon.PlusIcon
-import com.school_of_company.design_system.icon.SquareIcon
 import com.school_of_company.design_system.icon.TrashIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.form.enum.FormType
+import com.school_of_company.form.viewModel.viewData.DynamicFormViewData
 
 @Composable
-fun FormCard(modifier: Modifier = Modifier) {
-    val formType = remember {
-        mutableStateOf(FormType.CHECKBOX)
+fun FormCard(
+    modifier: Modifier = Modifier,
+    deleteThisForm: () -> Unit,
+) {
+    var formData by remember {
+        mutableStateOf(
+            DynamicFormViewData(
+                formType = FormType.CHECKBOX,
+                itemList = emptyList(),
+                title = "",
+                otherJson = false,
+                requiredStatus = false
+            )
+        )
     }
 
     ExpoAndroidTheme { colors, typography ->
@@ -56,11 +72,10 @@ fun FormCard(modifier: Modifier = Modifier) {
             ) {
                 Column(modifier = Modifier.fillMaxWidth(0.5f)) {
                     TransparentTextField(
-
                         placeholder = "제목 입력",
-                        value = "임시 값",
+                        value = formData.title,
                         textStyle = typography.bodyBold2,
-                        updateTextValue = { /* TODO */ }
+                        updateTextValue = { formData = formData.copy(title = it) }
                     )
 
                     Spacer(
@@ -72,8 +87,8 @@ fun FormCard(modifier: Modifier = Modifier) {
                 }
 
                 FormDropDown(
-                    currentItem = FormType.IMAGE,
-                    onItemClick = { formType.value = it },
+                    currentItem = formData.formType,
+                    onItemClick = { formData = formData.copy(formType = it) },
                 )
             }
             Column(
@@ -81,7 +96,7 @@ fun FormCard(modifier: Modifier = Modifier) {
                 verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.Top),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                when (formType.value) {
+                when (formData.formType) {
                     FormType.SENTENCE -> Unit
                     FormType.CHECKBOX -> Unit
                     FormType.DROPDOWN -> Unit
@@ -111,9 +126,19 @@ fun FormCard(modifier: Modifier = Modifier) {
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Row(
+                    modifier = Modifier.expoClickable(
+                        onClick = {
+                            formData = formData.copy(otherJson = !formData.otherJson)
+                        }
+                    ),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    SquareIcon()
+                    CheckBoxIcon(
+                        modifier = Modifier.size(16.dp),
+                        isSelected = formData.otherJson,
+                        tint = if (formData.otherJson) colors.main
+                        else colors.gray500,
+                    )
 
                     Spacer(modifier = Modifier.width(8.dp))
 
@@ -121,10 +146,12 @@ fun FormCard(modifier: Modifier = Modifier) {
                         text = "기타",
                         style = typography.captionRegular2,
                         fontWeight = FontWeight.W400,
-                        color = colors.gray500,
+                        color = if (formData.otherJson) colors.main
+                        else colors.gray500,
                     )
                 }
                 Row(
+                    modifier = Modifier.expoClickable(onClick = deleteThisForm),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     TrashIcon(tint = colors.error)
@@ -145,12 +172,16 @@ fun FormCard(modifier: Modifier = Modifier) {
                         fontWeight = FontWeight.W400,
                         color = colors.black,
                     )
+
                     Spacer(modifier = Modifier.width(20.dp))
+
                     ExpoToggleButton(
                         width = 45.dp,
                         height = 18.dp,
-                        check = true,
-                        onClick = { /* todo */ },
+                        check = formData.requiredStatus,
+                        onClick = {
+                            formData = formData.copy(requiredStatus = !formData.requiredStatus)
+                        },
                     )
                 }
             }
@@ -161,5 +192,5 @@ fun FormCard(modifier: Modifier = Modifier) {
 @Preview
 @Composable
 private fun FormCardPreview() {
-    FormCard()
+    FormCard(deleteThisForm = {})
 }

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -103,20 +104,30 @@ fun FormCard(
                     FormType.IMAGE -> Unit
                     FormType.MULTIPLE -> Unit
                 }
-                Row(
-                    modifier = Modifier.padding(vertical = 12.dp),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    PlusIcon(tint = colors.main)
 
-                    Spacer(modifier = Modifier.width(8.dp))
+                Column (horizontalAlignment = Alignment.CenterHorizontally){
+                    Row(
+                        modifier = Modifier.padding(vertical = 12.dp),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        PlusIcon(tint = colors.main)
 
-                    Text(
-                        text = "추가하기",
-                        style = typography.bodyBold2,
-                        fontWeight = FontWeight.W600,
-                        color = colors.main,
+                        Spacer(modifier = Modifier.width(8.dp))
+
+                        Text(
+                            text = "추가하기",
+                            style = typography.bodyBold2,
+                            fontWeight = FontWeight.W600,
+                            color = colors.main,
+                        )
+                    }
+
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(1.dp)
+                            .background(colors.gray100),
                     )
                 }
             }

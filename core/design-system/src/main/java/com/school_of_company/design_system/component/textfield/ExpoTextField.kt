@@ -475,7 +475,6 @@ fun TransparentTextField(
                     Text(
                         text = placeholder,
                         style = textStyle,
-                        modifier = Modifier.padding(start = 4.dp)
                     )
                 }
             }

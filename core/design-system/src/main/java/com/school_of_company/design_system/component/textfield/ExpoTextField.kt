@@ -458,7 +458,7 @@ fun TransparentTextField(
             modifier = modifier
         ) {
             Box(
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(vertical = 8.dp)
             ) {
                 BasicTextField(
                     onValueChange = { newText ->

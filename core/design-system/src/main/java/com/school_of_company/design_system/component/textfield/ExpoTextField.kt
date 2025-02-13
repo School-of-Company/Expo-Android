@@ -44,6 +44,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.school_of_company.design_system.icon.LocationIcon
+import com.school_of_company.design_system.icon.SearchIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.design_system.theme.ExpoTypography
 
@@ -478,6 +479,62 @@ fun TransparentTextField(
                     )
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun ExpoSearchIconTextField(
+    modifier: Modifier = Modifier,
+    value: String,
+    onValueChange: (String) -> Unit,
+    placeholder: String,
+    isDisabled: Boolean,
+    onButtonClicked: () -> Unit,
+) {
+    ExpoAndroidTheme { colors, typography ->
+        Box {
+            OutlinedTextField(
+                placeholder = {
+                    Text(
+                        text = placeholder,
+                        style = typography.captionRegular1,
+                        color = colors.gray300
+                    )
+                },
+                value = value,
+                onValueChange = { newState ->
+                    onValueChange(newState)
+                },
+                modifier = modifier
+                    .height(50.dp)
+                    .border(
+                        width = 1.dp,
+                        shape = RoundedCornerShape(6.dp),
+                        color = colors.gray100
+                    )
+                    .background(color = Color.Transparent)
+                    .fillMaxWidth(),
+                textStyle = typography.captionRegular1.copy(color = colors.black),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedTextColor = colors.black,
+                    unfocusedTextColor = colors.black,
+                    cursorColor = colors.main,
+                    focusedBorderColor = Color.Transparent,
+                    unfocusedBorderColor = Color.Transparent,
+                ),
+                enabled = !isDisabled,
+                maxLines = 1,
+                singleLine = true,
+                trailingIcon = {
+                    IconButton(onClick = onButtonClicked) {
+                        SearchIcon(
+                            tint = colors.gray500,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                }
+            )
         }
     }
 }

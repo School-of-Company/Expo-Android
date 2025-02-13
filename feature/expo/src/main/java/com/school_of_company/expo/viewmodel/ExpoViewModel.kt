@@ -77,6 +77,9 @@ internal class ExpoViewModel @Inject constructor(
         private const val COORDINATEX = "coordinatesx"
         private const val COORDINATEY = "coordinatesy"
         private const val LOCATION = "location"
+        private const val SEARCHED_COORDINATEX = "searched_coordinatesx"
+        private const val SEARCHED_COORDINATEY = "searched_coordinatesy"
+        private const val SEARCHED_LOCATION = "searched_location"
         private const val COVER_IMAGE = "cover_image"
         private const val STARTED = "started"
         private const val ENDED = "ended"
@@ -140,13 +143,19 @@ internal class ExpoViewModel @Inject constructor(
 
     internal var address = savedStateHandle.getStateFlow(key = ADDRESS, initialValue = "")
 
-    internal var location = savedStateHandle.getStateFlow(key = LOCATION, initialValue = "")
-
     internal var cover_image = savedStateHandle.getStateFlow(key = COVER_IMAGE, initialValue = "")
+
+    internal var location = savedStateHandle.getStateFlow(key = LOCATION, initialValue = "")
 
     internal var coordinateX = savedStateHandle.getStateFlow(key = COORDINATEX, initialValue = "")
 
     internal var coordinateY = savedStateHandle.getStateFlow(key = COORDINATEY, initialValue = "")
+
+    internal var searched_location = savedStateHandle.getStateFlow(key = SEARCHED_LOCATION, initialValue = "")
+
+    internal var searched_coordinateX = savedStateHandle.getStateFlow(key = SEARCHED_COORDINATEX, initialValue = "")
+
+    internal var searched_coordinateY = savedStateHandle.getStateFlow(key = SEARCHED_COORDINATEY, initialValue = "")
 
     val expoListSize: StateFlow<Int> = getExpoListUiState
         .map { state ->
@@ -180,9 +189,16 @@ internal class ExpoViewModel @Inject constructor(
                             onStartedDateChange(it.startedDay.formatNoneHyphenServerDate())
                             onEndedDateChange(it.finishedDay.formatNoneHyphenServerDate())
                             onIntroduceTitleChange(it.description)
-                            onLocationChange(it.location)
+                            if (searched_location.value.isNotBlank()) {
+                                onLocationChange(searched_location.value)
+                                onCoordinateChange(x = searched_coordinateX.value, y = searched_coordinateX.value)
+                                convertXYToJibun(x = searched_coordinateX.value, y = searched_coordinateX.value)
+                            } else {
+                                onLocationChange(it.location)
+                                onCoordinateChange(x = it.x, y = it.y)
+                                convertXYToJibun(x = it.x, y = it.y)
+                            }
                             onCoverImageChange(it.coverImage)
-                            convertXYToJibun(x = it.x, y = it.y)
                         }
                     }
                     is Result.Error -> _getExpoInformationUiState.value = GetExpoInformationUiState.Error(result.exception)
@@ -211,7 +227,7 @@ internal class ExpoViewModel @Inject constructor(
                     }
                 ),
             )
-                .asResult() // TODO: 컨벤션 확인 
+                .asResult() // TODO: 컨벤션 확인
                 .collectLatest { result ->
                     when (result) {
                         is Result.Loading -> _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Loading
@@ -265,14 +281,14 @@ internal class ExpoViewModel @Inject constructor(
     }
 
     internal fun initModifyExpo() {
+        _imageUpLoadUiState.value = ImageUpLoadUiState.Loading
         _modifyExpoInformationUiState.value = ModifyExpoInformationUiState.Loading
     }
 
     internal fun resetExpoInformation() {
-        if (_registerExpoInformationUiState.value is RegisterExpoInformationUiState.Success) {
+            onIntroduceTitleChange("")
             onStartedDateChange("")
             onEndedDateChange("")
-            onIntroduceTitleChange("")
             onAddressChange("")
             onLocationChange("")
             onCoverImageChange(null)
@@ -281,7 +297,6 @@ internal class ExpoViewModel @Inject constructor(
             onEndedChange("")
             _trainingProgramTextState.value = emptyList()
             _standardProgramTextState.value = emptyList()
-        }
     }
 
     internal fun deleteExpoInformation(expoId: String) = viewModelScope.launch {
@@ -300,9 +315,9 @@ internal class ExpoViewModel @Inject constructor(
             }
     }
 
-   internal fun resetDeleteExpoInformationState() {
-       _deleteExpoInformationUiState.value = DeleteExpoInformationUiState.Loading
-   }
+    internal fun resetDeleteExpoInformationState() {
+        _deleteExpoInformationUiState.value = DeleteExpoInformationUiState.Loading
+    }
 
     internal fun getExpoList() = viewModelScope.launch {
         _swipeRefreshLoading.value = true
@@ -400,18 +415,40 @@ internal class ExpoViewModel @Inject constructor(
             }
     }
 
+    internal fun initSearchedData() {
+        onSearchedLocationChange("")
+        onSearchedCoordinateChange("", "")
+    }
+
+    internal fun initSearchedUiState() {
+        _getAddressUiState.value = GetAddressUiState.Loading
+        _getCoordinatesUiState.value = GetCoordinatesUiState.Loading
+    }
+
+    internal fun initializeWithSearchedData() {
+        onLocationChange(searched_location.value)
+        onCoordinateChange(
+            searched_coordinateX.value,
+            searched_coordinateY.value
+        )
+        initSearchedData()
+    }
+
     internal fun searchLocation(searchText: String) =
         viewModelScope.launch {
+            onSearchedCoordinateChange(x = "", y = "")
             getAddressUseCase(searchText = searchText)
                 .asResult()
                 .collectLatest { result ->
                     when (result) {
                         is Result.Loading -> _getAddressUiState.value = GetAddressUiState.Loading
                         is Result.Success -> {
-                            if(result.data.isNotEmpty()){
-                                _getAddressUiState.value =  GetAddressUiState.Success(result.data)
+                            if (result.data.isNotEmpty()) {
+                                _getAddressUiState.value = GetAddressUiState.Success(result.data)
                             } else {
-                                _getAddressUiState.value = GetAddressUiState.Error(NoResponseException())
+                                _getAddressUiState.value = GetAddressUiState.Error(
+                                    NoResponseException()
+                                )
                             }
                         }
                         is Result.Error -> _getAddressUiState.value = GetAddressUiState.Error(result.exception)
@@ -420,6 +457,7 @@ internal class ExpoViewModel @Inject constructor(
         }
 
     internal fun convertJibunToXY(searchText: String) = viewModelScope.launch {
+        _getAddressUiState.value = GetAddressUiState.Loading
         getCoordinatesUseCase(address = searchText)
             .asResult()
             .collectLatest { result ->
@@ -428,8 +466,10 @@ internal class ExpoViewModel @Inject constructor(
                     is Result.Success -> if (result.data.addressName == "Unknown") {
                         _getCoordinatesUiState.value = GetCoordinatesUiState.Error(NoResponseException())
                     } else {
-                        onCoordinateXChange(result.data.x)
-                        onCoordinateYChange(result.data.y)
+                        onSearchedCoordinateChange(
+                            x = result.data.x.toDoubleOrNull()?.let { "%.6f".format(it) } ?: "0.000000",
+                            y = result.data.y.toDoubleOrNull()?.let { "%.6f".format(it) } ?: "0.000000"
+                        )
                         _getCoordinatesUiState.value = GetCoordinatesUiState.Success(result.data)
                     }
                     is Result.Error -> _getCoordinatesUiState.value = GetCoordinatesUiState.Error(result.exception)
@@ -461,8 +501,8 @@ internal class ExpoViewModel @Inject constructor(
 
     internal fun updateStandardProgramModifyText(index: Int, updateItem: StandardProIdRequestParam) {
         _standardProgramModifyTextState.value = _standardProgramModifyTextState.value.toMutableList().apply {
-                set(index, updateItem)
-            }
+            set(index, updateItem)
+        }
     }
 
     internal fun addTrainingProgramModifyText() {
@@ -581,10 +621,6 @@ internal class ExpoViewModel @Inject constructor(
         savedStateHandle[ADDRESS] = value
     }
 
-    internal fun onLocationChange(value: String) {
-        savedStateHandle[LOCATION] = value
-    }
-
     internal fun onCoverImageChange(value: String?) {
         savedStateHandle[COVER_IMAGE] = value
     }
@@ -597,12 +633,21 @@ internal class ExpoViewModel @Inject constructor(
         savedStateHandle[ENDED] = value
     }
 
-    internal fun onCoordinateXChange(value: String) {
-        savedStateHandle[COORDINATEX] = value
+    internal fun onLocationChange(value: String) {
+        savedStateHandle[LOCATION] = value
     }
 
-    internal fun onCoordinateYChange(value: String) {
-        savedStateHandle[COORDINATEY] = value
+    internal fun onCoordinateChange(x: String, y: String) {
+        savedStateHandle[COORDINATEX] = x
+        savedStateHandle[COORDINATEY] = y
     }
 
+    internal fun onSearchedLocationChange(value: String) {
+        savedStateHandle[SEARCHED_LOCATION] = value
+    }
+
+    internal fun onSearchedCoordinateChange(x: String, y: String) {
+        savedStateHandle[SEARCHED_COORDINATEX] = x
+        savedStateHandle[SEARCHED_COORDINATEY] = y
+    }
 }

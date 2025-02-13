@@ -6,11 +6,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import com.school_of_company.common.exception.*
 import com.school_of_company.design_system.R
+import com.school_of_company.expo.navigation.expoAddressSearchScreen
 import com.school_of_company.expo.navigation.expoCreateScreen
 import com.school_of_company.expo.navigation.expoCreatedScreen
 import com.school_of_company.expo.navigation.expoDetailScreen
 import com.school_of_company.expo.navigation.expoModifyScreen
 import com.school_of_company.expo.navigation.expoScreen
+import com.school_of_company.expo.navigation.navigateToExpoAddressSearch
 import com.school_of_company.expo.navigation.navigateToExpoDetail
 import com.school_of_company.expo.navigation.navigateToExpoModify
 import com.school_of_company.expo.navigation.navigateToHome
@@ -139,15 +141,22 @@ fun ExpoNavHost(
         )
 
         expoModifyScreen(
+            navigateToExpoAddressSearch = navController::navigateToExpoAddressSearch,
             onErrorToast = makeErrorToast,
             onBackClick = navController::popBackStack,
         )
 
         expoCreateScreen(
+            navigateToExpoAddressSearch = navController::navigateToExpoAddressSearch,
             onErrorToast = makeErrorToast
         )
 
         expoCreatedScreen(
+            onErrorToast = makeErrorToast
+        )
+
+        expoAddressSearchScreen(
+            popUpBackStack = navController::popBackStack,
             onErrorToast = makeErrorToast
         )
 

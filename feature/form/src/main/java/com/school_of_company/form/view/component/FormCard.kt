@@ -12,10 +12,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -39,11 +39,11 @@ fun FormCard(
     modifier: Modifier = Modifier,
     deleteThisForm: () -> Unit,
 ) {
+    val itemList = remember { mutableStateListOf<String>() }
     var formData by remember {
         mutableStateOf(
             DynamicFormViewData(
                 formType = FormType.CHECKBOX,
-                itemList = emptyList(),
                 title = "",
                 otherJson = false,
                 requiredStatus = false
@@ -97,17 +97,74 @@ fun FormCard(
                 verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.Top),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                when (formData.formType) {
-                    FormType.SENTENCE -> Unit
-                    FormType.CHECKBOX -> Unit
-                    FormType.DROPDOWN -> Unit
-                    FormType.IMAGE -> Unit
-                    FormType.MULTIPLE -> Unit
+                itemList.forEachIndexed { index, item ->
+                    when (formData.formType) {
+                        FormType.SENTENCE -> FormSentenceItem(
+                            modifier = Modifier.fillMaxWidth(),
+                            onXClick = { itemList.removeAt(index) },
+                        )
+                        FormType.CHECKBOX -> FormCheckBoxItem(
+                            modifier = Modifier.fillMaxWidth(),
+                            itemIndex = index,
+                            description = item,
+                            updateTextValue = { newText -> itemList[index] = newText },
+                            onXClick = { itemList.removeAt(index) },
+                        )
+                        FormType.DROPDOWN -> FormDropDownItem(
+                            modifier = Modifier.fillMaxWidth(),
+                            itemIndex = index,
+                            description = item,
+                            updateTextValue = { newText -> itemList[index] = newText },
+                            onXClick = { itemList.removeAt(index) },
+                        )
+                        FormType.IMAGE -> FormImageItem(
+                            modifier = Modifier.fillMaxWidth(),
+                            onXClick = { itemList.removeAt(index) },
+                        )
+                        FormType.MULTIPLE -> FormMultiPleItem(
+                            modifier = Modifier.fillMaxWidth(),
+                            itemIndex = index,
+                            description = item,
+                            updateTextValue = { newText -> itemList[index] = newText },
+                            onXClick = { itemList.removeAt(index) },
+                        )
+                    }
                 }
 
-                Column (horizontalAlignment = Alignment.CenterHorizontally){
+
+                if (formData.otherJson) {
+                    when (formData.formType) {
+                        FormType.SENTENCE -> FormSentenceItem(
+                            modifier = Modifier.fillMaxWidth(),
+                            onXClick = { formData = formData.copy(otherJson = false) },
+                        )
+                        FormType.CHECKBOX -> FormCheckBoxItem(
+                            modifier = Modifier.fillMaxWidth(),
+                            isEtc = true,
+                            onXClick = { formData = formData.copy(otherJson = false) },
+                        )
+                        FormType.DROPDOWN -> FormDropDownItem(
+                            modifier = Modifier.fillMaxWidth(),
+                            isEtc = true,
+                            onXClick = { formData = formData.copy(otherJson = false) },
+                        )
+                        FormType.IMAGE -> FormImageItem(
+                            modifier = Modifier.fillMaxWidth(),
+                            onXClick = { formData = formData.copy(otherJson = false) },
+                        )
+                        FormType.MULTIPLE -> FormMultiPleItem(
+                            modifier = Modifier.fillMaxWidth(),
+                            isEtc = true,
+                            onXClick = { formData = formData.copy(otherJson = false) },
+                        )
+                    }
+                }
+
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Row(
-                        modifier = Modifier.padding(vertical = 12.dp),
+                        modifier = Modifier
+                            .padding(vertical = 12.dp)
+                            .expoClickable { itemList.add("") },
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically,
                     ) {

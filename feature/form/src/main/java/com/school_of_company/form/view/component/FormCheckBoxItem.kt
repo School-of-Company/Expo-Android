@@ -16,7 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.component.textfield.TransparentTextField
-import com.school_of_company.design_system.icon.CircleIcon
+import com.school_of_company.design_system.icon.CheckBoxIcon
 import com.school_of_company.design_system.icon.XIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 
@@ -41,7 +41,8 @@ fun FormCheckBoxItem(
                 horizontalArrangement = Arrangement.spacedBy(10.dp, Alignment.Start),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                CircleIcon(
+                CheckBoxIcon(
+                    isSelected = false,
                     modifier = Modifier.size(16.dp),
                     tint = colors.gray500,
                 )

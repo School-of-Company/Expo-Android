@@ -28,18 +28,13 @@ fun FormAddButton(
             verticalAlignment = Alignment.CenterVertically,
             modifier = modifier
                 .expoClickable(onClick = onClick)
-                .border(
-                    width = 1.dp,
-                    color = colors.main400,
-                    shape = RoundedCornerShape(size = 6.dp),
-                )
                 .background(
-                    color = colors.white,
+                    color = colors.main100,
                     shape = RoundedCornerShape(size = 6.dp),
                 )
                 .padding(vertical = 8.dp, horizontal = 12.dp),
         ) {
-            PlusIcon(tint = colors.main400)
+            PlusIcon(tint = colors.main)
 
             Spacer(modifier = Modifier.width(8.dp))
 
@@ -47,7 +42,7 @@ fun FormAddButton(
                 text = "추가하기",
                 style = typography.bodyBold2,
                 fontWeight = FontWeight.W600,
-                color = colors.main400,
+                color = colors.main,
             )
         }
     }

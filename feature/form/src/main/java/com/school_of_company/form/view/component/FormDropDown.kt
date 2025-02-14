@@ -43,19 +43,24 @@ fun FormDropDown(
                     .border(
                         width = 1.dp,
                         color = colors.gray500,
-                        shape = RoundedCornerShape(size = 6.dp)
+                        shape = RoundedCornerShape(size = 6.dp),
                     )
-                    .background(color = colors.white, shape = RoundedCornerShape(size = 6.dp))
-                    .expoClickable {
-                        expanded.value = true
-                    }
-                    .padding(horizontal = 8.dp, vertical = 12.dp),
+                    .background(
+                        color = colors.white,
+                        shape = RoundedCornerShape(size = 6.dp),
+                    )
+                    .expoClickable { expanded.value = true }
+                    .padding(
+                        horizontal = 8.dp,
+                        vertical = 12.dp,
+                    ),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start),
             ) {
                 Icon(
                     painter = painterResource(currentItem.iconRes),
-                    contentDescription = null
+                    contentDescription = null,
+                    tint = colors.gray500
                 )
 
                 Text(

@@ -15,7 +15,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -37,20 +36,11 @@ import com.school_of_company.form.viewModel.viewData.DynamicFormViewData
 @Composable
 fun FormCard(
     modifier: Modifier = Modifier,
-    deleteThisForm: () -> Unit,
+    formIndex: Int,
+    formData: DynamicFormViewData,
+    onFormDataChange: (Int, DynamicFormViewData) -> Unit,
+    deleteThisForm: (Int) -> Unit,
 ) {
-    val itemList = remember { mutableStateListOf<String>() }
-    var formData by remember {
-        mutableStateOf(
-            DynamicFormViewData(
-                formType = FormType.CHECKBOX,
-                title = "",
-                otherJson = false,
-                requiredStatus = false
-            )
-        )
-    }
-
     ExpoAndroidTheme { colors, typography ->
         Column(
             modifier = modifier
@@ -76,7 +66,7 @@ fun FormCard(
                         placeholder = "제목 입력",
                         value = formData.title,
                         textStyle = typography.bodyBold2,
-                        updateTextValue = { formData = formData.copy(title = it) }
+                        updateTextValue = { onFormDataChange(formIndex, formData.copy(title = it)) }
                     )
 
                     Spacer(
@@ -89,7 +79,7 @@ fun FormCard(
 
                 FormDropDown(
                     currentItem = formData.formType,
-                    onItemClick = { formData = formData.copy(formType = it) },
+                    onItemClick = { onFormDataChange(formIndex, formData.copy(formType = it)) },
                 )
             }
             Column(
@@ -97,74 +87,125 @@ fun FormCard(
                 verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.Top),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                itemList.forEachIndexed { index, item ->
+                formData.itemList.forEachIndexed { index, item ->
                     when (formData.formType) {
                         FormType.SENTENCE -> FormSentenceItem(
                             modifier = Modifier.fillMaxWidth(),
-                            onXClick = { itemList.removeAt(index) },
+                            onXClick = {
+                                val newList =
+                                    formData.itemList.toMutableList().apply { removeAt(index) }
+                                onFormDataChange(formIndex, formData.copy(itemList = newList))
+                            },
                         )
+
                         FormType.CHECKBOX -> FormCheckBoxItem(
                             modifier = Modifier.fillMaxWidth(),
                             itemIndex = index,
                             description = item,
-                            updateTextValue = { newText -> itemList[index] = newText },
-                            onXClick = { itemList.removeAt(index) },
+                            updateTextValue = { newText ->
+                                val newList =
+                                    formData.itemList.toMutableList().apply { set(index, newText) }
+                                onFormDataChange(formIndex, formData.copy(itemList = newList))
+                            },
+                            onXClick = {
+                                val newList =
+                                    formData.itemList.toMutableList().apply { removeAt(index) }
+                                onFormDataChange(formIndex, formData.copy(itemList = newList))
+                            },
                         )
+
                         FormType.DROPDOWN -> FormDropDownItem(
                             modifier = Modifier.fillMaxWidth(),
                             itemIndex = index,
                             description = item,
-                            updateTextValue = { newText -> itemList[index] = newText },
-                            onXClick = { itemList.removeAt(index) },
+                            updateTextValue = { newText ->
+                                val newList =
+                                    formData.itemList.toMutableList().apply { set(index, newText) }
+                                onFormDataChange(formIndex, formData.copy(itemList = newList))
+                            },
+                            onXClick = {
+                                val newList =
+                                    formData.itemList.toMutableList().apply { removeAt(index) }
+                                onFormDataChange(formIndex, formData.copy(itemList = newList))
+                            },
                         )
+
                         FormType.IMAGE -> FormImageItem(
                             modifier = Modifier.fillMaxWidth(),
-                            onXClick = { itemList.removeAt(index) },
+                            onXClick = {
+                                val newList =
+                                    formData.itemList.toMutableList().apply { removeAt(index) }
+                                onFormDataChange(formIndex, formData.copy(itemList = newList))
+                            },
                         )
+
                         FormType.MULTIPLE -> FormMultiPleItem(
                             modifier = Modifier.fillMaxWidth(),
                             itemIndex = index,
                             description = item,
-                            updateTextValue = { newText -> itemList[index] = newText },
-                            onXClick = { itemList.removeAt(index) },
+                            updateTextValue = { newText ->
+                                val newList =
+                                    formData.itemList.toMutableList().apply { set(index, newText) }
+                                onFormDataChange(formIndex, formData.copy(itemList = newList))
+                            },
+                            onXClick = {
+                                val newList =
+                                    formData.itemList.toMutableList().apply { removeAt(index) }
+                                onFormDataChange(formIndex, formData.copy(itemList = newList))
+                            },
                         )
                     }
+
                 }
-
-
                 if (formData.otherJson) {
                     when (formData.formType) {
-                        FormType.SENTENCE -> FormSentenceItem(
-                            modifier = Modifier.fillMaxWidth(),
-                            onXClick = { formData = formData.copy(otherJson = false) },
+                        FormType.IMAGE,
+                        FormType.SENTENCE -> onFormDataChange(
+                            formIndex,
+                            formData.copy(otherJson = false)
                         )
+
                         FormType.CHECKBOX -> FormCheckBoxItem(
                             modifier = Modifier.fillMaxWidth(),
                             isEtc = true,
-                            onXClick = { formData = formData.copy(otherJson = false) },
+                            onXClick = {
+                                onFormDataChange(
+                                    formIndex, formData.copy(otherJson = false)
+                                )
+                            },
                         )
+
                         FormType.DROPDOWN -> FormDropDownItem(
                             modifier = Modifier.fillMaxWidth(),
                             isEtc = true,
-                            onXClick = { formData = formData.copy(otherJson = false) },
+                            onXClick = {
+                                onFormDataChange(
+                                    formIndex, formData.copy(otherJson = false)
+                                )
+                            },
                         )
-                        FormType.IMAGE -> FormImageItem(
-                            modifier = Modifier.fillMaxWidth(),
-                            onXClick = { formData = formData.copy(otherJson = false) },
-                        )
+
                         FormType.MULTIPLE -> FormMultiPleItem(
                             modifier = Modifier.fillMaxWidth(),
                             isEtc = true,
-                            onXClick = { formData = formData.copy(otherJson = false) },
+                            onXClick = {
+                                onFormDataChange(
+                                    formIndex, formData.copy(otherJson = false)
+                                )
+                            },
                         )
                     }
                 }
-
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Row(
                         modifier = Modifier
                             .padding(vertical = 12.dp)
-                            .expoClickable { itemList.add("") },
+                            .expoClickable {
+                                onFormDataChange(
+                                    formIndex,
+                                    formData.copy(itemList = formData.itemList + "")
+                                )
+                            },
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
@@ -188,6 +229,7 @@ fun FormCard(
                     )
                 }
             }
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.End),
@@ -196,7 +238,10 @@ fun FormCard(
                 Row(
                     modifier = Modifier.expoClickable(
                         onClick = {
-                            formData = formData.copy(otherJson = !formData.otherJson)
+                            onFormDataChange(
+                                formIndex,
+                                formData.copy(otherJson = !formData.otherJson)
+                            )
                         }
                     ),
                     verticalAlignment = Alignment.CenterVertically,
@@ -219,7 +264,7 @@ fun FormCard(
                     )
                 }
                 Row(
-                    modifier = Modifier.expoClickable(onClick = deleteThisForm),
+                    modifier = Modifier.expoClickable { deleteThisForm(formIndex) },
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     TrashIcon(tint = colors.error)
@@ -248,7 +293,10 @@ fun FormCard(
                         height = 18.dp,
                         check = formData.requiredStatus,
                         onClick = {
-                            formData = formData.copy(requiredStatus = !formData.requiredStatus)
+                            onFormDataChange(
+                                formIndex,
+                                formData.copy(requiredStatus = !formData.requiredStatus)
+                            )
                         },
                     )
                 }
@@ -260,5 +308,22 @@ fun FormCard(
 @Preview
 @Composable
 private fun FormCardPreview() {
-    FormCard(deleteThisForm = {})
+    var formData by remember {
+        mutableStateOf(
+            DynamicFormViewData(
+                formType = FormType.CHECKBOX,
+                title = "",
+                itemList = listOf(),
+                otherJson = false,
+                requiredStatus = false
+            )
+        )
+    }
+
+    FormCard(
+        formData = formData,
+        onFormDataChange = { _, item -> formData = item },
+        deleteThisForm = { /* 삭제 로직 */ },
+        formIndex = 0
+    )
 }

@@ -2,6 +2,8 @@ package com.school_of_company.form.view.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,10 +12,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -93,40 +95,45 @@ fun FormDropDown(
                 expanded = expanded.value,
                 onDismissRequest = { expanded.value = false },
             ) {
-                FormType.values()
-                    .filter { item ->
-                        item.typeName != currentItem.typeName
-                    }
-                    .forEach { filteredItem ->
-                        DropdownMenuItem(
-                            text = {
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Icon(
-                                        painter = painterResource(filteredItem.iconRes),
-                                        tint = colors.gray400,
-                                        contentDescription = null
-                                    )
+                Column(verticalArrangement = Arrangement.spacedBy(space = 22.dp)) {
+                    FormType.values()
+                        .filter { item ->
+                            item.typeName != currentItem.typeName
+                        }
+                        .forEach { filteredItem ->
+                            val interactionSource = remember { MutableInteractionSource() }
+                            val isPressed by interactionSource.collectIsPressedAsState()
 
-                                    Spacer(modifier = Modifier.width(8.dp))
+                            Row(
+                                modifier = Modifier
+                                    .expoClickable(interactionSource = interactionSource) {
+                                        onItemClick(filteredItem)
+                                        expanded.value = false
+                                    },
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    painter = painterResource(filteredItem.iconRes),
+                                    tint = if (isPressed) colors.main else colors.gray500,
+                                    contentDescription = null
+                                )
 
-                                    Text(
-                                        text = filteredItem.typeName,
-                                        style = typography.captionRegular1,
-                                        fontWeight = FontWeight.W400,
-                                        color = colors.gray400,
-                                    )
-                                }
-                            },
-                            onClick = {
-                                onItemClick(filteredItem)
-                                expanded.value = false
+                                Spacer(modifier = Modifier.width(8.dp))
+
+                                Text(
+                                    text = filteredItem.typeName,
+                                    style = typography.captionRegular1,
+                                    fontWeight = FontWeight.W400,
+                                    color = if (isPressed) colors.main else colors.gray500,
+                                )
                             }
-                        )
-                    }
+                        }
+                }
             }
         }
     }
 }
+
 
 @Preview
 @Composable

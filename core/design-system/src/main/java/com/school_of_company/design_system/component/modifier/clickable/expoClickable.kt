@@ -2,6 +2,7 @@ package com.school_of_company.design_system.component.modifier.clickable
 
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.InteractionSource
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.remember
@@ -18,6 +19,7 @@ fun Modifier.expoClickable(
     rippleColor: Color? = null,
     onClickLabel: String? = null,
     role: Role? = null,
+    interactionSource: MutableInteractionSource? = null,
     interval: Long = 1_000L,
     onClick: () -> Unit
 ) = composed(
@@ -31,6 +33,7 @@ fun Modifier.expoClickable(
 ) {
     val currentOnClick = rememberUpdatedState(onClick)
     val multipleEventsCutter = remember { MultipleEventsCutter.get(intervalMs = interval) }
+    val rememberedInteractionSource = remember { interactionSource ?: MutableInteractionSource() }
     Modifier.clickable(
         enabled = enabled,
         onClickLabel = onClickLabel,
@@ -44,6 +47,6 @@ fun Modifier.expoClickable(
                 )
             } ?: LocalIndication.current
         } else null,
-        interactionSource = remember { MutableInteractionSource() }
+        interactionSource = rememberedInteractionSource,
     )
 }

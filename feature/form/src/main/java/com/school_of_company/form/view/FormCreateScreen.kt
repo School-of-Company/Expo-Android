@@ -57,7 +57,7 @@ private fun FormCreateScreen(
     deleteForm: (Int) -> Unit,
     onFormDataChange: (Int, DynamicFormViewData) -> Unit,
 ) {
-    ExpoAndroidTheme { colors, typography ->
+    ExpoAndroidTheme { colors, _ ->
         Column(
             modifier = modifier
                 .fillMaxSize()

@@ -1,5 +1,6 @@
 package com.school_of_company.form.view
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -10,8 +11,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,6 +52,7 @@ private fun FormCreateScreen(
     modifier: Modifier = Modifier,
     formList: List<DynamicFormViewData>,
     focusManager: FocusManager = LocalFocusManager.current,
+    scrollState: ScrollState = rememberScrollState(),
     popUpBackStack: () -> Unit,
     addFormAtList: () -> Unit,
     createForm: () -> Unit,
@@ -60,6 +62,7 @@ private fun FormCreateScreen(
     ExpoAndroidTheme { colors, _ ->
         Column(
             modifier = modifier
+                .verticalScroll(scrollState)
                 .fillMaxSize()
                 .background(color = colors.white)
                 .padding(16.dp)
@@ -82,11 +85,11 @@ private fun FormCreateScreen(
                 betweenText = "신정차 폼",
             )
 
-            LazyColumn(
+            Column(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Top),
             ) {
-                itemsIndexed(formList) { index, item ->
+                formList.forEachIndexed { index, item ->
                     FormCard(
                         formIndex = index,
                         formData = item,
@@ -94,20 +97,18 @@ private fun FormCreateScreen(
                         deleteThisForm = deleteForm,
                     )
                 }
-                item {
-                    FormAddButton(onClick = addFormAtList)
-                }
+
+                FormAddButton(onClick = addFormAtList)
             }
 
-            Spacer(
-                modifier = Modifier
-                    .weight(1f)
-                    .widthIn(min = 16.dp),
-            )
+            Spacer(modifier = Modifier.weight(1f))
+
+            Spacer(modifier = Modifier.height(16.dp))
 
             ExpoButton(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .height(46.dp)
                     .padding(vertical = 12.dp),
                 text = "다음",
                 color = colors.main,
@@ -135,7 +136,7 @@ private fun FormCreateScreenPreview() {
             ),
             DynamicFormViewData(
                 title = "제목",
-                formType = FormType.IMAGE,
+                formType = FormType.DROPDOWN,
                 itemList = listOf("예시", "예시 1"),
                 requiredStatus = true,
                 otherJson = true,

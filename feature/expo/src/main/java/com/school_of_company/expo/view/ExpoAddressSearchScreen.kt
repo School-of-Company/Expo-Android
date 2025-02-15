@@ -64,7 +64,7 @@ internal fun ExpoAddressSearchRoute(
         }
     }
 
-    LaunchedEffect("InitSearched") {
+    LaunchedEffect(Unit) {
         viewModel.initSearchedData()
     }
 

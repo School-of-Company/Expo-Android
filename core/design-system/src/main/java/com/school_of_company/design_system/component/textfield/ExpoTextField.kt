@@ -36,6 +36,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -45,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import com.school_of_company.design_system.icon.LocationIcon
 import com.school_of_company.design_system.icon.SearchIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
+import com.school_of_company.design_system.theme.ExpoTypography
 
 @Composable
 fun ErrorText(
@@ -440,6 +442,45 @@ fun ExpoLocationIconTextField(
     }
 }
 
+@Composable
+fun TransparentTextField(
+    modifier: Modifier = Modifier,
+    placeholder: String,
+    value: String,
+    textStyle: TextStyle,
+    updateTextValue: (String) -> Unit,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+) {
+    ExpoAndroidTheme { colors, _ ->
+        Column(
+            verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.Top),
+            horizontalAlignment = Alignment.Start,
+            modifier = modifier
+        ) {
+            Box(
+                modifier = Modifier.padding(vertical = 8.dp)
+            ) {
+                BasicTextField(
+                    onValueChange = { newText ->
+                        updateTextValue(newText)
+                    },
+                    keyboardOptions = keyboardOptions,
+                    value = value,
+                    textStyle = textStyle,
+                    cursorBrush = SolidColor(colors.main),
+                    modifier = Modifier.heightIn(min = 10.dp, max = 300.dp)
+                )
+
+                if (value.isEmpty()) {
+                    Text(
+                        text = placeholder,
+                        style = textStyle,
+                    )
+                }
+            }
+        }
+    }
+}
 
 @Composable
 fun ExpoSearchIconTextField(
@@ -530,9 +571,15 @@ fun ExpoOutlinedTextFieldPreview() {
                 isReadOnly = false,
                 label = "비밀번호"
             )
-            LimitedLengthTextField(value = "", placeholder = "", isError = false, updateTextValue = {})
+            LimitedLengthTextField(
+                value = "",
+                placeholder = "",
+                isError = false,
+                updateTextValue = {})
 
-            NoneLimitedLengthTextField(value = "", placeholder = "",updateTextValue = {})
+            NoneLimitedLengthTextField(value = "", placeholder = "", updateTextValue = {})
+
+            TransparentTextField(value = "배경없는 textField", placeholder = "", updateTextValue = {}, textStyle = ExpoTypography.bodyBold2.copy(fontWeight = FontWeight.W600))
         }
     }
 }

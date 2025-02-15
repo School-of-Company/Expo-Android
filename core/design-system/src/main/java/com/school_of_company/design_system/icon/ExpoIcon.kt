@@ -264,14 +264,24 @@ fun SettingIcon(
 @Composable
 fun CheckBoxIcon(
     modifier: Modifier = Modifier,
+    isSelected: Boolean = true,
     tint: Color = Color.Unspecified,
 ) {
-    Icon(
-        painter = painterResource(id = R.drawable.ic_check_box),
-        contentDescription = stringResource(id = R.string.checkbox_description),
-        modifier = modifier,
-        tint = tint
-    )
+    if (isSelected) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_check_box),
+            contentDescription = stringResource(id = R.string.checkbox_description),
+            modifier = modifier,
+            tint = tint
+        )
+    } else {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_square),
+            contentDescription = "정사각형 아이콘",
+            modifier = modifier,
+            tint = tint
+        )
+    }
 }
 
 @Composable

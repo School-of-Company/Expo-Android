@@ -287,7 +287,7 @@ fun FormCard(
 
                     Spacer(modifier = Modifier.width(20.dp))
 
-                    ExpoToggleButton(
+                    FormToggleButton(
                         width = 45.dp,
                         height = 18.dp,
                         check = formData.requiredStatus,

@@ -32,7 +32,7 @@ import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import kotlin.math.roundToInt
 
 @Composable
-fun ExpoToggleButton(
+fun FormToggleButton(
     modifier: Modifier = Modifier,
     check: Boolean,
     width: Dp,

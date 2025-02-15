@@ -49,8 +49,8 @@ internal fun FormCreateRoute(
 @Composable
 private fun FormCreateScreen(
     modifier: Modifier = Modifier,
-    focusManager: FocusManager = LocalFocusManager.current,
     formList: List<DynamicFormViewData>,
+    focusManager: FocusManager = LocalFocusManager.current,
     popUpBackStack: () -> Unit,
     addFormAtList: () -> Unit,
     createForm: () -> Unit,

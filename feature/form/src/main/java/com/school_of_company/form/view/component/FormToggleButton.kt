@@ -1,4 +1,4 @@
-package com.school_of_company.design_system.component.button
+package com.school_of_company.form.view.component
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -120,7 +120,7 @@ fun ExpoToggleButton(
 private fun ExpoToggleButtonPreview() {
     var isToggled by remember { mutableStateOf(false) }
 
-    ExpoToggleButton(
+    FormToggleButton(
         check = isToggled,
         height = 24.dp,
         width = 70.dp,

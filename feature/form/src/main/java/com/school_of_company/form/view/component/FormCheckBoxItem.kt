@@ -21,7 +21,7 @@ import com.school_of_company.design_system.icon.XIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 
 @Composable
-fun FormCheckBoxItem(
+internal fun FormCheckBoxItem(
     modifier: Modifier = Modifier,
     isEtc: Boolean = false,
     itemIndex: Int = 0,

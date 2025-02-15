@@ -19,7 +19,7 @@ import com.school_of_company.design_system.icon.PlusIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 
 @Composable
-fun FormAddButton(
+internal fun FormAddButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {

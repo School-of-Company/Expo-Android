@@ -31,7 +31,7 @@ import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.form.enum.FormType
 
 @Composable
-fun FormDropDown(
+internal fun FormDropDown(
     modifier: Modifier = Modifier,
     currentItem: FormType,
     onItemClick: (FormType) -> Unit,

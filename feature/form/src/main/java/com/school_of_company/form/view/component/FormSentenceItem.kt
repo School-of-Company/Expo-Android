@@ -20,7 +20,7 @@ import com.school_of_company.design_system.icon.XIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 
 @Composable
-fun FormSentenceItem(
+internal fun FormSentenceItem(
     modifier: Modifier = Modifier,
     onXClick: () -> Unit,
 ) {

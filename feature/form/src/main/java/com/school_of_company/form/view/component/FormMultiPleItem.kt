@@ -21,7 +21,7 @@ import com.school_of_company.design_system.icon.XIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 
 @Composable
-fun FormMultiPleItem(
+internal fun FormMultiPleItem(
     modifier: Modifier = Modifier,
     isEtc: Boolean = false,
     itemIndex: Int = 0,

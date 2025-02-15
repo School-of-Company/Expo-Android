@@ -33,7 +33,7 @@ import com.school_of_company.form.enum.FormType
 import com.school_of_company.form.viewModel.viewData.DynamicFormViewData
 
 @Composable
-fun FormCard(
+internal fun FormCard(
     modifier: Modifier = Modifier,
     formIndex: Int,
     formData: DynamicFormViewData,

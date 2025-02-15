@@ -81,27 +81,22 @@ private fun FormCreateScreen(
                 },
                 betweenText = "신정차 폼",
             )
-            Column(
+
+            LazyColumn(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Top),
             ) {
-                LazyColumn(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Top),
-                ) {
-                    itemsIndexed(formList) { index, item ->
-                        FormCard(
-                            formIndex = index,
-                            formData = item,
-                            onFormDataChange = onFormDataChange,
-                            deleteThisForm = deleteForm,
-                        )
-                    }
+                itemsIndexed(formList) { index, item ->
+                    FormCard(
+                        formIndex = index,
+                        formData = item,
+                        onFormDataChange = onFormDataChange,
+                        deleteThisForm = deleteForm,
+                    )
                 }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                FormAddButton(onClick = addFormAtList)
+                item {
+                    FormAddButton(onClick = addFormAtList)
+                }
             }
 
             Spacer(

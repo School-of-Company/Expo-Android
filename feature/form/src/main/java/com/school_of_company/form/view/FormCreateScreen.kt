@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -75,7 +74,6 @@ private fun FormCreateScreen(
                 },
         ) {
             ExpoTopBar(
-                modifier = Modifier.padding(vertical = 16.dp),
                 startIcon = {
                     LeftArrowIcon(
                         tint = colors.black,
@@ -83,11 +81,12 @@ private fun FormCreateScreen(
                     )
                 },
                 betweenText = "신정차 폼",
+                modifier = Modifier.padding(vertical = 16.dp),
             )
 
             Column(
-                modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Top),
+                modifier = Modifier.fillMaxWidth(),
             ) {
                 formList.forEachIndexed { index, item ->
                     FormCard(
@@ -106,13 +105,13 @@ private fun FormCreateScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             ExpoButton(
+                text = "다음",
+                color = colors.main,
+                onClick = createForm,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(46.dp)
                     .padding(vertical = 12.dp),
-                text = "다음",
-                color = colors.main,
-                onClick = createForm,
             )
         }
     }

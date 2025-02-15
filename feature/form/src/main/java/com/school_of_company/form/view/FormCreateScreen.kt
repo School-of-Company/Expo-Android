@@ -31,7 +31,7 @@ import com.school_of_company.form.view.component.FormCard
 import com.school_of_company.form.viewModel.viewData.DynamicFormViewData
 
 @Composable
-fun FormCreateRoute(
+internal fun FormCreateRoute(
     modifier: Modifier = Modifier,
     popUpBackStack: () -> Unit,
 ) {
@@ -47,7 +47,7 @@ fun FormCreateRoute(
 }
 
 @Composable
-fun FormCreateScreen(
+private fun FormCreateScreen(
     modifier: Modifier = Modifier,
     focusManager: FocusManager = LocalFocusManager.current,
     formList: List<DynamicFormViewData>,

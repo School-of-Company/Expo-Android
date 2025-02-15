@@ -137,7 +137,14 @@ private fun FormCreateScreenPreview() {
                 itemList = listOf("예시", "예시 1"),
                 requiredStatus = true,
                 otherJson = true,
-            )
+            ),
+            DynamicFormViewData(
+                title = "제목",
+                formType = FormType.IMAGE,
+                itemList = listOf("예시", "예시 1"),
+                requiredStatus = true,
+                otherJson = true,
+            ),
         ),
         popUpBackStack = {},
     )

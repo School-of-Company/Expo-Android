@@ -173,7 +173,8 @@ fun ExpoNavHost(
         )
 
         formCreateScreen(
-            popUpBackStack = navController::popBackStack
+            popUpBackStack = navController::popBackStack,
+            onErrorToast = makeErrorToast,
         )
     }
 }

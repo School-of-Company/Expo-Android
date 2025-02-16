@@ -5,7 +5,7 @@ import com.school_of_company.model.model.form.DynamicFormModel
 
 internal fun DynamicFormViewData.toModel() = DynamicFormModel(
     title = title,
-    formType = formType.typeName,
+    formType = formType.name,
     jsonData = itemList,
     requiredStatus = requiredStatus,
     otherJson = if (otherJson) "etc" else null,

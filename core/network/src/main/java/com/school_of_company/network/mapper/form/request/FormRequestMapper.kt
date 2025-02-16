@@ -4,6 +4,7 @@ import com.school_of_company.model.model.form.DynamicFormModel
 import com.school_of_company.model.model.form.FormRequestAndResponseModel
 import com.school_of_company.network.dto.form.all.DynamicForm
 import com.school_of_company.network.dto.form.all.FormRequestAndResponse
+import com.school_of_company.network.util.convertListToJsonMap
 
 fun FormRequestAndResponseModel.toModel(): FormRequestAndResponse =
     FormRequestAndResponse(
@@ -16,7 +17,7 @@ fun DynamicFormModel.toModel(): DynamicForm =
     DynamicForm(
         title = this.title,
         formType = this.formType,
-        jsonData = this.jsonData,
+        jsonData = this.jsonData.convertListToJsonMap(),
         requiredStatus = this.requiredStatus,
         otherJson = this.otherJson,
     )

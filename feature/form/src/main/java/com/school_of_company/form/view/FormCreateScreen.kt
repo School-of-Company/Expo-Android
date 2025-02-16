@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
@@ -20,6 +21,8 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.school_of_company.design_system.component.button.ExpoButton
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.component.topbar.ExpoTopBar
@@ -28,21 +31,26 @@ import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.form.enum.FormType
 import com.school_of_company.form.view.component.FormAddButton
 import com.school_of_company.form.view.component.FormCard
+import com.school_of_company.form.viewModel.FormCreateViewModel
 import com.school_of_company.form.viewModel.viewData.DynamicFormViewData
 
 @Composable
 internal fun FormCreateRoute(
     modifier: Modifier = Modifier,
+    expoId: String,
     popUpBackStack: () -> Unit,
+    viewModel: FormCreateViewModel = hiltViewModel(),
 ) {
+    val formState by viewModel.formState.collectAsStateWithLifecycle()
+
     FormCreateScreen(
         modifier = modifier,
-        formList = listOf(),
+        formList = formState,
         popUpBackStack = popUpBackStack,
-        addFormAtList = { },
-        createForm = { },
-        deleteForm = { _ -> },
-        onFormDataChange = { _, _ -> }
+        addFormAtList = viewModel::addEmptyDynamicFormItem,
+        createForm = { viewModel.createForm(expoId) },
+        deleteForm = viewModel::removeDynamicFormItem,
+        onFormDataChange = viewModel::updateDynamicFormItem
     )
 }
 

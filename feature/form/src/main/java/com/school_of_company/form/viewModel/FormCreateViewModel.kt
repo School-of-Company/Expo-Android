@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.school_of_company.domain.usecase.form.CreateFormUseCase
 import com.school_of_company.form.enum.FormType
 import com.school_of_company.form.viewModel.uiState.CreateFormUiState
+import com.school_of_company.form.viewModel.util.toModel
 import com.school_of_company.form.viewModel.viewData.DynamicFormViewData
 import com.school_of_company.model.model.form.FormRequestAndResponseModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -63,7 +64,7 @@ internal class FormCreateViewModel @Inject constructor(
             body = FormRequestAndResponseModel(
                 informationImage = informationImage,
                 participantType = participantType,
-                dynamicForm = listOf()
+                dynamicForm = _formState.value.map { it.toModel() }
             ),
         )
             .onSuccess {

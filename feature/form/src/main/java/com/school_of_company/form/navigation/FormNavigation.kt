@@ -20,6 +20,7 @@ fun NavController.navigationToFormCreate(
 
 fun NavGraphBuilder.formCreateScreen(
     popUpBackStack: () -> Unit,
+    onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
 ) {
     composable(route = "$formCreateRoute/{id}") { backStackEntry ->
         val id = backStackEntry.arguments?.getString("id") ?: ""

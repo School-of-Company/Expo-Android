@@ -10,6 +10,6 @@ data class DynamicFormModel(
     val title: String,
     val formType: String, // SENTENCE, CHECKBOX, DROPDOWN, IMAGE, MULTIPLE
     val jsonData: String,
-    val requiredStatus: String,
-    val otherJson: String,
+    val requiredStatus: Boolean,
+    val otherJson: String?,
 )

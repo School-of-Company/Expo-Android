@@ -8,16 +8,24 @@ import com.school_of_company.form.view.FormCreateRoute
 
 const val formCreateRoute = "form_create_route"
 
-fun NavController.navigationToFormCreate(navOptions: NavOptions? = null) {
-    this.navigate(formCreateRoute, navOptions)
+fun NavController.navigationToFormCreate(
+    id: String,
+    navOptions: NavOptions? = null
+) {
+    this.navigate(
+        route = "$formCreateRoute/${id}",
+        navOptions
+    )
 }
 
 fun NavGraphBuilder.formCreateScreen(
     popUpBackStack: () -> Unit,
 ) {
-    composable(formCreateRoute) {
+    composable(route = "$formCreateRoute/{id}") { backStackEntry ->
+        val id = backStackEntry.arguments?.getString("id") ?: ""
         FormCreateRoute(
-            popUpBackStack = popUpBackStack,
+            expoId = id,
+            popUpBackStack = popUpBackStack
         )
     }
 }

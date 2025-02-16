@@ -176,6 +176,7 @@ internal fun FormCard(
 
                         FormType.DROPDOWN -> FormDropDownItem(
                             modifier = Modifier.fillMaxWidth(),
+                            itemIndex = formData.itemList.size,
                             isEtc = true,
                             onXClick = {
                                 onFormDataChange(

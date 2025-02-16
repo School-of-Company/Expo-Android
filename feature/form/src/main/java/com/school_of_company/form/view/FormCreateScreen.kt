@@ -34,12 +34,15 @@ import com.school_of_company.form.enum.FormType
 import com.school_of_company.form.view.component.FormAddButton
 import com.school_of_company.form.view.component.FormCard
 import com.school_of_company.form.viewModel.FormCreateViewModel
+import com.school_of_company.form.viewModel.uiState.CreateFormUiState
 import com.school_of_company.form.viewModel.viewData.DynamicFormViewData
 
 @Composable
 internal fun FormCreateRoute(
     modifier: Modifier = Modifier,
     expoId: String,
+    informationImage: String,
+    participantType: String,
     popUpBackStack: () -> Unit,
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
     viewModel: FormCreateViewModel = hiltViewModel(),
@@ -62,7 +65,7 @@ internal fun FormCreateRoute(
         formList = formState,
         popUpBackStack = popUpBackStack,
         addFormAtList = viewModel::addEmptyDynamicFormItem,
-        createForm = { viewModel.createForm(expoId) },
+        createForm = { viewModel.createForm(expoId, informationImage, participantType) },
         deleteForm = viewModel::removeDynamicFormItem,
         onFormDataChange = viewModel::updateDynamicFormItem
     )

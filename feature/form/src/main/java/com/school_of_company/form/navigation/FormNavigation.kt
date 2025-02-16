@@ -10,10 +10,12 @@ const val formCreateRoute = "form_create_route"
 
 fun NavController.navigationToFormCreate(
     id: String,
+    informationImage: String,
+    participantType: String,
     navOptions: NavOptions? = null
 ) {
     this.navigate(
-        route = "$formCreateRoute/${id}",
+        route = "$formCreateRoute/$id/$informationImage/$participantType",
         navOptions
     )
 }
@@ -22,11 +24,17 @@ fun NavGraphBuilder.formCreateScreen(
     popUpBackStack: () -> Unit,
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
 ) {
-    composable(route = "$formCreateRoute/{id}") { backStackEntry ->
+    composable(route = "$formCreateRoute/{id}/{informationImage}/{participantType}") { backStackEntry ->
         val id = backStackEntry.arguments?.getString("id") ?: ""
+        val informationImage = backStackEntry.arguments?.getString("informationImage") ?: ""
+        val participantType = backStackEntry.arguments?.getString("participantType") ?: ""
+
         FormCreateRoute(
+            popUpBackStack = popUpBackStack,
             expoId = id,
-            popUpBackStack = popUpBackStack
+            informationImage = informationImage,
+            participantType = participantType,
+            onErrorToast = onErrorToast,
         )
     }
 }

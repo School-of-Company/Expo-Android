@@ -17,7 +17,7 @@ fun DynamicForm.toModel(): DynamicFormModel =
     DynamicFormModel(
         title = this.title,
         formType = this.formType,
-        jsonData = this.jsonData.convertJsonMapToList(),
+        itemList = this.jsonData.convertJsonMapToList(),
         requiredStatus = this.requiredStatus,
-        otherJson = this.otherJson,
+        otherJson = !this.otherJson.isNullOrEmpty(),
     )

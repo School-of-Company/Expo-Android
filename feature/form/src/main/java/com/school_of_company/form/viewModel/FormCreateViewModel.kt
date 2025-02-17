@@ -5,8 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.school_of_company.domain.usecase.form.CreateFormUseCase
 import com.school_of_company.form.enum.FormType
 import com.school_of_company.form.viewModel.uiState.CreateFormUiState
-import com.school_of_company.form.viewModel.util.toModel
-import com.school_of_company.form.viewModel.viewData.DynamicFormViewData
+import com.school_of_company.model.model.form.DynamicFormModel
 import com.school_of_company.model.model.form.FormRequestAndResponseModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,13 +19,13 @@ internal class FormCreateViewModel @Inject constructor(
     private val createFormUseCase: CreateFormUseCase,
 ) : ViewModel() {
 
-    private val _formState = MutableStateFlow<List<DynamicFormViewData>>(emptyList())
+    private val _formState = MutableStateFlow<List<DynamicFormModel>>(emptyList())
     internal val formState = _formState.asStateFlow()
 
     private val _createFormUiState = MutableStateFlow<CreateFormUiState>(CreateFormUiState.Loading)
     internal val createFormUiState = _createFormUiState.asStateFlow()
 
-    internal fun updateDynamicFormItem(index: Int, newItem: DynamicFormViewData) {
+    internal fun updateDynamicFormItem(index: Int, newItem: DynamicFormModel) {
         val currentList = _formState.value.toMutableList()
         if (index in currentList.indices) {
             currentList[index] = newItem
@@ -43,9 +42,9 @@ internal class FormCreateViewModel @Inject constructor(
     }
 
     internal fun addEmptyDynamicFormItem() {
-        val newItem = DynamicFormViewData(
+        val newItem = DynamicFormModel(
             title = "",
-            formType = FormType.SENTENCE,
+            formType = FormType.SENTENCE.typeName,
             itemList = emptyList(),
             requiredStatus = false,
             otherJson = false
@@ -64,7 +63,7 @@ internal class FormCreateViewModel @Inject constructor(
             body = FormRequestAndResponseModel(
                 informationImage = informationImage,
                 participantType = participantType,
-                dynamicForm = _formState.value.map { it.toModel() }
+                dynamicForm = _formState.value
             ),
         )
             .onSuccess {

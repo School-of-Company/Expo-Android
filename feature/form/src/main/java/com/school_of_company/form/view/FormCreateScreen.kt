@@ -35,7 +35,7 @@ import com.school_of_company.form.view.component.FormAddButton
 import com.school_of_company.form.view.component.FormCard
 import com.school_of_company.form.viewModel.FormCreateViewModel
 import com.school_of_company.form.viewModel.uiState.CreateFormUiState
-import com.school_of_company.form.viewModel.viewData.DynamicFormViewData
+import com.school_of_company.model.model.form.DynamicFormModel
 
 @Composable
 internal fun FormCreateRoute(
@@ -74,14 +74,14 @@ internal fun FormCreateRoute(
 @Composable
 private fun FormCreateScreen(
     modifier: Modifier = Modifier,
-    formList: List<DynamicFormViewData>,
+    formList: List<DynamicFormModel>,
     focusManager: FocusManager = LocalFocusManager.current,
     scrollState: ScrollState = rememberScrollState(),
     popUpBackStack: () -> Unit,
     addFormAtList: () -> Unit,
     createForm: () -> Unit,
     deleteForm: (Int) -> Unit,
-    onFormDataChange: (Int, DynamicFormViewData) -> Unit,
+    onFormDataChange: (Int, DynamicFormModel) -> Unit,
 ) {
     ExpoAndroidTheme { colors, _ ->
         Column(
@@ -151,16 +151,16 @@ private fun FormCreateScreenPreview() {
         createForm = {},
         deleteForm = { _ -> },
         formList = listOf(
-            DynamicFormViewData(
+            DynamicFormModel(
                 title = "제목",
-                formType = FormType.DROPDOWN,
+                formType = FormType.DROPDOWN.name,
                 itemList = listOf("예시", "예시 1"),
                 requiredStatus = true,
                 otherJson = true,
             ),
-            DynamicFormViewData(
+            DynamicFormModel(
                 title = "제목",
-                formType = FormType.DROPDOWN,
+                formType = FormType.DROPDOWN.name,
                 itemList = listOf("예시", "예시 1"),
                 requiredStatus = true,
                 otherJson = true,

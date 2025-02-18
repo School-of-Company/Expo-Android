@@ -53,7 +53,10 @@ internal fun FormCreateRoute(
     LaunchedEffect(createFormUiState) {
         when (createFormUiState) {
             is CreateFormUiState.Loading -> Unit
-            is CreateFormUiState.Success -> popUpBackStack()
+            is CreateFormUiState.Success -> {
+                popUpBackStack()
+                onErrorToast(null, R.string.form_create_success)
+            }
             is CreateFormUiState.Error -> {
                 onErrorToast(null, R.string.form_create_fail)
             }

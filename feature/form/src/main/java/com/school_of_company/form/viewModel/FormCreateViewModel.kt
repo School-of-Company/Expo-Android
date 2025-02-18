@@ -44,8 +44,8 @@ internal class FormCreateViewModel @Inject constructor(
     internal fun addEmptyDynamicFormItem() {
         val newItem = DynamicFormModel(
             title = "",
-            itemList = emptyList(),
             formType = FormType.SENTENCE.name,
+            itemList = listOf(""),
             requiredStatus = false,
             otherJson = false
         )

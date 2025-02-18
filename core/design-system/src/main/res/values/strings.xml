@@ -87,7 +87,8 @@
     <string name="get_created_expo_list_empty">박람회 리스트가 비어있습니다.</string>
     <string name="expo_delete_fail">박람회 삭제를 실패하였습니다.</string>
 
-    <string name="form_create_fail">폼 생성을 실패했습니다</string>
+    <string name="form_create_fail">폼 생성을 실패했습니다.</string>
+    <string name="form_create_success">폼 생성을 성공했습니다.</string>
 
     <string name="expo_image_fail">박람회 이미지가 유효하지 않습니다.</string>
 

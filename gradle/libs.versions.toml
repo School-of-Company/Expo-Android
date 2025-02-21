@@ -1,6 +1,6 @@
 [versions]
 #Define Versions
-accompanist = "0.36.0"
+accompanist = "0.37.2"
 android = "2.12.8"
 androidGradlePlugin = "8.1.4"
 androidxActivity = "1.9.3"

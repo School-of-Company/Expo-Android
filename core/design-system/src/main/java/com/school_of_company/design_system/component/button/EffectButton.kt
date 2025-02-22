@@ -1,4 +1,4 @@
-package com.school_of_company.user.view.component
+package com.school_of_company.design_system.component.button
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.PaddingValues

@@ -58,7 +58,7 @@ internal fun UserDialog(
                 verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically)
             ) {
 
-                UserEffectButton(
+                EffectButton(
                     text = buttonText,
                     onClick = onConfirmClick,
                     defaultTextColor = colors.error,
@@ -74,7 +74,7 @@ internal fun UserDialog(
                         )
                 )
 
-                UserEffectButton(
+                EffectButton(
                     text = "취소",
                     onClick = onCancelClick,
                     defaultTextColor = colors.gray700,

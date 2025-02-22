@@ -95,10 +95,7 @@ internal fun ExpoDetailRoute(
         getCoordinatesToAddressUiState = getCoordinatesToAddressUiState,
         onBackClick = onBackClick,
         onMessageClick = { authority ->
-            onMessageClick(
-                id,
-                authority
-            )
+            onMessageClick(id, authority)
         },
         onCheckClick = onCheckClick,
         onModifyClick = onModifyClick,

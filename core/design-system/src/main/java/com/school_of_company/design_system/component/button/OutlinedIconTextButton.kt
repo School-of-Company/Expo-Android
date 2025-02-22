@@ -63,9 +63,9 @@ fun OutlinedIconTextButton(
 @Preview
 @Composable
 private fun OutlinedIconTextButtonPreview() {
-        OutlinedIconTextButton(
-            leadingIcon = { color -> TrashIcon(tint = color) },
-            onClick = { },
-            textValue = "삭제하기",
-        )
+    OutlinedIconTextButton(
+        leadingIcon = { color -> TrashIcon(tint = color) },
+        onClick = { },
+        textValue = "삭제하기",
+    )
 }

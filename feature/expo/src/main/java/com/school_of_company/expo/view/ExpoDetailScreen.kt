@@ -64,12 +64,14 @@ internal fun ExpoDetailRoute(
     onProgramClick: (String) -> Unit,
     onMessageClick: (String, String) -> Unit,
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
+    navigationToFormCreate: (String, String, String) -> Unit,
     viewModel: ExpoViewModel = hiltViewModel(),
 ) {
     val getExpoInformationUiState by viewModel.getExpoInformationUiState.collectAsStateWithLifecycle()
     val getTrainingProgramUiState by viewModel.getTrainingProgramListUiState.collectAsStateWithLifecycle()
     val getStandardProgramUiState by viewModel.getStandardProgramListUiState.collectAsStateWithLifecycle()
     val getCoordinatesToAddressUiState by viewModel.getCoordinatesToAddressUiState.collectAsStateWithLifecycle()
+    val coverImage by viewModel.coverImage.collectAsStateWithLifecycle()
 
     LaunchedEffect(getCoordinatesToAddressUiState) {
         when (getCoordinatesToAddressUiState) {
@@ -98,7 +100,8 @@ internal fun ExpoDetailRoute(
         },
         onCheckClick = onCheckClick,
         onModifyClick = onModifyClick,
-        onProgramClick = onProgramClick
+        onProgramClick = onProgramClick,
+        navigationToFormCreate = { type -> navigationToFormCreate(id,coverImage,type) },
     )
 
     LaunchedEffect(Unit) {
@@ -122,6 +125,7 @@ private fun ExpoDetailScreen(
     onCheckClick: (String) -> Unit,
     onModifyClick: (String) -> Unit,
     onProgramClick: (String) -> Unit,
+    navigationToFormCreate: (String) -> Unit,
 ) {
     val (openDialog, isOpenDialog) = rememberSaveable { mutableStateOf(false) }
     val (openModifyDialog, isOpenModifyDialog) = rememberSaveable { mutableStateOf(false) }
@@ -534,11 +538,11 @@ private fun ExpoDetailScreen(
                 endButtonText = "연수자",
                 onStartClick = {
                     isOpenFormCreateDialog(false)
-                    // todo : Navigate To Create Form Screen Logic - STANDARD
+                    navigationToFormCreate("STANDARD")
                 },
                 onEndClick = {
                     isOpenFormCreateDialog(false)
-                    // todo : Navigate To Create Form Screen Logic - TRAINEE
+                    navigationToFormCreate("TRAINEE")
                 },
                 onDismissClick = { isOpenFormCreateDialog(false) }
             )
@@ -550,16 +554,17 @@ private fun ExpoDetailScreen(
 @Composable
 private fun HomeDetailScreenPreview() {
     ExpoDetailScreen(
+        id = "",
+        getExpoInformationUiState = GetExpoInformationUiState.Loading,
+        getTrainingProgramUiState = GetTrainingProgramListUiState.Loading,
+        getStandardProgramUiState = GetStandardProgramListUiState.Loading,
+        getCoordinatesToAddressUiState = GetCoordinatesToAddressUiState.Loading,
         scrollState = ScrollState(0),
         onBackClick = {},
         onMessageClick = {},
         onCheckClick = {},
         onModifyClick = {},
         onProgramClick = {},
-        getExpoInformationUiState = GetExpoInformationUiState.Loading,
-        getTrainingProgramUiState = GetTrainingProgramListUiState.Loading,
-        getStandardProgramUiState = GetStandardProgramListUiState.Loading,
-        id = "",
-        getCoordinatesToAddressUiState = GetCoordinatesToAddressUiState.Loading
+        navigationToFormCreate = { _ -> }
     )
 }

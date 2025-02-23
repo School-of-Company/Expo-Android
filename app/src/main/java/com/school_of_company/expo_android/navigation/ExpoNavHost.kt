@@ -1,5 +1,8 @@
 package com.school_of_company.expo_android.navigation
 
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -7,11 +10,14 @@ import androidx.navigation.compose.NavHost
 import com.school_of_company.common.exception.*
 import com.school_of_company.design_system.R
 import com.school_of_company.expo.navigation.expoAddressSearchScreen
+import com.school_of_company.expo.navigation.expoCreateRoute
 import com.school_of_company.expo.navigation.expoCreateScreen
+import com.school_of_company.expo.navigation.expoCreatedRoute
 import com.school_of_company.expo.navigation.expoCreatedScreen
 import com.school_of_company.expo.navigation.expoDetailScreen
 import com.school_of_company.expo.navigation.expoModifyScreen
 import com.school_of_company.expo.navigation.expoScreen
+import com.school_of_company.expo.navigation.homeRoute
 import com.school_of_company.expo.navigation.navigateToExpoAddressSearch
 import com.school_of_company.expo.navigation.navigateToExpoDetail
 import com.school_of_company.expo.navigation.navigateToExpoModify
@@ -41,6 +47,13 @@ import com.school_of_company.ui.toast.makeToast
 import com.school_of_company.user.navigation.profileRoute
 import com.school_of_company.user.navigation.profileScreen
 
+private val ROUTES_WITHOUT_NAV_PADDING = listOf(
+    homeRoute,
+    expoCreateRoute,
+    expoCreatedRoute,
+    profileRoute
+)
+
 @Composable
 fun ExpoNavHost(
     modifier: Modifier = Modifier,
@@ -69,7 +82,11 @@ fun ExpoNavHost(
     NavHost(
         navController = navController,
         startDestination = startDestination,
-        modifier = modifier
+        modifier = if (navController.currentDestination?.route in ROUTES_WITHOUT_NAV_PADDING) {
+            modifier
+        } else {
+            modifier.windowInsetsPadding(WindowInsets.navigationBars)
+        }
     ) {
 
         signInScreen(

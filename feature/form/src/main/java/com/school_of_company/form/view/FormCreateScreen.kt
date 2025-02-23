@@ -34,7 +34,7 @@ import com.school_of_company.form.enum.FormType
 import com.school_of_company.form.view.component.FormAddButton
 import com.school_of_company.form.view.component.FormCard
 import com.school_of_company.form.viewModel.FormCreateViewModel
-import com.school_of_company.form.viewModel.uiState.CreateFormUiState
+import com.school_of_company.form.viewModel.uiState.FormUiState
 import com.school_of_company.model.model.form.DynamicFormModel
 
 @Composable
@@ -48,17 +48,17 @@ internal fun FormCreateRoute(
     viewModel: FormCreateViewModel = hiltViewModel(),
 ) {
     val formState by viewModel.formState.collectAsStateWithLifecycle()
-    val createFormUiState by viewModel.createFormUiState.collectAsStateWithLifecycle()
+    val formUiState by viewModel.formUiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(createFormUiState) {
-        when (createFormUiState) {
-            is CreateFormUiState.Loading -> Unit
-            is CreateFormUiState.Success -> {
+    LaunchedEffect(formUiState) {
+        when (formUiState) {
+            is FormUiState.Loading -> Unit
+            is FormUiState.Success -> {
                 popUpBackStack()
                 onErrorToast(null, R.string.form_create_success)
             }
-            is CreateFormUiState.Error -> {
                 onErrorToast(null, R.string.form_create_fail)
+            is FormUiState.Error -> {
             }
         }
     }

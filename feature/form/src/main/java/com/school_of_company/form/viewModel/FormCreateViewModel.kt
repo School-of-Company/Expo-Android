@@ -22,8 +22,8 @@ internal class FormCreateViewModel @Inject constructor(
     private val _formState = MutableStateFlow<List<DynamicFormModel>>(emptyList())
     internal val formState = _formState.asStateFlow()
 
-    private val _createFormUiState = MutableStateFlow<CreateFormUiState>(CreateFormUiState.Loading)
-    internal val createFormUiState = _createFormUiState.asStateFlow()
+    private val _formUiState = MutableStateFlow<FormUiState>(FormUiState.Loading)
+    internal val formUiState = _formUiState.asStateFlow()
 
     internal fun updateDynamicFormItem(index: Int, newItem: DynamicFormModel) {
         val currentList = _formState.value.toMutableList()
@@ -57,7 +57,7 @@ internal class FormCreateViewModel @Inject constructor(
         informationImage: String,
         participantType: String,
     ) = viewModelScope.launch {
-        _createFormUiState.value = CreateFormUiState.Loading
+        _formUiState.value = FormUiState.Loading
         createFormUseCase(
             expoId = expoId,
             body = FormRequestAndResponseModel(
@@ -68,13 +68,15 @@ internal class FormCreateViewModel @Inject constructor(
         )
             .onSuccess {
                 it.catch { remoteError ->
-                    _createFormUiState.value = CreateFormUiState.Error(remoteError)
+                    _formUiState.value = FormUiState.Error(remoteError)
                 }.collect {
-                    _createFormUiState.value = CreateFormUiState.Success
+                    _formUiState.value = FormUiState.Success
                 }
             }
             .onFailure { error ->
-                _createFormUiState.value = CreateFormUiState.Error(error)
+                _formUiState.value = FormUiState.Error(error)
+            }
+    }
             }
     }
 }

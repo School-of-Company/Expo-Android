@@ -101,7 +101,13 @@ internal fun ExpoDetailRoute(
         onCheckClick = onCheckClick,
         onModifyClick = onModifyClick,
         onProgramClick = onProgramClick,
-        navigationToFormCreate = { type -> navigationToFormCreate(id,coverImage,type) },
+        navigationToFormCreate = { type ->
+            navigationToFormCreate(
+                id,
+                coverImage,
+                type,
+            )
+        },
     )
 
     LaunchedEffect(Unit) {

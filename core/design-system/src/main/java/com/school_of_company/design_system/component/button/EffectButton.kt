@@ -18,6 +18,8 @@ import androidx.compose.ui.unit.dp
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import kotlinx.coroutines.delay
 
+private const val CLICK_EFFECT_DURATION = 100L
+
 @Composable
 fun EffectButton(
     modifier: Modifier = Modifier,
@@ -34,7 +36,7 @@ fun EffectButton(
         var isClicked by remember { mutableStateOf(false) }
 
         LaunchedEffect(isClicked) {
-            delay(100)
+            delay(CLICK_EFFECT_DURATION)
             isClicked = false
         }
 

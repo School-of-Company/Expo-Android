@@ -7,7 +7,7 @@ import javax.inject.Inject
 class ModifyFormUseCase @Inject constructor(
     private val repository: FormRepository
 ) {
-    operator fun invoke(formId: Long, body: FormRequestAndResponseModel) = runCatching {
+    operator fun invoke(formId: String, body: FormRequestAndResponseModel) = runCatching {
         repository.modifyForm(
             formId = formId,
             body = body

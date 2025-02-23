@@ -544,11 +544,11 @@ private fun ExpoDetailScreen(
                 endButtonText = "연수자",
                 onStartClick = {
                     isOpenFormCreateDialog(false)
-                    navigationToFormCreate("STANDARD")
+                    navigationToFormCreate(ParticipantType.STANDARD.name)
                 },
                 onEndClick = {
                     isOpenFormCreateDialog(false)
-                    navigationToFormCreate("TRAINEE")
+                    navigationToFormCreate(ParticipantType.TRAINEE.name)
                 },
                 onDismissClick = { isOpenFormCreateDialog(false) }
             )

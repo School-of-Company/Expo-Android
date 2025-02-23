@@ -14,10 +14,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
+import com.school_of_company.expo.navigation.homeRoute
 import com.school_of_company.expo.navigation.navigateToExpoCreate
 import com.school_of_company.expo.navigation.navigateToExpoCreated
 import com.school_of_company.expo.navigation.navigateToHome
 import com.school_of_company.expo_android.navigation.TopLevelDestination
+import com.school_of_company.navigation.sigInRoute
+import com.school_of_company.signup.navigation.signUpRoute
 import com.school_of_company.user.navigation.navigateToProfile
 import kotlinx.coroutines.CoroutineScope
 
@@ -88,5 +91,11 @@ class ExpoAppState(
 fun NavController.navigationPopUpToLogin(loginRoute: String) {
     this.navigate(loginRoute) {
         popUpTo(loginRoute) { inclusive = true }
+    }
+}
+
+fun NavController.navigateToHomeAndClearLogin() {
+    this.navigate(homeRoute) {
+        popUpTo(sigInRoute) { inclusive = true }
     }
 }

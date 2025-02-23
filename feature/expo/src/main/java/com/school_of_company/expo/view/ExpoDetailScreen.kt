@@ -36,7 +36,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import com.school_of_company.design_system.R
-import com.school_of_company.design_system.component.button.ExpoButton
+import com.school_of_company.design_system.component.button.EffectButton
 import com.school_of_company.design_system.component.button.ExpoEnableButton
 import com.school_of_company.design_system.component.button.ExpoEnableDetailButton
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
@@ -46,7 +46,6 @@ import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.expo.view.component.ExpoDetailModifyDialog
 import com.school_of_company.expo.view.component.HomeKakaoMap
-import com.school_of_company.expo.view.component.MessageDialog
 import com.school_of_company.expo.viewmodel.ExpoViewModel
 import com.school_of_company.expo.viewmodel.uistate.GetCoordinatesToAddressUiState
 import com.school_of_company.expo.viewmodel.uistate.GetExpoInformationUiState
@@ -127,6 +126,7 @@ private fun ExpoDetailScreen(
     val (openDialog, isOpenDialog) = rememberSaveable { mutableStateOf(false) }
     val (openModifyDialog, isOpenModifyDialog) = rememberSaveable { mutableStateOf(false) }
     val (openFormModifyDialog, isOpenFormModifyDialog) = rememberSaveable { mutableStateOf(false) }
+    val (openFormCreateDialog, isOpenFormCreateDialog) = rememberSaveable { mutableStateOf(false) }
 
     ExpoAndroidTheme { colors, typography ->
         when {
@@ -329,34 +329,84 @@ private fun ExpoDetailScreen(
                                     .padding(top = 38.dp)
                             ) {
 
-                                ExpoButton(
-                                    text = "프로그램",
-                                    color = colors.main,
-                                    onClick = { onProgramClick(id) },
+                                EffectButton(
+                                    text = "문자 보내기",
+                                    defaultBackgroundColor = colors.white,
+                                    defaultTextColor = colors.main,
+                                    clickedTextColor = colors.white,
+                                    clickedBackgroundColor = colors.main,
+                                    onClick = { isOpenDialog(true) },
                                     modifier = Modifier
                                         .weight(1f)
-                                        .padding(
-                                            vertical = 15.dp,
-                                            horizontal = 41.5.dp
+                                        .border(
+                                            width = 1.dp,
+                                            color = colors.main,
+                                            shape = RoundedCornerShape(6.dp)
                                         )
                                 )
 
-                                ExpoButton(
+                                EffectButton(
+                                    text = "통계 확인하기",
+                                    defaultBackgroundColor = colors.white,
+                                    defaultTextColor = colors.main,
+                                    clickedTextColor = colors.white,
+                                    clickedBackgroundColor = colors.main,
+                                    onClick = {  }, // todo : Navigate To Statistics Screen Logic
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .border(
+                                            width = 1.dp,
+                                            color = colors.main,
+                                            shape = RoundedCornerShape(6.dp)
+                                        )
+                                )
+                            }
+
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(
+                                    16.dp,
+                                    Alignment.CenterHorizontally
+                                ),
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+
+                                EffectButton(
+                                    text = "프로그램",
+                                    defaultBackgroundColor = colors.white,
+                                    defaultTextColor = colors.main,
+                                    clickedTextColor = colors.white,
+                                    clickedBackgroundColor = colors.main,
+                                    onClick = { onProgramClick(id) },
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .border(
+                                            width = 1.dp,
+                                            color = colors.main,
+                                            shape = RoundedCornerShape(6.dp)
+                                        )
+                                )
+
+                                EffectButton(
                                     text = "조회하기",
-                                    color = colors.main,
+                                    defaultBackgroundColor = colors.white,
+                                    defaultTextColor = colors.main,
+                                    clickedTextColor = colors.white,
+                                    clickedBackgroundColor = colors.main,
                                     onClick = { onCheckClick(id) },
                                     modifier = Modifier
                                         .weight(1f)
-                                        .padding(
-                                            vertical = 15.dp,
-                                            horizontal = 41.5.dp
+                                        .border(
+                                            width = 1.dp,
+                                            color = colors.main,
+                                            shape = RoundedCornerShape(6.dp)
                                         )
                                 )
                             }
 
                             ExpoEnableDetailButton(
-                                text = "문자 보내기",
-                                onClick = { isOpenDialog(true) },
+                                text = "폼 생성하기",
+                                onClick = { isOpenFormCreateDialog(true) },
                                 modifier = Modifier.fillMaxWidth()
                             )
 
@@ -421,16 +471,19 @@ private fun ExpoDetailScreen(
 
     if (openDialog) {
         Dialog(onDismissRequest = { isOpenDialog(false) }) {
-            MessageDialog(
-                onCancelClick = { isOpenDialog(false) },
-                onParticipantClick = {
+            ExpoDetailModifyDialog(
+                titleText = "누구에게 문자를 전송하시겠습니까?",
+                startButtonText = "참가자",
+                endButtonText = "연수자",
+                onStartClick = {
                     isOpenDialog(false)
                     onMessageClick(Authority.ROLE_STANDARD.name)
                 },
-                onTraineeClick = {
+                onEndClick = {
                     isOpenDialog(false)
                     onMessageClick(Authority.ROLE_TRAINEE.name)
-                }
+                },
+                onDismissClick = { isOpenDialog(false) }
             )
         }
     }
@@ -469,6 +522,25 @@ private fun ExpoDetailScreen(
                     // todo : Add Navigation STANDARD Form Screen Logic
                 },
                 onDismissClick = { isOpenFormModifyDialog(false) }
+            )
+        }
+    }
+
+    if (openFormCreateDialog) {
+        Dialog(onDismissRequest = { isOpenFormCreateDialog(false) }) {
+            ExpoDetailModifyDialog(
+                titleText = "어떤 폼을 생성하시겠습니까?",
+                startButtonText = "참가자",
+                endButtonText = "연수자",
+                onStartClick = {
+                    isOpenFormCreateDialog(false)
+                    // todo : Navigate To Create Form Screen Logic - STANDARD
+                },
+                onEndClick = {
+                    isOpenFormCreateDialog(false)
+                    // todo : Navigate To Create Form Screen Logic - TRAINEE
+                },
+                onDismissClick = { isOpenFormCreateDialog(false) }
             )
         }
     }

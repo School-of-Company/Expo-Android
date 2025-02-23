@@ -47,6 +47,13 @@ import com.school_of_company.ui.toast.makeToast
 import com.school_of_company.user.navigation.profileRoute
 import com.school_of_company.user.navigation.profileScreen
 
+private val ROUTES_WITHOUT_NAV_PADDING = listOf(
+    homeRoute,
+    expoCreateRoute,
+    expoCreatedRoute,
+    profileRoute
+)
+
 @Composable
 fun ExpoNavHost(
     modifier: Modifier = Modifier,
@@ -75,7 +82,7 @@ fun ExpoNavHost(
     NavHost(
         navController = navController,
         startDestination = startDestination,
-        modifier = if (navController.currentDestination?.route in listOf(homeRoute, expoCreateRoute, expoCreatedRoute, profileRoute)) {
+        modifier = if (navController.currentDestination?.route in ROUTES_WITHOUT_NAV_PADDING) {
             modifier
         } else {
             modifier.windowInsetsPadding(WindowInsets.navigationBars)

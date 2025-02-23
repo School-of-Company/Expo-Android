@@ -52,6 +52,7 @@ import com.school_of_company.expo.viewmodel.uistate.GetExpoInformationUiState
 import com.school_of_company.expo.viewmodel.uistate.GetStandardProgramListUiState
 import com.school_of_company.expo.viewmodel.uistate.GetTrainingProgramListUiState
 import com.school_of_company.model.enum.Authority
+import com.school_of_company.model.enum.ParticipantType
 import com.school_of_company.ui.util.formatServerDate
 
 @Composable

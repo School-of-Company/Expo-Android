@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
@@ -20,6 +22,9 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.school_of_company.design_system.R
 import com.school_of_company.design_system.component.button.ExpoButton
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.component.topbar.ExpoTopBar
@@ -28,35 +33,58 @@ import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.form.enum.FormType
 import com.school_of_company.form.view.component.FormAddButton
 import com.school_of_company.form.view.component.FormCard
-import com.school_of_company.form.viewModel.viewData.DynamicFormViewData
+import com.school_of_company.form.viewModel.FormCreateViewModel
+import com.school_of_company.form.viewModel.uiState.CreateFormUiState
+import com.school_of_company.model.model.form.DynamicFormModel
 
 @Composable
 internal fun FormCreateRoute(
     modifier: Modifier = Modifier,
+    expoId: String,
+    informationImage: String,
+    participantType: String,
     popUpBackStack: () -> Unit,
+    onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
+    viewModel: FormCreateViewModel = hiltViewModel(),
 ) {
+    val formState by viewModel.formState.collectAsStateWithLifecycle()
+    val createFormUiState by viewModel.createFormUiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(createFormUiState) {
+        when (createFormUiState) {
+            is CreateFormUiState.Loading -> Unit
+            is CreateFormUiState.Success -> {
+                popUpBackStack()
+                onErrorToast(null, R.string.form_create_success)
+            }
+            is CreateFormUiState.Error -> {
+                onErrorToast(null, R.string.form_create_fail)
+            }
+        }
+    }
+
     FormCreateScreen(
         modifier = modifier,
-        formList = listOf(),
+        formList = formState,
         popUpBackStack = popUpBackStack,
-        addFormAtList = { },
-        createForm = { },
-        deleteForm = { _ -> },
-        onFormDataChange = { _, _ -> }
+        addFormAtList = viewModel::addEmptyDynamicFormItem,
+        createForm = { viewModel.createForm(expoId, informationImage, participantType) },
+        deleteForm = viewModel::removeDynamicFormItem,
+        onFormDataChange = viewModel::updateDynamicFormItem
     )
 }
 
 @Composable
 private fun FormCreateScreen(
     modifier: Modifier = Modifier,
-    formList: List<DynamicFormViewData>,
+    formList: List<DynamicFormModel>,
     focusManager: FocusManager = LocalFocusManager.current,
     scrollState: ScrollState = rememberScrollState(),
     popUpBackStack: () -> Unit,
     addFormAtList: () -> Unit,
     createForm: () -> Unit,
     deleteForm: (Int) -> Unit,
-    onFormDataChange: (Int, DynamicFormViewData) -> Unit,
+    onFormDataChange: (Int, DynamicFormModel) -> Unit,
 ) {
     ExpoAndroidTheme { colors, _ ->
         Column(
@@ -126,16 +154,16 @@ private fun FormCreateScreenPreview() {
         createForm = {},
         deleteForm = { _ -> },
         formList = listOf(
-            DynamicFormViewData(
+            DynamicFormModel(
                 title = "제목",
-                formType = FormType.DROPDOWN,
+                formType = FormType.DROPDOWN.name,
                 itemList = listOf("예시", "예시 1"),
                 requiredStatus = true,
                 otherJson = true,
             ),
-            DynamicFormViewData(
+            DynamicFormModel(
                 title = "제목",
-                formType = FormType.DROPDOWN,
+                formType = FormType.DROPDOWN.name,
                 itemList = listOf("예시", "예시 1"),
                 requiredStatus = true,
                 otherJson = true,

@@ -30,14 +30,14 @@ import com.school_of_company.design_system.icon.PlusIcon
 import com.school_of_company.design_system.icon.TrashIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.form.enum.FormType
-import com.school_of_company.form.viewModel.viewData.DynamicFormViewData
+import com.school_of_company.model.model.form.DynamicFormModel
 
 @Composable
 internal fun FormCard(
     modifier: Modifier = Modifier,
     formIndex: Int,
-    formData: DynamicFormViewData,
-    onFormDataChange: (Int, DynamicFormViewData) -> Unit,
+    formData: DynamicFormModel,
+    onFormDataChange: (Int, DynamicFormModel) -> Unit,
     deleteThisForm: (Int) -> Unit,
 ) {
     ExpoAndroidTheme { colors, typography ->
@@ -64,7 +64,7 @@ internal fun FormCard(
                     TransparentTextField(
                         placeholder = "제목 입력",
                         value = formData.title,
-                        textStyle = typography.bodyBold2,
+                        textStyle = typography.bodyBold2.copy(color = colors.black),
                         updateTextValue = { onFormDataChange(formIndex, formData.copy(title = it)) }
                     )
 
@@ -77,8 +77,8 @@ internal fun FormCard(
                 }
 
                 FormDropDown(
-                    currentItem = formData.formType,
-                    onItemClick = { onFormDataChange(formIndex, formData.copy(formType = it)) },
+                    currentItem = FormType.valueOf(formData.formType),
+                    onItemClick = { onFormDataChange(formIndex, formData.copy(formType = it.name)) },
                 )
             }
             Column(
@@ -87,7 +87,7 @@ internal fun FormCard(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 formData.itemList.forEachIndexed { index, item ->
-                    when (formData.formType) {
+                    when (FormType.valueOf(formData.formType)) {
                         FormType.SENTENCE -> FormSentenceItem(
                             modifier = Modifier.fillMaxWidth(),
                             onXClick = {
@@ -157,7 +157,7 @@ internal fun FormCard(
 
                 }
                 if (formData.otherJson) {
-                    when (formData.formType) {
+                    when (FormType.valueOf(formData.formType)) {
                         FormType.IMAGE,
                         FormType.SENTENCE -> onFormDataChange(
                             formIndex,
@@ -176,6 +176,7 @@ internal fun FormCard(
 
                         FormType.DROPDOWN -> FormDropDownItem(
                             modifier = Modifier.fillMaxWidth(),
+                            itemIndex = formData.itemList.size,
                             isEtc = true,
                             onXClick = {
                                 onFormDataChange(
@@ -309,8 +310,8 @@ internal fun FormCard(
 private fun FormCardPreview() {
     var formData by remember {
         mutableStateOf(
-            DynamicFormViewData(
-                formType = FormType.CHECKBOX,
+            DynamicFormModel(
+                formType = FormType.CHECKBOX.name,
                 title = "",
                 itemList = listOf(),
                 otherJson = false,

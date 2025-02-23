@@ -9,5 +9,7 @@ data class FormRequestAndResponseModel(
 data class DynamicFormModel(
     val title: String,
     val formType: String, // SENTENCE, CHECKBOX, DROPDOWN, IMAGE, MULTIPLE
-    val jsonData: String
+    val itemList: List<String>,
+    val requiredStatus: Boolean,
+    val otherJson: Boolean,
 )

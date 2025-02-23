@@ -64,7 +64,7 @@ internal fun FormMultiPleItem(
                     TransparentTextField(
                         placeholder = "선택지 ${itemIndex + 1}",
                         value = description,
-                        textStyle = typography.captionRegular1,
+                        textStyle = typography.captionRegular1.copy(color = colors.black),
                         updateTextValue = updateTextValue
                     )
                 }

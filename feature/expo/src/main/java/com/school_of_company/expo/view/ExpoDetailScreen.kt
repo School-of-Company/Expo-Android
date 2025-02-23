@@ -44,14 +44,15 @@ import com.school_of_company.design_system.component.topbar.ExpoTopBar
 import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
+import com.school_of_company.expo.view.component.ExpoDetailModifyDialog
 import com.school_of_company.expo.view.component.HomeKakaoMap
+import com.school_of_company.expo.view.component.MessageDialog
 import com.school_of_company.expo.viewmodel.ExpoViewModel
 import com.school_of_company.expo.viewmodel.uistate.GetCoordinatesToAddressUiState
 import com.school_of_company.expo.viewmodel.uistate.GetExpoInformationUiState
 import com.school_of_company.expo.viewmodel.uistate.GetStandardProgramListUiState
 import com.school_of_company.expo.viewmodel.uistate.GetTrainingProgramListUiState
 import com.school_of_company.model.enum.Authority
-import com.school_of_company.ui.preview.ExpoPreviews
 import com.school_of_company.ui.util.formatServerDate
 
 @Composable
@@ -74,8 +75,14 @@ internal fun ExpoDetailRoute(
     LaunchedEffect(getCoordinatesToAddressUiState) {
         when (getCoordinatesToAddressUiState) {
             is GetCoordinatesToAddressUiState.Loading -> Unit
-            is GetCoordinatesToAddressUiState.Success -> onErrorToast(null, R.string.convert_coordinates_to_address_success)
-            is GetCoordinatesToAddressUiState.Error -> onErrorToast(null, R.string.convert_coordinates_to_address_fail)
+            is GetCoordinatesToAddressUiState.Success -> onErrorToast(
+                null,
+                R.string.convert_coordinates_to_address_success
+            )
+            is GetCoordinatesToAddressUiState.Error -> onErrorToast(
+                null,
+                R.string.convert_coordinates_to_address_fail
+            )
         }
     }
 
@@ -87,7 +94,9 @@ internal fun ExpoDetailRoute(
         getStandardProgramUiState = getStandardProgramUiState,
         getCoordinatesToAddressUiState = getCoordinatesToAddressUiState,
         onBackClick = onBackClick,
-        onMessageClick = { authority -> onMessageClick(id, authority) },
+        onMessageClick = { authority ->
+            onMessageClick(id, authority)
+        },
         onCheckClick = onCheckClick,
         onModifyClick = onModifyClick,
         onProgramClick = onProgramClick
@@ -116,6 +125,8 @@ private fun ExpoDetailScreen(
     onProgramClick: (String) -> Unit,
 ) {
     val (openDialog, isOpenDialog) = rememberSaveable { mutableStateOf(false) }
+    val (openModifyDialog, isOpenModifyDialog) = rememberSaveable { mutableStateOf(false) }
+    val (openFormModifyDialog, isOpenFormModifyDialog) = rememberSaveable { mutableStateOf(false) }
 
     ExpoAndroidTheme { colors, typography ->
         when {
@@ -351,7 +362,7 @@ private fun ExpoDetailScreen(
 
                             ExpoEnableButton(
                                 text = "수정하기",
-                                onClick = { onModifyClick(id) },
+                                onClick = { isOpenModifyDialog(true) },
                                 textColor = colors.gray700,
                                 backgroundColor = colors.gray100,
                                 modifier = Modifier.fillMaxWidth()
@@ -410,7 +421,7 @@ private fun ExpoDetailScreen(
 
     if (openDialog) {
         Dialog(onDismissRequest = { isOpenDialog(false) }) {
-            com.school_of_company.expo.view.component.MessageDialog(
+            MessageDialog(
                 onCancelClick = { isOpenDialog(false) },
                 onParticipantClick = {
                     isOpenDialog(false)
@@ -420,6 +431,44 @@ private fun ExpoDetailScreen(
                     isOpenDialog(false)
                     onMessageClick(Authority.ROLE_TRAINEE.name)
                 }
+            )
+        }
+    }
+
+    if (openModifyDialog) {
+        Dialog(onDismissRequest = { isOpenModifyDialog(false) }) {
+            ExpoDetailModifyDialog(
+                titleText = "수정할 항목을 선택해주세요",
+                startButtonText = "박람회",
+                endButtonText = "폼",
+                onStartClick = {
+                    isOpenModifyDialog(false)
+                    onModifyClick(id)
+                },
+                onEndClick = {
+                    isOpenModifyDialog(false)
+                    isOpenFormModifyDialog(true)
+                },
+                onDismissClick = { isOpenModifyDialog(false) }
+            )
+        }
+    }
+
+    if (openFormModifyDialog) {
+        Dialog(onDismissRequest = { isOpenFormModifyDialog(false) }) {
+            ExpoDetailModifyDialog(
+                titleText = "어떤 폼을 수정하시겠습니까?",
+                startButtonText = "참가자",
+                endButtonText = "연수자",
+                onStartClick = {
+                    isOpenFormModifyDialog(false)
+                    // todo : Add Navigation TRAINEE Form Screen Logic
+                },
+                onEndClick = {
+                    isOpenFormModifyDialog(false)
+                    // todo : Add Navigation STANDARD Form Screen Logic
+                },
+                onDismissClick = { isOpenFormModifyDialog(false) }
             )
         }
     }

@@ -28,6 +28,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
+            if (viewModel.appLoginState.value is AppLoginState.Loading) return@setContent
+
             val startDestination = when (viewModel.appLoginState.value) {
                 is AppLoginState.Success -> homeRoute
                 else -> sigInRoute

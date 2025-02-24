@@ -9,7 +9,7 @@ import android.net.Uri
 
 const val formCreateRoute = "form_create_route"
 
-fun NavController.navigationToFormCreate(
+fun NavController.navigationToForm(
     id: String,
     informationImage: String,
     participantType: String,
@@ -23,7 +23,7 @@ fun NavController.navigationToFormCreate(
     )
 }
 
-fun NavGraphBuilder.formCreateScreen(
+fun NavGraphBuilder.formScreen(
     popUpBackStack: () -> Unit,
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
 ) {
@@ -34,7 +34,7 @@ fun NavGraphBuilder.formCreateScreen(
         val participantType = backStackEntry.arguments?.getString("participantType") ?: ""
         val isCreate = backStackEntry.arguments?.getBoolean("isCreate") ?: true
 
-        FormCreateRoute(
+        FormRoute(
             popUpBackStack = popUpBackStack,
             expoId = id,
             informationImage = informationImage,

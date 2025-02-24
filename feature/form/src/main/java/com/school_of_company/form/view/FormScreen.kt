@@ -38,7 +38,7 @@ import com.school_of_company.form.viewModel.uiState.FormUiState
 import com.school_of_company.model.model.form.DynamicFormModel
 
 @Composable
-internal fun FormCreateRoute(
+internal fun FormRoute(
     modifier: Modifier = Modifier,
     expoId: String,
     informationImage: String,
@@ -63,7 +63,7 @@ internal fun FormCreateRoute(
         }
     }
 
-    FormCreateScreen(
+    FormScreen(
         modifier = modifier,
         formList = formState,
         popUpBackStack = popUpBackStack,
@@ -75,7 +75,7 @@ internal fun FormCreateRoute(
 }
 
 @Composable
-private fun FormCreateScreen(
+private fun FormScreen(
     modifier: Modifier = Modifier,
     formList: List<DynamicFormModel>,
     focusManager: FocusManager = LocalFocusManager.current,

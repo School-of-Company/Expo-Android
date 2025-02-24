@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-internal class FormCreateViewModel @Inject constructor(
+internal class FormViewModel @Inject constructor(
     private val createFormUseCase: CreateFormUseCase,
 ) : ViewModel() {
 

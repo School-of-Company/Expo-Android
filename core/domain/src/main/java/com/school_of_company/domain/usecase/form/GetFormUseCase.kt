@@ -8,10 +8,10 @@ import javax.inject.Inject
 class GetFormUseCase @Inject constructor(
     private val repository: FormRepository
 ) {
-    operator fun invoke(expoId: String, formType: String): Flow<FormRequestAndResponseModel> =
+    operator fun invoke(expoId: String, participantType: String): Flow<FormRequestAndResponseModel> =
         repository.getForm(
             expoId = expoId,
-            formType = formType
+            participantType = participantType
         )
 
 }

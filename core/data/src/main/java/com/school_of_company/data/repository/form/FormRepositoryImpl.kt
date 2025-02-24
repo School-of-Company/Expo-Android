@@ -25,10 +25,10 @@ class FormRepositoryImpl @Inject constructor(
         )
     }
 
-    override fun getForm(expoId: String, formType: String): Flow<FormRequestAndResponseModel> {
+    override fun getForm(expoId: String, participantType: String): Flow<FormRequestAndResponseModel> {
         return dataSource.getForm(
             expoId = expoId,
-            formType = formType
+            participantType = participantType
         ).transform { response ->
             emit(response.toModel())
         }

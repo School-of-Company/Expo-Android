@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface FormRepository {
     fun createForm(expoId: String, body: FormRequestAndResponseModel) : Flow<Unit>
-    fun modifyForm(formId: String, body: FormRequestAndResponseModel) : Flow<Unit>
-    fun getForm(formId: String, formType: String) : Flow<FormRequestAndResponseModel>
-    fun deleteForm(formId: String) : Flow<Unit>
+    fun modifyForm(expoId: String, body: FormRequestAndResponseModel) : Flow<Unit>
+    fun getForm(expoId: String, formType: String) : Flow<FormRequestAndResponseModel>
+    fun deleteForm(expoId: String) : Flow<Unit>
 }

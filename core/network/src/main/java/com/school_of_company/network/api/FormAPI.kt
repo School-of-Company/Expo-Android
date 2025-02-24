@@ -19,18 +19,18 @@ interface FormAPI {
 
     @PATCH("/form/{form_id}")
     suspend fun modifyForm(
-        @Path("form_id") formId: String,
+        @Path("form_id") expoId: String,
         @Body body: FormRequestAndResponse
     )
 
     @GET("/form/{form_id}")
     suspend fun getForm(
-        @Path("form_id") formId: String,
-        @Query("formType") formType: String // TRAINEE, STANDARD
+        @Path("form_id") expoId: String,
+        @Query("formType") participantType: String // TRAINEE, STANDARD
     ): FormRequestAndResponse
 
     @DELETE("/form/{form_id}")
     suspend fun deleteForm(
-        @Path("form_id") formId: String
+        @Path("form_id") expoId: String
     )
 }

@@ -66,6 +66,7 @@ internal fun ExpoDetailRoute(
     onMessageClick: (String, String) -> Unit,
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
     navigationToFormCreate: (String, String, String) -> Unit,
+    navigationToFormModify: (String, String, String) -> Unit,
     viewModel: ExpoViewModel = hiltViewModel(),
 ) {
     val getExpoInformationUiState by viewModel.getExpoInformationUiState.collectAsStateWithLifecycle()
@@ -109,6 +110,13 @@ internal fun ExpoDetailRoute(
                 type,
             )
         },
+        navigationToFormModify = { type ->
+            navigationToFormModify(
+                id,
+                coverImage,
+                type,
+            )
+        },
     )
 
     LaunchedEffect(Unit) {
@@ -133,6 +141,7 @@ private fun ExpoDetailScreen(
     onModifyClick: (String) -> Unit,
     onProgramClick: (String) -> Unit,
     navigationToFormCreate: (String) -> Unit,
+    navigationToFormModify: (String) -> Unit,
 ) {
     val (openDialog, isOpenDialog) = rememberSaveable { mutableStateOf(false) }
     val (openModifyDialog, isOpenModifyDialog) = rememberSaveable { mutableStateOf(false) }
@@ -526,11 +535,11 @@ private fun ExpoDetailScreen(
                 endButtonText = "연수자",
                 onStartClick = {
                     isOpenFormModifyDialog(false)
-                    // todo : Add Navigation TRAINEE Form Screen Logic
+                    navigationToFormModify(ParticipantType.STANDARD.name)
                 },
                 onEndClick = {
                     isOpenFormModifyDialog(false)
-                    // todo : Add Navigation STANDARD Form Screen Logic
+                    navigationToFormModify(ParticipantType.TRAINEE.name)
                 },
                 onDismissClick = { isOpenFormModifyDialog(false) }
             )
@@ -572,6 +581,7 @@ private fun HomeDetailScreenPreview() {
         onCheckClick = {},
         onModifyClick = {},
         onProgramClick = {},
-        navigationToFormCreate = { _ -> }
+        navigationToFormCreate = { _ -> },
+        navigationToFormModify = { _ -> }
     )
 }

@@ -30,10 +30,11 @@ import com.school_of_company.design_system.component.modifier.clickable.expoClic
 import com.school_of_company.design_system.component.topbar.ExpoTopBar
 import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
+import com.school_of_company.form.enum.FormActionType
 import com.school_of_company.form.enum.FormType
 import com.school_of_company.form.view.component.FormAddButton
 import com.school_of_company.form.view.component.FormCard
-import com.school_of_company.form.viewModel.FormCreateViewModel
+import com.school_of_company.form.viewModel.FormViewModel
 import com.school_of_company.form.viewModel.uiState.FormUiState
 import com.school_of_company.model.model.form.DynamicFormModel
 
@@ -46,30 +47,59 @@ internal fun FormRoute(
     formActionType: FormActionType,
     popUpBackStack: () -> Unit,
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
-    viewModel: FormCreateViewModel = hiltViewModel(),
+    viewModel: FormViewModel = hiltViewModel(),
 ) {
     val formState by viewModel.formState.collectAsStateWithLifecycle()
-    val formUiState by viewModel.formUiState.collectAsStateWithLifecycle()
+    val formActionUiState by viewModel.formUiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(formUiState) {
-        when (formUiState) {
+    if (formActionType == FormActionType.MODIFY) {
+        LaunchedEffect(Unit) {
+            viewModel.getForm(
+                expoId = expoId,
+                participantType = participantType,
+            )
+        }
+    }
+
+    LaunchedEffect(formActionUiState) {
+        when (formActionUiState) {
             is FormUiState.Loading -> Unit
             is FormUiState.Success -> {
                 popUpBackStack()
-                onErrorToast(null, R.string.form_create_success)
+                when (formActionType) {
+                    FormActionType.MODIFY -> onErrorToast(null, R.string.form_modify_success)
+                    FormActionType.CREATE -> onErrorToast(null, R.string.form_create_success)
+                }
             }
-                onErrorToast(null, R.string.form_create_fail)
+
             is FormUiState.Error -> {
+                when (formActionType) {
+                    FormActionType.MODIFY -> onErrorToast(null, R.string.form_modify_success)
+                    FormActionType.CREATE -> onErrorToast(null, R.string.form_modify_fail)
+                }
             }
         }
     }
 
     FormScreen(
         modifier = modifier,
+        formActionType = formActionType,
         formList = formState,
         popUpBackStack = popUpBackStack,
         addFormAtList = viewModel::addEmptyDynamicFormItem,
-        createForm = { viewModel.createForm(expoId, informationImage, participantType) },
+        submitForm = {
+            when (formActionType) {
+                FormActionType.MODIFY -> viewModel.modifyForm(
+                    expoId,
+                    participantType,
+                )
+                FormActionType.CREATE -> viewModel.createForm(
+                    expoId,
+                    informationImage,
+                    participantType,
+                )
+            }
+        },
         deleteForm = viewModel::removeDynamicFormItem,
         onFormDataChange = viewModel::updateDynamicFormItem
     )
@@ -78,12 +108,13 @@ internal fun FormRoute(
 @Composable
 private fun FormScreen(
     modifier: Modifier = Modifier,
+    formActionType: FormActionType,
     formList: List<DynamicFormModel>,
     focusManager: FocusManager = LocalFocusManager.current,
     scrollState: ScrollState = rememberScrollState(),
     popUpBackStack: () -> Unit,
     addFormAtList: () -> Unit,
-    createForm: () -> Unit,
+    submitForm: () -> Unit,
     deleteForm: (Int) -> Unit,
     onFormDataChange: (Int, DynamicFormModel) -> Unit,
 ) {
@@ -109,7 +140,10 @@ private fun FormScreen(
                         modifier = Modifier.expoClickable(onClick = popUpBackStack)
                     )
                 },
-                betweenText = "신정차 폼",
+                betweenText = when (formActionType) {
+                    FormActionType.MODIFY -> "폼 수정하기"
+                    FormActionType.CREATE -> "신정차 폼"
+                },
                 modifier = Modifier.padding(vertical = 16.dp),
             )
 
@@ -136,7 +170,7 @@ private fun FormScreen(
             ExpoButton(
                 text = "다음",
                 color = colors.main,
-                onClick = createForm,
+                onClick = submitForm,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(46.dp)
@@ -149,11 +183,7 @@ private fun FormScreen(
 @Preview
 @Composable
 private fun FormCreateScreenPreview() {
-    FormCreateScreen(
-        addFormAtList = { },
-        onFormDataChange = { _, _ -> },
-        createForm = {},
-        deleteForm = { _ -> },
+    FormScreen(
         formList = listOf(
             DynamicFormModel(
                 title = "제목",
@@ -171,5 +201,10 @@ private fun FormCreateScreenPreview() {
             ),
         ),
         popUpBackStack = {},
+        addFormAtList = { },
+        submitForm = {},
+        deleteForm = { _ -> },
+        onFormDataChange = { _, _ -> },
+        formActionType = FormActionType.MODIFY,
     )
 }

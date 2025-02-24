@@ -43,6 +43,7 @@ internal fun FormRoute(
     expoId: String,
     informationImage: String,
     participantType: String,
+    formActionType: FormActionType,
     popUpBackStack: () -> Unit,
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
     viewModel: FormCreateViewModel = hiltViewModel(),

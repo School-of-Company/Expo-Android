@@ -100,10 +100,3 @@ fun NavController.navigateToHomeAndClearLogin() {
         popUpTo(sigInRoute) { inclusive = true }
     }
 }
-
-// 로그인을 한 이후 홈 화면으로 이동할 때 네비게이션 백스택을 비우고 이동하는 함수입니다.
-fun NavController.navigateToHomeAndClearLogin() {
-    this.navigate(homeRoute) {
-        popUpTo(sigInRoute) { inclusive = true }
-    }
-}

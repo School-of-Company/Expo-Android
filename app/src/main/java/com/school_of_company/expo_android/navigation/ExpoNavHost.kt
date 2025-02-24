@@ -91,7 +91,7 @@ fun ExpoNavHost(
 
         signInScreen(
             onSignUpClick = navController::navigationToSignUp,
-            onSignInClick = { navController.navigateToHomeAndClearLogin() },
+            onSignInClick = navController::navigateToHomeAndClearLogin,
             onErrorToast = makeErrorToast
         )
 

@@ -21,8 +21,8 @@ import com.school_of_company.expo.navigation.homeRoute
 import com.school_of_company.expo.navigation.navigateToExpoAddressSearch
 import com.school_of_company.expo.navigation.navigateToExpoDetail
 import com.school_of_company.expo.navigation.navigateToExpoModify
-import com.school_of_company.expo.navigation.navigateToHome
 import com.school_of_company.expo_android.ui.ExpoAppState
+import com.school_of_company.expo_android.ui.navigateToHomeAndClearLogin
 import com.school_of_company.expo_android.ui.navigationPopUpToLogin
 import com.school_of_company.form.enum.FormActionType
 import com.school_of_company.form.navigation.formScreen
@@ -93,7 +93,7 @@ fun ExpoNavHost(
 
         signInScreen(
             onSignUpClick = navController::navigationToSignUp,
-            onSignInClick = navController::navigateToHome,
+            onSignInClick = navController::navigateToHomeAndClearLogin,
             onErrorToast = makeErrorToast
         )
 

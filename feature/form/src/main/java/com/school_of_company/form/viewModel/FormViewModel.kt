@@ -36,7 +36,7 @@ internal class FormViewModel @Inject constructor(
         mutableStateOf("")
     }
 
-    private val _formState = MutableStateFlow<List<DynamicFormModel>>(emptyList())
+    private val _formState = MutableStateFlow<List<DynamicFormModel>>(listOf(DynamicFormModel.createDefault()))
     internal val formState = _formState.asStateFlow()
 
     private val _formUiState = MutableStateFlow<FormUiState>(FormUiState.Loading)
@@ -62,14 +62,7 @@ internal class FormViewModel @Inject constructor(
     }
 
     internal fun addEmptyDynamicFormItem() {
-        val newItem = DynamicFormModel(
-            title = "",
-            formType = FormType.SENTENCE.name,
-            itemList = listOf(""),
-            requiredStatus = false,
-            otherJson = false
-        )
-        _formState.value += newItem
+        _formState.value += DynamicFormModel.createDefault()
     }
 
     internal fun createForm(

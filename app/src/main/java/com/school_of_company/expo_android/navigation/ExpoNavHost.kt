@@ -24,8 +24,9 @@ import com.school_of_company.expo.navigation.navigateToExpoModify
 import com.school_of_company.expo.navigation.navigateToHome
 import com.school_of_company.expo_android.ui.ExpoAppState
 import com.school_of_company.expo_android.ui.navigationPopUpToLogin
-import com.school_of_company.form.navigation.formCreateScreen
-import com.school_of_company.form.navigation.navigationToFormCreate
+import com.school_of_company.form.enum.FormActionType
+import com.school_of_company.form.navigation.formScreen
+import com.school_of_company.form.navigation.navigationToForm
 import com.school_of_company.program.navigation.navigateQrScanner
 import com.school_of_company.program.navigation.qrScannerScreen
 import com.school_of_company.navigation.navigateToSignIn
@@ -118,7 +119,22 @@ fun ExpoNavHost(
                 navController.navigateToProgramDetailProgram(id)
             },
             onMessageClick = navController::navigateToSmsSendMessage,
-            navigationToFormCreate = navController::navigationToFormCreate,
+            navigationToFormCreate = { id, informationImage, participantType ->
+                navController.navigationToForm(
+                    id,
+                    informationImage,
+                    participantType,
+                    FormActionType.CREATE,
+                )
+            },
+            navigationToFormModify = { id, informationImage, participantType ->
+                navController.navigationToForm(
+                    id,
+                    informationImage,
+                    participantType,
+                    FormActionType.MODIFY,
+                )
+            },
             onErrorToast = makeErrorToast,
         )
 
@@ -192,7 +208,7 @@ fun ExpoNavHost(
             onMainNavigate = { navController.navigationPopUpToLogin(loginRoute = sigInRoute) }
         )
 
-        formCreateScreen(
+        formScreen(
             popUpBackStack = navController::popBackStack,
             onErrorToast = makeErrorToast,
         )

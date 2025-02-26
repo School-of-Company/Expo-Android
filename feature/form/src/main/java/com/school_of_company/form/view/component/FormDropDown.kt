@@ -140,7 +140,7 @@ internal fun FormDropDown(
 @Composable
 private fun FormDropDownPreview() {
     var currentItem = remember {
-        mutableStateOf(FormType.IMAGE)
+        mutableStateOf(FormType.SENTENCE)
     }
     FormDropDown(
         onItemClick = { currentItem.value = it },

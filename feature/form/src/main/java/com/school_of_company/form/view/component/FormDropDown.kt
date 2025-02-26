@@ -47,7 +47,7 @@ internal fun FormDropDown(
                 modifier = modifier
                     .border(
                         width = 1.dp,
-                        color = colors.gray500,
+                        color = colors.gray100,
                         shape = RoundedCornerShape(size = 6.dp),
                     )
                     .background(

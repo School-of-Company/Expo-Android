@@ -448,6 +448,7 @@ fun TransparentTextField(
     placeholder: String,
     value: String,
     textStyle: TextStyle,
+    placeholderTextStyle: TextStyle? = null,
     updateTextValue: (String) -> Unit,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
 ) {
@@ -474,7 +475,7 @@ fun TransparentTextField(
                 if (value.isEmpty()) {
                     Text(
                         text = placeholder,
-                        style = textStyle,
+                        style = placeholderTextStyle ?: textStyle,
                     )
                 }
             }
@@ -579,7 +580,12 @@ fun ExpoOutlinedTextFieldPreview() {
 
             NoneLimitedLengthTextField(value = "", placeholder = "", updateTextValue = {})
 
-            TransparentTextField(value = "배경없는 textField", placeholder = "", updateTextValue = {}, textStyle = ExpoTypography.bodyBold2.copy(fontWeight = FontWeight.W600))
+            TransparentTextField(
+                value = "배경없는 textField",
+                placeholder = "",
+                updateTextValue = {},
+                textStyle = ExpoTypography.bodyBold2.copy(fontWeight = FontWeight.W600)
+            )
         }
     }
 }

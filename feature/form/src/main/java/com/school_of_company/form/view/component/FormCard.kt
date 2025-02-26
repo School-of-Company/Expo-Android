@@ -64,7 +64,8 @@ internal fun FormCard(
                     TransparentTextField(
                         placeholder = "제목 입력",
                         value = formData.title,
-                        textStyle = typography.bodyBold2.copy(color = colors.black),
+                        textStyle = typography.captionBold2.copy(color = colors.black),
+                        placeholderTextStyle = typography.captionBold2.copy(color = colors.gray500),
                         updateTextValue = { onFormDataChange(formIndex, formData.copy(title = it)) }
                     )
 

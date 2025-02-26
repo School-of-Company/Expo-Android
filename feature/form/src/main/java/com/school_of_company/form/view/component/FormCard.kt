@@ -64,7 +64,8 @@ internal fun FormCard(
                     TransparentTextField(
                         placeholder = "제목 입력",
                         value = formData.title,
-                        textStyle = typography.bodyBold2.copy(color = colors.black),
+                        textStyle = typography.captionBold2.copy(color = colors.black),
+                        placeholderTextStyle = typography.captionBold2.copy(color = colors.gray500),
                         updateTextValue = { onFormDataChange(formIndex, formData.copy(title = it)) }
                     )
 
@@ -129,15 +130,6 @@ internal fun FormCard(
                             },
                         )
 
-                        FormType.IMAGE -> FormImageItem(
-                            modifier = Modifier.fillMaxWidth(),
-                            onXClick = {
-                                val newList =
-                                    formData.itemList.toMutableList().apply { removeAt(index) }
-                                onFormDataChange(formIndex, formData.copy(itemList = newList))
-                            },
-                        )
-
                         FormType.MULTIPLE -> FormMultiPleItem(
                             modifier = Modifier.fillMaxWidth(),
                             itemIndex = index,
@@ -158,7 +150,6 @@ internal fun FormCard(
                 }
                 if (formData.otherJson) {
                     when (FormType.valueOf(formData.formType)) {
-                        FormType.IMAGE,
                         FormType.SENTENCE -> onFormDataChange(
                             formIndex,
                             formData.copy(otherJson = false)

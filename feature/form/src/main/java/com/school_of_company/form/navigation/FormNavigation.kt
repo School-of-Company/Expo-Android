@@ -6,6 +6,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.school_of_company.form.view.FormCreateRoute
+import com.school_of_company.form.view.FormModifyRoute
 
 const val formCreateRoute = "form_create_route"
 const val formModifyRoute = "form_modify_route"
@@ -66,7 +67,7 @@ fun NavGraphBuilder.formModifyScreen(
         val informationImage = Uri.decode(encodedImage) // URL 디코딩
         val participantType = backStackEntry.arguments?.getString("participantType") ?: ""
 
-        FormCreateRoute(
+        FormModifyRoute(
             popUpBackStack = popUpBackStack,
             expoId = id,
             informationImage = informationImage,

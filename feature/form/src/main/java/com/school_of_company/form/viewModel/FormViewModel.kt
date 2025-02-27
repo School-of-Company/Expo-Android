@@ -34,26 +34,6 @@ internal class FormViewModel @Inject constructor(
     private val _getFormUiState = MutableStateFlow<GetFormUiState>(GetFormUiState.Loading)
     internal val getFormUiState = _getFormUiState.asStateFlow()
 
-    internal fun updateDynamicFormItem(index: Int, newItem: DynamicFormModel) {
-        val currentList = _formState.value.toMutableList()
-        if (index in currentList.indices) {
-            currentList[index] = newItem
-            _formState.value = currentList
-        }
-    }
-
-    internal fun removeDynamicFormItem(index: Int) {
-        val currentList = _formState.value.toMutableList()
-        if (index in currentList.indices) {
-            currentList.removeAt(index)
-            _formState.value = currentList
-        }
-    }
-
-    internal fun addEmptyDynamicFormItem() {
-        _formState.value += DynamicFormModel.createDefault()
-    }
-
     internal fun createForm(
         expoId: String,
         participantType: String,
@@ -122,5 +102,25 @@ internal class FormViewModel @Inject constructor(
                     is Result.Error -> _getFormUiState.value = GetFormUiState.Error(result.exception)
                 }
             }
+    }
+
+    internal fun updateDynamicFormItem(index: Int, newItem: DynamicFormModel) {
+        val currentList = _formState.value.toMutableList()
+        if (index in currentList.indices) {
+            currentList[index] = newItem
+            _formState.value = currentList
+        }
+    }
+
+    internal fun removeDynamicFormItem(index: Int) {
+        val currentList = _formState.value.toMutableList()
+        if (index in currentList.indices) {
+            currentList.removeAt(index)
+            _formState.value = currentList
+        }
+    }
+
+    internal fun addEmptyDynamicFormItem() {
+        _formState.value += DynamicFormModel.createDefault()
     }
 }

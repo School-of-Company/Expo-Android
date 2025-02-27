@@ -7,7 +7,6 @@ import com.school_of_company.common.result.asResult
 import com.school_of_company.domain.usecase.form.CreateFormUseCase
 import com.school_of_company.domain.usecase.form.GetFormUseCase
 import com.school_of_company.domain.usecase.form.ModifyFormUseCase
-import com.school_of_company.form.enum.FormType
 import com.school_of_company.form.viewModel.uiState.FormUiState
 import com.school_of_company.form.viewModel.uiState.GetFormUiState
 import com.school_of_company.model.model.form.DynamicFormModel
@@ -111,16 +110,16 @@ internal class FormViewModel @Inject constructor(
         getFormUseCase(
             expoId = expoId,
             participantType = participantType,
-            .collectLatest {
-                when (it) {
         )
             .asResult()
+            .collectLatest { result ->
+                when (result) {
                     is Result.Loading -> _getFormUiState.value = GetFormUiState.Loading
-                    is Result.Success -> with(it.data) {
+                    is Result.Success -> with(result.data) {
                         _getFormUiState.value = GetFormUiState.Success
                         _formState.value = dynamicForm
                     }
-                    is Result.Error -> _getFormUiState.value = GetFormUiState.Error(it.exception)
+                    is Result.Error -> _getFormUiState.value = GetFormUiState.Error(result.exception)
                 }
             }
     }

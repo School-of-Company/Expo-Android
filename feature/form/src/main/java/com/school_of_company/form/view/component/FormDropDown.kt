@@ -19,6 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -37,7 +38,8 @@ internal fun FormDropDown(
     currentItem: FormType,
     onItemClick: (FormType) -> Unit,
 ) {
-    val expanded = rememberSaveable { mutableStateOf(false) }
+    var expanded by rememberSaveable { mutableStateOf(false) }
+    var isSelected by rememberSaveable { mutableStateOf(false) }
 
     ExpoAndroidTheme { colors, typography ->
         Column(modifier = modifier) {
@@ -45,14 +47,14 @@ internal fun FormDropDown(
                 modifier = modifier
                     .border(
                         width = 1.dp,
-                        color = colors.gray500,
+                        color = colors.gray100,
                         shape = RoundedCornerShape(size = 6.dp),
                     )
                     .background(
                         color = colors.white,
                         shape = RoundedCornerShape(size = 6.dp),
                     )
-                    .expoClickable { expanded.value = true }
+                    .expoClickable { expanded = true }
                     .padding(
                         horizontal = 8.dp,
                         vertical = 12.dp,
@@ -63,17 +65,19 @@ internal fun FormDropDown(
                 Icon(
                     painter = painterResource(currentItem.iconRes),
                     contentDescription = null,
-                    tint = colors.gray500
+                    tint = if (isSelected) colors.main
+                    else colors.gray500
                 )
 
                 Text(
                     text = currentItem.typeName,
                     style = typography.captionRegular1,
                     fontWeight = FontWeight.W400,
-                    color = colors.gray400,
+                    color = if (isSelected) colors.main
+                    else colors.gray500
                 )
 
-                if (expanded.value) {
+                if (expanded) {
                     UpArrowIcon(tint = colors.gray500)
                 } else {
                     DownArrowIcon(tint = colors.gray500)
@@ -93,8 +97,8 @@ internal fun FormDropDown(
                     )
                     .padding(16.dp),
                 shadowElevation = 12.dp,
-                expanded = expanded.value,
-                onDismissRequest = { expanded.value = false },
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(space = 22.dp)) {
                     FormType.values()
@@ -109,7 +113,8 @@ internal fun FormDropDown(
                                 modifier = Modifier
                                     .expoClickable(interactionSource = interactionSource) {
                                         onItemClick(filteredItem)
-                                        expanded.value = false
+                                        expanded = false
+                                        isSelected = true
                                     },
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
@@ -140,7 +145,7 @@ internal fun FormDropDown(
 @Composable
 private fun FormDropDownPreview() {
     var currentItem = remember {
-        mutableStateOf(FormType.IMAGE)
+        mutableStateOf(FormType.SENTENCE)
     }
     FormDropDown(
         onItemClick = { currentItem.value = it },

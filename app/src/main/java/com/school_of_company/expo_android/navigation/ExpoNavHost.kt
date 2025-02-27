@@ -120,20 +120,8 @@ fun ExpoNavHost(
                 navController.navigateToProgramDetailProgram(id)
             },
             onMessageClick = navController::navigateToSmsSendMessage,
-            navigationToFormCreate = { id, informationImage, participantType ->
-                navController.navigationToCreateForm(
-                    id,
-                    informationImage,
-                    participantType,
-                )
-            },
-            navigationToFormModify = { id, informationImage, participantType ->
-                navController.navigationToModifyForm(
-                    id,
-                    informationImage,
-                    participantType,
-                )
-            },
+            navigationToFormCreate = navController::navigationToCreateForm,
+            navigationToFormModify = navController::navigationToModifyForm,
             onErrorToast = makeErrorToast,
         )
 

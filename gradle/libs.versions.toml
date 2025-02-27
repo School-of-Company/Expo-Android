@@ -3,7 +3,7 @@
 accompanist = "0.36.0"
 android = "2.12.8"
 androidGradlePlugin = "8.1.4"
-androidxActivity = "1.9.3"
+androidxActivity = "1.10.1"
 androidxAppCompat = "1.7.0"
 androidxBrowser = "1.8.0"
 androidxComposeBom = "2024.12.01"

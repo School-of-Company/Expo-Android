@@ -65,7 +65,7 @@ internal fun FormModifyRoute(
                 onErrorToast(null, R.string.form_modify_success)
             }
 
-            is FormUiState.Error -> onErrorToast(null, R.string.form_modify_success)
+            is FormUiState.Error -> onErrorToast(null, R.string.form_modify_fail)
 
         }
     }

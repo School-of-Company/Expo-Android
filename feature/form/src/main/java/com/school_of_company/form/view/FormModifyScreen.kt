@@ -41,7 +41,6 @@ import com.school_of_company.model.model.form.DynamicFormModel
 internal fun FormModifyRoute(
     modifier: Modifier = Modifier,
     expoId: String,
-    informationImage: String,
     participantType: String,
     popUpBackStack: () -> Unit,
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,

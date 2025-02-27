@@ -41,7 +41,6 @@ import com.school_of_company.model.model.form.DynamicFormModel
 internal fun FormCreateRoute(
     modifier: Modifier = Modifier,
     expoId: String,
-    informationImage: String,
     participantType: String,
     popUpBackStack: () -> Unit,
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
@@ -68,7 +67,7 @@ internal fun FormCreateRoute(
         formList = formState,
         popUpBackStack = popUpBackStack,
         addFormAtList = viewModel::addEmptyDynamicFormItem,
-        createForm = { viewModel.createForm(expoId, informationImage, participantType) },
+        createForm = { viewModel.createForm(expoId, participantType) },
         deleteForm = viewModel::removeDynamicFormItem,
         onFormDataChange = viewModel::updateDynamicFormItem
     )

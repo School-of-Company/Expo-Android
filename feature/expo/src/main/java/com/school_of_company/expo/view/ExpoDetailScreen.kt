@@ -65,15 +65,14 @@ internal fun ExpoDetailRoute(
     onProgramClick: (String) -> Unit,
     onMessageClick: (String, String) -> Unit,
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
-    navigationToFormCreate: (String, String, String) -> Unit,
-    navigationToFormModify: (String, String, String) -> Unit,
+    navigationToFormCreate: (String, String) -> Unit,
+    navigationToFormModify: (String, String) -> Unit,
     viewModel: ExpoViewModel = hiltViewModel(),
 ) {
     val getExpoInformationUiState by viewModel.getExpoInformationUiState.collectAsStateWithLifecycle()
     val getTrainingProgramUiState by viewModel.getTrainingProgramListUiState.collectAsStateWithLifecycle()
     val getStandardProgramUiState by viewModel.getStandardProgramListUiState.collectAsStateWithLifecycle()
     val getCoordinatesToAddressUiState by viewModel.getCoordinatesToAddressUiState.collectAsStateWithLifecycle()
-    val coverImage by viewModel.coverImage.collectAsStateWithLifecycle()
 
     LaunchedEffect(getCoordinatesToAddressUiState) {
         when (getCoordinatesToAddressUiState) {
@@ -106,14 +105,12 @@ internal fun ExpoDetailRoute(
         navigationToFormCreate = { type ->
             navigationToFormCreate(
                 id,
-                coverImage,
                 type,
             )
         },
         navigationToFormModify = { type ->
             navigationToFormModify(
                 id,
-                coverImage,
                 type,
             )
         },

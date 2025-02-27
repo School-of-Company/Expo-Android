@@ -1,11 +1,7 @@
 package com.school_of_company.form.viewModel
 
-import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
-import androidx.lifecycle.viewmodel.compose.saveable
 import com.school_of_company.common.result.Result
 import com.school_of_company.common.result.asResult
 import com.school_of_company.domain.usecase.form.CreateFormUseCase
@@ -24,18 +20,12 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@OptIn(SavedStateHandleSaveableApi::class)
 @HiltViewModel
 internal class FormViewModel @Inject constructor(
     private val createFormUseCase: CreateFormUseCase,
     private val getFormUseCase: GetFormUseCase,
     private val modifyFormUseCase: ModifyFormUseCase,
-    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private var _coverImage by savedStateHandle.saveable {
-        mutableStateOf("")
-    }
-
     private val _formState = MutableStateFlow<List<DynamicFormModel>>(listOf(DynamicFormModel.createDefault()))
     internal val formState = _formState.asStateFlow()
 
@@ -67,14 +57,12 @@ internal class FormViewModel @Inject constructor(
 
     internal fun createForm(
         expoId: String,
-        informationImage: String,
         participantType: String,
     ) = viewModelScope.launch {
         _formUiState.value = FormUiState.Loading
         createFormUseCase(
             expoId = expoId,
             body = FormRequestAndResponseModel(
-                informationImage = informationImage,
                 participantType = participantType,
                 dynamicForm = _formState.value
             ),
@@ -99,7 +87,6 @@ internal class FormViewModel @Inject constructor(
         modifyFormUseCase(
             expoId = expoId,
             body = FormRequestAndResponseModel(
-                informationImage = _coverImage,
                 participantType = participantType,
                 dynamicForm = _formState.value
             ),
@@ -131,7 +118,6 @@ internal class FormViewModel @Inject constructor(
                     is Result.Success -> with(it.data) {
                         _getFormUiState.value = GetFormUiState.Success
                         _formState.value = dynamicForm
-                        _coverImage = informationImage
                     }
                     is Result.Error -> _getFormUiState.value = GetFormUiState.Error(it.exception)
                 }

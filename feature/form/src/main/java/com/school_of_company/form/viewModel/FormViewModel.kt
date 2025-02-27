@@ -43,7 +43,7 @@ internal class FormViewModel @Inject constructor(
     internal val formUiState = _formUiState.asStateFlow()
 
     private val _getFormUiState = MutableStateFlow<GetFormUiState>(GetFormUiState.Loading)
-    internal val getFormUiState = _formUiState.asStateFlow()
+    internal val getFormUiState = _getFormUiState.asStateFlow()
 
     internal fun updateDynamicFormItem(index: Int, newItem: DynamicFormModel) {
         val currentList = _formState.value.toMutableList()

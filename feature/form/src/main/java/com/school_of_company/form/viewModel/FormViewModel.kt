@@ -111,9 +111,10 @@ internal class FormViewModel @Inject constructor(
         getFormUseCase(
             expoId = expoId,
             participantType = participantType,
-        ).asResult()
             .collectLatest {
                 when (it) {
+        )
+            .asResult()
                     is Result.Loading -> _getFormUiState.value = GetFormUiState.Loading
                     is Result.Success -> with(it.data) {
                         _getFormUiState.value = GetFormUiState.Success

@@ -53,7 +53,7 @@ fun NavGraphBuilder.formModifyScreen(
     popUpBackStack: () -> Unit,
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
 ) {
-    composable(route = "$formModifyRoute/{id}/{informationImage}/{participantType}") { backStackEntry ->
+    composable(route = "$formModifyRoute/{id}/{participantType}") { backStackEntry ->
         val id = backStackEntry.arguments?.getString("id") ?: ""
         val participantType = backStackEntry.arguments?.getString("participantType") ?: ""
 

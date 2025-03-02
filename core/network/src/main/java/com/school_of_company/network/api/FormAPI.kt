@@ -23,10 +23,10 @@ interface FormAPI {
         @Body body: FormRequestAndResponse
     )
 
-    @GET("/form/{form_id}")
+    @GET("/form/{expo_id}")
     suspend fun getForm(
-        @Path("form_id") expoId: String,
-        @Query("formType") participantType: String // TRAINEE, STANDARD
+        @Path("expo_id") expoId: String,
+        @Query("type") participantType: String // TRAINEE, STANDARD
     ): FormRequestAndResponse
 
     @DELETE("/form/{form_id}")

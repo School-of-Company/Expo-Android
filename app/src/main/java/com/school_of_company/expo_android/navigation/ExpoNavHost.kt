@@ -25,7 +25,9 @@ import com.school_of_company.expo_android.ui.ExpoAppState
 import com.school_of_company.expo_android.ui.navigateToHomeAndClearLogin
 import com.school_of_company.expo_android.ui.navigationPopUpToLogin
 import com.school_of_company.form.navigation.formCreateScreen
-import com.school_of_company.form.navigation.navigationToFormCreate
+import com.school_of_company.form.navigation.formModifyScreen
+import com.school_of_company.form.navigation.navigationToCreateForm
+import com.school_of_company.form.navigation.navigationToModifyForm
 import com.school_of_company.program.navigation.navigateQrScanner
 import com.school_of_company.program.navigation.qrScannerScreen
 import com.school_of_company.navigation.navigateToSignIn
@@ -118,7 +120,8 @@ fun ExpoNavHost(
                 navController.navigateToProgramDetailProgram(id)
             },
             onMessageClick = navController::navigateToSmsSendMessage,
-            navigationToFormCreate = navController::navigationToFormCreate,
+            navigationToFormCreate = navController::navigationToCreateForm,
+            navigationToFormModify = navController::navigationToModifyForm,
             onErrorToast = makeErrorToast,
         )
 
@@ -193,6 +196,11 @@ fun ExpoNavHost(
         )
 
         formCreateScreen(
+            popUpBackStack = navController::popBackStack,
+            onErrorToast = makeErrorToast,
+        )
+
+        formModifyScreen(
             popUpBackStack = navController::popBackStack,
             onErrorToast = makeErrorToast,
         )

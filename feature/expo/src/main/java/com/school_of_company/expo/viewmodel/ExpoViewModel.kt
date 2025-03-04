@@ -175,17 +175,6 @@ internal class ExpoViewModel @Inject constructor(
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), listOf())
 
-    val coverImage:StateFlow<String> = getExpoInformationUiState
-        .map { state ->
-            when(state) {
-                is GetExpoInformationUiState.Success -> {
-                    state.data.coverImage ?: ""
-                }
-                else -> ""
-            }
-        }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "")
-
     internal fun getExpoInformation(expoId: String) = viewModelScope.launch {
         getExpoInformationUseCase(expoId = expoId)
             .asResult()

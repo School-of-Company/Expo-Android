@@ -65,14 +65,14 @@ internal fun ExpoDetailRoute(
     onProgramClick: (String) -> Unit,
     onMessageClick: (String, String) -> Unit,
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
-    navigationToFormCreate: (String, String, String) -> Unit,
+    navigationToFormCreate: (String, String) -> Unit,
+    navigationToFormModify: (String, String) -> Unit,
     viewModel: ExpoViewModel = hiltViewModel(),
 ) {
     val getExpoInformationUiState by viewModel.getExpoInformationUiState.collectAsStateWithLifecycle()
     val getTrainingProgramUiState by viewModel.getTrainingProgramListUiState.collectAsStateWithLifecycle()
     val getStandardProgramUiState by viewModel.getStandardProgramListUiState.collectAsStateWithLifecycle()
     val getCoordinatesToAddressUiState by viewModel.getCoordinatesToAddressUiState.collectAsStateWithLifecycle()
-    val coverImage by viewModel.coverImage.collectAsStateWithLifecycle()
 
     LaunchedEffect(getCoordinatesToAddressUiState) {
         when (getCoordinatesToAddressUiState) {
@@ -105,7 +105,12 @@ internal fun ExpoDetailRoute(
         navigationToFormCreate = { type ->
             navigationToFormCreate(
                 id,
-                coverImage,
+                type,
+            )
+        },
+        navigationToFormModify = { type ->
+            navigationToFormModify(
+                id,
                 type,
             )
         },
@@ -133,6 +138,7 @@ private fun ExpoDetailScreen(
     onModifyClick: (String) -> Unit,
     onProgramClick: (String) -> Unit,
     navigationToFormCreate: (String) -> Unit,
+    navigationToFormModify: (String) -> Unit,
 ) {
     val (openDialog, isOpenDialog) = rememberSaveable { mutableStateOf(false) }
     val (openModifyDialog, isOpenModifyDialog) = rememberSaveable { mutableStateOf(false) }
@@ -526,11 +532,11 @@ private fun ExpoDetailScreen(
                 endButtonText = "연수자",
                 onStartClick = {
                     isOpenFormModifyDialog(false)
-                    // todo : Add Navigation TRAINEE Form Screen Logic
+                    navigationToFormModify(ParticipantType.STANDARD.name)
                 },
                 onEndClick = {
                     isOpenFormModifyDialog(false)
-                    // todo : Add Navigation STANDARD Form Screen Logic
+                    navigationToFormModify(ParticipantType.TRAINEE.name)
                 },
                 onDismissClick = { isOpenFormModifyDialog(false) }
             )
@@ -572,6 +578,7 @@ private fun HomeDetailScreenPreview() {
         onCheckClick = {},
         onModifyClick = {},
         onProgramClick = {},
-        navigationToFormCreate = { _ -> }
+        navigationToFormCreate = { _ -> },
+        navigationToFormModify = { _ -> }
     )
 }

@@ -38,7 +38,7 @@ import com.school_of_company.form.viewModel.uiState.FormUiState
 import com.school_of_company.model.model.form.DynamicFormModel
 
 @Composable
-internal fun FormCreateRoute(
+internal fun FormModifyRoute(
     modifier: Modifier = Modifier,
     expoId: String,
     participantType: String,
@@ -47,41 +47,53 @@ internal fun FormCreateRoute(
     viewModel: FormViewModel = hiltViewModel(),
 ) {
     val formState by viewModel.formState.collectAsStateWithLifecycle()
-    val formUiState by viewModel.formUiState.collectAsStateWithLifecycle()
+    val formActionUiState by viewModel.formUiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(formUiState) {
-        when (formUiState) {
+    LaunchedEffect(Unit) {
+        viewModel.getForm(
+            expoId = expoId,
+            participantType = participantType,
+        )
+    }
+
+    LaunchedEffect(formActionUiState) {
+        when (formActionUiState) {
             is FormUiState.Loading -> Unit
             is FormUiState.Success -> {
                 popUpBackStack()
-                onErrorToast(null, R.string.form_create_success)
+                onErrorToast(null, R.string.form_modify_success)
             }
-            is FormUiState.Error -> {
-                onErrorToast(null, R.string.form_create_fail)
-            }
+
+            is FormUiState.Error -> onErrorToast(null, R.string.form_modify_fail)
+
         }
     }
 
-    FormCreateScreen(
+    FormModifyScreen(
         modifier = modifier,
         formList = formState,
         popUpBackStack = popUpBackStack,
         addFormAtList = viewModel::addEmptyDynamicFormItem,
-        createForm = { viewModel.createForm(expoId, participantType) },
+        submitForm = {
+            viewModel.modifyForm(
+                expoId,
+                participantType,
+            )
+        },
         deleteForm = viewModel::removeDynamicFormItem,
         onFormDataChange = viewModel::updateDynamicFormItem
     )
 }
 
 @Composable
-private fun FormCreateScreen(
+private fun FormModifyScreen(
     modifier: Modifier = Modifier,
     formList: List<DynamicFormModel>,
     focusManager: FocusManager = LocalFocusManager.current,
     scrollState: ScrollState = rememberScrollState(),
     popUpBackStack: () -> Unit,
     addFormAtList: () -> Unit,
-    createForm: () -> Unit,
+    submitForm: () -> Unit,
     deleteForm: (Int) -> Unit,
     onFormDataChange: (Int, DynamicFormModel) -> Unit,
 ) {
@@ -107,7 +119,7 @@ private fun FormCreateScreen(
                         modifier = Modifier.expoClickable(onClick = popUpBackStack)
                     )
                 },
-                betweenText = "신정차 폼",
+                betweenText = "폼 수정하기",
                 modifier = Modifier.padding(vertical = 16.dp),
             )
 
@@ -134,7 +146,7 @@ private fun FormCreateScreen(
             ExpoButton(
                 text = "다음",
                 color = colors.main,
-                onClick = createForm,
+                onClick = submitForm,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(46.dp)
@@ -146,12 +158,8 @@ private fun FormCreateScreen(
 
 @Preview
 @Composable
-private fun FormCreateScreenPreview() {
-    FormCreateScreen(
-        addFormAtList = { },
-        onFormDataChange = { _, _ -> },
-        createForm = {},
-        deleteForm = { _ -> },
+private fun FormModifyScreenPreview() {
+    FormModifyScreen(
         formList = listOf(
             DynamicFormModel(
                 title = "제목",
@@ -169,5 +177,9 @@ private fun FormCreateScreenPreview() {
             ),
         ),
         popUpBackStack = {},
+        addFormAtList = { },
+        submitForm = {},
+        deleteForm = { _ -> },
+        onFormDataChange = { _, _ -> },
     )
 }

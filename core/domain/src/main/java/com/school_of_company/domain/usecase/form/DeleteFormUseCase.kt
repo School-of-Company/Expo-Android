@@ -6,7 +6,7 @@ import javax.inject.Inject
 class DeleteFormUseCase @Inject constructor(
     private val repository: FormRepository
 ) {
-    operator fun invoke(formId: Long) = runCatching {
-        repository.deleteForm(formId = formId)
+    operator fun invoke(expoId: String) = runCatching {
+        repository.deleteForm(expoId = expoId)
     }
 }

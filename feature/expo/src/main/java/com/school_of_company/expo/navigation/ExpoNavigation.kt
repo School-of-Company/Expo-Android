@@ -70,7 +70,8 @@ fun NavGraphBuilder.expoDetailScreen(
     onModifyClick: (String) -> Unit,
     onProgramClick: (String) -> Unit,
     onMessageClick: (String, String) -> Unit,
-    navigationToFormCreate: (String, String, String) -> Unit,
+    navigationToFormCreate: (String, String) -> Unit,
+    navigationToFormModify: (String, String) -> Unit,
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
 ) {
     composable(route = "$expoDetailRoute/{id}") { backStackEntry ->
@@ -83,6 +84,7 @@ fun NavGraphBuilder.expoDetailScreen(
             onProgramClick = onProgramClick,
             onMessageClick = onMessageClick,
             navigationToFormCreate = navigationToFormCreate,
+            navigationToFormModify = navigationToFormModify,
             onErrorToast = onErrorToast,
         )
     }

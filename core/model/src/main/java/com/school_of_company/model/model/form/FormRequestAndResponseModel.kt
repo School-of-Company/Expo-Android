@@ -1,9 +1,8 @@
 package com.school_of_company.model.model.form
 
 data class FormRequestAndResponseModel(
-    val informationImage: String,
     val participantType: String, // TRAINEE, STANDARD
-    val dynamicForm: List<DynamicFormModel>
+    val dynamicForm: List<DynamicFormModel>,
 )
 
 data class DynamicFormModel(
@@ -12,4 +11,14 @@ data class DynamicFormModel(
     val itemList: List<String>,
     val requiredStatus: Boolean,
     val otherJson: Boolean,
-)
+) {
+    companion object {
+        fun createDefault(): DynamicFormModel = DynamicFormModel(
+            title = "",
+            formType = "SENTENCE",
+            itemList = listOf(""),
+            requiredStatus = false,
+            otherJson = false,
+        )
+    }
+}

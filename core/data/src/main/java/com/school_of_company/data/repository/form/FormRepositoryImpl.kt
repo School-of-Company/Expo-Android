@@ -18,23 +18,23 @@ class FormRepositoryImpl @Inject constructor(
         )
     }
 
-    override fun modifyForm(formId: Long, body: FormRequestAndResponseModel): Flow<Unit> {
+    override fun modifyForm(expoId: String, body: FormRequestAndResponseModel): Flow<Unit> {
         return dataSource.modifyForm(
-            formId = formId,
+            expoId = expoId,
             body = body.toModel()
         )
     }
 
-    override fun getForm(formId: Long, formType: String): Flow<FormRequestAndResponseModel> {
+    override fun getForm(expoId: String, participantType: String): Flow<FormRequestAndResponseModel> {
         return dataSource.getForm(
-            formId = formId,
-            formType = formType
+            expoId = expoId,
+            participantType = participantType
         ).transform { response ->
             emit(response.toModel())
         }
     }
 
-    override fun deleteForm(formId: Long): Flow<Unit> {
-        return dataSource.deleteForm(formId = formId)
+    override fun deleteForm(expoId: String): Flow<Unit> {
+        return dataSource.deleteForm(expoId = expoId)
     }
 }

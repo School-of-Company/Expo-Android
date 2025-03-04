@@ -15,18 +15,18 @@ class FormDataSourceImpl @Inject constructor(
             body = body
         ) }
 
-    override fun modifyForm(formId: Long, body: FormRequestAndResponse): Flow<Unit> =
+    override fun modifyForm(expoId: String, body: FormRequestAndResponse): Flow<Unit> =
         performApiRequest { service.modifyForm(
-            formId = formId,
+            expoId = expoId,
             body = body
         ) }
 
-    override fun getForm(formId: Long, formType: String): Flow<FormRequestAndResponse> =
+    override fun getForm(expoId: String, participantType: String): Flow<FormRequestAndResponse> =
         performApiRequest { service.getForm(
-            formId = formId,
-            formType = formType
+            expoId = expoId,
+            participantType = participantType
         ) }
 
-    override fun deleteForm(formId: Long): Flow<Unit> =
-        performApiRequest { service.deleteForm(formId = formId) }
+    override fun deleteForm(expoId: String): Flow<Unit> =
+        performApiRequest { service.deleteForm(expoId = expoId) }
 }

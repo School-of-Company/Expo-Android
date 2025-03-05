@@ -18,7 +18,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -74,7 +74,7 @@ internal fun SignUpRoute(
     val isCertificationCodeError by viewModel.isCertificationCodeValid.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
-    DisposableEffect(signUpUiState) {
+    LaunchedEffect(signUpUiState) {
         when (signUpUiState) {
             is SignUpUiState.Loading -> Unit
             is SignUpUiState.Success -> {
@@ -109,7 +109,6 @@ internal fun SignUpRoute(
                 )
             }
         }
-        onDispose { viewModel.initSignUp() }
     }
 
     SignUpScreen(

@@ -112,10 +112,6 @@ internal class SignUpViewModel @Inject constructor(
         _isCertificationResent.value = value
     }
 
-    internal fun initSignUp() {
-        _signUpUiState.value = SignUpUiState.Loading
-    }
-
     internal fun signUp(body: AdminSignUpRequestParam) = viewModelScope.launch {
         setError(false)
         setEmailValidError(false)

@@ -236,7 +236,7 @@ private fun SignInScreen(
                     Text(
                         text = stringResource(id = R.string.sign_out_bar),
                         style = typography.captionRegular2,
-                        color = colors.gray500,
+                        color = colors.main,
                         fontWeight = FontWeight.Normal,
                         modifier = modifier.expoClickable { onSignUpClick() }
                     )

@@ -43,12 +43,14 @@
 
     <string name="expection_saveToken">토큰이 저장되지 않았습니다.</string>
     <string name="expection_signIn">로그인에 실패했습니다.</string>
-    <string name="expection_not_found">서버 관리자에서 문의해주세요..</string>
+    <string name="expection_server_error">서버 관리자에서 문의해주세요..</string>
     <string name="expection_id_not_valid">아이디가 올바르지 않습니다.</string>
     <string name="expection_password_valid">비밀번호가 올바르지 않습니다.</string>
     <string name="expection_password_validdd">비밀번호가 유효하지 않습니다.</string>
     <string name="expection_email_validdddd">이메일이 유효하지 않습니다.</string>
     <string name="expection_bad_request">잘못된 요청입니다.</string>
+    <string name="exception_forbidden">회원가입 수락이 보류 중입니다.</string>
+    <string name="expeciton_not_found">회원 정보를 찾지 못했습니다.</string>
 
     <string name="main_string">EXPO</string>
     <string name="admin_sign_in">관리자 로그인</string>

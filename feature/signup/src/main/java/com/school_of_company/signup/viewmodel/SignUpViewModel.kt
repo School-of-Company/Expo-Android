@@ -3,7 +3,6 @@ package com.school_of_company.signup.viewmodel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.school_of_company.common.network.errorHandling
 import com.school_of_company.common.regex.checkEmailRegex
 import com.school_of_company.common.regex.checkPasswordRegex
 import com.school_of_company.domain.usecase.auth.AdminSignUpRequestUseCase
@@ -144,16 +143,10 @@ internal class SignUpViewModel @Inject constructor(
                     .onSuccess {
                         it.catch { remoteError ->
                             _signUpUiState.value = SignUpUiState.Error(remoteError)
-                            remoteError.errorHandling {
-                                conflictAction = { _signUpUiState.value = SignUpUiState.DuplicateAccount }
-                            }
                         }.collect { _signUpUiState.value = SignUpUiState.Success }
                     }
                     .onFailure { error ->
                         _signUpUiState.value = SignUpUiState.Error(error)
-                        error.errorHandling {
-                            conflictAction = { _signUpUiState.value = SignUpUiState.DuplicateAccount }
-                        }
                     }
             }
         }

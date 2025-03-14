@@ -10,9 +10,5 @@ import kotlinx.coroutines.flow.*
  * @return API 요청 결과를 방출하는 Flow
  */
 internal inline fun <reified T> performApiRequest(crossinline apiCall: suspend () -> T): Flow<T> = flow {
-    emit(
-        ExpoApiHandler<T>()
-            .httpRequest { apiCall() }
-            .sendRequest()
-    )
+    emit(apiCall())
 }.flowOn(Dispatchers.IO)

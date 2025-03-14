@@ -41,8 +41,9 @@ jobs:
       - name: Create LOCAL_PROPERTIES
         run: echo '${{ secrets.LOCAL_PROPERTIES }}' > ./local.properties
 
-      - name: Build with Gradle (without tests)
-        run: ./gradlew build -x test
+      - name: Build with Gradle (incremental)
+        run: ./gradlew assembleDebug --no-daemon
+
 
       - name: Expo-Android CI Discord Notification
         uses: sarisia/actions-status-discord@v1

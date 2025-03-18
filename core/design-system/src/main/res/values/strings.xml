@@ -48,6 +48,7 @@
     <string name="expection_password_valid">비밀번호가 올바르지 않습니다.</string>
     <string name="expection_password_validdd">비밀번호가 유효하지 않습니다.</string>
     <string name="expection_email_validdddd">이메일이 유효하지 않습니다.</string>
+    <string name="expection_sms_valid">전화번호를 인증하지 않았습니다.</string>
     <string name="expection_bad_request">잘못된 요청입니다.</string>
     <string name="exception_forbidden">회원가입 수락이 보류 중입니다.</string>
     <string name="expeciton_not_found">회원 정보를 찾지 못했습니다.</string>

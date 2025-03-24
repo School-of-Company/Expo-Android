@@ -39,7 +39,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.school_of_company.design_system.R
 import com.school_of_company.design_system.component.button.ExpoStateButton
-import com.school_of_company.design_system.component.button.TimeExpoStateButton
 import com.school_of_company.design_system.component.button.state.ButtonState
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.component.modifier.padding.paddingHorizontal
@@ -50,12 +49,12 @@ import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.model.param.auth.AdminSignUpRequestParam
 import com.school_of_company.model.param.sms.SmsSignUpCertificationNumberSendRequestParam
+import com.school_of_company.signup.view.component.TimeExpoStateButton
 import com.school_of_company.signup.viewmodel.SignUpViewModel
 import com.school_of_company.signup.viewmodel.uistate.SignUpUiState
 import com.school_of_company.signup.viewmodel.uistate.SmsSignUpCertificationCodeUiState
 import com.school_of_company.signup.viewmodel.uistate.SmsSignUpCertificationSendCodeUiState
 import com.school_of_company.ui.toast.makeToast
-import kotlinx.coroutines.delay
 
 @Composable
 internal fun SignUpRoute(
@@ -377,7 +376,7 @@ private fun SignUpScreen(
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                     )
 
-                    if (isSuccess|| !isFirstAttempt) {
+                    if (isSuccess || !isFirstAttempt) {
                         TimeExpoStateButton(
                             modifier = Modifier.fillMaxWidth(),
                             text = "재발송"

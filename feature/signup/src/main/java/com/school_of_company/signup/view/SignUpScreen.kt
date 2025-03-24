@@ -39,6 +39,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.school_of_company.design_system.R
 import com.school_of_company.design_system.component.button.ExpoStateButton
+import com.school_of_company.design_system.component.button.TimeExpoStateButton
 import com.school_of_company.design_system.component.button.state.ButtonState
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.component.modifier.padding.paddingHorizontal
@@ -66,7 +67,7 @@ internal fun SignUpRoute(
 ) {
     val signUpUiState by viewModel.signUpUiState.collectAsStateWithLifecycle()
     val name by viewModel.name.collectAsStateWithLifecycle()
-    val SmsSignUpCertificationSendCodeUiState by viewModel.smsSignUpCertificationSendCodeUiState.collectAsStateWithLifecycle()
+    val smsSignUpCertificationSendCodeUiState by viewModel.smsSignUpCertificationSendCodeUiState.collectAsStateWithLifecycle()
     val nickname by viewModel.nickname.collectAsStateWithLifecycle()
     val smsSignUpCertificationCodeUiState by viewModel.smsSignUpCertificationCodeUiState.collectAsStateWithLifecycle()
     val email by viewModel.email.collectAsStateWithLifecycle()
@@ -187,7 +188,7 @@ internal fun SignUpRoute(
         onRePasswordChange = viewModel::onRePasswordChange,
         onPhoneNumberChange = viewModel::onPhoneNumberChange,
         onCertificationNumberChange = viewModel::onCertificationNumberChange,
-        smsSignUpCertificationSendCodeUiState = SmsSignUpCertificationSendCodeUiState
+        smsSignUpCertificationSendCodeUiState = smsSignUpCertificationSendCodeUiState
     )
 }
 
@@ -222,17 +223,9 @@ private fun SignUpScreen(
 ) {
     var isPasswordVisible by remember { mutableStateOf(false) }
     var isCheckPasswordVisible by remember { mutableStateOf(false) }
-    var isEnabled by remember { mutableStateOf(false) }
-    var remainingAttempts by remember { mutableStateOf(5) }
     var isFirstAttempt by remember { mutableStateOf(true) }
+    val isSuccess = smsSignUpCertificationSendCodeUiState is SmsSignUpCertificationSendCodeUiState.Success
 
-    LaunchedEffect(remainingAttempts) {
-        if (remainingAttempts > 0) {
-            isEnabled = false
-            delay(300_000L)
-            isEnabled = true
-        }
-    }
 
     ExpoAndroidTheme { colors, typography ->
 
@@ -384,17 +377,12 @@ private fun SignUpScreen(
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                     )
 
-                    if (smsSignUpCertificationSendCodeUiState is SmsSignUpCertificationSendCodeUiState.Success || !isFirstAttempt) {
-                        ExpoStateButton(
+                    if (isSuccess|| !isFirstAttempt) {
+                        TimeExpoStateButton(
                             modifier = Modifier.fillMaxWidth(),
-                            text =  "재발송",
-                            state = if (isEnabled && remainingAttempts > 0) ButtonState.Enable else ButtonState.Disable
+                            text = "재발송"
                         ) {
-                            if (isEnabled && remainingAttempts > 0) {
-                                sendCertificationCodeCallBack()
-                                isEnabled = false
-                                remainingAttempts--
-                            }
+                            sendCertificationCodeCallBack()
                         }
                     }else{
                         ExpoStateButton(

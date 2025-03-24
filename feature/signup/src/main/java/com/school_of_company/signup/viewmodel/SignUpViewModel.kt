@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.school_of_company.common.regex.checkEmailRegex
 import com.school_of_company.common.regex.checkPasswordRegex
+import com.school_of_company.common.result.asResult
 import com.school_of_company.domain.usecase.auth.AdminSignUpRequestUseCase
 import com.school_of_company.domain.usecase.sms.SmsSignUpCertificationNumberCertificationRequestUseCase
 import com.school_of_company.domain.usecase.sms.SmsSignUpCertificationNumberSendRequestUseCase
@@ -18,7 +19,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -83,12 +86,24 @@ internal class SignUpViewModel @Inject constructor(
     private val _isCertificationResent = MutableStateFlow(false)
     internal val isCertificationResent: StateFlow<Boolean> = _isCertificationResent.asStateFlow()
 
+    private var _isUnauthorizedError = MutableStateFlow(false)
+
+    private var _isBadRequestError = MutableStateFlow(false)
+
     private fun setCodeError(value: Boolean) {
         _isCodeError.value = value
     }
 
     internal fun setError(value: Boolean) {
         _isError.value = value
+    }
+
+    internal fun setUnauthorizedError(value: Boolean) {
+        _isUnauthorizedError.value = value
+    }
+
+    internal fun setBadRequestError(value: Boolean) {
+        _isBadRequestError.value = value
     }
 
     internal fun setEmailValidError(value: Boolean) {
@@ -159,14 +174,41 @@ internal class SignUpViewModel @Inject constructor(
                 phoneNumber = phoneNumber,
                 code = certificationNumber
             )
-                .onSuccess {
-                    it.catch { remoteError ->
-                        _smsSignUpCertificationCodeUiState.value = SmsSignUpCertificationCodeUiState.Error(remoteError)
-                    }.collect { _smsSignUpCertificationCodeUiState.value = SmsSignUpCertificationCodeUiState.Success }
-                }
-                .onFailure { error ->
-                    _smsSignUpCertificationCodeUiState.value = SmsSignUpCertificationCodeUiState.Error(error)
-                    setCodeError(true)
+                .asResult()
+                .collectLatest {
+                    result ->
+                    when (result) {
+                        is com.school_of_company.common.result.Result.Success -> {
+                            _smsSignUpCertificationCodeUiState.value = SmsSignUpCertificationCodeUiState.Success
+                        }
+                        is com.school_of_company.common.result.Result.Loading -> {
+                            _smsSignUpCertificationCodeUiState.value = SmsSignUpCertificationCodeUiState.Loading
+                        }
+                        is com.school_of_company.common.result.Result.Error -> {
+                            val exception = result.exception
+                            _smsSignUpCertificationCodeUiState.value = when {
+                                exception is HttpException -> when (exception.code()) {
+                                    401 -> {
+                                        setUnauthorizedError(true)
+                                        SmsSignUpCertificationCodeUiState.Error(exception, com.school_of_company.design_system.R.string.valid_certification, SmsSignUpCertificationCodeUiState.ErrorType.Unauthorized)}
+
+                                    404 ->{
+                                        setBadRequestError(true)
+                                        SmsSignUpCertificationCodeUiState.Error(exception, com.school_of_company.design_system.R.string.sms_not_certification, SmsSignUpCertificationCodeUiState.ErrorType.BAD_REQUEST)
+                                    }
+
+                                    else -> {
+                                        setError(true)
+                                        SmsSignUpCertificationCodeUiState.Error(exception, com.school_of_company.design_system.R.string.fail_certification, SmsSignUpCertificationCodeUiState.ErrorType.GENERAL)
+                                    }
+                                }
+                                else -> {
+                                    setError(true)
+                                    SmsSignUpCertificationCodeUiState.Error(exception, com.school_of_company.design_system.R.string.fail_certification, SmsSignUpCertificationCodeUiState.ErrorType.GENERAL)
+                                }
+                            }
+                        }
+                        }
                 }
         }
 

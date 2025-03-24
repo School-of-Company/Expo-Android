@@ -39,7 +39,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.school_of_company.design_system.R
 import com.school_of_company.design_system.component.button.ExpoStateButton
-import com.school_of_company.design_system.component.button.TimeExpoStateButton
 import com.school_of_company.design_system.component.button.state.ButtonState
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.component.modifier.padding.paddingHorizontal
@@ -386,7 +385,7 @@ private fun SignUpScreen(
                     )
 
                     if (smsSignUpCertificationSendCodeUiState is SmsSignUpCertificationSendCodeUiState.Success || !isFirstAttempt) {
-                        TimeExpoStateButton(
+                        ExpoStateButton(
                             modifier = Modifier.fillMaxWidth(),
                             text =  "재발송",
                             state = if (isEnabled && remainingAttempts > 0) ButtonState.Enable else ButtonState.Disable

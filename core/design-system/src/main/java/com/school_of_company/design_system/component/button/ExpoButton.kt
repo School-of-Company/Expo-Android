@@ -61,60 +61,6 @@ fun ExpoButton(
         }
     }
 }
-@Composable
-fun TimeExpoStateButton(
-    modifier: Modifier = Modifier,
-    text: String,
-    onClick: () -> Unit,
-) {
-    ExpoAndroidTheme { colors, typography ->
-
-        var isEnabled by remember { mutableStateOf(true) }
-        var remainingAttempts by remember { mutableStateOf(5) }
-
-        LaunchedEffect(remainingAttempts) {
-            if (remainingAttempts > 0) {
-                isEnabled = false
-                delay(300_000L)
-                isEnabled = true
-            }
-        }
-        val enabledState: (buttonState: ButtonState) -> Boolean = {
-            when (it) {
-                ButtonState.Enable -> true
-                ButtonState.Disable -> false
-            }
-        }
-
-        val interactionSource = remember { MutableInteractionSource() }
-
-        Button(
-            modifier = modifier,
-            interactionSource = interactionSource,
-            enabled = if (isEnabled && remainingAttempts > 0) enabledState(ButtonState.Enable) else enabledState(ButtonState.Disable),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = colors.main,
-                contentColor = colors.white,
-                disabledContainerColor = colors.gray200,
-                disabledContentColor = colors.gray400
-            ),
-            contentPadding = PaddingValues(vertical = 16.dp),
-            shape = RoundedCornerShape(12.dp),
-            onClick ={
-                if (isEnabled && remainingAttempts > 0) {
-                    isEnabled = false
-                    remainingAttempts--
-                }
-                onClick()
-            }
-        ) {
-            Text(
-                text = text,
-                style = typography.bodyBold2
-            )
-        }
-    }
-}
 
 @Composable
 fun ExpoStateButton(

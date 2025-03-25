@@ -27,6 +27,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextLayoutResult
@@ -226,18 +228,37 @@ private fun ExpoDetailScreen(
                                 fontWeight = FontWeight(600),
                             )
 
-                            Text(
-                                text = getExpoInformationUiState.data.description,
-                                style = typography.bodyRegular2,
-                                color = colors.gray400,
-                                overflow = TextOverflow.Ellipsis,
-                                maxLines = maxLines,
-                                onTextLayout = { textLayoutResult: TextLayoutResult ->
-                                    if (textLayoutResult.lineCount > 4) {
-                                        if (textLayoutResult.isLineEllipsized(4)) showReadMoreButtonState = true
+                            Box(modifier = Modifier.fillMaxWidth()) {
+                                Text(
+                                    text = getExpoInformationUiState.data.description,
+                                    style = typography.bodyRegular2,
+                                    color = colors.gray400,
+                                    overflow = TextOverflow.Ellipsis,
+                                    maxLines = maxLines,
+                                    onTextLayout = { textLayoutResult: TextLayoutResult ->
+                                        if (textLayoutResult.lineCount > 4) {
+                                            if (textLayoutResult.isLineEllipsized(4)) showReadMoreButtonState =
+                                                true
+                                        }
                                     }
+                                )
+
+                                if (!expandedState) {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(40.dp)
+                                            .align(Alignment.BottomCenter)
+                                            .background(
+                                                brush = Brush.verticalGradient(
+                                                    colors = listOf(Color.Transparent, colors.white),
+                                                    startY = 0f,
+                                                    endY = 120f
+                                                )
+                                            )
+                                    )
                                 }
-                            )
+                            }
 
                             if (showReadMoreButtonState) {
                                 Text(

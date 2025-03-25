@@ -8,9 +8,10 @@ import javax.inject.Inject
 class SmsSignUpCertificationNumberCertificationRequestUseCase @Inject constructor(
     private val repository: SmsRepository
 ) {
-    operator fun invoke(phoneNumber: String, code: String): Flow<Unit> =
+    operator fun invoke(phoneNumber: String, code: String) = runCatching {
         repository.smsSignUpCertificationNumberCertification(
             phoneNumber = phoneNumber,
             code = code
         )
+    }
 }

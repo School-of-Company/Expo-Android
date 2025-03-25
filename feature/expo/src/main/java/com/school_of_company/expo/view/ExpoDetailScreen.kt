@@ -151,10 +151,10 @@ private fun ExpoDetailScreen(
     val (openFormModifyDialog, isOpenFormModifyDialog) = rememberSaveable { mutableStateOf(false) }
     val (openFormCreateDialog, isOpenFormCreateDialog) = rememberSaveable { mutableStateOf(false) }
 
-    var expandedState by rememberSaveable { mutableStateOf(false) }
+    var expandedExpoIntroductionTextState by rememberSaveable { mutableStateOf(false) }
     var showReadMoreButtonState by rememberSaveable { mutableStateOf(false) }
 
-    val maxLines = if (expandedState) 100 else 5
+    val maxLines = if (expandedExpoIntroductionTextState) 100 else 5
 
     ExpoAndroidTheme { colors, typography ->
         when {
@@ -243,7 +243,7 @@ private fun ExpoDetailScreen(
                                     }
                                 )
 
-                                if (!expandedState) {
+                                if (!expandedExpoIntroductionTextState) {
                                     Box(
                                         modifier = Modifier
                                             .fillMaxWidth()
@@ -262,10 +262,10 @@ private fun ExpoDetailScreen(
 
                             if (showReadMoreButtonState) {
                                 Text(
-                                    text = if (expandedState) "접기" else "더보기",
+                                    text = if (expandedExpoIntroductionTextState) "접기" else "더보기",
                                     color = colors.gray200,
                                     modifier = Modifier.expoClickable {
-                                        expandedState = !expandedState
+                                        expandedExpoIntroductionTextState = !expandedExpoIntroductionTextState
                                     },
                                     style = typography.bodyRegular2
                                 )

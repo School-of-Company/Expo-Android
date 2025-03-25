@@ -176,42 +176,52 @@ internal class SignUpViewModel @Inject constructor(
                 phoneNumber = phoneNumber,
                 code = certificationNumber
             )
-                .asResult()
-                .collectLatest {
-                    result ->
-                    when (result) {
-                        is Result.Success -> {
-                            _smsSignUpCertificationCodeUiState.value = SmsSignUpCertificationCodeUiState.Success
-                        }
-                        is Result.Loading -> {
-                            _smsSignUpCertificationCodeUiState.value = SmsSignUpCertificationCodeUiState.Loading
-                        }
-                        is Result.Error -> {
-                            val exception = result.exception
-                            _smsSignUpCertificationCodeUiState.value = when {
-                                exception is HttpException -> when (exception.code()) {
-                                    401 -> {
-                                        setUnauthorizedError(true)
-                                        SmsSignUpCertificationCodeUiState.Error(exception, R.string.valid_certification, SmsSignUpCertificationCodeUiState.ErrorType.Unauthorized)}
-
-                                    404 ->{
-                                        setBadRequestError(true)
-                                        SmsSignUpCertificationCodeUiState.Error(exception, R.string.sms_not_certification, SmsSignUpCertificationCodeUiState.ErrorType.BAD_REQUEST)
-                                    }
-
-                                    else -> {
-                                        setError(true)
-                                        SmsSignUpCertificationCodeUiState.Error(exception, R.string.fail_certification, SmsSignUpCertificationCodeUiState.ErrorType.GENERAL)
-                                    }
+                .onSuccess {
+                    it.catch { exception ->
+                        _smsSignUpCertificationCodeUiState.value = when {
+                            exception is HttpException -> when (exception.code()) {
+                                401 -> {
+                                    setUnauthorizedError(true)
+                                    SmsSignUpCertificationCodeUiState.Error(
+                                        exception,
+                                        R.string.valid_certification,
+                                        SmsSignUpCertificationCodeUiState.ErrorType.Unauthorized
+                                    )
                                 }
-
+                                404 -> {
+                                    setBadRequestError(true)
+                                    SmsSignUpCertificationCodeUiState.Error(
+                                        exception,
+                                        R.string.sms_not_certification,
+                                        SmsSignUpCertificationCodeUiState.ErrorType.BAD_REQUEST
+                                    )
+                                }
                                 else -> {
                                     setError(true)
-                                    SmsSignUpCertificationCodeUiState.Error(exception, R.string.fail_certification, SmsSignUpCertificationCodeUiState.ErrorType.GENERAL)
+                                    SmsSignUpCertificationCodeUiState.Error(
+                                        exception,
+                                        R.string.fail_certification,
+                                        SmsSignUpCertificationCodeUiState.ErrorType.GENERAL
+                                    )
                                 }
                             }
+                            else -> {
+                                setError(true)
+                                SmsSignUpCertificationCodeUiState.Error(
+                                    exception,
+                                    R.string.fail_certification,
+                                    SmsSignUpCertificationCodeUiState.ErrorType.GENERAL
+                                )
+                            }
                         }
-                        }
+                    }.collect { _smsSignUpCertificationCodeUiState.value = SmsSignUpCertificationCodeUiState.Success }
+                }
+                .onFailure { error ->
+                    _smsSignUpCertificationCodeUiState.value = SmsSignUpCertificationCodeUiState.Error(
+                        error,
+                        R.string.fail_certification,
+                        SmsSignUpCertificationCodeUiState.ErrorType.GENERAL
+                    )
                 }
         }
 

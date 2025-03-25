@@ -28,7 +28,7 @@ fun TimeExpoStateButton(
 
         var isEnabled by remember { mutableStateOf(true) }
         var remainingAttempts by remember { mutableStateOf(5) }
-        var timerStarted by remember { mutableStateOf(false) }
+        var timerStarted by remember { mutableStateOf(true) }
 
         LaunchedEffect(timerStarted) {
             if (timerStarted) {
@@ -63,7 +63,7 @@ fun TimeExpoStateButton(
                 if (isEnabled && remainingAttempts > 0) {
                     isEnabled = false
                     remainingAttempts--
-                    timerStarted = true
+                    timerStarted = false
                 }
                 onClick()
             }

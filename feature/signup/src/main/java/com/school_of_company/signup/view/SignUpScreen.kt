@@ -376,17 +376,6 @@ private fun SignUpScreen(
                         onValueChange = onPhoneNumberChange,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                     )
-                    if (isFail || !isFirstAttempt){
-                        ExpoStateButton(
-                            text = "인증번호" ,
-                            state = if (phoneNumber.isNotBlank()) ButtonState.Enable else ButtonState.Disable,
-                            modifier = Modifier.fillMaxWidth()
-
-                        ) {
-                            sendCertificationCodeCallBack()
-                            isFirstAttempt = false
-                        }
-                    }
 
                     if (isSuccess || !isFirstAttempt) {
                         TimeExpoStateButton(

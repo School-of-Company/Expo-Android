@@ -241,7 +241,7 @@ private fun ExpoDetailScreen(
 
                             if (showReadMoreButtonState) {
                                 Text(
-                                    text = if (expandedState) "줄이기" else "더보기",
+                                    text = if (expandedState) "접기" else "더보기",
                                     color = colors.gray200,
                                     modifier = Modifier.expoClickable {
                                         expandedState = !expandedState

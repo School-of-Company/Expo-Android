@@ -224,6 +224,7 @@ private fun SignUpScreen(
     var isCheckPasswordVisible by remember { mutableStateOf(false) }
     var isFirstAttempt by remember { mutableStateOf(true) }
     val isSuccess = smsSignUpCertificationSendCodeUiState is SmsSignUpCertificationSendCodeUiState.Success
+    val isFail = smsSignUpCertificationSendCodeUiState is SmsSignUpCertificationSendCodeUiState.Error
 
 
     ExpoAndroidTheme { colors, typography ->
@@ -375,6 +376,17 @@ private fun SignUpScreen(
                         onValueChange = onPhoneNumberChange,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                     )
+                    if (isFail || !isFirstAttempt){
+                        ExpoStateButton(
+                            text = "인증번호" ,
+                            state = if (phoneNumber.isNotBlank()) ButtonState.Enable else ButtonState.Disable,
+                            modifier = Modifier.fillMaxWidth()
+
+                        ) {
+                            sendCertificationCodeCallBack()
+                            isFirstAttempt = false
+                        }
+                    }
 
                     if (isSuccess || !isFirstAttempt) {
                         TimeExpoStateButton(
@@ -383,7 +395,7 @@ private fun SignUpScreen(
                         ) {
                             sendCertificationCodeCallBack()
                         }
-                    }else{
+                    } else {
                         ExpoStateButton(
                             text = "인증번호",
                             state = if (phoneNumber.isNotBlank()) ButtonState.Enable else ButtonState.Disable,

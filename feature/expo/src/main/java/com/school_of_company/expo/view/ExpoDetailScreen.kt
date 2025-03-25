@@ -23,12 +23,17 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -54,6 +59,7 @@ import com.school_of_company.expo.viewmodel.uistate.GetTrainingProgramListUiStat
 import com.school_of_company.model.enum.Authority
 import com.school_of_company.model.enum.ParticipantType
 import com.school_of_company.ui.util.formatServerDate
+import kotlin.math.max
 
 @Composable
 internal fun ExpoDetailRoute(
@@ -145,6 +151,11 @@ private fun ExpoDetailScreen(
     val (openFormModifyDialog, isOpenFormModifyDialog) = rememberSaveable { mutableStateOf(false) }
     val (openFormCreateDialog, isOpenFormCreateDialog) = rememberSaveable { mutableStateOf(false) }
 
+    var expandedExpoIntroductionTextState by rememberSaveable { mutableStateOf(false) }
+    var showReadMoreButtonState by rememberSaveable { mutableStateOf(false) }
+
+    val maxLines = if (expandedExpoIntroductionTextState) 100 else 5
+
     ExpoAndroidTheme { colors, typography ->
         when {
 
@@ -217,11 +228,50 @@ private fun ExpoDetailScreen(
                                 fontWeight = FontWeight(600),
                             )
 
-                            Text(
-                                text = getExpoInformationUiState.data.description,
-                                style = typography.bodyRegular2,
-                                color = colors.gray400
-                            )
+                            Box(modifier = Modifier.fillMaxWidth()) {
+                                Text(
+                                    text = getExpoInformationUiState.data.description,
+                                    style = typography.bodyRegular2,
+                                    color = colors.gray400,
+                                    overflow = TextOverflow.Ellipsis,
+                                    maxLines = maxLines,
+                                    onTextLayout = { textLayoutResult: TextLayoutResult ->
+                                        if (textLayoutResult.lineCount > 4) {
+                                            if (textLayoutResult.isLineEllipsized(4)) showReadMoreButtonState =
+                                                true
+                                        }
+                                    }
+                                )
+
+                                if (!expandedExpoIntroductionTextState) {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(40.dp)
+                                            .align(Alignment.BottomCenter)
+                                            .background(
+                                                brush = Brush.verticalGradient(
+                                                    colors = listOf(Color.Transparent, colors.white),
+                                                    startY = 0f,
+                                                    endY = 120f
+                                                )
+                                            )
+                                    )
+                                }
+                            }
+
+                            if (showReadMoreButtonState) {
+                                Text(
+                                    text = if (expandedExpoIntroductionTextState) "접기" else "더보기",
+                                    color = colors.gray200,
+                                    modifier = Modifier.expoClickable {
+                                        expandedExpoIntroductionTextState = !expandedExpoIntroductionTextState
+                                    },
+                                    style = typography.bodyRegular2
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.height(8.dp))
 
                             Row(
                                 horizontalArrangement = Arrangement.spacedBy(

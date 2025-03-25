@@ -28,12 +28,14 @@ fun TimeExpoStateButton(
 
         var isEnabled by remember { mutableStateOf(true) }
         var remainingAttempts by remember { mutableStateOf(5) }
+        var timerStarted by remember { mutableStateOf(false) }
 
-        LaunchedEffect(remainingAttempts) {
-            if (remainingAttempts > 0) {
+        LaunchedEffect(timerStarted) {
+            if (timerStarted) {
                 isEnabled = false
                 delay(300_000L)
                 isEnabled = true
+                timerStarted = false
             }
         }
         val enabledState: (buttonState: ButtonState) -> Boolean = {
@@ -48,8 +50,7 @@ fun TimeExpoStateButton(
         Button(
             modifier = modifier,
             interactionSource = interactionSource,
-            enabled = if (isEnabled && remainingAttempts > 0) enabledState(ButtonState.Enable) else enabledState(
-                ButtonState.Disable),
+            enabled = if (isEnabled && remainingAttempts > 0) enabledState(ButtonState.Enable) else enabledState(ButtonState.Disable),
             colors = ButtonDefaults.buttonColors(
                 containerColor = colors.main,
                 contentColor = colors.white,
@@ -62,6 +63,7 @@ fun TimeExpoStateButton(
                 if (isEnabled && remainingAttempts > 0) {
                     isEnabled = false
                     remainingAttempts--
+                    timerStarted = true
                 }
                 onClick()
             }

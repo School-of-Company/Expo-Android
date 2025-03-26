@@ -57,7 +57,7 @@ internal fun ExpoCreatedRoute(
 
     val context = LocalContext.current
 
-    LaunchedEffect("initCreatedExpo") {
+    LaunchedEffect(Unit) {
         expoViewModel.getExpoList()
     }
 
@@ -71,6 +71,7 @@ internal fun ExpoCreatedRoute(
         when (deleteExpoInformationUiState) {
             is DeleteExpoInformationUiState.Loading -> Unit
             is DeleteExpoInformationUiState.Success -> {
+                setSelectedIndex(-1)
                 makeToast(context, "박람회가 삭제되었습니다.")
             }
             is DeleteExpoInformationUiState.Error -> {

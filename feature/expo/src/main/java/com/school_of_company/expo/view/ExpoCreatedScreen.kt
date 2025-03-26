@@ -38,6 +38,7 @@ import com.school_of_company.expo.viewmodel.ExpoViewModel
 import com.school_of_company.expo.viewmodel.uistate.DeleteExpoInformationUiState
 import com.school_of_company.expo.viewmodel.uistate.GetExpoListUiState
 import com.school_of_company.model.entity.expo.ExpoListResponseEntity
+import com.school_of_company.ui.preview.ExpoPreviews
 import com.school_of_company.ui.toast.makeToast
 import kotlinx.collections.immutable.immutableListOf
 import kotlinx.collections.immutable.toPersistentList
@@ -178,7 +179,7 @@ private fun ExpoCreatedScreen(
     }
 }
 
-@Preview
+@ExpoPreviews
 @Composable
 private fun ExpoCreatedScreenPreview() {
     ExpoCreatedScreen(

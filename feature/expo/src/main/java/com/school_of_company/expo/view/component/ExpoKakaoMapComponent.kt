@@ -47,7 +47,7 @@ internal fun HomeKakaoMap(
                         }
 
                         override fun onMapError(exception: Exception?) {
-                            makeToast(context = context, toastMessage = "지도를 불러오는 중 알 수 없는 에러가 발생했습니다.\n onMapError: $exception")
+                            makeToast(context = context, toastMessage = "지도를 불러오는 중 알 수 없는 에러가 발생했습니다.")
                         }
                     },
 

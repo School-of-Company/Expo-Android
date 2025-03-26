@@ -129,13 +129,6 @@ internal fun SignUpRoute(
 
             is SmsSignUpCertificationCodeUiState.Error -> {
                 val error = smsSignUpCertificationCodeUiState as SmsSignUpCertificationCodeUiState.Error
-
-                when(error.errorType){
-                    SmsSignUpCertificationCodeUiState.ErrorType.Unauthorized -> viewModel.setBadRequestError(true)
-                    SmsSignUpCertificationCodeUiState.ErrorType.BAD_REQUEST -> viewModel.setBadRequestError(true)
-                    SmsSignUpCertificationCodeUiState.ErrorType.GENERAL -> viewModel.setError(true)
-
-                }
                 onErrorToast(error.exception, error.messageResId)
             }
         }

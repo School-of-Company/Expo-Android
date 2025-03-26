@@ -316,12 +316,20 @@ private fun ExpoDetailScreen(
                                     color = colors.gray400
                                 )
 
-                                getStandardProgramUiState.data.forEach { program ->
+                                if (getStandardProgramUiState.data.isEmpty()) {
                                     Text(
-                                        text = "· ${program.title}",
+                                        text = "일반 프로그램이 없습니다.",
                                         style = typography.bodyRegular2,
                                         color = colors.gray400
                                     )
+                                } else {
+                                    getStandardProgramUiState.data.forEach { program ->
+                                        Text(
+                                            text = "· ${program.title}",
+                                            style = typography.bodyRegular2,
+                                            color = colors.gray400
+                                        )
+                                    }
                                 }
                             }
 
@@ -332,12 +340,20 @@ private fun ExpoDetailScreen(
                                     color = colors.gray400
                                 )
 
-                                getTrainingProgramUiState.data.forEach { program ->
+                                if (getTrainingProgramUiState.data.isEmpty()) {
                                     Text(
-                                        text = "· ${program.title}",
+                                        text = "프로그램이 존재하지 않음",
                                         style = typography.bodyRegular2,
                                         color = colors.gray400
                                     )
+                                } else {
+                                    getTrainingProgramUiState.data.forEach { program ->
+                                        Text(
+                                            text = "· ${program.title}",
+                                            style = typography.bodyRegular2,
+                                            color = colors.gray400
+                                        )
+                                    }
                                 }
                             }
                         }

@@ -18,7 +18,7 @@ import kotlinx.coroutines.delay
 import java.util.concurrent.TimeUnit
 
 @Composable
-fun CountdownTimer(
+internal fun CountdownTimer(
     onTimerFinish: () -> Unit,
 ) {
     var remainingTime by remember { mutableIntStateOf(5 * 60) }
@@ -50,7 +50,7 @@ fun CountdownTimer(
 }
 
 @Composable
-fun formatTime(seconds: Long): String {
+internal fun formatTime(seconds: Long): String {
     val minutes = TimeUnit.SECONDS.toMinutes(seconds)
     val remainingSeconds = seconds - TimeUnit.MINUTES.toSeconds(minutes)
     return String.format("%01d:%02d", minutes, remainingSeconds)

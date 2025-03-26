@@ -32,6 +32,7 @@ import com.school_of_company.design_system.R
 import com.school_of_company.design_system.component.button.ExpoStateButton
 import com.school_of_company.design_system.component.button.state.ButtonState
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
+import com.school_of_company.design_system.component.modifier.padding.paddingHorizontal
 import com.school_of_company.design_system.component.textfield.ExpoSearchIconTextField
 import com.school_of_company.design_system.component.topbar.ExpoTopBar
 import com.school_of_company.design_system.icon.LeftArrowIcon
@@ -128,7 +129,11 @@ private fun ExpoAddressSearchScreen(
             modifier = modifier
                 .fillMaxSize()
                 .background(color = colors.white)
-                .padding(16.dp)
+                .paddingHorizontal(
+                    horizontal = 16.dp,
+                    top = 68.dp,
+                    bottom = 24.dp
+                )
                 .pointerInput(Unit) {
                     detectTapGestures(
                         onTap = {
@@ -138,7 +143,6 @@ private fun ExpoAddressSearchScreen(
                 },
         ) {
             ExpoTopBar(
-                modifier = Modifier.padding(vertical = 16.dp),
                 startIcon = {
                     LeftArrowIcon(
                         tint = colors.black,
@@ -146,6 +150,7 @@ private fun ExpoAddressSearchScreen(
                     )
                 },
                 betweenText = "장소",
+                modifier = Modifier.padding(bottom = 38.dp)
             )
 
             Column(modifier = Modifier.fillMaxWidth()) {

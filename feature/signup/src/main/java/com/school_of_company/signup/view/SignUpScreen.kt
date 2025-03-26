@@ -224,7 +224,6 @@ private fun SignUpScreen(
     var isCheckPasswordVisible by remember { mutableStateOf(false) }
     var isFirstAttempt by remember { mutableStateOf(true) }
     val isSuccess = smsSignUpCertificationSendCodeUiState is SmsSignUpCertificationSendCodeUiState.Success
-    val isFail = smsSignUpCertificationSendCodeUiState is SmsSignUpCertificationSendCodeUiState.Error
 
 
     ExpoAndroidTheme { colors, typography ->
@@ -378,10 +377,10 @@ private fun SignUpScreen(
                     )
 
                     if (isSuccess || !isFirstAttempt) {
-                        TimeExpoStateButton(
+                        TimeExpoStateButton (
                             modifier = Modifier.fillMaxWidth(),
                             text = "재발송"
-                        ) {
+                        ){
                             sendCertificationCodeCallBack()
                         }
                     } else {

@@ -145,7 +145,10 @@ private fun ExpoCreatedScreen(
                     when (getExpoListUiState) {
                         is GetExpoListUiState.Loading -> Unit
                         is GetExpoListUiState.Success -> {
-                            Column(horizontalAlignment = Alignment.CenterHorizontally,) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier.padding(horizontal = 8.dp)
+                            ) {
                                 CreatedExpoList(
                                     selectedIndex = selectedIndex,
                                     expoList = getExpoListUiState.data.toPersistentList(),

@@ -29,15 +29,18 @@ fun TimeExpoStateButton(
         var isEnabled by remember { mutableStateOf(true) }
         var remainingAttempts by remember { mutableStateOf(5) }
         var timerStarted by remember { mutableStateOf(true) }
+        var showCountdown by remember { mutableStateOf(true) }
 
         LaunchedEffect(timerStarted) {
             if (timerStarted) {
                 isEnabled = false
-                delay(300_000L)
+                delay(300_000L) // 5분 대기
                 isEnabled = true
                 timerStarted = false
+                showCountdown = false
             }
         }
+
         val enabledState: (buttonState: ButtonState) -> Boolean = {
             when (it) {
                 ButtonState.Enable -> true
@@ -59,19 +62,26 @@ fun TimeExpoStateButton(
             ),
             contentPadding = PaddingValues(vertical = 16.dp),
             shape = RoundedCornerShape(12.dp),
-            onClick ={
+            onClick = {
                 if (isEnabled && remainingAttempts > 0) {
                     isEnabled = false
                     remainingAttempts--
-                    timerStarted = false
+                    timerStarted = true
+                    showCountdown = true
                 }
                 onClick()
             }
         ) {
-            Text(
-                text = text,
-                style = typography.bodyBold2
-            )
+            if (showCountdown) {
+                CountdownTimer(
+                    onTimerFinish = { showCountdown = false }
+                )
+            } else {
+                Text(
+                    text = text,
+                    style = typography.bodyBold2
+                )
+            }
         }
     }
 }

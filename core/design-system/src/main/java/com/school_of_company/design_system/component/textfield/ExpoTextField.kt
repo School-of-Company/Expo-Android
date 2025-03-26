@@ -244,9 +244,7 @@ fun LimitedLengthTextField(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     lengthLimit: Int = 0,
 ) {
-    val lengthCheck = remember {
-        if (lengthLimit != 0) value.length >= lengthLimit else false
-    }
+    val lengthCheck = lengthLimit != 0 && value.length > lengthLimit
 
     ExpoAndroidTheme { colors, typography ->
         Column(

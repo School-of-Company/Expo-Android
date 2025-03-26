@@ -263,7 +263,7 @@ private fun ExpoDetailScreen(
                             if (showReadMoreButtonState) {
                                 Text(
                                     text = if (expandedExpoIntroductionTextState) "접기" else "더보기",
-                                    color = colors.gray200,
+                                    color = if (expandedExpoIntroductionTextState) colors.main else colors.gray200,
                                     modifier = Modifier.expoClickable {
                                         expandedExpoIntroductionTextState = !expandedExpoIntroductionTextState
                                     },

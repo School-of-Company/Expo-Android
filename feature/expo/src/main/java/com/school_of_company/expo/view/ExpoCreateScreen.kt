@@ -519,9 +519,7 @@ private fun ExpoCreateScreen(
                         } else {
                             ButtonState.Disable
                         },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(14.dp),
+                        modifier = Modifier.fillMaxWidth(),
                         onClick = onExpoCreateCallBack
                     )
 

@@ -23,7 +23,7 @@ internal fun HomeSendMessageTopBar(
     betweenText: String = "",
     endIcon: @Composable () -> Unit = { Spacer(modifier = Modifier.size(24.dp)) }
 ) {
-    ExpoAndroidTheme { _, typography ->
+    ExpoAndroidTheme { colors, typography ->
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
@@ -34,6 +34,7 @@ internal fun HomeSendMessageTopBar(
                 text = betweenText,
                 style = typography.bodyRegular1,
                 fontWeight = FontWeight(400),
+                color = colors.black
             )
             endIcon()
         }

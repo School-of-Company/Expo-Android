@@ -56,7 +56,7 @@ internal fun FormToggleButton(
                 else thumbOffset > (maxBound / 2)
 
                 if (isOverHalf) onClick()
-                thumbOffset = if (check) maxBound else minBound
+                else thumbOffset = if (check) maxBound else minBound
             }
         }
 

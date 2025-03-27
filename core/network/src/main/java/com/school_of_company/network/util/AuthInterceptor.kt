@@ -39,7 +39,7 @@ class AuthInterceptor @Inject constructor(
 
             // kakao api 에 대해서는 KakaoRestApiKey 를 추가합니다
             Regex("/(search|geo)").containsMatchIn(path) && method in listOf(GET) -> {
-                request.newBuilder().addHeader("Authorization", "KakaoAK ${BuildConfig.KAKAO_REST_KEY}").build()
+                request
             }
 
             // "/sms"의 경로에 대해서는 토큰을 추가하지 않습니다.
@@ -53,9 +53,8 @@ class AuthInterceptor @Inject constructor(
                 request.newBuilder().addHeader("RefreshToken", "Bearer $refreshToken").build()
             }
 
-            // 나머지의 경우에는 전부 acessToken을 추가합니다.
             else -> {
-                request.newBuilder().addHeader("Authorization", "Bearer $accessToken").build()
+                request
             }
         }
 

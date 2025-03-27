@@ -47,7 +47,7 @@ internal fun FormToggleButton(
         var thumbOffset by remember { mutableFloatStateOf(if (check) maxBound else minBound) }
         var isDragging by remember { mutableStateOf(false) }
 
-        val positionFraction = (thumbOffset - minBound) / (maxBound - minBound)
+        val positionFraction = thumbOffset / maxBound
 
         val trackColor by animateColorAsState(
             targetValue = lerp(colors.gray100, colors.main100, positionFraction),

@@ -29,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -243,9 +244,7 @@ fun LimitedLengthTextField(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     lengthLimit: Int = 0,
 ) {
-    val lengthCheck = remember {
-        if (lengthLimit != 0) value.length >= lengthLimit else false
-    }
+    val lengthCheck = lengthLimit != 0 && value.length > lengthLimit
 
     ExpoAndroidTheme { colors, typography ->
         Column(
@@ -396,7 +395,7 @@ fun ExpoLocationIconTextField(
     onButtonClicked: () -> Unit,
 ) {
     ExpoAndroidTheme { colors, typography ->
-        Box {
+        Box(modifier = modifier.clip(RoundedCornerShape(8.dp))) {
             OutlinedTextField(
                 placeholder = {
                     Text(
@@ -413,7 +412,7 @@ fun ExpoLocationIconTextField(
                     .height(50.dp)
                     .border(
                         width = 1.dp,
-                        shape = RoundedCornerShape(6.dp),
+                        shape = RoundedCornerShape(8.dp),
                         color = colors.gray100
                     )
                     .background(color = Color.Transparent)
@@ -585,6 +584,14 @@ fun ExpoOutlinedTextFieldPreview() {
                 placeholder = "",
                 updateTextValue = {},
                 textStyle = ExpoTypography.bodyBold2.copy(fontWeight = FontWeight.W600)
+            )
+
+            ExpoLocationIconTextField(
+                value = "",
+                onValueChange = {},
+                placeholder = "",
+                isDisabled = false,
+                onButtonClicked = {}
             )
         }
     }

@@ -48,6 +48,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -102,7 +103,9 @@ internal fun ExpoCreateRoute(
     val trainingProgramTextState by viewModel.trainingProgramTextState.collectAsStateWithLifecycle()
     val standardProgramTextState by viewModel.standardProgramTextState.collectAsStateWithLifecycle()
 
-    var selectedImageUri by rememberSaveable { mutableStateOf<Uri?>(null) }
+    var selectedImageUriString by rememberSaveable { mutableStateOf<String?>(null) }
+    var selectedImageUri: Uri? = selectedImageUriString?.let { Uri.parse(it) }
+
 
     val context = LocalContext.current
 
@@ -112,12 +115,13 @@ internal fun ExpoCreateRoute(
                 val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
                 context.contentResolver.openInputStream(uri)?.use { inputStream ->
                     BitmapFactory.decodeStream(inputStream, null, options)
+                    selectedImageUriString = uri.toString()
                     selectedImageUri = uri
                 }
             }
         }
 
-    LaunchedEffect("InitializeWithSearchedData") {
+    LaunchedEffect(Unit) {
         viewModel.initializeWithSearchedData()
     }
 
@@ -159,6 +163,7 @@ internal fun ExpoCreateRoute(
             is RegisterExpoInformationUiState.Success -> {
                 viewModel.resetExpoInformation()
                 selectedImageUri = null
+                selectedImageUriString = null
                 makeToast(context, "박람회 등록을 완료하였습니다.")
                 viewModel.initRegisterExpo()
             }
@@ -238,8 +243,8 @@ private fun ExpoCreateScreen(
     val (openTrainingSettingBottomSheet, isOpenTrainingSettingBottomSheet) = rememberSaveable { mutableStateOf(false) }
     val (openStandardSettingBottomSheet, isOpenStandardSettingBottomSheet) = rememberSaveable { mutableStateOf(false) }
 
-    var selectedTrainingIndex by remember { mutableStateOf<Int?>(null) }
-    var selectedStandardIndex by remember { mutableStateOf<Int?>(null) }
+    var selectedTrainingIndex by rememberSaveable { mutableStateOf<Int?>(null) }
+    var selectedStandardIndex by rememberSaveable { mutableStateOf<Int?>(null) }
 
     ExpoAndroidTheme { colors, typography ->
         Column(
@@ -352,6 +357,26 @@ private fun ExpoCreateScreen(
                         text = "이미지 328 × 178 사이즈를 권장합니다.",
                         style = typography.captionRegular2,
                         color = colors.gray300
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(3.dp))
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.Start),
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.expoClickable { onImageClick() }
+                ) {
+                    ImageIcon(
+                        tint = colors.gray300,
+                        modifier = Modifier.size(16.dp)
+                    )
+
+                    Text(
+                        text = "이미지 수정하기(클릭)",
+                        style = typography.captionRegular2,
+                        color = colors.gray300,
+                        textDecoration = TextDecoration.Underline
                     )
                 }
 
@@ -519,9 +544,7 @@ private fun ExpoCreateScreen(
                         } else {
                             ButtonState.Disable
                         },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(14.dp),
+                        modifier = Modifier.fillMaxWidth(),
                         onClick = onExpoCreateCallBack
                     )
 

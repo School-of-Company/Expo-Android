@@ -101,7 +101,7 @@ private fun SendMessageScreen(
                 .background(color = colors.white)
                 .paddingHorizontal(
                     horizontal = 16.dp,
-                    top = 61.dp
+                    top = 68.dp
                 )
                 .pointerInput(Unit) {
                     detectTapGestures(

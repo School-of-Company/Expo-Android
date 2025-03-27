@@ -13,13 +13,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.model.entity.participant.ParticipantInformationResponseEntity
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 internal fun ProgramDetailParticipantManagementList(
     modifier: Modifier = Modifier,
-    item: ImmutableList<ParticipantInformationResponseEntity> = persistentListOf(),
+    item: ParticipantInformationResponseEntity,
     scrollState: ScrollState
 ) {
     ExpoAndroidTheme { colors, _ ->
@@ -30,7 +29,7 @@ internal fun ProgramDetailParticipantManagementList(
                 .background(color = colors.white)
                 .padding(start = 16.dp)
         ) {
-            itemsIndexed(item) { index, item ->
+            itemsIndexed(item.participant) { index, item ->
                 ProgramDetailParticipantManagementListItem(
                     index = index + 1,
                     data = item,
@@ -39,13 +38,4 @@ internal fun ProgramDetailParticipantManagementList(
             }
         }
     }
-}
-
-@Preview
-@Composable
-private fun HomeDetailParticipantManagementListPreview() {
-    ProgramDetailParticipantManagementList(
-        item = persistentListOf(),
-        scrollState = rememberScrollState()
-    )
 }

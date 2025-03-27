@@ -57,8 +57,8 @@ import com.school_of_company.program.view.component.ProgramTraineeTable
 import com.school_of_company.program.viewmodel.ProgramViewModel
 import com.school_of_company.program.viewmodel.uistate.ParticipantResponseListUiState
 import com.school_of_company.program.viewmodel.uistate.TraineeResponseListUiState
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.delay
+import okhttp3.internal.toImmutableList
 
 @Composable
 internal fun ProgramDetailParticipantManagementRoute(
@@ -298,7 +298,7 @@ private fun ProgramDetailParticipantManagementScreen(
 
                                 is ParticipantResponseListUiState.Success -> {
                                     Text(
-                                        text = "${participantAheadResponseListUiState.data.size}명",
+                                        text = "${participantAheadResponseListUiState.data.participant.size}명",
                                         style = typography.captionRegular2,
                                         color = colors.main
                                     )
@@ -334,7 +334,7 @@ private fun ProgramDetailParticipantManagementScreen(
 
                                 is ParticipantResponseListUiState.Success -> {
                                     Text(
-                                        text = "${participantFieldResponseListUiState.data.size}명",
+                                        text = "${participantFieldResponseListUiState.data}명",
                                         style = typography.captionRegular2,
                                         color = colors.main
                                     )
@@ -464,7 +464,7 @@ private fun ProgramDetailParticipantManagementScreen(
 
                                     ProgramDetailParticipantManagementList(
                                         scrollState = scrollState,
-                                        item = participantAheadResponseListUiState.data.toImmutableList()
+                                        item = participantAheadResponseListUiState.data
                                     )
                                 }
                             }
@@ -494,7 +494,7 @@ private fun ProgramDetailParticipantManagementScreen(
 
                                     ProgramDetailParticipantManagementList(
                                         scrollState = scrollState,
-                                        item = participantFieldResponseListUiState.data.toImmutableList()
+                                        item = participantFieldResponseListUiState.data
                                     )
                                 }
                             }

@@ -241,7 +241,7 @@ internal class ProgramViewModel @Inject constructor(
                 when (result) {
                     is Result.Loading -> enumData.value = ParticipantResponseListUiState.Loading
                     is Result.Success -> {
-                        if (result.data.isEmpty()) {
+                        if (result.data.participant.isEmpty()) {
                             _swipeRefreshLoading.value = false
                             enumData.value = ParticipantResponseListUiState.Empty
                         } else {

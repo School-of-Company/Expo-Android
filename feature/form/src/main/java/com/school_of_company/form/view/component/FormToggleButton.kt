@@ -62,9 +62,9 @@ internal fun FormToggleButton(
         )
 
         val animatedOffset by animateFloatAsState(
-            targetValue = if (isDragging) thumbOffset else if (check) maxBound else minBound,
+            targetValue = thumbOffset,
             animationSpec = spring(),
-            label = "custom_switch"
+            label = "thumb_offset"
         )
 
         val dragModifier = Modifier.pointerInput(Unit) {

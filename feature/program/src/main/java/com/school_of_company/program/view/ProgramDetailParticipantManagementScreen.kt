@@ -58,7 +58,6 @@ import com.school_of_company.program.viewmodel.ProgramViewModel
 import com.school_of_company.program.viewmodel.uistate.ParticipantResponseListUiState
 import com.school_of_company.program.viewmodel.uistate.TraineeResponseListUiState
 import kotlinx.coroutines.delay
-import okhttp3.internal.toImmutableList
 
 @Composable
 internal fun ProgramDetailParticipantManagementRoute(
@@ -526,7 +525,7 @@ private fun ProgramDetailParticipantManagementScreen(
 
                                     ProgramTraineeList(
                                         scrollState = scrollState,
-                                        item = traineeInformationUiState.data.toImmutableList()
+                                        item = traineeInformationUiState.data
                                     )
                                 }
                             }

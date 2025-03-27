@@ -11,13 +11,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.model.entity.trainee.TraineeResponseEntity
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 internal fun ProgramTraineeList(
     modifier: Modifier = Modifier,
-    item: ImmutableList<TraineeResponseEntity> = persistentListOf(),
+    item: List<TraineeResponseEntity> = persistentListOf(),
     scrollState: ScrollState,
 ) {
     ExpoAndroidTheme { colors, _ ->

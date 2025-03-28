@@ -13,14 +13,20 @@ class ParticipantRepositoryImpl @Inject constructor(
     override fun getParticipantInformationList(
         type: String,
         expoId: String,
-        name: String?
-    ): Flow<List<ParticipantInformationResponseEntity>> {
+        name: String?,
+        page: Int?,
+        size: Int?,
+        localDate: String?
+    ): Flow<ParticipantInformationResponseEntity> {
         return dataSource.getParticipantInformationList(
             type = type,
             expoId = expoId,
-            name = name
-        ).transform { list ->
-            emit(list.map { it.toEntity() })
+            name = name,
+            page = page,
+            size = size,
+            localDate = localDate
+        ).transform { response ->
+            emit(response.toEntity())
         }
     }
 }

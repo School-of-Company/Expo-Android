@@ -4,5 +4,12 @@ import com.school_of_company.network.dto.participant.response.ParticipantInforma
 import kotlinx.coroutines.flow.Flow
 
 interface ParticipantDataSource {
-    fun getParticipantInformationList(type: String, expoId: String, name: String? = null): Flow<List<ParticipantInformationResponse>>
+    fun getParticipantInformationList(
+        type: String,
+        expoId: String,
+        name: String? = null,
+        page: Int? = null,
+        size: Int? = null,
+        localDate: String? = null
+    ): Flow<ParticipantInformationResponse>
 }

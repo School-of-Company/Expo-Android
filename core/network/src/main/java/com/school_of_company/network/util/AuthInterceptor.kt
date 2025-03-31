@@ -1,5 +1,6 @@
 package com.school_of_company.network.util
 
+import android.util.Log
 import com.school_of_company.datastore.datasource.AuthTokenDataSource
 import com.school_of_company.network.BuildConfig
 import kotlinx.coroutines.flow.first
@@ -53,8 +54,9 @@ class AuthInterceptor @Inject constructor(
                 request.newBuilder().addHeader("RefreshToken", "Bearer $refreshToken").build()
             }
 
+            // 나머지의 경우에는 전부 acessToken을 추가합니다.
             else -> {
-                request
+                request.newBuilder().addHeader("Authorization", "Bearer $accessToken").build()
             }
         }
 

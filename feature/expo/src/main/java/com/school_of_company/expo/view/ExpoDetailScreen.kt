@@ -234,7 +234,7 @@ private fun ExpoDetailScreen(
                                     getExpoInformationUiState.data.startedDay.formatServerDate(),
                                     getExpoInformationUiState.data.finishedDay.formatServerDate()
                                 ),
-                                style = typography.captionRegular2,
+                                style = typography.captionRegular1,
                                 color = colors.gray600,
                             )
                         }

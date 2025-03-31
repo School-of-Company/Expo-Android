@@ -44,6 +44,7 @@ import com.school_of_company.design_system.R
 import com.school_of_company.design_system.component.button.EffectButton
 import com.school_of_company.design_system.component.button.ExpoEnableButton
 import com.school_of_company.design_system.component.button.ExpoEnableDetailButton
+import com.school_of_company.design_system.component.loading.LoadingDot
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.component.topbar.ExpoTopBar
 import com.school_of_company.design_system.icon.LeftArrowIcon
@@ -502,7 +503,17 @@ private fun ExpoDetailScreen(
                 }
             }
 
-            getExpoInformationUiState is GetExpoInformationUiState.Loading || getTrainingProgramUiState is GetTrainingProgramListUiState.Loading || getStandardProgramUiState is GetStandardProgramListUiState.Loading -> Unit
+            getExpoInformationUiState is GetExpoInformationUiState.Loading || getTrainingProgramUiState is GetTrainingProgramListUiState.Loading || getStandardProgramUiState is GetStandardProgramListUiState.Loading -> {
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(color = colors.white)
+                ) {
+                    LoadingDot()
+                }
+            }
 
             getExpoInformationUiState is GetExpoInformationUiState.Error || getTrainingProgramUiState is GetTrainingProgramListUiState.Error || getStandardProgramUiState is GetStandardProgramListUiState.Error -> {
 

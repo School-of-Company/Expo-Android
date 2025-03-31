@@ -218,6 +218,27 @@ private fun ExpoDetailScreen(
                             }
                         }
 
+                        Spacer(modifier = Modifier.height(54.dp))
+
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Bottom)) {
+                            Text(
+                                text = "모집 기간",
+                                style = typography.bodyRegular2,
+                                color = colors.gray600,
+                                fontWeight = FontWeight(600),
+                            )
+
+                            Text(
+                                text = stringResource(
+                                    R.string.date_type,
+                                    getExpoInformationUiState.data.startedDay.formatServerDate(),
+                                    getExpoInformationUiState.data.finishedDay.formatServerDate()
+                                ),
+                                style = typography.captionRegular2,
+                                color = colors.gray600,
+                            )
+                        }
+
                         Spacer(modifier = Modifier.height(18.dp))
 
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Bottom)) {
@@ -268,32 +289,6 @@ private fun ExpoDetailScreen(
                                         expandedExpoIntroductionTextState = !expandedExpoIntroductionTextState
                                     },
                                     style = typography.bodyRegular2
-                                )
-                            }
-
-                            Spacer(modifier = Modifier.height(8.dp))
-
-                            Row(
-                                horizontalArrangement = Arrangement.spacedBy(
-                                    11.dp,
-                                    Alignment.Start
-                                )
-                            ) {
-
-                                Text(
-                                    text = stringResource(id = R.string.register_temp),
-                                    style = typography.captionRegular2,
-                                    color = colors.gray600
-                                )
-
-                                Text(
-                                    text = stringResource(
-                                        R.string.date_type,
-                                        getExpoInformationUiState.data.startedDay.formatServerDate(),
-                                        getExpoInformationUiState.data.finishedDay.formatServerDate()
-                                    ),
-                                    style = typography.captionRegular2,
-                                    color = colors.gray600,
                                 )
                             }
                         }

@@ -21,7 +21,7 @@ import java.util.Locale
  */
 fun String.formatServerDate(): String =
     LocalDate.parse(this, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-        .format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일",Locale.getDefault()))
+        .format(DateTimeFormatter.ofPattern("MM월 dd일",Locale.getDefault()))
 
 fun String.formatNoneHyphenServerDate(): String =
     if (this.contains("T")) {

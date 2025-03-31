@@ -1,8 +1,6 @@
 package com.school_of_company.network.util
 
-import android.util.Log
 import com.school_of_company.datastore.datasource.AuthTokenDataSource
-import com.school_of_company.network.BuildConfig
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor

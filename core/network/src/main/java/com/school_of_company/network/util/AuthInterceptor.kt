@@ -47,6 +47,11 @@ class AuthInterceptor @Inject constructor(
                 request
             }
 
+            // Juso API 요청을 그대로 반환 합니다.
+            path.contains("addrlink/addrLinkApi.do") -> {
+                request
+            }
+
             // 특정 경로와 DELETE 메서드 요청에는 리프레시 토큰을 추가합니다.
             path.endsWith("/auth") && method == PATCH -> {
                 request.newBuilder().addHeader("RefreshToken", "Bearer $refreshToken").build()

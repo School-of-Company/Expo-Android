@@ -29,7 +29,6 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -60,6 +59,7 @@ import com.school_of_company.design_system.R
 import com.school_of_company.design_system.component.bottomsheet.SettingBottomSheet
 import com.school_of_company.design_system.component.button.ExpoStateButton
 import com.school_of_company.design_system.component.button.state.ButtonState
+import com.school_of_company.design_system.component.loading.LoadingDot
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.component.modifier.padding.paddingHorizontal
 import com.school_of_company.design_system.component.textfield.ExpoLocationIconTextField
@@ -68,6 +68,7 @@ import com.school_of_company.design_system.component.textfield.NoneLimitedLength
 import com.school_of_company.design_system.icon.ImageIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
+import com.school_of_company.design_system.theme.color.ExpoColor
 import com.school_of_company.expo.view.component.ExpoAddTextField
 import com.school_of_company.expo.view.component.ExpoSettingBottomSheet
 import com.school_of_company.expo.view.component.ExpoStandardAddTextField
@@ -158,19 +159,26 @@ internal fun ExpoCreateRoute(
     }
 
     LaunchedEffect(registerExpoInformationUiState) {
-        when (registerExpoInformationUiState) {
-            is RegisterExpoInformationUiState.Loading -> Unit
-            is RegisterExpoInformationUiState.Success -> {
-                viewModel.resetExpoInformation()
-                selectedImageUri = null
-                selectedImageUriString = null
-                makeToast(context, "박람회 등록을 완료하였습니다.")
-                viewModel.initRegisterExpo()
-            }
+        if (registerExpoInformationUiState is RegisterExpoInformationUiState.Success) {
+            viewModel.resetExpoInformation()
+            selectedImageUri = null
+            selectedImageUriString = null
+            makeToast(context, "박람회 등록을 완료하였습니다.")
+            viewModel.initRegisterExpo()
+        } else if (registerExpoInformationUiState is RegisterExpoInformationUiState.Error) {
+            onErrorToast(null, R.string.expo_register_fail)
+        }
+    }
 
-            is RegisterExpoInformationUiState.Error -> {
-                onErrorToast(null, R.string.expo_register_fail)
-            }
+    if (registerExpoInformationUiState is RegisterExpoInformationUiState.Loading) {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = ExpoColor.main)
+        ) {
+            LoadingDot()
         }
     }
 

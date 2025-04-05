@@ -20,6 +20,7 @@ import com.school_of_company.design_system.component.modifier.padding.paddingHor
 import com.school_of_company.design_system.component.topbar.ExpoTopBar
 import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
+import com.school_of_company.expo.view.component.DetailsPieChart
 import com.school_of_company.expo.view.component.ExpoChartGroupButton
 import com.school_of_company.expo.view.component.ParticipantPieChart
 import com.school_of_company.expo.view.component.SchoolCategory
@@ -111,12 +112,14 @@ private fun ExpoChartScreen(
                 }
             )
 
-            Spacer(modifier = Modifier.padding(bottom = 50.dp))
+            Spacer(modifier = Modifier.padding(bottom = 32.dp))
+
+            DetailsPieChart(data = data)
+
+            Spacer(modifier = Modifier.padding(bottom = 81.dp))
 
             if (isPieChartSelected) {
-                ParticipantPieChart(
-                    data = data
-                )
+                ParticipantPieChart(data = data)
             } else {
                 Text(
                     text = "막대 그래프",

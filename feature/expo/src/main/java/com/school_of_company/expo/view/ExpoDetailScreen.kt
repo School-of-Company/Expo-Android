@@ -67,6 +67,7 @@ internal fun ExpoDetailRoute(
     modifier: Modifier = Modifier,
     id: String,
     onBackClick: () -> Unit,
+    onChartClick: () -> Unit,
     onCheckClick: (String) -> Unit,
     onModifyClick: (String) -> Unit,
     onProgramClick: (String) -> Unit,
@@ -103,6 +104,7 @@ internal fun ExpoDetailRoute(
         getStandardProgramUiState = getStandardProgramUiState,
         getCoordinatesToAddressUiState = getCoordinatesToAddressUiState,
         onBackClick = onBackClick,
+        onChartClick = onChartClick,
         onMessageClick = { authority ->
             onMessageClick(id, authority)
         },
@@ -140,6 +142,7 @@ private fun ExpoDetailScreen(
     getCoordinatesToAddressUiState: GetCoordinatesToAddressUiState,
     scrollState: ScrollState = rememberScrollState(),
     onBackClick: () -> Unit,
+    onChartClick: () -> Unit,
     onMessageClick: (String) -> Unit,
     onCheckClick: (String) -> Unit,
     onModifyClick: (String) -> Unit,
@@ -261,11 +264,13 @@ private fun ExpoDetailScreen(
                                         if (textLayoutResult.lineCount > 4) {
                                             if (textLayoutResult.isLineEllipsized(4)) showReadMoreButtonState =
                                                 true
+                                        } else {
+                                            showReadMoreButtonState = false
                                         }
                                     }
                                 )
 
-                                if (!expandedExpoIntroductionTextState) {
+                                if (!expandedExpoIntroductionTextState && showReadMoreButtonState) {
                                     Box(
                                         modifier = Modifier
                                             .fillMaxWidth()
@@ -430,7 +435,7 @@ private fun ExpoDetailScreen(
                                     defaultTextColor = colors.main,
                                     clickedTextColor = colors.white,
                                     clickedBackgroundColor = colors.main,
-                                    onClick = {  }, // todo : Navigate To Statistics Screen Logic
+                                    onClick = { onChartClick() }, // todo : Id Value
                                     modifier = Modifier
                                         .weight(1f)
                                         .border(
@@ -646,6 +651,7 @@ private fun HomeDetailScreenPreview() {
         getCoordinatesToAddressUiState = GetCoordinatesToAddressUiState.Loading,
         scrollState = ScrollState(0),
         onBackClick = {},
+        onChartClick = {},
         onMessageClick = {},
         onCheckClick = {},
         onModifyClick = {},

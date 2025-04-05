@@ -8,19 +8,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -37,8 +27,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
-import com.school_of_company.design_system.theme.ExpoTypography
-import com.school_of_company.design_system.theme.color.ExpoColor
 
 data class SchoolData(
     val elementary: SchoolCategory,
@@ -74,7 +62,7 @@ internal fun ParticipantPieChart(
             360f * it.second.number / totalSum.toFloat()
         }
 
-        val colors = listOf(
+        val chartColors = listOf(
             colors.main600,
             colors.main400,
             colors.main500,
@@ -104,13 +92,6 @@ internal fun ParticipantPieChart(
             modifier = Modifier.fillMaxWidth()
         ) {
 
-            DetailsPieChart(
-                data = data,
-                colors = colors
-            )
-
-            Spacer(modifier = Modifier.padding(bottom = 81.dp))
-
             Box(modifier = Modifier.size(animateSize.dp)) {
                 Canvas(
                     modifier = Modifier
@@ -119,7 +100,7 @@ internal fun ParticipantPieChart(
                 ) {
                     floatValues.forEachIndexed { index, value ->
                         drawArc(
-                            color = colors[index % colors.size],
+                            color = chartColors[index % chartColors.size],
                             startAngle = lastValue,
                             sweepAngle = value,
                             useCenter = false,
@@ -129,84 +110,9 @@ internal fun ParticipantPieChart(
                     }
                 }
             }
-
-            Spacer(modifier = Modifier.padding(36.dp))
         }
     }
 }
-
-@Composable
-private fun DetailsPieChart(
-    data: SchoolData,
-    colors: List<Color>
-) {
-    val items = listOf(
-        "유치원" to data.kindergarten,
-        "초등학교" to data.elementary,
-        "중학교" to data.middle,
-        "고등학교" to data.high,
-        "기타" to data.other
-    )
-
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(3),
-        modifier = Modifier
-            .fillMaxWidth()
-            .heightIn(90.dp),
-        horizontalArrangement = Arrangement.spacedBy(10.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
-    ) {
-        itemsIndexed(items) { index, (label, category) ->
-            DetailsPieChartItem(
-                label = label,
-                value = category.number,
-                percent = category.percent,
-                color = colors.getOrElse(index) { ExpoColor.gray400 }
-            )
-        }
-    }
-}
-
-@Composable
-private fun DetailsPieChartItem(
-    label: String,
-    value: Int,
-    percent: Int,
-    color: Color
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Box(
-            modifier = Modifier
-                .background(
-                    color = color,
-                    shape = CircleShape
-                )
-                .size(16.dp)
-        )
-
-        Column(modifier = Modifier.fillMaxWidth()) {
-            Text(
-                modifier = Modifier.padding(start = 15.dp),
-                text = label,
-                style = ExpoTypography.captionBold1,
-                color = Color.Black
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                modifier = Modifier.padding(start = 15.dp),
-                text = "${value}명 ($percent%)",
-                style = ExpoTypography.captionRegular2,
-                color = ExpoColor.gray400
-            )
-        }
-    }
-}
-
 
 @Preview
 @Composable

@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import com.school_of_company.common.exception.*
 import com.school_of_company.design_system.R
 import com.school_of_company.expo.navigation.expoAddressSearchScreen
+import com.school_of_company.expo.navigation.expoChartScreen
 import com.school_of_company.expo.navigation.expoCreateRoute
 import com.school_of_company.expo.navigation.expoCreateScreen
 import com.school_of_company.expo.navigation.expoCreatedRoute
@@ -19,6 +20,7 @@ import com.school_of_company.expo.navigation.expoModifyScreen
 import com.school_of_company.expo.navigation.expoScreen
 import com.school_of_company.expo.navigation.homeRoute
 import com.school_of_company.expo.navigation.navigateToExpoAddressSearch
+import com.school_of_company.expo.navigation.navigateToExpoChart
 import com.school_of_company.expo.navigation.navigateToExpoDetail
 import com.school_of_company.expo.navigation.navigateToExpoModify
 import com.school_of_company.expo_android.ui.ExpoAppState
@@ -110,6 +112,7 @@ fun ExpoNavHost(
 
         expoDetailScreen(
             onBackClick = navController::popBackStack,
+            onChartClick = navController::navigateToExpoChart,
             onCheckClick = { id ->
                 navController.navigateToProgramDetailParticipantManagement(id)
             },
@@ -203,6 +206,10 @@ fun ExpoNavHost(
         formModifyScreen(
             popUpBackStack = navController::popBackStack,
             onErrorToast = makeErrorToast,
+        )
+
+        expoChartScreen(
+            onBackClick = navController::popBackStack
         )
     }
 }

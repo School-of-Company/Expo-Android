@@ -6,7 +6,6 @@ object ExpoColor : ColorTheme() {
 
     // Main Color
     override val main = Color(0xFF448FFF)
-    override val main600 = Color(0xFF448FFF)
     override val main500 = Color(0xFF63A2FF)
     override val main400 = Color(0xFF82B4FF)
     override val main300 = Color(0xFFA2C7FF)

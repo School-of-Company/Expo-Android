@@ -6,7 +6,6 @@ abstract class ColorTheme {
 
     // Main ColorTheme
     abstract val main: Color
-    abstract val main600: Color
     abstract val main500: Color
     abstract val main400: Color
     abstract val main300: Color

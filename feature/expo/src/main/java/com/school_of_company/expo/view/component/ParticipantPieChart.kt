@@ -63,7 +63,7 @@ internal fun ParticipantPieChart(
         }
 
         val chartColors = listOf(
-            colors.main600,
+            colors.main,
             colors.main400,
             colors.main500,
             colors.main200,

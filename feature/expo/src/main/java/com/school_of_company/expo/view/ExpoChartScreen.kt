@@ -119,7 +119,7 @@ private fun ExpoChartScreen(
 
             DetailsPieChart(data = data)
 
-            Spacer(Modifier.height(35.dp))
+            Spacer(modifier = Modifier.padding(bottom = 35.dp))
 
             if (isPieChartSelected) {
                 ParticipantPieChart(data = data)

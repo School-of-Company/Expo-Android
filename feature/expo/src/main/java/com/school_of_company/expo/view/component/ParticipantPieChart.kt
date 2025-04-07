@@ -91,6 +91,7 @@ internal fun ParticipantPieChart(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
+                .offset(y = 30.dp),
             contentAlignment = Alignment.Center,
         ) {
             Canvas(

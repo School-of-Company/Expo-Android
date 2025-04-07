@@ -32,6 +32,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 
+internal data class SchoolCategoryItem(
+    val number: Float,
+    val percent: Float,
+)
+
+// TODO: model과 통합
+
 @Composable
 internal fun ParticipantBarGraph(
     modifier: Modifier = Modifier,

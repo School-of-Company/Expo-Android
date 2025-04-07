@@ -4,9 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
-import androidx.navigation.navigation
 import com.school_of_company.expo.view.ExpoAddressSearchRoute
-import com.school_of_company.expo.view.ExpoChartRoute
 import com.school_of_company.expo.view.ExpoCreateRoute
 import com.school_of_company.expo.view.ExpoCreatedRoute
 import com.school_of_company.expo.view.ExpoDetailRoute
@@ -19,7 +17,6 @@ const val expoModifyRoute = "expo_modify_route"
 const val expoCreateRoute = "expo_create_route"
 const val expoCreatedRoute = "expo_created_route"
 const val expoAddressSearchRoute = "expo_address_search_route"
-const val expoChartRoute = "expo_chart_route"
 
 fun NavController.navigateToHome(navOptions: NavOptions? = null) {
     this.navigate(homeRoute, navOptions)
@@ -55,10 +52,6 @@ fun NavController.navigateToExpoCreated(navOptions: NavOptions? = null) {
 
 fun NavController.navigateToExpoAddressSearch(navOptions: NavOptions? = null) {
     this.navigate(expoAddressSearchRoute, navOptions)
-}
-
-fun NavController.navigateToExpoChart(navOptions: NavOptions? = null) {
-    this.navigate(expoChartRoute, navOptions)
 }
 
 fun NavGraphBuilder.expoScreen(
@@ -143,16 +136,6 @@ fun NavGraphBuilder.expoAddressSearchScreen(
         ExpoAddressSearchRoute(
             popUpBackStack = popUpBackStack,
             onErrorToast = onErrorToast,
-        )
-    }
-}
-
-fun NavGraphBuilder.expoChartScreen(
-    onBackClick: () -> Unit,
-) {
-    composable(route = expoChartRoute) {
-        ExpoChartRoute(
-            onBackClick = onBackClick
         )
     }
 }

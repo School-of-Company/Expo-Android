@@ -60,7 +60,6 @@ import com.school_of_company.expo.viewmodel.uistate.GetTrainingProgramListUiStat
 import com.school_of_company.model.enum.Authority
 import com.school_of_company.model.enum.ParticipantType
 import com.school_of_company.ui.util.formatServerDate
-import kotlin.math.max
 
 @Composable
 internal fun ExpoDetailRoute(

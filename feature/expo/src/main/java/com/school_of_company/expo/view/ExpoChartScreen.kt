@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,8 +23,10 @@ import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.expo.view.component.DetailsPieChart
 import com.school_of_company.expo.view.component.ExpoChartGroupButton
+import com.school_of_company.expo.view.component.ParticipantBarGraph
 import com.school_of_company.expo.view.component.ParticipantPieChart
 import com.school_of_company.expo.view.component.SchoolCategory
+import com.school_of_company.expo.view.component.SchoolCategoryItem
 import com.school_of_company.expo.view.component.SchoolData
 
 @Composable
@@ -116,15 +119,20 @@ private fun ExpoChartScreen(
 
             DetailsPieChart(data = data)
 
-            Spacer(modifier = Modifier.padding(bottom = 81.dp))
+            Spacer(Modifier.height(35.dp))
 
             if (isPieChartSelected) {
                 ParticipantPieChart(data = data)
             } else {
-                Text(
-                    text = "막대 그래프",
-                    style = typography.bodyRegular2,
-                    color = colors.gray500
+                val list = listOf(
+                    SchoolCategoryItem(number = 10f, percent = 10f),
+                    SchoolCategoryItem(number = 20f, percent = 20f),
+                    SchoolCategoryItem(number = 20f, percent = 20f),
+                    SchoolCategoryItem(number = 30f, percent = 30f),
+                    SchoolCategoryItem(number = 20f, percent = 20f),
+                )
+                ParticipantBarGraph(
+                    schoolCategoryList = list.map { Pair("이름입니다", it) }
                 )
             }
         }

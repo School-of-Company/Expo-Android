@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -87,27 +88,26 @@ internal fun ParticipantPieChart(
             animationPlayed = true
         }
 
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxWidth()
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .offset(y = 30.dp),
+            contentAlignment = Alignment.Center,
         ) {
-
-            Box(modifier = Modifier.size(animateSize.dp)) {
-                Canvas(
-                    modifier = Modifier
-                        .size(radiusOuter * 2f)
-                        .rotate(animateRotation)
-                ) {
-                    floatValues.forEachIndexed { index, value ->
-                        drawArc(
-                            color = chartColors[index % chartColors.size],
-                            startAngle = lastValue,
-                            sweepAngle = value,
-                            useCenter = false,
-                            style = Stroke(chartBarWidth.toPx(), cap = StrokeCap.Butt)
-                        )
-                        lastValue += value
-                    }
+            Canvas(
+                modifier = Modifier
+                    .size(animateSize.dp)
+                    .rotate(animateRotation)
+            ) {
+                floatValues.forEachIndexed { index, value ->
+                    drawArc(
+                        color = chartColors[index % chartColors.size],
+                        startAngle = lastValue,
+                        sweepAngle = value,
+                        useCenter = false,
+                        style = Stroke(chartBarWidth.toPx(), cap = StrokeCap.Butt)
+                    )
+                    lastValue += value
                 }
             }
         }

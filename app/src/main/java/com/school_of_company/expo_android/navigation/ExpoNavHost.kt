@@ -110,7 +110,6 @@ fun ExpoNavHost(
 
         expoDetailScreen(
             onBackClick = navController::popBackStack,
-            onChartClick = {},
             onCheckClick = { id ->
                 navController.navigateToProgramDetailParticipantManagement(id)
             },

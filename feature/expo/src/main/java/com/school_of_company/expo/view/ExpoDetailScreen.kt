@@ -41,7 +41,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import com.school_of_company.design_system.R
-import com.school_of_company.design_system.component.button.EffectButton
 import com.school_of_company.design_system.component.button.ExpoEnableButton
 import com.school_of_company.design_system.component.button.ExpoEnableDetailButton
 import com.school_of_company.design_system.component.loading.LoadingDot
@@ -66,7 +65,6 @@ internal fun ExpoDetailRoute(
     modifier: Modifier = Modifier,
     id: String,
     onBackClick: () -> Unit,
-    onChartClick: () -> Unit,
     onCheckClick: (String) -> Unit,
     onModifyClick: (String) -> Unit,
     onProgramClick: (String) -> Unit,
@@ -103,7 +101,6 @@ internal fun ExpoDetailRoute(
         getStandardProgramUiState = getStandardProgramUiState,
         getCoordinatesToAddressUiState = getCoordinatesToAddressUiState,
         onBackClick = onBackClick,
-        onChartClick = onChartClick,
         onMessageClick = { authority ->
             onMessageClick(id, authority)
         },
@@ -141,7 +138,6 @@ private fun ExpoDetailScreen(
     getCoordinatesToAddressUiState: GetCoordinatesToAddressUiState,
     scrollState: ScrollState = rememberScrollState(),
     onBackClick: () -> Unit,
-    onChartClick: () -> Unit,
     onMessageClick: (String) -> Unit,
     onCheckClick: (String) -> Unit,
     onModifyClick: (String) -> Unit,
@@ -221,7 +217,7 @@ private fun ExpoDetailScreen(
                             }
                         }
 
-                        Spacer(modifier = Modifier.height(54.dp))
+                        Spacer(modifier = Modifier.height(18.dp))
 
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Bottom)) {
                             Text(
@@ -318,7 +314,7 @@ private fun ExpoDetailScreen(
 
                                 if (getStandardProgramUiState.data.isEmpty()) {
                                     Text(
-                                        text = "일반 프로그램이 없습니다.",
+                                        text = "· 일반 프로그램이 존재하지 않음",
                                         style = typography.bodyRegular2,
                                         color = colors.gray400
                                     )
@@ -342,7 +338,7 @@ private fun ExpoDetailScreen(
 
                                 if (getTrainingProgramUiState.data.isEmpty()) {
                                     Text(
-                                        text = "프로그램이 존재하지 않음",
+                                        text = "· 연수자 프로그램이 존재하지 않음",
                                         style = typography.bodyRegular2,
                                         color = colors.gray400
                                     )
@@ -400,50 +396,9 @@ private fun ExpoDetailScreen(
 
                         Spacer(modifier = Modifier.weight(1f))
 
+                        Spacer(modifier = Modifier.padding(bottom = 38.dp))
+
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top)) {
-                            Row(
-                                horizontalArrangement = Arrangement.spacedBy(
-                                    16.dp,
-                                    Alignment.CenterHorizontally
-                                ),
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(top = 38.dp)
-                            ) {
-
-                                EffectButton(
-                                    text = "문자 보내기",
-                                    defaultBackgroundColor = colors.white,
-                                    defaultTextColor = colors.main,
-                                    clickedTextColor = colors.white,
-                                    clickedBackgroundColor = colors.main,
-                                    onClick = { isOpenDialog(true) },
-                                    modifier = Modifier
-                                        .weight(1f)
-                                        .border(
-                                            width = 1.dp,
-                                            color = colors.main,
-                                            shape = RoundedCornerShape(6.dp)
-                                        )
-                                )
-
-                                EffectButton(
-                                    text = "통계 확인하기",
-                                    defaultBackgroundColor = colors.white,
-                                    defaultTextColor = colors.main,
-                                    clickedTextColor = colors.white,
-                                    clickedBackgroundColor = colors.main,
-                                    onClick = { onChartClick() }, // todo : Id Value
-                                    modifier = Modifier
-                                        .weight(1f)
-                                        .border(
-                                            width = 1.dp,
-                                            color = colors.main,
-                                            shape = RoundedCornerShape(6.dp)
-                                        )
-                                )
-                            }
 
                             Row(
                                 horizontalArrangement = Arrangement.spacedBy(
@@ -454,12 +409,10 @@ private fun ExpoDetailScreen(
                                 modifier = Modifier.fillMaxWidth()
                             ) {
 
-                                EffectButton(
+                                ExpoEnableButton(
                                     text = "프로그램",
-                                    defaultBackgroundColor = colors.white,
-                                    defaultTextColor = colors.main,
-                                    clickedTextColor = colors.white,
-                                    clickedBackgroundColor = colors.main,
+                                    textColor = colors.main,
+                                    backgroundColor = colors.white,
                                     onClick = { onProgramClick(id) },
                                     modifier = Modifier
                                         .weight(1f)
@@ -470,12 +423,10 @@ private fun ExpoDetailScreen(
                                         )
                                 )
 
-                                EffectButton(
+                                ExpoEnableButton(
                                     text = "조회하기",
-                                    defaultBackgroundColor = colors.white,
-                                    defaultTextColor = colors.main,
-                                    clickedTextColor = colors.white,
-                                    clickedBackgroundColor = colors.main,
+                                    textColor = colors.main,
+                                    backgroundColor = colors.white,
                                     onClick = { onCheckClick(id) },
                                     modifier = Modifier
                                         .weight(1f)
@@ -486,6 +437,20 @@ private fun ExpoDetailScreen(
                                         )
                                 )
                             }
+
+                            ExpoEnableButton(
+                                text = "문자 보내기",
+                                onClick = { isOpenDialog(true) },
+                                textColor = colors.main,
+                                backgroundColor = colors.white,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .border(
+                                        width = 1.dp,
+                                        color = colors.main,
+                                        shape = RoundedCornerShape(6.dp)
+                                    )
+                            )
 
                             ExpoEnableDetailButton(
                                 text = "폼 생성하기",
@@ -650,7 +615,6 @@ private fun HomeDetailScreenPreview() {
         getCoordinatesToAddressUiState = GetCoordinatesToAddressUiState.Loading,
         scrollState = ScrollState(0),
         onBackClick = {},
-        onChartClick = {},
         onMessageClick = {},
         onCheckClick = {},
         onModifyClick = {},

@@ -1,4 +1,4 @@
-package com.msg.bitgoeul_android.di
+package com.school_of_company.expo_android.di
 
 import com.school_of_company.expo_android.BuildConfig
 import dagger.Module

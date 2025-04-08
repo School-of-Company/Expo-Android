@@ -66,7 +66,6 @@ internal fun ExpoDetailRoute(
     modifier: Modifier = Modifier,
     id: String,
     onBackClick: () -> Unit,
-    onChartClick: () -> Unit,
     onCheckClick: (String) -> Unit,
     onModifyClick: (String) -> Unit,
     onProgramClick: (String) -> Unit,
@@ -103,7 +102,6 @@ internal fun ExpoDetailRoute(
         getStandardProgramUiState = getStandardProgramUiState,
         getCoordinatesToAddressUiState = getCoordinatesToAddressUiState,
         onBackClick = onBackClick,
-        onChartClick = onChartClick,
         onMessageClick = { authority ->
             onMessageClick(id, authority)
         },
@@ -141,7 +139,6 @@ private fun ExpoDetailScreen(
     getCoordinatesToAddressUiState: GetCoordinatesToAddressUiState,
     scrollState: ScrollState = rememberScrollState(),
     onBackClick: () -> Unit,
-    onChartClick: () -> Unit,
     onMessageClick: (String) -> Unit,
     onCheckClick: (String) -> Unit,
     onModifyClick: (String) -> Unit,
@@ -318,7 +315,7 @@ private fun ExpoDetailScreen(
 
                                 if (getStandardProgramUiState.data.isEmpty()) {
                                     Text(
-                                        text = "일반 프로그램이 없습니다.",
+                                        text = "· 일반 프로그램이 존재하지 않음",
                                         style = typography.bodyRegular2,
                                         color = colors.gray400
                                     )
@@ -342,7 +339,7 @@ private fun ExpoDetailScreen(
 
                                 if (getTrainingProgramUiState.data.isEmpty()) {
                                     Text(
-                                        text = "프로그램이 존재하지 않음",
+                                        text = "· 연수자 프로그램이 존재하지 않음",
                                         style = typography.bodyRegular2,
                                         color = colors.gray400
                                     )
@@ -401,49 +398,6 @@ private fun ExpoDetailScreen(
                         Spacer(modifier = Modifier.weight(1f))
 
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top)) {
-                            Row(
-                                horizontalArrangement = Arrangement.spacedBy(
-                                    16.dp,
-                                    Alignment.CenterHorizontally
-                                ),
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(top = 38.dp)
-                            ) {
-
-                                EffectButton(
-                                    text = "문자 보내기",
-                                    defaultBackgroundColor = colors.white,
-                                    defaultTextColor = colors.main,
-                                    clickedTextColor = colors.white,
-                                    clickedBackgroundColor = colors.main,
-                                    onClick = { isOpenDialog(true) },
-                                    modifier = Modifier
-                                        .weight(1f)
-                                        .border(
-                                            width = 1.dp,
-                                            color = colors.main,
-                                            shape = RoundedCornerShape(6.dp)
-                                        )
-                                )
-
-                                EffectButton(
-                                    text = "통계 확인하기",
-                                    defaultBackgroundColor = colors.white,
-                                    defaultTextColor = colors.main,
-                                    clickedTextColor = colors.white,
-                                    clickedBackgroundColor = colors.main,
-                                    onClick = { onChartClick() }, // todo : Id Value
-                                    modifier = Modifier
-                                        .weight(1f)
-                                        .border(
-                                            width = 1.dp,
-                                            color = colors.main,
-                                            shape = RoundedCornerShape(6.dp)
-                                        )
-                                )
-                            }
 
                             Row(
                                 horizontalArrangement = Arrangement.spacedBy(
@@ -486,6 +440,19 @@ private fun ExpoDetailScreen(
                                         )
                                 )
                             }
+
+                            ExpoEnableButton(
+                                text = "문자 보내기",
+                                onClick = { isOpenDialog(true) },
+                                backgroundColor = colors.white,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .border(
+                                        width = 1.dp,
+                                        color = colors.main,
+                                        shape = RoundedCornerShape(6.dp)
+                                    )
+                            )
 
                             ExpoEnableDetailButton(
                                 text = "폼 생성하기",
@@ -650,7 +617,6 @@ private fun HomeDetailScreenPreview() {
         getCoordinatesToAddressUiState = GetCoordinatesToAddressUiState.Loading,
         scrollState = ScrollState(0),
         onBackClick = {},
-        onChartClick = {},
         onMessageClick = {},
         onCheckClick = {},
         onModifyClick = {},

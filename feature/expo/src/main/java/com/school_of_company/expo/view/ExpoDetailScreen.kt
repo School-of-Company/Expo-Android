@@ -41,7 +41,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import com.school_of_company.design_system.R
-import com.school_of_company.design_system.component.button.EffectButton
 import com.school_of_company.design_system.component.button.ExpoEnableButton
 import com.school_of_company.design_system.component.button.ExpoEnableDetailButton
 import com.school_of_company.design_system.component.loading.LoadingDot
@@ -218,7 +217,7 @@ private fun ExpoDetailScreen(
                             }
                         }
 
-                        Spacer(modifier = Modifier.height(54.dp))
+                        Spacer(modifier = Modifier.height(18.dp))
 
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Bottom)) {
                             Text(
@@ -397,6 +396,8 @@ private fun ExpoDetailScreen(
 
                         Spacer(modifier = Modifier.weight(1f))
 
+                        Spacer(modifier = Modifier.padding(bottom = 38.dp))
+
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top)) {
 
                             Row(
@@ -408,12 +409,10 @@ private fun ExpoDetailScreen(
                                 modifier = Modifier.fillMaxWidth()
                             ) {
 
-                                EffectButton(
+                                ExpoEnableButton(
                                     text = "프로그램",
-                                    defaultBackgroundColor = colors.white,
-                                    defaultTextColor = colors.main,
-                                    clickedTextColor = colors.white,
-                                    clickedBackgroundColor = colors.main,
+                                    textColor = colors.main,
+                                    backgroundColor = colors.white,
                                     onClick = { onProgramClick(id) },
                                     modifier = Modifier
                                         .weight(1f)
@@ -424,12 +423,10 @@ private fun ExpoDetailScreen(
                                         )
                                 )
 
-                                EffectButton(
+                                ExpoEnableButton(
                                     text = "조회하기",
-                                    defaultBackgroundColor = colors.white,
-                                    defaultTextColor = colors.main,
-                                    clickedTextColor = colors.white,
-                                    clickedBackgroundColor = colors.main,
+                                    textColor = colors.main,
+                                    backgroundColor = colors.white,
                                     onClick = { onCheckClick(id) },
                                     modifier = Modifier
                                         .weight(1f)
@@ -444,6 +441,7 @@ private fun ExpoDetailScreen(
                             ExpoEnableButton(
                                 text = "문자 보내기",
                                 onClick = { isOpenDialog(true) },
+                                textColor = colors.main,
                                 backgroundColor = colors.white,
                                 modifier = Modifier
                                     .fillMaxWidth()

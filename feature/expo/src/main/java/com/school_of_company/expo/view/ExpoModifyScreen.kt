@@ -146,8 +146,8 @@ internal fun ExpoModifyRoute(
                         description = viewModel.introduce_title.value,
                         location = viewModel.location.value,
                         coverImage = (imageUpLoadUiState as ImageUpLoadUiState.Success).data.imageURL,
-                        x = "37.511734",
-                        y = "127.05905",
+                        x = viewModel.coordinateX.value,
+                        y = viewModel.coordinateY.value,
                         updateStandardProRequestDto = standardProgramTextState,
                         updateTrainingProRequestDto = trainingProgramTextState
                     )

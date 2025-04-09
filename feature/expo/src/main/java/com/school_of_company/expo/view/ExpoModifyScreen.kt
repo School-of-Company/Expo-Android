@@ -128,7 +128,7 @@ internal fun ExpoModifyRoute(
 
     DisposableEffect(Unit) {
         onDispose {
-            viewModel.resetExpoInformation()
+            viewModel.resetOnModifyExpoInformation()
             viewModel.initModifyExpo()
         }
     }
@@ -165,7 +165,7 @@ internal fun ExpoModifyRoute(
             is ModifyExpoInformationUiState.Loading -> Unit
             is ModifyExpoInformationUiState.Success -> {
                 onBackClick()
-                viewModel.resetExpoInformation()
+                viewModel.resetOnModifyExpoInformation()
                 viewModel.initModifyExpo()
                 makeToast(context, "박람회 수정을 완료하였습니다.")
             }

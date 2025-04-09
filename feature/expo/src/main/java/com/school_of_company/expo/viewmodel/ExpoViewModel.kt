@@ -88,49 +88,63 @@ internal class ExpoViewModel @Inject constructor(
     private val _swipeRefreshLoading = MutableStateFlow(false)
     val swipeRefreshLoading = _swipeRefreshLoading.asStateFlow()
 
-    private val _trainingProgramTextState = MutableStateFlow<List<TrainingProRequestParam>>(emptyList())
+    private val _trainingProgramTextState =
+        MutableStateFlow<List<TrainingProRequestParam>>(emptyList())
     internal val trainingProgramTextState = _trainingProgramTextState.asStateFlow()
 
-    private val _standardProgramTextState = MutableStateFlow<List<StandardProRequestParam>>(emptyList())
+    private val _standardProgramTextState =
+        MutableStateFlow<List<StandardProRequestParam>>(emptyList())
     internal val standardProgramTextState = _standardProgramTextState.asStateFlow()
 
-    private val _trainingProgramModifyTextState = MutableStateFlow<List<TrainingProIdRequestParam>>(emptyList())
+    private val _trainingProgramModifyTextState =
+        MutableStateFlow<List<TrainingProIdRequestParam>>(emptyList())
     internal val trainingProgramModifyTextState = _trainingProgramModifyTextState.asStateFlow()
 
-    private val _standardProgramModifyTextState = MutableStateFlow<List<StandardProIdRequestParam>>(emptyList())
+    private val _standardProgramModifyTextState =
+        MutableStateFlow<List<StandardProIdRequestParam>>(emptyList())
     internal val standardProgramModifyTextState = _standardProgramModifyTextState.asStateFlow()
 
-    private val _getExpoInformationUiState = MutableStateFlow<GetExpoInformationUiState>(GetExpoInformationUiState.Loading)
+    private val _getExpoInformationUiState =
+        MutableStateFlow<GetExpoInformationUiState>(GetExpoInformationUiState.Loading)
     internal val getExpoInformationUiState = _getExpoInformationUiState.asStateFlow()
 
-    private val _getCoordinatesUiState = MutableStateFlow<GetCoordinatesUiState>(GetCoordinatesUiState.Loading)
+    private val _getCoordinatesUiState =
+        MutableStateFlow<GetCoordinatesUiState>(GetCoordinatesUiState.Loading)
     internal val getCoordinatesUiState = _getCoordinatesUiState.asStateFlow()
 
-    private val _getCoordinatesToAddressUiState = MutableStateFlow<GetCoordinatesToAddressUiState>(GetCoordinatesToAddressUiState.Loading)
+    private val _getCoordinatesToAddressUiState =
+        MutableStateFlow<GetCoordinatesToAddressUiState>(GetCoordinatesToAddressUiState.Loading)
     internal val getCoordinatesToAddressUiState = _getCoordinatesToAddressUiState.asStateFlow()
 
     private val _getAddressUiState = MutableStateFlow<GetAddressUiState>(GetAddressUiState.Loading)
     internal val getAddressUiState = _getAddressUiState.asStateFlow()
 
-    private val _registerExpoInformationUiState = MutableStateFlow<RegisterExpoInformationUiState>(RegisterExpoInformationUiState.Loading)
+    private val _registerExpoInformationUiState =
+        MutableStateFlow<RegisterExpoInformationUiState>(RegisterExpoInformationUiState.Loading)
     internal val registerExpoInformationUiState = _registerExpoInformationUiState.asStateFlow()
 
-    private val _modifyExpoInformationUiState = MutableStateFlow<ModifyExpoInformationUiState>(ModifyExpoInformationUiState.Loading)
+    private val _modifyExpoInformationUiState =
+        MutableStateFlow<ModifyExpoInformationUiState>(ModifyExpoInformationUiState.Loading)
     internal val modifyExpoInformationUiState = _modifyExpoInformationUiState.asStateFlow()
 
-    private val _deleteExpoInformationUiState = MutableStateFlow<DeleteExpoInformationUiState>(DeleteExpoInformationUiState.Loading)
+    private val _deleteExpoInformationUiState =
+        MutableStateFlow<DeleteExpoInformationUiState>(DeleteExpoInformationUiState.Loading)
     internal val deleteExpoInformationUiState = _deleteExpoInformationUiState.asStateFlow()
 
-    private val _getExpoListUiState = MutableStateFlow<GetExpoListUiState>(GetExpoListUiState.Loading)
+    private val _getExpoListUiState =
+        MutableStateFlow<GetExpoListUiState>(GetExpoListUiState.Loading)
     internal val getExpoListUiState = _getExpoListUiState.asStateFlow()
 
-    private val _imageUpLoadUiState = MutableStateFlow<ImageUpLoadUiState>(ImageUpLoadUiState.Loading)
+    private val _imageUpLoadUiState =
+        MutableStateFlow<ImageUpLoadUiState>(ImageUpLoadUiState.Loading)
     internal val imageUpLoadUiState = _imageUpLoadUiState.asStateFlow()
 
-    private val _getStandardProgramListUiState = MutableStateFlow<GetStandardProgramListUiState>(GetStandardProgramListUiState.Loading)
+    private val _getStandardProgramListUiState =
+        MutableStateFlow<GetStandardProgramListUiState>(GetStandardProgramListUiState.Loading)
     internal val getStandardProgramListUiState = _getStandardProgramListUiState.asStateFlow()
 
-    private val _getTrainingProgramListUiState = MutableStateFlow<GetTrainingProgramListUiState>(GetTrainingProgramListUiState.Loading)
+    private val _getTrainingProgramListUiState =
+        MutableStateFlow<GetTrainingProgramListUiState>(GetTrainingProgramListUiState.Loading)
     internal val getTrainingProgramListUiState = _getTrainingProgramListUiState.asStateFlow()
 
     internal var modify_title = savedStateHandle.getStateFlow(key = MODIFY_TITLE, initialValue = "")
@@ -139,7 +153,8 @@ internal class ExpoViewModel @Inject constructor(
 
     internal var ended_date = savedStateHandle.getStateFlow(key = ENDED_DATE, initialValue = "")
 
-    internal var introduce_title = savedStateHandle.getStateFlow(key = INTRODUCE_TITLE, initialValue = "")
+    internal var introduce_title =
+        savedStateHandle.getStateFlow(key = INTRODUCE_TITLE, initialValue = "")
 
     internal var address = savedStateHandle.getStateFlow(key = ADDRESS, initialValue = "")
 
@@ -151,11 +166,14 @@ internal class ExpoViewModel @Inject constructor(
 
     internal var coordinateY = savedStateHandle.getStateFlow(key = COORDINATEY, initialValue = "")
 
-    internal var searched_location = savedStateHandle.getStateFlow(key = SEARCHED_LOCATION, initialValue = "")
+    internal var searched_location =
+        savedStateHandle.getStateFlow(key = SEARCHED_LOCATION, initialValue = "")
 
-    internal var searched_coordinateX = savedStateHandle.getStateFlow(key = SEARCHED_COORDINATEX, initialValue = "")
+    internal var searched_coordinateX =
+        savedStateHandle.getStateFlow(key = SEARCHED_COORDINATEX, initialValue = "")
 
-    internal var searched_coordinateY = savedStateHandle.getStateFlow(key = SEARCHED_COORDINATEY, initialValue = "")
+    internal var searched_coordinateY =
+        savedStateHandle.getStateFlow(key = SEARCHED_COORDINATEY, initialValue = "")
 
     val expoListSize: StateFlow<Int> = getExpoListUiState
         .map { state ->
@@ -180,9 +198,12 @@ internal class ExpoViewModel @Inject constructor(
             .asResult()
             .collectLatest { result ->
                 when (result) {
-                    is Result.Loading -> _getExpoInformationUiState.value = GetExpoInformationUiState.Loading
+                    is Result.Loading -> _getExpoInformationUiState.value =
+                        GetExpoInformationUiState.Loading
+
                     is Result.Success -> {
-                        _getExpoInformationUiState.value = GetExpoInformationUiState.Success(result.data)
+                        _getExpoInformationUiState.value =
+                            GetExpoInformationUiState.Success(result.data)
 
                         result.data.let {
                             onModifyTitleChange(it.title)
@@ -199,7 +220,9 @@ internal class ExpoViewModel @Inject constructor(
                             onCoverImageChange(it.coverImage)
                         }
                     }
-                    is Result.Error -> _getExpoInformationUiState.value = GetExpoInformationUiState.Error(result.exception)
+
+                    is Result.Error -> _getExpoInformationUiState.value =
+                        GetExpoInformationUiState.Error(result.exception)
                 }
             }
     }
@@ -228,9 +251,14 @@ internal class ExpoViewModel @Inject constructor(
                 .asResult() // TODO: 컨벤션 확인
                 .collectLatest { result ->
                     when (result) {
-                        is Result.Loading -> _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Loading
-                        is Result.Success -> _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Success(result.data)
-                        is Result.Error -> _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Error(result.exception)
+                        is Result.Loading -> _registerExpoInformationUiState.value =
+                            RegisterExpoInformationUiState.Loading
+
+                        is Result.Success -> _registerExpoInformationUiState.value =
+                            RegisterExpoInformationUiState.Success(result.data)
+
+                        is Result.Error -> _registerExpoInformationUiState.value =
+                            RegisterExpoInformationUiState.Error(result.exception)
                     }
                 }
         }
@@ -268,7 +296,8 @@ internal class ExpoViewModel @Inject constructor(
         )
             .onSuccess {
                 it.catch { remoteError ->
-                    _modifyExpoInformationUiState.value = ModifyExpoInformationUiState.Error(remoteError)
+                    _modifyExpoInformationUiState.value =
+                        ModifyExpoInformationUiState.Error(remoteError)
                 }.collect {
                     _modifyExpoInformationUiState.value = ModifyExpoInformationUiState.Success
                 }
@@ -283,26 +312,41 @@ internal class ExpoViewModel @Inject constructor(
         _modifyExpoInformationUiState.value = ModifyExpoInformationUiState.Loading
     }
 
-    internal fun resetExpoInformation() {
-            onIntroduceTitleChange("")
-            onStartedDateChange("")
-            onEndedDateChange("")
-            onAddressChange("")
-            onLocationChange("")
-            onCoverImageChange(null)
-            onModifyTitleChange("")
-            onStartedChange("")
-            onEndedChange("")
-            _trainingProgramTextState.value = emptyList()
-            _standardProgramTextState.value = emptyList()
+    internal fun resetOnCreateExpoInformation() {
+        onIntroduceTitleChange("")
+        onStartedDateChange("")
+        onEndedDateChange("")
+        onAddressChange("")
+        onLocationChange("")
+        onCoverImageChange(null)
+        onModifyTitleChange("")
+        onStartedChange("")
+        onEndedChange("")
+        _trainingProgramTextState.value = emptyList()
+        _standardProgramTextState.value = emptyList()
     }
+
+    internal fun resetOnModifyExpoInformation() {
+        onIntroduceTitleChange("")
+        onStartedDateChange("")
+        onEndedDateChange("")
+        onAddressChange("")
+        onCoverImageChange(null)
+        onModifyTitleChange("")
+        onStartedChange("")
+        onEndedChange("")
+        _trainingProgramTextState.value = emptyList()
+        _standardProgramTextState.value = emptyList()
+    }
+
 
     internal fun deleteExpoInformation(expoId: String) = viewModelScope.launch {
         _deleteExpoInformationUiState.value = DeleteExpoInformationUiState.Loading
         deleteExpoInformationUseCase(expoId = expoId)
             .onSuccess {
                 it.catch { remoteError ->
-                    _deleteExpoInformationUiState.value = DeleteExpoInformationUiState.Error(remoteError)
+                    _deleteExpoInformationUiState.value =
+                        DeleteExpoInformationUiState.Error(remoteError)
                 }.collect {
                     _deleteExpoInformationUiState.value = DeleteExpoInformationUiState.Success
                     getExpoList()
@@ -333,6 +377,7 @@ internal class ExpoViewModel @Inject constructor(
                             _swipeRefreshLoading.value = false
                         }
                     }
+
                     is Result.Error -> {
                         _getExpoListUiState.value = GetExpoListUiState.Error(result.exception)
                         _swipeRefreshLoading.value = false
@@ -348,7 +393,8 @@ internal class ExpoViewModel @Inject constructor(
         val multipartFile = getMultipartFile(context, image)
 
         if (multipartFile == null) {
-            _imageUpLoadUiState.value = ImageUpLoadUiState.Error(IllegalStateException("이미지 파일 변환 실패"))
+            _imageUpLoadUiState.value =
+                ImageUpLoadUiState.Error(IllegalStateException("이미지 파일 변환 실패"))
             return@launch
         }
 
@@ -357,8 +403,11 @@ internal class ExpoViewModel @Inject constructor(
             .collectLatest { result ->
                 when (result) {
                     is Result.Loading -> _imageUpLoadUiState.value = ImageUpLoadUiState.Loading
-                    is Result.Success -> _imageUpLoadUiState.value = ImageUpLoadUiState.Success(result.data)
-                    is Result.Error -> _imageUpLoadUiState.value = ImageUpLoadUiState.Error(result.exception)
+                    is Result.Success -> _imageUpLoadUiState.value =
+                        ImageUpLoadUiState.Success(result.data)
+
+                    is Result.Error -> _imageUpLoadUiState.value =
+                        ImageUpLoadUiState.Error(result.exception)
                 }
             }
     }
@@ -369,9 +418,12 @@ internal class ExpoViewModel @Inject constructor(
             .asResult()
             .collectLatest { result ->
                 when (result) {
-                    is Result.Loading -> _getStandardProgramListUiState.value = GetStandardProgramListUiState.Loading
+                    is Result.Loading -> _getStandardProgramListUiState.value =
+                        GetStandardProgramListUiState.Loading
+
                     is Result.Success -> {
-                        _getStandardProgramListUiState.value = GetStandardProgramListUiState.Success(result.data)
+                        _getStandardProgramListUiState.value =
+                            GetStandardProgramListUiState.Success(result.data)
 
                         _standardProgramModifyTextState.value = result.data.map { program ->
                             StandardProIdRequestParam(
@@ -382,7 +434,9 @@ internal class ExpoViewModel @Inject constructor(
                             )
                         }
                     }
-                    is Result.Error -> _getStandardProgramListUiState.value = GetStandardProgramListUiState.Error(result.exception)
+
+                    is Result.Error -> _getStandardProgramListUiState.value =
+                        GetStandardProgramListUiState.Error(result.exception)
                 }
             }
     }
@@ -394,9 +448,12 @@ internal class ExpoViewModel @Inject constructor(
             .asResult()
             .collectLatest { result ->
                 when (result) {
-                    is Result.Loading -> _getTrainingProgramListUiState.value = GetTrainingProgramListUiState.Loading
+                    is Result.Loading -> _getTrainingProgramListUiState.value =
+                        GetTrainingProgramListUiState.Loading
+
                     is Result.Success -> {
-                        _getTrainingProgramListUiState.value = GetTrainingProgramListUiState.Success(result.data)
+                        _getTrainingProgramListUiState.value =
+                            GetTrainingProgramListUiState.Success(result.data)
 
                         _trainingProgramModifyTextState.value = result.data.map { program ->
                             TrainingProIdRequestParam(
@@ -408,7 +465,9 @@ internal class ExpoViewModel @Inject constructor(
                             )
                         }
                     }
-                    is Result.Error -> _getTrainingProgramListUiState.value = GetTrainingProgramListUiState.Error(result.exception)
+
+                    is Result.Error -> _getTrainingProgramListUiState.value =
+                        GetTrainingProgramListUiState.Error(result.exception)
                 }
             }
     }
@@ -448,7 +507,9 @@ internal class ExpoViewModel @Inject constructor(
                                 )
                             }
                         }
-                        is Result.Error -> _getAddressUiState.value = GetAddressUiState.Error(result.exception)
+
+                        is Result.Error -> _getAddressUiState.value =
+                            GetAddressUiState.Error(result.exception)
                     }
                 }
         }
@@ -458,20 +519,27 @@ internal class ExpoViewModel @Inject constructor(
         getCoordinatesUseCase(address = searchText)
             .asResult()
             .collectLatest { result ->
-                when(result){
-                    is Result.Loading -> _getCoordinatesUiState.value = GetCoordinatesUiState.Loading
+                when (result) {
+                    is Result.Loading -> _getCoordinatesUiState.value =
+                        GetCoordinatesUiState.Loading
+
                     is Result.Success -> if (result.data.addressName == "Unknown") {
-                        _getCoordinatesUiState.value = GetCoordinatesUiState.Error(NoResponseException())
+                        _getCoordinatesUiState.value =
+                            GetCoordinatesUiState.Error(NoResponseException())
                     } else {
                         onSearchedCoordinateChange(
-                            x = result.data.x.toDoubleOrNull()?.let { "%.6f".format(it) } ?: "0.000000",
-                            y = result.data.y.toDoubleOrNull()?.let { "%.6f".format(it) } ?: "0.000000"
+                            x = result.data.x.toDoubleOrNull()?.let { "%.6f".format(it) }
+                                ?: "0.000000",
+                            y = result.data.y.toDoubleOrNull()?.let { "%.6f".format(it) }
+                                ?: "0.000000"
                         )
                         onSearchedLocationChange(result.data.addressName)
 
                         _getCoordinatesUiState.value = GetCoordinatesUiState.Success(result.data)
                     }
-                    is Result.Error -> _getCoordinatesUiState.value = GetCoordinatesUiState.Error(result.exception)
+
+                    is Result.Error -> _getCoordinatesUiState.value =
+                        GetCoordinatesUiState.Error(result.exception)
                 }
             }
     }
@@ -481,28 +549,42 @@ internal class ExpoViewModel @Inject constructor(
             .asResult()
             .collectLatest { result ->
                 when (result) {
-                    is Result.Loading -> _getCoordinatesToAddressUiState.value = GetCoordinatesToAddressUiState.Loading
+                    is Result.Loading -> _getCoordinatesToAddressUiState.value =
+                        GetCoordinatesToAddressUiState.Loading
+
                     is Result.Success -> if (result.data.addressName == "Unknown") {
-                        _getCoordinatesToAddressUiState.value = GetCoordinatesToAddressUiState.Error(NoResponseException())
+                        _getCoordinatesToAddressUiState.value =
+                            GetCoordinatesToAddressUiState.Error(NoResponseException())
                     } else {
-                        _getCoordinatesToAddressUiState.value = GetCoordinatesToAddressUiState.Success(result.data)
+                        _getCoordinatesToAddressUiState.value =
+                            GetCoordinatesToAddressUiState.Success(result.data)
                         onAddressChange(result.data.addressName)
                     }
-                    is Result.Error -> _getCoordinatesToAddressUiState.value = GetCoordinatesToAddressUiState.Error(result.exception)
+
+                    is Result.Error -> _getCoordinatesToAddressUiState.value =
+                        GetCoordinatesToAddressUiState.Error(result.exception)
                 }
             }
     }
 
-    internal fun updateTrainingProgramModifyText(index: Int, updateItem: TrainingProIdRequestParam) {
-        _trainingProgramModifyTextState.value = _trainingProgramModifyTextState.value.toMutableList().apply {
-            set(index, updateItem)
-        }
+    internal fun updateTrainingProgramModifyText(
+        index: Int,
+        updateItem: TrainingProIdRequestParam
+    ) {
+        _trainingProgramModifyTextState.value =
+            _trainingProgramModifyTextState.value.toMutableList().apply {
+                set(index, updateItem)
+            }
     }
 
-    internal fun updateStandardProgramModifyText(index: Int, updateItem: StandardProIdRequestParam) {
-        _standardProgramModifyTextState.value = _standardProgramModifyTextState.value.toMutableList().apply {
-            set(index, updateItem)
-        }
+    internal fun updateStandardProgramModifyText(
+        index: Int,
+        updateItem: StandardProIdRequestParam
+    ) {
+        _standardProgramModifyTextState.value =
+            _standardProgramModifyTextState.value.toMutableList().apply {
+                set(index, updateItem)
+            }
     }
 
     internal fun addTrainingProgramModifyText() {
@@ -532,27 +614,37 @@ internal class ExpoViewModel @Inject constructor(
     }
 
     internal fun removeTrainingProgramModifyText(index: Int) {
-        _trainingProgramModifyTextState.value = _trainingProgramModifyTextState.value.toMutableList().apply {
-            removeAt(index)
-        }
+        _trainingProgramModifyTextState.value =
+            _trainingProgramModifyTextState.value.toMutableList().apply {
+                removeAt(index)
+            }
     }
 
     internal fun removeStandardProgramModifyText(index: Int) {
-        _standardProgramModifyTextState.value = _standardProgramModifyTextState.value.toMutableList().apply {
-            removeAt(index)
-        }
+        _standardProgramModifyTextState.value =
+            _standardProgramModifyTextState.value.toMutableList().apply {
+                removeAt(index)
+            }
     }
 
-    internal fun updateExistingTrainingProgramModify(index: Int, updatedItem: TrainingProIdRequestParam) {
-        _trainingProgramModifyTextState.value = _trainingProgramModifyTextState.value.toMutableList().apply {
-            this[index] = updatedItem
-        }
+    internal fun updateExistingTrainingProgramModify(
+        index: Int,
+        updatedItem: TrainingProIdRequestParam
+    ) {
+        _trainingProgramModifyTextState.value =
+            _trainingProgramModifyTextState.value.toMutableList().apply {
+                this[index] = updatedItem
+            }
     }
 
-    internal fun updateExistingStandardProgramModify(index: Int, updatedItem: StandardProIdRequestParam) {
-        _standardProgramModifyTextState.value = _standardProgramModifyTextState.value.toMutableList().apply {
-            this[index] = updatedItem
-        }
+    internal fun updateExistingStandardProgramModify(
+        index: Int,
+        updatedItem: StandardProIdRequestParam
+    ) {
+        _standardProgramModifyTextState.value =
+            _standardProgramModifyTextState.value.toMutableList().apply {
+                this[index] = updatedItem
+            }
     }
 
     internal fun updateTrainingProgramText(index: Int, updateItem: TrainingProRequestParam) {

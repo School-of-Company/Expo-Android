@@ -190,9 +190,7 @@ internal class ExpoViewModel @Inject constructor(
                             onEndedDateChange(it.finishedDay.formatNoneHyphenServerDate())
                             onIntroduceTitleChange(it.description)
                             if (searched_location.value.isNotBlank()) {
-                                onLocationChange(searched_location.value)
-                                onCoordinateChange(x = searched_coordinateX.value, y = searched_coordinateX.value)
-                                convertXYToJibun(x = searched_coordinateX.value, y = searched_coordinateX.value)
+                                setSearchedData()
                             } else {
                                 onLocationChange(it.location)
                                 onCoordinateChange(x = it.x, y = it.y)

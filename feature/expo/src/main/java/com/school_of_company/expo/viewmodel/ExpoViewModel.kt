@@ -468,6 +468,8 @@ internal class ExpoViewModel @Inject constructor(
                             x = result.data.x.toDoubleOrNull()?.let { "%.6f".format(it) } ?: "0.000000",
                             y = result.data.y.toDoubleOrNull()?.let { "%.6f".format(it) } ?: "0.000000"
                         )
+                        onSearchedLocationChange(result.data.addressName)
+
                         _getCoordinatesUiState.value = GetCoordinatesUiState.Success(result.data)
                     }
                     is Result.Error -> _getCoordinatesUiState.value = GetCoordinatesUiState.Error(result.exception)

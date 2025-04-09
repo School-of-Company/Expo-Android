@@ -522,6 +522,13 @@ internal class ExpoViewModel @Inject constructor(
         )
     }
 
+    private fun setSearchedData() {
+        if (searched_location.value.isNotEmpty()) {
+            onCoordinateChange(searched_coordinateX.value, searched_coordinateY.value)
+            onAddressChange(searched_location.value)
+        }
+    }
+
     internal fun removeTrainingProgramModifyText(index: Int) {
         _trainingProgramModifyTextState.value = _trainingProgramModifyTextState.value.toMutableList().apply {
             removeAt(index)

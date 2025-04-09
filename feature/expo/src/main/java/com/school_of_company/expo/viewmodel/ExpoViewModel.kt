@@ -287,6 +287,8 @@ internal class ExpoViewModel @Inject constructor(
         onIntroduceTitleChange("")
         onStartedDateChange("")
         onEndedDateChange("")
+        onLocationChange("")
+        onAddressChange("")
         onCoverImageChange(null)
         onModifyTitleChange("")
         onStartedChange("")

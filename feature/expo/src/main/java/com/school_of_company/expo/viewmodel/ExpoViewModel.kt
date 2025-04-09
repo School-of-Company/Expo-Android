@@ -442,7 +442,6 @@ internal class ExpoViewModel @Inject constructor(
                         is Result.Success -> {
                             if (result.data.isNotEmpty()) {
                                 _getAddressUiState.value = GetAddressUiState.Success(result.data)
-                                onAddressChange(result.data.first().roadAddr)
                             } else {
                                 _getAddressUiState.value = GetAddressUiState.Error(
                                     NoResponseException()

@@ -108,7 +108,8 @@ internal fun ExpoModifyRoute(
 
     val context = LocalContext.current
 
-    val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+    val galleryLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             if (uri != null) {
                 val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
                 context.contentResolver.openInputStream(uri)?.use { inputStream ->
@@ -168,6 +169,7 @@ internal fun ExpoModifyRoute(
                 viewModel.initModifyExpo()
                 makeToast(context, "박람회 수정을 완료하였습니다.")
             }
+
             is ModifyExpoInformationUiState.Error -> {
                 onErrorToast(null, R.string.expo_modify_fail)
             }
@@ -199,7 +201,6 @@ internal fun ExpoModifyRoute(
         onStartedDateChange = viewModel::onStartedDateChange,
         onEndedDateChange = viewModel::onEndedDateChange,
         onModifyTitleChange = viewModel::onModifyTitleChange,
-        onAddressChange = viewModel::onAddressChange,
         onLocationChange = viewModel::onLocationChange,
         onIntroduceTitleChange = viewModel::onIntroduceTitleChange,
         onRemoveTrainingProgram = viewModel::removeTrainingProgramModifyText,
@@ -235,7 +236,6 @@ private fun ExpoModifyScreen(
     onStartedDateChange: (String) -> Unit,
     onEndedDateChange: (String) -> Unit,
     onModifyTitleChange: (String) -> Unit,
-    onAddressChange: (String) -> Unit,
     onLocationChange: (String) -> Unit,
     onIntroduceTitleChange: (String) -> Unit,
     onRemoveTrainingProgram: (Int) -> Unit,
@@ -533,17 +533,17 @@ private fun ExpoModifyScreen(
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top)) {
 
                         ExpoLocationIconTextField(
+                            value = addressState,
+                            onValueChange = { _ -> },
                             placeholder = "장소를 입력해주세요.",
                             isDisabled = true,
-                            onValueChange = onLocationChange,
                             onButtonClicked = navigateToExpoAddressSearch,
-                            value = locationState,
                         )
 
                         NoneLimitedLengthTextField(
-                            value = addressState,
-                            placeholder = "상세주소를 입력해주세요.",
-                            updateTextValue = onAddressChange
+                            value = locationState,
+                            updateTextValue = onLocationChange,
+                            placeholder = "상세주소를 입력해주세요."
                         )
                     }
 
@@ -642,7 +642,6 @@ private fun HomeDetailModifyScreenPreview() {
         locationState = "",
         onModifyTitleChange = {},
         onLocationChange = {},
-        onAddressChange = {},
         onStartedDateChange = {},
         onEndedDateChange = {},
         onIntroduceTitleChange = {},

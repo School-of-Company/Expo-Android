@@ -283,12 +283,10 @@ internal class ExpoViewModel @Inject constructor(
         _modifyExpoInformationUiState.value = ModifyExpoInformationUiState.Loading
     }
 
-    internal fun resetOnCreateExpoInformation() {
+    internal fun resetExpoInformation() {
         onIntroduceTitleChange("")
         onStartedDateChange("")
         onEndedDateChange("")
-        onAddressChange("")
-        onLocationChange("")
         onCoverImageChange(null)
         onModifyTitleChange("")
         onStartedChange("")
@@ -296,20 +294,6 @@ internal class ExpoViewModel @Inject constructor(
         _trainingProgramTextState.value = emptyList()
         _standardProgramTextState.value = emptyList()
     }
-
-    internal fun resetOnModifyExpoInformation() {
-        onIntroduceTitleChange("")
-        onStartedDateChange("")
-        onEndedDateChange("")
-        onAddressChange("")
-        onCoverImageChange(null)
-        onModifyTitleChange("")
-        onStartedChange("")
-        onEndedChange("")
-        _trainingProgramTextState.value = emptyList()
-        _standardProgramTextState.value = emptyList()
-    }
-
 
     internal fun deleteExpoInformation(expoId: String) = viewModelScope.launch {
         _deleteExpoInformationUiState.value = DeleteExpoInformationUiState.Loading

@@ -160,7 +160,7 @@ internal fun ExpoCreateRoute(
 
     LaunchedEffect(registerExpoInformationUiState) {
         if (registerExpoInformationUiState is RegisterExpoInformationUiState.Success) {
-            viewModel.resetOnCreateExpoInformation()
+            viewModel.resetExpoInformation()
             selectedImageUri = null
             selectedImageUriString = null
             makeToast(context, "박람회 등록을 완료하였습니다.")

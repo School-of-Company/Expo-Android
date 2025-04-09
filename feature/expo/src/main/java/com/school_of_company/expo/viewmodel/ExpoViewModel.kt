@@ -426,7 +426,6 @@ internal class ExpoViewModel @Inject constructor(
     }
 
     internal fun initializeWithSearchedData() {
-        onLocationChange(searched_location.value)
         onCoordinateChange(
             searched_coordinateX.value,
             searched_coordinateY.value
@@ -445,6 +444,7 @@ internal class ExpoViewModel @Inject constructor(
                         is Result.Success -> {
                             if (result.data.isNotEmpty()) {
                                 _getAddressUiState.value = GetAddressUiState.Success(result.data)
+                                onAddressChange(result.data.first().roadAddr)
                             } else {
                                 _getAddressUiState.value = GetAddressUiState.Error(
                                     NoResponseException()

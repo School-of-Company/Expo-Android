@@ -197,7 +197,7 @@ internal fun ExpoCreateRoute(
         onStartedDateChange = viewModel::onStartedDateChange,
         onEndedDateChange = viewModel::onEndedDateChange,
         onIntroduceTitleChange = viewModel::onIntroduceTitleChange,
-        onAddressChange = viewModel::onAddressChange,
+        onLocationChange = viewModel::onLocationChange,
         onExpoCreateCallBack = {
             if (selectedImageUri != null) {
                 viewModel.imageUpLoad(context, selectedImageUri!!)
@@ -241,7 +241,7 @@ private fun ExpoCreateScreen(
     onEndedDateChange: (String) -> Unit,
     onModifyTitleChange: (String) -> Unit,
     onIntroduceTitleChange: (String) -> Unit,
-    onAddressChange: (String) -> Unit,
+    onLocationChange: (String) -> Unit,
     onRemoveTrainingProgram: (Int) -> Unit,
     onRemoveStandardProgram: (Int) -> Unit,
     onTrainingProgramChange: (Int, TrainingProRequestParam) -> Unit,
@@ -520,14 +520,14 @@ private fun ExpoCreateScreen(
                             placeholder = "위치를 알려주세요.",
                             isDisabled = true,
                             onButtonClicked = navigateToExpoAddressSearch,
-                            value = locationState,
+                            value = addressState,
                             onValueChange = { _ -> },
                         )
 
                         NoneLimitedLengthTextField(
-                            value = addressState,
+                            value = locationState,
                             placeholder = "상세주소를 입력해주세요.",
-                            updateTextValue = onAddressChange
+                            updateTextValue = onLocationChange
                         )
                     }
 
@@ -633,7 +633,7 @@ private fun ExpoCreateScreenPreview() {
         onEndedDateChange = {},
         onModifyTitleChange = {},
         onIntroduceTitleChange = {},
-        onAddressChange = {},
+        onLocationChange = {},
         onRemoveTrainingProgram = {},
         onRemoveStandardProgram = {},
         navigateToExpoAddressSearch = {},

@@ -426,6 +426,7 @@ internal class ExpoViewModel @Inject constructor(
             searched_coordinateX.value,
             searched_coordinateY.value
         )
+        onAddressChange(searched_location.value)
         initSearchedData()
     }
 

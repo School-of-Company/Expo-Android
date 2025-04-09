@@ -485,6 +485,7 @@ internal class ExpoViewModel @Inject constructor(
                         _getCoordinatesToAddressUiState.value = GetCoordinatesToAddressUiState.Error(NoResponseException())
                     } else {
                         _getCoordinatesToAddressUiState.value = GetCoordinatesToAddressUiState.Success(result.data)
+                        onAddressChange(result.data.addressName)
                     }
                     is Result.Error -> _getCoordinatesToAddressUiState.value = GetCoordinatesToAddressUiState.Error(result.exception)
                 }

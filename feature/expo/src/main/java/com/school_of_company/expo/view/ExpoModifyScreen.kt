@@ -46,6 +46,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -120,6 +121,10 @@ internal fun ExpoModifyRoute(
             }
         }
 
+    LaunchedEffect(Unit) {
+        viewModel.setCurrentScreen(ExpoViewModel.CurrentScreen.MODIFY)
+    }
+
     LaunchedEffect(id) {
         viewModel.getExpoInformation(id)
         viewModel.getStandardProgramList(id)
@@ -128,7 +133,6 @@ internal fun ExpoModifyRoute(
 
     DisposableEffect(Unit) {
         onDispose {
-            viewModel.resetExpoInformation()
             viewModel.initModifyExpo()
         }
     }
@@ -198,6 +202,7 @@ internal fun ExpoModifyRoute(
         navigateToExpoAddressSearch = navigateToExpoAddressSearch,
         onAddStandardProgram = viewModel::addStandardProgramModifyText,
         onAddTrainingProgram = viewModel::addTrainingProgramModifyText,
+        clearExpoInformation = viewModel::resetExpoInformation,
         onStartedDateChange = viewModel::onStartedDateChange,
         onEndedDateChange = viewModel::onEndedDateChange,
         onModifyTitleChange = viewModel::onModifyTitleChange,
@@ -233,6 +238,7 @@ private fun ExpoModifyScreen(
     navigateToExpoAddressSearch: () -> Unit,
     onAddStandardProgram: () -> Unit,
     onAddTrainingProgram: () -> Unit,
+    clearExpoInformation: () -> Unit,
     onStartedDateChange: (String) -> Unit,
     onEndedDateChange: (String) -> Unit,
     onModifyTitleChange: (String) -> Unit,
@@ -283,7 +289,10 @@ private fun ExpoModifyScreen(
                 startIcon = {
                     LeftArrowIcon(
                         tint = colors.black,
-                        modifier = Modifier.expoClickable { onBackClick() }
+                        modifier = Modifier.expoClickable {
+                            onBackClick()
+                            clearExpoInformation()
+                        }
                     )
                 },
                 betweenText = "박람회 수정하기"
@@ -531,11 +540,17 @@ private fun ExpoModifyScreen(
                     Spacer(modifier = Modifier.padding(top = 28.dp))
 
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top)) {
+                        Text(
+                            text = "장소",
+                            style = typography.bodyRegular2,
+                            color = colors.black,
+                            fontWeight = FontWeight.W600,
+                        )
 
                         ExpoLocationIconTextField(
                             value = addressState,
                             onValueChange = { _ -> },
-                            placeholder = "장소를 입력해주세요.",
+                            placeholder = "장소를 선택해주세요.",
                             isDisabled = true,
                             onButtonClicked = navigateToExpoAddressSearch,
                         )
@@ -642,6 +657,7 @@ private fun HomeDetailModifyScreenPreview() {
         locationState = "",
         onModifyTitleChange = {},
         onLocationChange = {},
+        clearExpoInformation = {},
         onStartedDateChange = {},
         onEndedDateChange = {},
         onIntroduceTitleChange = {},

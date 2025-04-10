@@ -123,7 +123,7 @@ internal fun ExpoCreateRoute(
         }
 
     LaunchedEffect(Unit) {
-        viewModel.initializeWithSearchedData()
+        viewModel.setCurrentScreen(ExpoViewModel.CurrentScreen.CREATE)
     }
 
     DisposableEffect(Unit) {
@@ -512,12 +512,12 @@ private fun ExpoCreateScreen(
                         Text(
                             text = "장소",
                             style = typography.bodyRegular2,
-                            color = colors.gray600,
+                            color = colors.black,
                             fontWeight = FontWeight.W600,
                         )
 
                         ExpoLocationIconTextField(
-                            placeholder = "위치를 알려주세요.",
+                            placeholder = "장소를 선택해주세요.",
                             isDisabled = true,
                             onButtonClicked = navigateToExpoAddressSearch,
                             value = addressState,

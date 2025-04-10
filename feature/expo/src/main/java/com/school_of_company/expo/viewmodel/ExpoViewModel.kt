@@ -48,6 +48,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -73,17 +74,31 @@ internal class ExpoViewModel @Inject constructor(
         private const val STARTED_DATE = "started_date"
         private const val ENDED_DATE = "ended_date"
         private const val INTRODUCE_TITLE = "introduce_title"
-        private const val ADDRESS = "address"
         private const val COORDINATEX = "coordinatesx"
         private const val COORDINATEY = "coordinatesy"
-        private const val LOCATION = "location"
         private const val SEARCHED_COORDINATEX = "searched_coordinatesx"
         private const val SEARCHED_COORDINATEY = "searched_coordinatesy"
         private const val SEARCHED_LOCATION = "searched_location"
         private const val COVER_IMAGE = "cover_image"
         private const val STARTED = "started"
         private const val ENDED = "ended"
+        private const val MODIFY_ADDRESS = "modify_address"
+        private const val MODIFY_LOCATION = "modify_location"
+        private const val CREATE_ADDRESS = "create_address"
+        private const val CREATE_LOCATION = "create_location"
+        private const val CURRENT_SCREEN = "current_screen"
     }
+    enum class CurrentScreen {
+        MODIFY, CREATE, NONE
+    }
+
+    internal var currentScreen = savedStateHandle.getStateFlow(CURRENT_SCREEN, CurrentScreen.NONE.name)
+
+    internal var modify_address = savedStateHandle.getStateFlow(key = MODIFY_ADDRESS, initialValue = "")
+    internal var modify_location = savedStateHandle.getStateFlow(key = MODIFY_LOCATION, initialValue = "")
+
+    internal var create_address = savedStateHandle.getStateFlow(key = CREATE_ADDRESS, initialValue = "")
+    internal var create_location = savedStateHandle.getStateFlow(key = CREATE_LOCATION, initialValue = "")
 
     private val _swipeRefreshLoading = MutableStateFlow(false)
     val swipeRefreshLoading = _swipeRefreshLoading.asStateFlow()
@@ -141,17 +156,11 @@ internal class ExpoViewModel @Inject constructor(
 
     internal var introduce_title = savedStateHandle.getStateFlow(key = INTRODUCE_TITLE, initialValue = "")
 
-    internal var address = savedStateHandle.getStateFlow(key = ADDRESS, initialValue = "")
-
     internal var cover_image = savedStateHandle.getStateFlow(key = COVER_IMAGE, initialValue = "")
-
-    internal var location = savedStateHandle.getStateFlow(key = LOCATION, initialValue = "")
 
     internal var coordinateX = savedStateHandle.getStateFlow(key = COORDINATEX, initialValue = "")
 
     internal var coordinateY = savedStateHandle.getStateFlow(key = COORDINATEY, initialValue = "")
-
-    internal var searched_location = savedStateHandle.getStateFlow(key = SEARCHED_LOCATION, initialValue = "")
 
     internal var searched_coordinateX = savedStateHandle.getStateFlow(key = SEARCHED_COORDINATEX, initialValue = "")
 
@@ -175,6 +184,31 @@ internal class ExpoViewModel @Inject constructor(
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), listOf())
 
+    internal val address: StateFlow<String> = combine(
+        currentScreen,
+        modify_address,
+        create_address
+    ) { screen, modifyAddress, createAddress ->
+        when (CurrentScreen.valueOf(screen)) {
+            CurrentScreen.MODIFY -> modifyAddress
+            CurrentScreen.CREATE -> createAddress
+            else -> ""
+        }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "")
+
+
+    internal val location: StateFlow<String> = combine(
+        currentScreen,
+        modify_location,
+        create_location
+    ) { screen, modifyLocation, createLocation ->
+        when (CurrentScreen.valueOf(screen)) {
+            CurrentScreen.MODIFY -> modifyLocation
+            CurrentScreen.CREATE -> createLocation
+            else -> ""
+        }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "")
+
     internal fun getExpoInformation(expoId: String) = viewModelScope.launch {
         getExpoInformationUseCase(expoId = expoId)
             .asResult()
@@ -189,7 +223,7 @@ internal class ExpoViewModel @Inject constructor(
                             onStartedDateChange(it.startedDay.formatNoneHyphenServerDate())
                             onEndedDateChange(it.finishedDay.formatNoneHyphenServerDate())
                             onIntroduceTitleChange(it.description)
-                            if (searched_location.value.isNotBlank()) {
+                            if (address.value.isNotBlank()) {
                                 setSearchedData()
                             } else {
                                 onLocationChange(it.location)
@@ -225,7 +259,7 @@ internal class ExpoViewModel @Inject constructor(
                     }
                 ),
             )
-                .asResult() // TODO: 컨벤션 확인
+                .asResult()
                 .collectLatest { result ->
                     when (result) {
                         is Result.Loading -> _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Loading
@@ -414,22 +448,13 @@ internal class ExpoViewModel @Inject constructor(
     }
 
     internal fun initSearchedData() {
-        onSearchedLocationChange("")
+        onAddressChange("")
         onSearchedCoordinateChange("", "")
     }
 
     internal fun initSearchedUiState() {
         _getAddressUiState.value = GetAddressUiState.Loading
         _getCoordinatesUiState.value = GetCoordinatesUiState.Loading
-    }
-
-    internal fun initializeWithSearchedData() {
-        onCoordinateChange(
-            searched_coordinateX.value,
-            searched_coordinateY.value
-        )
-        onAddressChange(searched_location.value)
-        initSearchedData()
     }
 
     internal fun searchLocation(searchText: String) =
@@ -468,7 +493,7 @@ internal class ExpoViewModel @Inject constructor(
                             x = result.data.x.toDoubleOrNull()?.let { "%.6f".format(it) } ?: "0.000000",
                             y = result.data.y.toDoubleOrNull()?.let { "%.6f".format(it) } ?: "0.000000"
                         )
-                        onSearchedLocationChange(result.data.addressName)
+                        onAddressChange(result.data.addressName)
 
                         _getCoordinatesUiState.value = GetCoordinatesUiState.Success(result.data)
                     }
@@ -526,9 +551,9 @@ internal class ExpoViewModel @Inject constructor(
     }
 
     private fun setSearchedData() {
-        if (searched_location.value.isNotEmpty()) {
+        if (address.value.isNotEmpty()) {
             onCoordinateChange(searched_coordinateX.value, searched_coordinateY.value)
-            onAddressChange(searched_location.value)
+            onAddressChange(address.value)
         }
     }
 
@@ -625,10 +650,6 @@ internal class ExpoViewModel @Inject constructor(
         savedStateHandle[INTRODUCE_TITLE] = value
     }
 
-    internal fun onAddressChange(value: String) {
-        savedStateHandle[ADDRESS] = value
-    }
-
     internal fun onCoverImageChange(value: String?) {
         savedStateHandle[COVER_IMAGE] = value
     }
@@ -639,10 +660,6 @@ internal class ExpoViewModel @Inject constructor(
 
     internal fun onEndedChange(value: String) {
         savedStateHandle[ENDED] = value
-    }
-
-    internal fun onLocationChange(value: String) {
-        savedStateHandle[LOCATION] = value
     }
 
     internal fun onCoordinateChange(x: String, y: String) {
@@ -657,5 +674,25 @@ internal class ExpoViewModel @Inject constructor(
     internal fun onSearchedCoordinateChange(x: String, y: String) {
         savedStateHandle[SEARCHED_COORDINATEX] = x
         savedStateHandle[SEARCHED_COORDINATEY] = y
+    }
+
+    internal fun onAddressChange(value: String) {
+        when (CurrentScreen.valueOf(currentScreen.value)) {
+            CurrentScreen.MODIFY -> savedStateHandle[MODIFY_ADDRESS] = value
+            CurrentScreen.CREATE -> savedStateHandle[CREATE_ADDRESS] = value
+            else -> Unit
+        }
+    }
+
+    internal fun onLocationChange(value: String) {
+        when (CurrentScreen.valueOf(currentScreen.value)) {
+            CurrentScreen.MODIFY -> savedStateHandle[MODIFY_LOCATION] = value
+            CurrentScreen.CREATE -> savedStateHandle[CREATE_LOCATION] = value
+            else -> Unit
+        }
+    }
+
+    internal fun setCurrentScreen(screen: CurrentScreen) {
+        savedStateHandle[CURRENT_SCREEN] = screen.name
     }
 }

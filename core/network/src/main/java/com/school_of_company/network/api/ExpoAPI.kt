@@ -34,6 +34,6 @@ interface ExpoAPI {
         @Path("expo_id") expoId: String
     )
 
-    @GET("/valid")
+    @GET("/expo/valid")
     suspend fun checkExpoSurveyDynamicFormEnable() : ExpoSurveyDynamicFormEnabledResponse
 }

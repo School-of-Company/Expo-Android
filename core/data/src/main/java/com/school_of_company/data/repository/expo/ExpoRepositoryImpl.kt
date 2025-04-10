@@ -2,6 +2,7 @@ package com.school_of_company.data.repository.expo
 
 import com.school_of_company.model.entity.expo.ExpoIdResponseEntity
 import com.school_of_company.model.entity.expo.ExpoListResponseEntity
+import com.school_of_company.model.entity.expo.ExpoSurveyDynamicFormEnabledEntity
 import com.school_of_company.model.model.expo.ExpoRequestAndResponseModel
 import com.school_of_company.model.param.expo.ExpoAllRequestParam
 import com.school_of_company.model.param.expo.ExpoModifyRequestParam
@@ -48,5 +49,11 @@ class ExpoRepositoryImpl @Inject constructor(
 
     override fun deleteExpoInformation(expoId: String): Flow<Unit> {
         return dataSource.deleteExpoInformation(expoId = expoId)
+    }
+
+    override fun checkExpoSurveyDynamicFormEnable(expoId: String): Flow<ExpoSurveyDynamicFormEnabledEntity> {
+        return dataSource.checkExpoSurveyDynamicFormEnable(expoId = expoId).transform { response ->
+            emit(response.toEntity())
+        }
     }
 }

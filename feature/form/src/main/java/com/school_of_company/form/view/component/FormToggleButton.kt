@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
+import kotlinx.coroutines.flow.flow
 import kotlin.math.roundToInt
 
 @Composable
@@ -137,4 +138,10 @@ private fun ExpoToggleButtonPreview() {
         width = 70.dp,
         onClick = { isToggled = !isToggled },
     )
+    val numbers = flow {
+        println("Flow started!")
+        emit(1) // 데이터 방출
+        emit(2) // 데이터 방출
+    }
+
 }

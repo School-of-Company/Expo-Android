@@ -5,6 +5,7 @@ import com.school_of_company.network.dto.expo.request.ExpoModifyRequest
 import com.school_of_company.network.dto.expo.response.ExpoResponse
 import com.school_of_company.network.dto.expo.response.ExpoIdResponse
 import com.school_of_company.network.dto.expo.response.ExpoListResponse
+import com.school_of_company.network.dto.expo.response.ExpoSurveyDynamicFormEnabledResponse
 import kotlinx.coroutines.flow.Flow
 
 interface ExpoDataSource {
@@ -13,4 +14,5 @@ interface ExpoDataSource {
     fun registerExpoInformation(body: ExpoAllRequest) : Flow<ExpoIdResponse>
     fun modifyExpoInformation(expoId: String, body: ExpoModifyRequest) : Flow<Unit>
     fun deleteExpoInformation(expoId: String) : Flow<Unit>
+    fun checkExpoSurveyDynamicFormEnable(expoId: String) : Flow<ExpoSurveyDynamicFormEnabledResponse>
 }

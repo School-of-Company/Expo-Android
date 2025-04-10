@@ -6,6 +6,7 @@ import com.school_of_company.network.dto.expo.request.ExpoModifyRequest
 import com.school_of_company.network.dto.expo.response.ExpoResponse
 import com.school_of_company.network.dto.expo.response.ExpoIdResponse
 import com.school_of_company.network.dto.expo.response.ExpoListResponse
+import com.school_of_company.network.dto.expo.response.ExpoSurveyDynamicFormEnabledResponse
 import com.school_of_company.network.util.performApiRequest
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -30,4 +31,7 @@ class ExpoDataSourceImpl @Inject constructor(
 
     override fun deleteExpoInformation(expoId: String): Flow<Unit> =
         performApiRequest { service.deleteExpoInformation(expoId = expoId) }
+
+    override fun checkExpoSurveyDynamicFormEnable(expoId: String): Flow<ExpoSurveyDynamicFormEnabledResponse> =
+        performApiRequest { service.checkExpoSurveyDynamicFormEnable(expoId = expoId) }
 }

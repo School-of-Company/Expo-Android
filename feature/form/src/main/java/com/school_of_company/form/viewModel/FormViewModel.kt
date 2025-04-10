@@ -28,6 +28,9 @@ internal class FormViewModel @Inject constructor(
     private val _formState = MutableStateFlow<List<DynamicFormModel>>(listOf(DynamicFormModel.createDefault()))
     internal val formState = _formState.asStateFlow()
 
+    private val _informationTextState = MutableStateFlow("")
+    internal val informationTextState = _informationTextState.asStateFlow()
+
     private val _formUiState = MutableStateFlow<FormUiState>(FormUiState.Loading)
     internal val formUiState = _formUiState.asStateFlow()
 
@@ -37,13 +40,15 @@ internal class FormViewModel @Inject constructor(
     internal fun createForm(
         expoId: String,
         participantType: String,
+        informationText: String,
     ) = viewModelScope.launch {
         _formUiState.value = FormUiState.Loading
         createFormUseCase(
             expoId = expoId,
             body = FormRequestAndResponseModel(
                 participantType = participantType,
-                dynamicForm = _formState.value
+                dynamicForm = _formState.value,
+                informationText = informationText
             ),
         )
             .onSuccess {
@@ -61,13 +66,15 @@ internal class FormViewModel @Inject constructor(
     internal fun modifyForm(
         expoId: String,
         participantType: String,
+        informationText: String,
     ) = viewModelScope.launch {
         _formUiState.value = FormUiState.Loading
         modifyFormUseCase(
             expoId = expoId,
             body = FormRequestAndResponseModel(
                 participantType = participantType,
-                dynamicForm = _formState.value
+                dynamicForm = _formState.value,
+                informationText = informationText
             ),
         )
             .onSuccess {
@@ -98,6 +105,7 @@ internal class FormViewModel @Inject constructor(
                     is Result.Success -> with(result.data) {
                         _getFormUiState.value = GetFormUiState.Success
                         _formState.value = dynamicForm
+                        _informationTextState.value = informationText
                     }
                     is Result.Error -> _getFormUiState.value = GetFormUiState.Error(result.exception)
                 }
@@ -122,5 +130,9 @@ internal class FormViewModel @Inject constructor(
 
     internal fun addEmptyDynamicFormItem() {
         _formState.value += DynamicFormModel.createDefault()
+    }
+
+    internal fun setInformationTextState(value: String) {
+        _informationTextState.value = value
     }
 }

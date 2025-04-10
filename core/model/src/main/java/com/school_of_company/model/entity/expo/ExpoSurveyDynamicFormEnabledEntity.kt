@@ -5,7 +5,7 @@ data class ExpoSurveyDynamicFormEnabledEntity(
 )
 
 data class ExpoValidityEntity(
-    val expoId: Long,
+    val expoId: String,
     val standardFormCreatedStatus: Boolean,
     val traineeFormCreatedStatus: Boolean,
     val standardSurveyCreatedStatus: Boolean,

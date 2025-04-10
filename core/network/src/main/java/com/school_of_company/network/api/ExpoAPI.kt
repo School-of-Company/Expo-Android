@@ -5,6 +5,7 @@ import com.school_of_company.network.dto.expo.request.ExpoModifyRequest
 import com.school_of_company.network.dto.expo.response.ExpoResponse
 import com.school_of_company.network.dto.expo.response.ExpoIdResponse
 import com.school_of_company.network.dto.expo.response.ExpoListResponse
+import com.school_of_company.network.dto.expo.response.ExpoSurveyDynamicFormEnabledResponse
 import retrofit2.http.*
 
 interface ExpoAPI {
@@ -32,4 +33,7 @@ interface ExpoAPI {
     suspend fun deleteExpoInformation(
         @Path("expo_id") expoId: String
     )
+
+    @GET("/expo/valid")
+    suspend fun checkExpoSurveyDynamicFormEnable() : ExpoSurveyDynamicFormEnabledResponse
 }

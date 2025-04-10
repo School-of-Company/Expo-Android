@@ -2,6 +2,7 @@ package com.school_of_company.data.repository.expo
 
 import com.school_of_company.model.entity.expo.ExpoIdResponseEntity
 import com.school_of_company.model.entity.expo.ExpoListResponseEntity
+import com.school_of_company.model.entity.expo.ExpoSurveyDynamicFormEnabledEntity
 import com.school_of_company.model.model.expo.ExpoRequestAndResponseModel
 import com.school_of_company.model.param.expo.ExpoAllRequestParam
 import com.school_of_company.model.param.expo.ExpoModifyRequestParam
@@ -14,4 +15,5 @@ interface ExpoRepository {
     fun registerExpoInformation(body: ExpoAllRequestParam) : Flow<ExpoIdResponseEntity>
     fun modifyExpoInformation(expoId: String, body: ExpoModifyRequestParam) : Flow<Unit>
     fun deleteExpoInformation(expoId: String) : Flow<Unit>
+    fun checkExpoSurveyDynamicFormEnable() : Flow<ExpoSurveyDynamicFormEnabledEntity>
 }

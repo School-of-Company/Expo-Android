@@ -14,5 +14,5 @@ interface ExpoDataSource {
     fun registerExpoInformation(body: ExpoAllRequest) : Flow<ExpoIdResponse>
     fun modifyExpoInformation(expoId: String, body: ExpoModifyRequest) : Flow<Unit>
     fun deleteExpoInformation(expoId: String) : Flow<Unit>
-    fun checkExpoSurveyDynamicFormEnable(expoId: String) : Flow<ExpoSurveyDynamicFormEnabledResponse>
+    fun checkExpoSurveyDynamicFormEnable() : Flow<ExpoSurveyDynamicFormEnabledResponse>
 }

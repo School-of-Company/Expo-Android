@@ -32,6 +32,6 @@ class ExpoDataSourceImpl @Inject constructor(
     override fun deleteExpoInformation(expoId: String): Flow<Unit> =
         performApiRequest { service.deleteExpoInformation(expoId = expoId) }
 
-    override fun checkExpoSurveyDynamicFormEnable(expoId: String): Flow<ExpoSurveyDynamicFormEnabledResponse> =
-        performApiRequest { service.checkExpoSurveyDynamicFormEnable(expoId = expoId) }
+    override fun checkExpoSurveyDynamicFormEnable(): Flow<ExpoSurveyDynamicFormEnabledResponse> =
+        performApiRequest { service.checkExpoSurveyDynamicFormEnable() }
 }

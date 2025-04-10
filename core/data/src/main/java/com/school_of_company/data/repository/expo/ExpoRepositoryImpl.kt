@@ -51,8 +51,8 @@ class ExpoRepositoryImpl @Inject constructor(
         return dataSource.deleteExpoInformation(expoId = expoId)
     }
 
-    override fun checkExpoSurveyDynamicFormEnable(expoId: String): Flow<ExpoSurveyDynamicFormEnabledEntity> {
-        return dataSource.checkExpoSurveyDynamicFormEnable(expoId = expoId).transform { response ->
+    override fun checkExpoSurveyDynamicFormEnable(): Flow<ExpoSurveyDynamicFormEnabledEntity> {
+        return dataSource.checkExpoSurveyDynamicFormEnable().transform { response ->
             emit(response.toEntity())
         }
     }

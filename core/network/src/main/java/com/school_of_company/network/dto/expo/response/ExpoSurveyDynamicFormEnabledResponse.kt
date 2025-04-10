@@ -5,14 +5,14 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class ExpoSurveyDynamicFormEnabledResponse(
-    @Json(name = "expoValid") val expoValid: List<ExpoValidityResponse>
+    @Json(name = "expoValid") val expoValid: List<ExpoValidityResponse>,
 )
 
 @JsonClass(generateAdapter = true)
 data class ExpoValidityResponse(
-    @Json(name = "expoId") val expoId: String,
+    @Json(name = "expoId") val expoId: Long,
     @Json(name = "standardFormCreatedStatus") val standardFormCreatedStatus: Boolean,
     @Json(name = "traineeFormCreatedStatus") val traineeFormCreatedStatus: Boolean,
     @Json(name = "standardSurveyCreatedStatus") val standardSurveyCreatedStatus: Boolean,
-    @Json(name = "traineeSurveyCreatedStatus") val traineeSurveyCreatedStatus: Boolean
+    @Json(name = "traineeSurveyCreatedStatus") val traineeSurveyCreatedStatus: Boolean,
 )

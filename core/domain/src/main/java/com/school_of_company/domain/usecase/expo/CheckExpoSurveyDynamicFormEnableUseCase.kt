@@ -8,6 +8,6 @@ import javax.inject.Inject
 class CheckExpoSurveyDynamicFormEnableUseCase @Inject constructor(
     private val repository: ExpoRepository
 ) {
-    operator fun invoke(expoId: String): Flow<ExpoSurveyDynamicFormEnabledEntity> =
-        repository.checkExpoSurveyDynamicFormEnable(expoId = expoId)
+    operator fun invoke(): Flow<ExpoSurveyDynamicFormEnabledEntity> =
+        repository.checkExpoSurveyDynamicFormEnable()
 }

@@ -318,6 +318,8 @@ internal class ExpoViewModel @Inject constructor(
     }
 
     internal fun resetExpoInformation() {
+        onCoordinateChange("", "")
+        onSearchedCoordinateChange("", "")
         onIntroduceTitleChange("")
         onStartedDateChange("")
         onEndedDateChange("")
@@ -445,11 +447,6 @@ internal class ExpoViewModel @Inject constructor(
                     is Result.Error -> _getTrainingProgramListUiState.value = GetTrainingProgramListUiState.Error(result.exception)
                 }
             }
-    }
-
-    internal fun initSearchedData() {
-        onAddressChange("")
-        onSearchedCoordinateChange("", "")
     }
 
     internal fun initSearchedUiState() {
@@ -665,10 +662,6 @@ internal class ExpoViewModel @Inject constructor(
     internal fun onCoordinateChange(x: String, y: String) {
         savedStateHandle[COORDINATEX] = x
         savedStateHandle[COORDINATEY] = y
-    }
-
-    internal fun onSearchedLocationChange(value: String) {
-        savedStateHandle[SEARCHED_LOCATION] = value
     }
 
     internal fun onSearchedCoordinateChange(x: String, y: String) {

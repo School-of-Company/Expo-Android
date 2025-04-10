@@ -8,8 +8,9 @@ import com.school_of_company.network.util.convertListToJsonMap
 
 fun FormRequestAndResponseModel.toModel(): FormRequestAndResponse =
     FormRequestAndResponse(
-        participantType = this.participantType,
-        dynamicForm = this.dynamicForm.map { it.toModel() }
+        informationText = informationText,
+        participantType = participantType,
+        dynamicForm = dynamicForm.map { it.toModel() }
     )
 
 fun DynamicFormModel.toModel(): DynamicForm =

@@ -31,6 +31,7 @@ internal fun PersonaInformationFormCard(
 ) {
     ExpoAndroidTheme { colors, typography ->
         Column(
+            verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically),
             modifier = modifier
                 .border(
                     width = 1.dp,
@@ -42,7 +43,6 @@ internal fun PersonaInformationFormCard(
                     shape = RoundedCornerShape(size = 6.dp),
                 )
                 .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically),
         ) {
             Text(
                 text = "개인정보 동의 안내 문장을 입력해주세요.",

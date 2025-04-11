@@ -27,6 +27,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.school_of_company.design_system.R
 import com.school_of_company.design_system.component.button.ExpoButton
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
+import com.school_of_company.design_system.component.modifier.padding.paddingHorizontal
 import com.school_of_company.design_system.component.topbar.ExpoTopBar
 import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
@@ -95,10 +96,10 @@ private fun FormCreateScreen(
     ExpoAndroidTheme { colors, _ ->
         Column(
             modifier = modifier
-                .verticalScroll(scrollState)
                 .fillMaxSize()
+                .verticalScroll(scrollState)
                 .background(color = colors.white)
-                .padding(16.dp)
+                .padding(horizontal = 16.dp,)
                 .pointerInput(Unit) {
                     detectTapGestures(
                         onTap = {
@@ -115,7 +116,10 @@ private fun FormCreateScreen(
                     )
                 },
                 betweenText = "신정차 폼",
-                modifier = Modifier.padding(vertical = 16.dp),
+                modifier = Modifier.padding(
+                    top = 68.dp,
+                    bottom = 16.dp
+                ),
             )
 
             Column(
@@ -150,8 +154,9 @@ private fun FormCreateScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(46.dp)
-                    .padding(vertical = 12.dp),
             )
+
+            Spacer(modifier = Modifier.padding(bottom = 28.dp))
         }
     }
 }
@@ -162,13 +167,6 @@ private fun FormCreateScreenPreview() {
     FormCreateScreen(
         informationTextState = "informationTextState",
         formList = listOf(
-            DynamicFormModel(
-                title = "제목",
-                formType = FormType.DROPDOWN.name,
-                itemList = listOf("예시", "예시 1"),
-                requiredStatus = true,
-                otherJson = true,
-            ),
             DynamicFormModel(
                 title = "제목",
                 formType = FormType.DROPDOWN.name,

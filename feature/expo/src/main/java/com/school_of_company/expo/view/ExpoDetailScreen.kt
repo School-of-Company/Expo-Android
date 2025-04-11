@@ -178,7 +178,6 @@ private fun ExpoDetailScreen(
 
                     Spacer(modifier = Modifier.height(28.dp))
 
-
                     Column(modifier = Modifier.verticalScroll(scrollState)) {
                         if (getExpoInformationUiState.data.coverImage != null) {
                             Image(

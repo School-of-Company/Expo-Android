@@ -5,7 +5,7 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class FormRequestAndResponse(
-    @Json(name = "informationText") val informationText: String = "",
+    @Json(name = "informationText") val informationText: String,
     @Json(name = "participantType") val participantType: String, // TRAINEE, STANDARD
     @Json(name = "dynamicForm") val dynamicForm: List<DynamicForm>
 )

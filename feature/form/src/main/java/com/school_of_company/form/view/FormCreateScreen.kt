@@ -33,6 +33,7 @@ import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.form.enum.FormType
 import com.school_of_company.form.view.component.FormAddButton
 import com.school_of_company.form.view.component.FormCard
+import com.school_of_company.form.view.component.PersonaInformationFormCard
 import com.school_of_company.form.viewModel.FormViewModel
 import com.school_of_company.form.viewModel.uiState.FormUiState
 import com.school_of_company.model.model.form.DynamicFormModel
@@ -48,6 +49,7 @@ internal fun FormCreateRoute(
 ) {
     val formState by viewModel.formState.collectAsStateWithLifecycle()
     val formUiState by viewModel.formUiState.collectAsStateWithLifecycle()
+    val informationTextState by viewModel.informationTextState.collectAsStateWithLifecycle()
 
     LaunchedEffect(formUiState) {
         when (formUiState) {
@@ -56,6 +58,7 @@ internal fun FormCreateRoute(
                 popUpBackStack()
                 onErrorToast(null, R.string.form_create_success)
             }
+
             is FormUiState.Error -> {
                 onErrorToast(null, R.string.form_create_fail)
             }
@@ -64,11 +67,13 @@ internal fun FormCreateRoute(
 
     FormCreateScreen(
         modifier = modifier,
+        informationTextState = informationTextState,
         formList = formState,
         popUpBackStack = popUpBackStack,
         addFormAtList = viewModel::addEmptyDynamicFormItem,
-        createForm = { viewModel.createForm(expoId, participantType) },
+        createForm = { viewModel.createForm(expoId, participantType, informationTextState) },
         deleteForm = viewModel::removeDynamicFormItem,
+        onInformationTextStateChange = viewModel::setInformationTextState,
         onFormDataChange = viewModel::updateDynamicFormItem
     )
 }
@@ -76,6 +81,7 @@ internal fun FormCreateRoute(
 @Composable
 private fun FormCreateScreen(
     modifier: Modifier = Modifier,
+    informationTextState: String,
     formList: List<DynamicFormModel>,
     focusManager: FocusManager = LocalFocusManager.current,
     scrollState: ScrollState = rememberScrollState(),
@@ -83,6 +89,7 @@ private fun FormCreateScreen(
     addFormAtList: () -> Unit,
     createForm: () -> Unit,
     deleteForm: (Int) -> Unit,
+    onInformationTextStateChange: (String) -> Unit,
     onFormDataChange: (Int, DynamicFormModel) -> Unit,
 ) {
     ExpoAndroidTheme { colors, _ ->
@@ -124,6 +131,11 @@ private fun FormCreateScreen(
                     )
                 }
 
+                PersonaInformationFormCard(
+                    value = informationTextState,
+                    onTextChange = onInformationTextStateChange
+                )
+
                 FormAddButton(onClick = addFormAtList)
             }
 
@@ -148,10 +160,7 @@ private fun FormCreateScreen(
 @Composable
 private fun FormCreateScreenPreview() {
     FormCreateScreen(
-        addFormAtList = { },
-        onFormDataChange = { _, _ -> },
-        createForm = {},
-        deleteForm = { _ -> },
+        informationTextState = "informationTextState",
         formList = listOf(
             DynamicFormModel(
                 title = "제목",
@@ -169,5 +178,10 @@ private fun FormCreateScreenPreview() {
             ),
         ),
         popUpBackStack = {},
+        addFormAtList = { },
+        createForm = {},
+        deleteForm = { _ -> },
+        onFormDataChange = { _, _ -> },
+        onInformationTextStateChange = { _ -> },
     )
 }

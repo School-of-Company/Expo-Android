@@ -1,5 +1,6 @@
 package com.school_of_company.form.viewModel
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.school_of_company.common.result.Result
@@ -24,9 +25,13 @@ internal class FormViewModel @Inject constructor(
     private val createFormUseCase: CreateFormUseCase,
     private val getFormUseCase: GetFormUseCase,
     private val modifyFormUseCase: ModifyFormUseCase,
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
-    private val _formState = MutableStateFlow<List<DynamicFormModel>>(listOf(DynamicFormModel.createDefault()))
-    internal val formState = _formState.asStateFlow()
+
+    companion object {
+        private const val FORM_STATE = "form_state"
+        private const val INFORMATION_TEXT_STATE = "information_text_state"
+    }
 
     private val _formUiState = MutableStateFlow<FormUiState>(FormUiState.Loading)
     internal val formUiState = _formUiState.asStateFlow()
@@ -34,16 +39,21 @@ internal class FormViewModel @Inject constructor(
     private val _getFormUiState = MutableStateFlow<GetFormUiState>(GetFormUiState.Loading)
     internal val getFormUiState = _getFormUiState.asStateFlow()
 
+    internal val formState = savedStateHandle.getStateFlow(FORM_STATE, listOf(DynamicFormModel.createDefault()))
+    internal val informationTextState = savedStateHandle.getStateFlow(INFORMATION_TEXT_STATE, "")
+
     internal fun createForm(
         expoId: String,
         participantType: String,
+        informationText: String,
     ) = viewModelScope.launch {
         _formUiState.value = FormUiState.Loading
         createFormUseCase(
             expoId = expoId,
             body = FormRequestAndResponseModel(
                 participantType = participantType,
-                dynamicForm = _formState.value
+                dynamicForm = formState.value,
+                informationText = informationText
             ),
         )
             .onSuccess {
@@ -61,13 +71,15 @@ internal class FormViewModel @Inject constructor(
     internal fun modifyForm(
         expoId: String,
         participantType: String,
+        informationText: String,
     ) = viewModelScope.launch {
         _formUiState.value = FormUiState.Loading
         modifyFormUseCase(
             expoId = expoId,
             body = FormRequestAndResponseModel(
                 participantType = participantType,
-                dynamicForm = _formState.value
+                dynamicForm = formState.value,
+                informationText = informationText
             ),
         )
             .onSuccess {
@@ -97,30 +109,37 @@ internal class FormViewModel @Inject constructor(
                     is Result.Loading -> _getFormUiState.value = GetFormUiState.Loading
                     is Result.Success -> with(result.data) {
                         _getFormUiState.value = GetFormUiState.Success
-                        _formState.value = dynamicForm
+                        savedStateHandle[FORM_STATE] = dynamicForm
+                        savedStateHandle[INFORMATION_TEXT_STATE] = informationText
                     }
-                    is Result.Error -> _getFormUiState.value = GetFormUiState.Error(result.exception)
+
+                    is Result.Error -> _getFormUiState.value =
+                        GetFormUiState.Error(result.exception)
                 }
             }
     }
 
     internal fun updateDynamicFormItem(index: Int, newItem: DynamicFormModel) {
-        val currentList = _formState.value.toMutableList()
+        val currentList = formState.value.toMutableList()
         if (index in currentList.indices) {
             currentList[index] = newItem
-            _formState.value = currentList
+            savedStateHandle[FORM_STATE] = currentList
         }
     }
 
     internal fun removeDynamicFormItem(index: Int) {
-        val currentList = _formState.value.toMutableList()
+        val currentList = formState.value.toMutableList()
         if (index in currentList.indices) {
             currentList.removeAt(index)
-            _formState.value = currentList
+            savedStateHandle[FORM_STATE] = currentList
         }
     }
 
     internal fun addEmptyDynamicFormItem() {
-        _formState.value += DynamicFormModel.createDefault()
+        savedStateHandle[FORM_STATE] = formState.value + DynamicFormModel.createDefault()
+    }
+
+    internal fun setInformationTextState(value: String) {
+        savedStateHandle[INFORMATION_TEXT_STATE] = value
     }
 }

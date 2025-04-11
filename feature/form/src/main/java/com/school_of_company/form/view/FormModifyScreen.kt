@@ -48,6 +48,7 @@ internal fun FormModifyRoute(
 ) {
     val formState by viewModel.formState.collectAsStateWithLifecycle()
     val formActionUiState by viewModel.formUiState.collectAsStateWithLifecycle()
+    val informationTextState by viewModel.informationTextState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.getForm(
@@ -71,6 +72,7 @@ internal fun FormModifyRoute(
 
     FormModifyScreen(
         modifier = modifier,
+        informationTextState = informationTextState,
         formList = formState,
         popUpBackStack = popUpBackStack,
         addFormAtList = viewModel::addEmptyDynamicFormItem,
@@ -78,9 +80,11 @@ internal fun FormModifyRoute(
             viewModel.modifyForm(
                 expoId,
                 participantType,
+                informationTextState,
             )
         },
         deleteForm = viewModel::removeDynamicFormItem,
+        onInformationTextStateChange = viewModel::setInformationTextState,
         onFormDataChange = viewModel::updateDynamicFormItem
     )
 }
@@ -88,6 +92,7 @@ internal fun FormModifyRoute(
 @Composable
 private fun FormModifyScreen(
     modifier: Modifier = Modifier,
+    informationTextState: String,
     formList: List<DynamicFormModel>,
     focusManager: FocusManager = LocalFocusManager.current,
     scrollState: ScrollState = rememberScrollState(),
@@ -95,6 +100,7 @@ private fun FormModifyScreen(
     addFormAtList: () -> Unit,
     submitForm: () -> Unit,
     deleteForm: (Int) -> Unit,
+    onInformationTextStateChange: (String) -> Unit,
     onFormDataChange: (Int, DynamicFormModel) -> Unit,
 ) {
     ExpoAndroidTheme { colors, _ ->
@@ -181,5 +187,7 @@ private fun FormModifyScreenPreview() {
         submitForm = {},
         deleteForm = { _ -> },
         onFormDataChange = { _, _ -> },
+        onInformationTextStateChange = { _ -> },
+        informationTextState = "",
     )
 }

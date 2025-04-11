@@ -45,7 +45,7 @@ internal fun PersonaInformationFormCard(
             verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically),
         ) {
             Text(
-                text = "개인정보 동의 안내 문장을 입력하세요.",
+                text = "개인정보 동의 안내 문장을 입력해주세요.",
                 style = typography.titleBold3,
                 fontWeight = FontWeight.W600,
                 color = colors.black,

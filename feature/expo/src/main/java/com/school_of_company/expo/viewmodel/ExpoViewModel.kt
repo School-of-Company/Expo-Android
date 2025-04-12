@@ -646,20 +646,20 @@ internal class ExpoViewModel @Inject constructor(
         savedStateHandle[COVER_IMAGE] = value
     }
 
-    internal fun onStartedChange(value: String) {
+    private fun onStartedChange(value: String) {
         savedStateHandle[STARTED] = value
     }
 
-    internal fun onEndedChange(value: String) {
+    private fun onEndedChange(value: String) {
         savedStateHandle[ENDED] = value
     }
 
-    internal fun onCoordinateChange(x: String, y: String) {
+    private fun onCoordinateChange(x: String, y: String) {
         savedStateHandle[COORDINATEX] = x
         savedStateHandle[COORDINATEY] = y
     }
 
-    internal fun onSearchedCoordinateChange(x: String, y: String) {
+    private fun onSearchedCoordinateChange(x: String, y: String) {
         savedStateHandle[COORDINATEX] = x
         savedStateHandle[COORDINATEY] = y
     }

@@ -19,6 +19,7 @@ import com.school_of_company.domain.usecase.kakao.GetCoordinatesToAddressUseCase
 import com.school_of_company.domain.usecase.kakao.GetCoordinatesUseCase
 import com.school_of_company.domain.usecase.standard.StandardProgramListUseCase
 import com.school_of_company.domain.usecase.training.TrainingProgramListUseCase
+import com.school_of_company.expo.enum.CurrentScreen
 import com.school_of_company.expo.enum.TrainingCategory
 import com.school_of_company.expo.util.getMultipartFile
 import com.school_of_company.expo.viewmodel.uistate.DeleteExpoInformationUiState
@@ -84,9 +85,6 @@ internal class ExpoViewModel @Inject constructor(
         private const val CREATE_ADDRESS = "create_address"
         private const val CREATE_LOCATION = "create_location"
         private const val CURRENT_SCREEN = "current_screen"
-    }
-    enum class CurrentScreen {
-        MODIFY, CREATE, NONE
     }
 
     internal var currentScreen = savedStateHandle.getStateFlow(CURRENT_SCREEN, CurrentScreen.NONE.name)

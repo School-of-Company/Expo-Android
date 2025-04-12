@@ -474,6 +474,7 @@ fun TransparentTextField(
                 if (value.isEmpty()) {
                     Text(
                         text = placeholder,
+                        color = colors.gray500,
                         style = placeholderTextStyle ?: textStyle,
                     )
                 }

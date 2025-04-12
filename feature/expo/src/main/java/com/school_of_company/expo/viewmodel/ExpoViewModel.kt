@@ -227,8 +227,8 @@ internal class ExpoViewModel @Inject constructor(
                                 setSearchedData()
                             } else {
                                 onLocationChange(it.location)
-                                onCoordinateChange(x = it.x, y = it.y)
-                                convertXYToJibun(x = it.x, y = it.y)
+                                onCoordinateChange(x = it.y, y = it.x)
+                                convertXYToJibun(x = it.y, y = it.x)
                             }
                             onCoverImageChange(it.coverImage)
                         }

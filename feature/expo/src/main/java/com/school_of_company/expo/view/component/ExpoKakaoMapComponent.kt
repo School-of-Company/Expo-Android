@@ -29,11 +29,10 @@ internal fun HomeKakaoMap(
     val context = LocalContext.current
     val mapView = remember { MapView(context) }
     val fixedLatLng = remember {
-        // 고정 라벨 위치 (예: 특정 x, y 좌표)
         LatLng.from(
-            locationY,
-            locationX
-        ) // 고정 좌표 설정
+            locationX,
+            locationY
+        )
     }
 
     AndroidView(

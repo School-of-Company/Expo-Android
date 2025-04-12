@@ -96,8 +96,8 @@ internal fun ExpoAddressSearchRoute(
     ExpoAddressSearchScreen(
         modifier = modifier,
         location = location,
-        coordinateX = coordinateX,
-        coordinateY = coordinateY,
+        coordinateX = coordinateY,
+        coordinateY = coordinateX,
         addressList = addressList,
         popUpBackStack = popUpBackStack,
         onLocationSearch = { viewModel.searchLocation(location) },

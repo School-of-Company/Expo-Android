@@ -58,8 +58,8 @@ internal fun ExpoAddressSearchRoute(
 
     val addressList by viewModel.addressList.collectAsStateWithLifecycle()
     val location by viewModel.address.collectAsStateWithLifecycle()
-    val coordinateX by viewModel.searched_coordinateX.collectAsStateWithLifecycle()
-    val coordinateY by viewModel.searched_coordinateY.collectAsStateWithLifecycle()
+    val coordinateX by viewModel.coordinateX.collectAsStateWithLifecycle()
+    val coordinateY by viewModel.coordinateY.collectAsStateWithLifecycle()
 
     DisposableEffect(Unit) {
         onDispose {

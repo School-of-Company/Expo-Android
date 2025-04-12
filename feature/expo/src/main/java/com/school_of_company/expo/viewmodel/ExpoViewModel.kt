@@ -76,9 +76,6 @@ internal class ExpoViewModel @Inject constructor(
         private const val INTRODUCE_TITLE = "introduce_title"
         private const val COORDINATEX = "coordinatesx"
         private const val COORDINATEY = "coordinatesy"
-        private const val SEARCHED_COORDINATEX = "searched_coordinatesx"
-        private const val SEARCHED_COORDINATEY = "searched_coordinatesy"
-        private const val SEARCHED_LOCATION = "searched_location"
         private const val COVER_IMAGE = "cover_image"
         private const val STARTED = "started"
         private const val ENDED = "ended"
@@ -162,10 +159,6 @@ internal class ExpoViewModel @Inject constructor(
 
     internal var coordinateY = savedStateHandle.getStateFlow(key = COORDINATEY, initialValue = "")
 
-    internal var searched_coordinateX = savedStateHandle.getStateFlow(key = SEARCHED_COORDINATEX, initialValue = "")
-
-    internal var searched_coordinateY = savedStateHandle.getStateFlow(key = SEARCHED_COORDINATEY, initialValue = "")
-
     val expoListSize: StateFlow<Int> = getExpoListUiState
         .map { state ->
             when (state) {
@@ -225,6 +218,8 @@ internal class ExpoViewModel @Inject constructor(
                             onIntroduceTitleChange(it.description)
                             if (address.value.isNotBlank()) {
                                 setSearchedData()
+                                onCoordinateChange(x = coordinateX.value, y = coordinateY.value)
+                                convertXYToJibun(x = coordinateX.value, y = coordinateY.value)
                             } else {
                                 onLocationChange(it.location)
                                 onCoordinateChange(x = it.x, y = it.y)
@@ -549,7 +544,7 @@ internal class ExpoViewModel @Inject constructor(
 
     private fun setSearchedData() {
         if (address.value.isNotEmpty()) {
-            onCoordinateChange(searched_coordinateX.value, searched_coordinateY.value)
+            onCoordinateChange(coordinateX.value, coordinateY.value)
             onAddressChange(address.value)
         }
     }
@@ -665,8 +660,8 @@ internal class ExpoViewModel @Inject constructor(
     }
 
     internal fun onSearchedCoordinateChange(x: String, y: String) {
-        savedStateHandle[SEARCHED_COORDINATEX] = x
-        savedStateHandle[SEARCHED_COORDINATEY] = y
+        savedStateHandle[COORDINATEX] = x
+        savedStateHandle[COORDINATEY] = y
     }
 
     internal fun onAddressChange(value: String) {

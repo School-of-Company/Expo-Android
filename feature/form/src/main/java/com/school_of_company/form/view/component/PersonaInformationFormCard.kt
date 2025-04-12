@@ -49,6 +49,7 @@ internal fun PersonaInformationFormCard(
                 style = typography.titleBold3,
                 fontWeight = FontWeight.W600,
                 color = colors.black,
+                modifier = Modifier.padding(top = 8.dp)
             )
 
             Spacer(
@@ -61,7 +62,7 @@ internal fun PersonaInformationFormCard(
             TransparentTextField(
                 placeholder = "문장을 입력해주세요",
                 value = value,
-                textStyle = typography.bodyRegular2,
+                textStyle = typography.captionBold2,
                 placeholderTextStyle = typography.captionBold2.copy(color = colors.gray500),
                 updateTextValue = onTextChange
             )

@@ -65,7 +65,7 @@ internal fun FormCheckBoxItem(
                     TransparentTextField(
                         placeholder = "문장을 입력하세요",
                         value = description,
-                        textStyle = typography.captionRegular1.copy(color = colors.black),
+                        textStyle = typography.captionRegular1.copy(color = colors.gray500),
                         updateTextValue = updateTextValue
                     )
                 }

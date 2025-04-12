@@ -65,7 +65,7 @@ internal fun FormCheckBoxItem(
                     TransparentTextField(
                         placeholder = "문장을 입력하세요",
                         value = description,
-                        textStyle = typography.captionRegular1.copy(color = colors.gray500),
+                        textStyle = typography.captionRegular1.copy(color = colors.black),
                         updateTextValue = updateTextValue
                     )
                 }
@@ -100,7 +100,7 @@ private fun FormCheckBoxItemPreview() {
         )
         FormCheckBoxItem(
             modifier = Modifier.fillMaxWidth(),
-            description = "",
+            description = "ads",
             isEtc = false,
             itemIndex = 0,
             onXClick = { },

@@ -69,6 +69,7 @@ import com.school_of_company.design_system.icon.ImageIcon
 import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
+import com.school_of_company.expo.enum.CurrentScreen
 import com.school_of_company.expo.view.component.ExpoAddModifyTextField
 import com.school_of_company.expo.view.component.ExpoSettingModifyBottomSheet
 import com.school_of_company.expo.view.component.ExpoStandardAddModifyTextField
@@ -122,7 +123,7 @@ internal fun ExpoModifyRoute(
         }
 
     LaunchedEffect(Unit) {
-        viewModel.setCurrentScreen(ExpoViewModel.CurrentScreen.MODIFY)
+        viewModel.setCurrentScreen(CurrentScreen.MODIFY)
     }
 
     LaunchedEffect(id) {

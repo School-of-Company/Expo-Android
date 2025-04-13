@@ -19,6 +19,7 @@ import com.school_of_company.domain.usecase.kakao.GetCoordinatesToAddressUseCase
 import com.school_of_company.domain.usecase.kakao.GetCoordinatesUseCase
 import com.school_of_company.domain.usecase.standard.StandardProgramListUseCase
 import com.school_of_company.domain.usecase.training.TrainingProgramListUseCase
+import com.school_of_company.expo.enum.CurrentScreen
 import com.school_of_company.expo.enum.TrainingCategory
 import com.school_of_company.expo.util.getMultipartFile
 import com.school_of_company.expo.viewmodel.uistate.DeleteExpoInformationUiState
@@ -76,9 +77,6 @@ internal class ExpoViewModel @Inject constructor(
         private const val INTRODUCE_TITLE = "introduce_title"
         private const val COORDINATEX = "coordinatesx"
         private const val COORDINATEY = "coordinatesy"
-        private const val SEARCHED_COORDINATEX = "searched_coordinatesx"
-        private const val SEARCHED_COORDINATEY = "searched_coordinatesy"
-        private const val SEARCHED_LOCATION = "searched_location"
         private const val COVER_IMAGE = "cover_image"
         private const val STARTED = "started"
         private const val ENDED = "ended"
@@ -87,9 +85,6 @@ internal class ExpoViewModel @Inject constructor(
         private const val CREATE_ADDRESS = "create_address"
         private const val CREATE_LOCATION = "create_location"
         private const val CURRENT_SCREEN = "current_screen"
-    }
-    enum class CurrentScreen {
-        MODIFY, CREATE, NONE
     }
 
     internal var currentScreen = savedStateHandle.getStateFlow(CURRENT_SCREEN, CurrentScreen.NONE.name)
@@ -162,10 +157,6 @@ internal class ExpoViewModel @Inject constructor(
 
     internal var coordinateY = savedStateHandle.getStateFlow(key = COORDINATEY, initialValue = "")
 
-    internal var searched_coordinateX = savedStateHandle.getStateFlow(key = SEARCHED_COORDINATEX, initialValue = "")
-
-    internal var searched_coordinateY = savedStateHandle.getStateFlow(key = SEARCHED_COORDINATEY, initialValue = "")
-
     val expoListSize: StateFlow<Int> = getExpoListUiState
         .map { state ->
             when (state) {
@@ -225,6 +216,8 @@ internal class ExpoViewModel @Inject constructor(
                             onIntroduceTitleChange(it.description)
                             if (address.value.isNotBlank()) {
                                 setSearchedData()
+                                onCoordinateChange(x = coordinateX.value, y = coordinateY.value)
+                                convertXYToJibun(x = coordinateX.value, y = coordinateY.value)
                             } else {
                                 onLocationChange(it.location)
                                 onCoordinateChange(x = it.x, y = it.y)
@@ -549,7 +542,7 @@ internal class ExpoViewModel @Inject constructor(
 
     private fun setSearchedData() {
         if (address.value.isNotEmpty()) {
-            onCoordinateChange(searched_coordinateX.value, searched_coordinateY.value)
+            onCoordinateChange(coordinateX.value, coordinateY.value)
             onAddressChange(address.value)
         }
     }
@@ -619,18 +612,6 @@ internal class ExpoViewModel @Inject constructor(
         }
     }
 
-    internal fun updateExistingTrainingProgram(index: Int, updatedItem: TrainingProRequestParam) {
-        _trainingProgramTextState.value = _trainingProgramTextState.value.toMutableList().apply {
-            this[index] = updatedItem
-        }
-    }
-
-    internal fun updateExistingStandardProgram(index: Int, updatedItem: StandardProRequestParam) {
-        _standardProgramTextState.value = _standardProgramTextState.value.toMutableList().apply {
-            this[index] = updatedItem
-        }
-    }
-
     internal fun onModifyTitleChange(value: String) {
         savedStateHandle[MODIFY_TITLE] = value
     }
@@ -651,22 +632,22 @@ internal class ExpoViewModel @Inject constructor(
         savedStateHandle[COVER_IMAGE] = value
     }
 
-    internal fun onStartedChange(value: String) {
+    private fun onStartedChange(value: String) {
         savedStateHandle[STARTED] = value
     }
 
-    internal fun onEndedChange(value: String) {
+    private fun onEndedChange(value: String) {
         savedStateHandle[ENDED] = value
     }
 
-    internal fun onCoordinateChange(x: String, y: String) {
+    private fun onCoordinateChange(x: String, y: String) {
         savedStateHandle[COORDINATEX] = x
         savedStateHandle[COORDINATEY] = y
     }
 
-    internal fun onSearchedCoordinateChange(x: String, y: String) {
-        savedStateHandle[SEARCHED_COORDINATEX] = x
-        savedStateHandle[SEARCHED_COORDINATEY] = y
+    private fun onSearchedCoordinateChange(x: String, y: String) {
+        savedStateHandle[COORDINATEX] = x
+        savedStateHandle[COORDINATEY] = y
     }
 
     internal fun onAddressChange(value: String) {

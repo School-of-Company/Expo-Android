@@ -27,13 +27,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.school_of_company.design_system.R
 import com.school_of_company.design_system.component.button.ExpoButton
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
-import com.school_of_company.design_system.component.modifier.padding.paddingHorizontal
 import com.school_of_company.design_system.component.topbar.ExpoTopBar
 import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.form.enum.FormType
 import com.school_of_company.form.view.component.FormAddButton
 import com.school_of_company.form.view.component.FormCard
+import com.school_of_company.form.view.component.PersonaInformationFormCard
 import com.school_of_company.form.viewModel.FormViewModel
 import com.school_of_company.form.viewModel.uiState.FormUiState
 import com.school_of_company.model.model.form.DynamicFormModel
@@ -67,7 +67,6 @@ internal fun FormModifyRoute(
             }
 
             is FormUiState.Error -> onErrorToast(null, R.string.form_modify_fail)
-
         }
     }
 
@@ -146,6 +145,11 @@ private fun FormModifyScreen(
                     )
                 }
 
+                PersonaInformationFormCard(
+                    value = informationTextState,
+                    onTextChange = onInformationTextStateChange
+                )
+
                 FormAddButton(onClick = addFormAtList)
             }
 
@@ -171,14 +175,8 @@ private fun FormModifyScreen(
 @Composable
 private fun FormModifyScreenPreview() {
     FormModifyScreen(
+        informationTextState = "informationTextState",
         formList = listOf(
-            DynamicFormModel(
-                title = "제목",
-                formType = FormType.DROPDOWN.name,
-                itemList = listOf("예시", "예시 1"),
-                requiredStatus = true,
-                otherJson = true,
-            ),
             DynamicFormModel(
                 title = "제목",
                 formType = FormType.DROPDOWN.name,
@@ -193,6 +191,5 @@ private fun FormModifyScreenPreview() {
         deleteForm = { _ -> },
         onFormDataChange = { _, _ -> },
         onInformationTextStateChange = { _ -> },
-        informationTextState = "",
     )
 }

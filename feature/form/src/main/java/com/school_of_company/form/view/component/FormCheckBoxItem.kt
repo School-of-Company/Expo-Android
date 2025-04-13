@@ -100,7 +100,7 @@ private fun FormCheckBoxItemPreview() {
         )
         FormCheckBoxItem(
             modifier = Modifier.fillMaxWidth(),
-            description = "",
+            description = "ads",
             isEtc = false,
             itemIndex = 0,
             onXClick = { },

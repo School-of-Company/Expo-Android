@@ -434,7 +434,7 @@ private fun ExpoModifyScreen(
 
                 Row(horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.Start)) {
                     LimitedLengthTextField(
-                        label = "모집기간",
+                        label = "행사 기간",
                         value = startedDateState,
                         lengthLimit = 8,
                         placeholder = "시작일",

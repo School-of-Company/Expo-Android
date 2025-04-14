@@ -33,6 +33,7 @@ fun NavController.navigationToModifyForm(
 }
 
 fun NavGraphBuilder.formCreateScreen(
+    navigateToExpoNavigationHome: () -> Unit,
     popUpBackStack: () -> Unit,
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
 ) {
@@ -41,6 +42,7 @@ fun NavGraphBuilder.formCreateScreen(
         val participantType = backStackEntry.arguments?.getString("participantType") ?: ""
 
         FormCreateRoute(
+            navigateToExpoNavigationHome = navigateToExpoNavigationHome,
             popUpBackStack = popUpBackStack,
             expoId = id,
             participantType = participantType,

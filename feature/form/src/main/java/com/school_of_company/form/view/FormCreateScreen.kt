@@ -26,6 +26,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.school_of_company.design_system.R
 import com.school_of_company.design_system.component.button.ExpoButton
+import com.school_of_company.design_system.component.button.ExpoStateButton
+import com.school_of_company.design_system.component.button.state.ButtonState
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.component.modifier.padding.paddingHorizontal
 import com.school_of_company.design_system.component.topbar.ExpoTopBar
@@ -147,13 +149,22 @@ private fun FormCreateScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            ExpoButton(
-                text = "다음",
-                color = colors.main,
+            ExpoStateButton(
+                text = "생성 완료",
+                state = if (
+                    informationTextState.isNotEmpty() &&
+                    formList.isNotEmpty() &&
+                    formList.all { form ->
+                        when (FormType.valueOf(form.formType)) {
+                            FormType.SENTENCE -> form.title.isNotEmpty()
+                            FormType.CHECKBOX, FormType.DROPDOWN, FormType.MULTIPLE ->
+                                form.title.isNotEmpty() &&
+                                form.itemList.isNotEmpty() &&
+                                form.itemList.all { it.isNotEmpty() }
+                        }
+                    }) ButtonState.Enable else ButtonState.Disable,
                 onClick = createForm,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(46.dp)
+                modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.padding(bottom = 28.dp))

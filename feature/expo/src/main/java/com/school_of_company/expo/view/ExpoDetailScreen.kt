@@ -220,7 +220,7 @@ private fun ExpoDetailScreen(
 
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Bottom)) {
                             Text(
-                                text = "모집 기간",
+                                text = "행사 기간",
                                 style = typography.bodyRegular2,
                                 color = colors.gray600,
                                 fontWeight = FontWeight(600),

@@ -217,9 +217,8 @@ private fun ExpoAddressSearchScreen(
                 } else {
                     ButtonState.Disable
                 },
-                modifier = Modifier
-                    .fillMaxWidth(),
-                onClick = popUpBackStack
+                onClick = popUpBackStack,
+                modifier = Modifier.fillMaxWidth()
             )
         }
     }

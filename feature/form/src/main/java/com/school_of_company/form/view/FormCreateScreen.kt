@@ -44,6 +44,7 @@ internal fun FormCreateRoute(
     modifier: Modifier = Modifier,
     expoId: String,
     participantType: String,
+    navigateToExpoNavigationHome: () -> Unit,
     popUpBackStack: () -> Unit,
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
     viewModel: FormViewModel = hiltViewModel(),
@@ -56,8 +57,7 @@ internal fun FormCreateRoute(
         when (formUiState) {
             is FormUiState.Loading -> Unit
             is FormUiState.Success -> {
-                popUpBackStack()
-                onErrorToast(null, R.string.form_create_success)
+                navigateToExpoNavigationHome()
             }
 
             is FormUiState.Error -> {

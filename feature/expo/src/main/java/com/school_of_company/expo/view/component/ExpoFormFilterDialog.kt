@@ -46,7 +46,7 @@ internal fun ExpoFormFilterDialog(
                 onClick = onStudentFormTrueClick
             ),
             FilterOption(
-                label = "연수자 폼 (X)",
+                label = "참가자 폼 (X)",
                 selected = selectedOptions.find { it.label == "참가자 폼 (X)" }?.selected == true,
                 onClick = onStudentFormFalseClick
             )

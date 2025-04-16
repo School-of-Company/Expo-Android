@@ -66,7 +66,6 @@ internal fun ExpoRoute(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ExpoScreen(
     modifier: Modifier = Modifier,
@@ -76,21 +75,6 @@ private fun ExpoScreen(
     getExpoList: () -> Unit,
     navigationToDetail: (String) -> Unit
 ) {
-    var filterButtonText by rememberSaveable { mutableStateOf("최신순") }
-
-    val (openBottomSheet, isOpenBottomSheet) = rememberSaveable { mutableStateOf(false) }
-    var arrayList by rememberSaveable { mutableStateOf(ArrayHomeListEnum.RECENT) }
-
-    val sortedItems = when (getExpoListData) {
-        is GetExpoListUiState.Success -> {
-            when (arrayList) {
-                ArrayHomeListEnum.RECENT -> getExpoListData.data.sortedByDescending { it.startedDay }
-                ArrayHomeListEnum.OLDER -> getExpoListData.data.sortedBy { it.startedDay }
-            }
-        }
-
-        else -> emptyList()
-    }
 
     ExpoAndroidTheme { colors, typography ->
         Column(
@@ -121,7 +105,10 @@ private fun ExpoScreen(
                     color = colors.black
                 )
 
-                HomeFilterButton(text = filterButtonText) { isOpenBottomSheet(true) }
+                HomeFilterButton(
+                    text = "필터",
+                    onClick = {}
+                )
             }
 
             Spacer(modifier = Modifier.padding(bottom = 24.dp))
@@ -140,7 +127,7 @@ private fun ExpoScreen(
                 when (getExpoListData) {
                     is GetExpoListUiState.Success -> {
                         ExpoList(
-                            item = sortedItems.toImmutableList(),
+                            item = getExpoListData.data.toImmutableList(),
                             emptyList = false,
                             navigateToExpoDetail = navigationToDetail
                         )
@@ -189,22 +176,6 @@ private fun ExpoScreen(
                 }
             }
         }
-    }
-
-    if (openBottomSheet) {
-        HomeBottomSheet(
-            onRecentClick = {
-                arrayList = ArrayHomeListEnum.RECENT
-                filterButtonText = "최신순"
-                isOpenBottomSheet(false)
-            },
-            onOldClick = {
-                arrayList = ArrayHomeListEnum.OLDER
-                filterButtonText = "오래된 순"
-                isOpenBottomSheet(false)
-            },
-            onCancelClick = { isOpenBottomSheet(false) }
-        )
     }
 }
 

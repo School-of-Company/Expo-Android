@@ -54,17 +54,10 @@ internal fun TrainingProgramParticipantListItem(
             )
 
             Text(
-                text = data.organization,
+                text = data.programName,
                 style = typography.captionRegular2,
                 color = colors.black,
                 modifier = Modifier.width(100.dp)
-            )
-
-            Text(
-                text = data.position,
-                style = typography.captionRegular2,
-                color = colors.black,
-                modifier = Modifier.width(80.dp)
             )
 
             Text(
@@ -99,8 +92,6 @@ private fun HomeDetailProgramParticipantListItemPreview() {
         data = TeacherTrainingProgramResponseEntity(
             id = 0,
             name = "홍길동",
-            organization = "한국대학교",
-            position = "교사",
             programName = "프로그램",
             status = true,
             entryTime = "2024-09-12 T 08:30",

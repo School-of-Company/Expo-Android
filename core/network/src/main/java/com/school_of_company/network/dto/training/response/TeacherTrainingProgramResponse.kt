@@ -7,8 +7,6 @@ import com.squareup.moshi.JsonClass
 data class TeacherTrainingProgramResponse(
     @Json(name = "id") val id: Long,
     @Json(name = "name") val name: String,
-    @Json(name = "organization") val organization: String,
-    @Json(name = "position") val position: String,
     @Json(name = "programName") val programName: String,
     @Json(name = "status") val status: Boolean,
     @Json(name = "entryTime") val entryTime: String?,

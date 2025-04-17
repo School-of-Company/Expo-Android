@@ -16,11 +16,13 @@ import androidx.compose.ui.unit.dp
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.icon.XIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
+import com.school_of_company.expo.enum.FilterOptionEnum
+import com.school_of_company.expo.viewmodel.ExpoViewModel
 
 @Composable
 internal fun ExpoFormFilterDialog(
     modifier: Modifier = Modifier,
-    selectedOptions: List<FilterOption>,
+    selectedOptions: List<FilterOptionEnum?>,
     onTrainingFormTrueClick: () -> Unit,
     onTrainingFormFalseClick: () -> Unit,
     onStudentFormTrueClick: () -> Unit,
@@ -32,22 +34,22 @@ internal fun ExpoFormFilterDialog(
         val options = listOf(
             FilterOption(
                 label = "연수자 폼 (O)",
-                selected = selectedOptions.find { it.label == "연수자 폼 (O)" }?.selected == true,
+                selected = selectedOptions.contains(FilterOptionEnum.TRAINING_FORM_TRUE),
                 onClick = onTrainingFormTrueClick
             ),
             FilterOption(
                 label = "연수자 폼 (X)",
-                selected = selectedOptions.find { it.label == "연수자 폼 (X)" }?.selected == true,
+                selected = selectedOptions.contains(FilterOptionEnum.TRAINING_FORM_FALSE),
                 onClick = onTrainingFormFalseClick
             ),
             FilterOption(
                 label = "참가자 폼 (O)",
-                selected = selectedOptions.find { it.label == "참가자 폼 (O)" }?.selected == true,
+                selected = selectedOptions.contains(FilterOptionEnum.STUDENT_FORM_TRUE),
                 onClick = onStudentFormTrueClick
             ),
             FilterOption(
                 label = "참가자 폼 (X)",
-                selected = selectedOptions.find { it.label == "참가자 폼 (X)" }?.selected == true,
+                selected = selectedOptions.contains(FilterOptionEnum.STUDENT_FORM_FALSE),
                 onClick = onStudentFormFalseClick
             )
         )

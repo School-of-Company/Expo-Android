@@ -372,8 +372,13 @@ internal class ExpoViewModel @Inject constructor(
                             _getExpoListUiState.value = GetExpoListUiState.Empty
                             _swipeRefreshLoading.value = false
                         } else {
-                            _getExpoListUiState.value = GetExpoListUiState.Success(result.data)
-                            _swipeRefreshLoading.value = false
+                            if (_selectedFilter.value != null) {
+                                checkExpoSurveyDynamicFormEnable()
+                                _swipeRefreshLoading.value = false
+                            } else {
+                                _getExpoListUiState.value = GetExpoListUiState.Success(result.data)
+                                _swipeRefreshLoading.value = false
+                            }
                         }
                     }
                     is Result.Error -> {

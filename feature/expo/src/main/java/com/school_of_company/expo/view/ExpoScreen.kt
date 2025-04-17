@@ -13,20 +13,19 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -34,13 +33,13 @@ import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.design_system.R
-import com.school_of_company.expo.enum.ArrayHomeListEnum
 import com.school_of_company.expo.viewmodel.ExpoViewModel
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.school_of_company.design_system.component.shimmer.shimmerEffect
 import com.school_of_company.design_system.component.uistate.error.ShowErrorState
+import com.school_of_company.expo.enum.FilterOptionEnum
+import com.school_of_company.expo.view.component.ExpoFormFilterDialog
 import com.school_of_company.expo.view.component.ExpoList
-import com.school_of_company.expo.view.component.HomeBottomSheet
 import com.school_of_company.expo.view.component.HomeFilterButton
 import com.school_of_company.expo.viewmodel.uistate.GetExpoListUiState
 import kotlinx.collections.immutable.toImmutableList
@@ -53,12 +52,15 @@ internal fun ExpoRoute(
     val swipeRefreshLoading by viewModel.swipeRefreshLoading.collectAsStateWithLifecycle()
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = swipeRefreshLoading)
     val getExpoListUiState by viewModel.getExpoListUiState.collectAsStateWithLifecycle()
+    val selectedFilter by viewModel.selectedFilter.collectAsStateWithLifecycle()
 
     ExpoScreen(
         swipeRefreshState = swipeRefreshState,
         getExpoListData = getExpoListUiState,
         getExpoList = { viewModel.getExpoList() },
-        navigationToDetail = navigationToDetail
+        navigationToDetail = navigationToDetail,
+        selectedFilter = selectedFilter,
+        onFilterSelected = { filter -> viewModel.onFilterSelected(filter) }
     )
 
     LaunchedEffect(Unit) {
@@ -72,9 +74,12 @@ private fun ExpoScreen(
     swipeRefreshState: SwipeRefreshState,
     getExpoListData: GetExpoListUiState,
     scrollState: ScrollState = rememberScrollState(),
+    selectedFilter: FilterOptionEnum?,
+    onFilterSelected: (FilterOptionEnum) -> Unit, // ViewModel에 전달용
     getExpoList: () -> Unit,
     navigationToDetail: (String) -> Unit
 ) {
+    val (openFilterDialog, setOpenFilterDialog) = rememberSaveable { mutableStateOf(false) }
 
     ExpoAndroidTheme { colors, typography ->
         Column(
@@ -107,7 +112,7 @@ private fun ExpoScreen(
 
                 HomeFilterButton(
                     text = "필터",
-                    onClick = {}
+                    onClick = { setOpenFilterDialog(true) }
                 )
             }
 
@@ -177,6 +182,20 @@ private fun ExpoScreen(
             }
         }
     }
+
+
+    if (openFilterDialog) {
+        Dialog(onDismissRequest = {setOpenFilterDialog(false)}) {
+            ExpoFormFilterDialog(
+                selectedOptions = listOf(selectedFilter),
+                onStudentFormTrueClick = { onFilterSelected(FilterOptionEnum.STUDENT_FORM_TRUE) },
+                onStudentFormFalseClick = { onFilterSelected(FilterOptionEnum.STUDENT_FORM_FALSE) },
+                onTrainingFormFalseClick = { onFilterSelected(FilterOptionEnum.TRAINING_FORM_FALSE) },
+                onTrainingFormTrueClick = { onFilterSelected(FilterOptionEnum.TRAINING_FORM_TRUE) },
+                onDismissClick = { setOpenFilterDialog(false) }
+            )
+        }
+    }
 }
 
 
@@ -187,6 +206,8 @@ private fun HomeScreenPreview() {
         navigationToDetail = {},
         swipeRefreshState = rememberSwipeRefreshState(isRefreshing = false),
         getExpoListData = GetExpoListUiState.Loading,
-        getExpoList = {}
+        getExpoList = {},
+        onFilterSelected = {},
+        selectedFilter = FilterOptionEnum.TRAINING_FORM_FALSE
     )
 }

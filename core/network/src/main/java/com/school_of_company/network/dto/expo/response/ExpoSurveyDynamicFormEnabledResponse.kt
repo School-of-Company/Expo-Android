@@ -10,7 +10,7 @@ data class ExpoSurveyDynamicFormEnabledResponse(
 
 @JsonClass(generateAdapter = true)
 data class ExpoValidityResponse(
-    @Json(name = "expoId") val expoId: Long,
+    @Json(name = "expoId") val expoId: String,
     @Json(name = "standardFormCreatedStatus") val standardFormCreatedStatus: Boolean,
     @Json(name = "traineeFormCreatedStatus") val traineeFormCreatedStatus: Boolean,
     @Json(name = "standardSurveyCreatedStatus") val standardSurveyCreatedStatus: Boolean,

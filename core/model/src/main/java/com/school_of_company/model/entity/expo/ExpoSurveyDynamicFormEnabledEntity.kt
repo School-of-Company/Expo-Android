@@ -8,6 +8,4 @@ data class ExpoValidityEntity(
     val expoId: String,
     val standardFormCreatedStatus: Boolean,
     val traineeFormCreatedStatus: Boolean,
-    val standardSurveyCreatedStatus: Boolean,
-    val traineeSurveyCreatedStatus: Boolean,
 )

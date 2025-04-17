@@ -15,6 +15,4 @@ fun ExpoValidityResponse.toEntity(): ExpoValidityEntity =
         expoId = this.expoId,
         standardFormCreatedStatus = this.standardFormCreatedStatus,
         traineeFormCreatedStatus = this.traineeFormCreatedStatus,
-        standardSurveyCreatedStatus = this.standardSurveyCreatedStatus,
-        traineeSurveyCreatedStatus = this.traineeSurveyCreatedStatus
     )

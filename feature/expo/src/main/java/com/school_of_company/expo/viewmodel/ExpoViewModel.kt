@@ -9,6 +9,7 @@ import com.school_of_company.common.exception.NoResponseException
 import com.school_of_company.common.result.Result
 import com.school_of_company.common.result.asResult
 import com.school_of_company.domain.usecase.Image.ImageUpLoadUseCase
+import com.school_of_company.domain.usecase.expo.CheckExpoSurveyDynamicFormEnableUseCase
 import com.school_of_company.domain.usecase.expo.DeleteExpoInformationUseCase
 import com.school_of_company.domain.usecase.expo.GetExpoInformationUseCase
 import com.school_of_company.domain.usecase.expo.GetExpoListUseCase
@@ -20,8 +21,10 @@ import com.school_of_company.domain.usecase.kakao.GetCoordinatesUseCase
 import com.school_of_company.domain.usecase.standard.StandardProgramListUseCase
 import com.school_of_company.domain.usecase.training.TrainingProgramListUseCase
 import com.school_of_company.expo.enum.CurrentScreen
+import com.school_of_company.expo.enum.FilterOptionEnum
 import com.school_of_company.expo.enum.TrainingCategory
 import com.school_of_company.expo.util.getMultipartFile
+import com.school_of_company.expo.viewmodel.uistate.CheckExpoSurveyDynamicFormEnableUiState
 import com.school_of_company.expo.viewmodel.uistate.DeleteExpoInformationUiState
 import com.school_of_company.expo.viewmodel.uistate.GetAddressUiState
 import com.school_of_company.expo.viewmodel.uistate.GetCoordinatesToAddressUiState
@@ -33,6 +36,7 @@ import com.school_of_company.expo.viewmodel.uistate.GetTrainingProgramListUiStat
 import com.school_of_company.expo.viewmodel.uistate.ImageUpLoadUiState
 import com.school_of_company.expo.viewmodel.uistate.ModifyExpoInformationUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterExpoInformationUiState
+import com.school_of_company.model.entity.expo.ExpoListResponseEntity
 import com.school_of_company.model.model.juso.JusoModel
 import com.school_of_company.model.param.expo.ExpoAllRequestParam
 import com.school_of_company.model.param.expo.ExpoModifyRequestParam
@@ -68,6 +72,7 @@ internal class ExpoViewModel @Inject constructor(
     private val modifyExpoInformationUseCase: ModifyExpoInformationUseCase,
     private val getCoordinatesToAddressUseCase: GetCoordinatesToAddressUseCase,
     private val registerExpoInformationUseCase: RegisterExpoInformationUseCase,
+    private val checkExpoSurveyDynamicFormEnableUseCase: CheckExpoSurveyDynamicFormEnableUseCase,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     companion object {
@@ -142,6 +147,13 @@ internal class ExpoViewModel @Inject constructor(
 
     private val _getTrainingProgramListUiState = MutableStateFlow<GetTrainingProgramListUiState>(GetTrainingProgramListUiState.Loading)
     internal val getTrainingProgramListUiState = _getTrainingProgramListUiState.asStateFlow()
+
+    private val _checkExpoSurveyDynamicFormEnableUiState = MutableStateFlow<CheckExpoSurveyDynamicFormEnableUiState>(CheckExpoSurveyDynamicFormEnableUiState.Loading)
+
+    private val _allExpoList = MutableStateFlow<List<ExpoListResponseEntity>>(emptyList())
+
+    private val _selectedFilter = MutableStateFlow<FilterOptionEnum?>(null)
+    internal val selectedFilter: StateFlow<FilterOptionEnum?> = _selectedFilter.asStateFlow()
 
     internal var modify_title = savedStateHandle.getStateFlow(key = MODIFY_TITLE, initialValue = "")
 
@@ -354,6 +366,8 @@ internal class ExpoViewModel @Inject constructor(
                 when (result) {
                     is Result.Loading -> _getExpoListUiState.value = GetExpoListUiState.Loading
                     is Result.Success -> {
+                        _allExpoList.value = result.data
+
                         if (result.data.isEmpty()) {
                             _getExpoListUiState.value = GetExpoListUiState.Empty
                             _swipeRefreshLoading.value = false
@@ -507,6 +521,47 @@ internal class ExpoViewModel @Inject constructor(
                     is Result.Error -> _getCoordinatesToAddressUiState.value = GetCoordinatesToAddressUiState.Error(result.exception)
                 }
             }
+    }
+
+    private fun checkExpoSurveyDynamicFormEnable() = viewModelScope.launch {
+        val currentFilter = _selectedFilter.value ?: return@launch
+        _checkExpoSurveyDynamicFormEnableUiState.value = CheckExpoSurveyDynamicFormEnableUiState.Loading
+        checkExpoSurveyDynamicFormEnableUseCase()
+            .asResult()
+            .collectLatest { result ->
+                when (result) {
+                    is Result.Loading -> _checkExpoSurveyDynamicFormEnableUiState.value = CheckExpoSurveyDynamicFormEnableUiState.Loading
+                    is Result.Success -> {
+                        val filterExpoId = result.data.expoValid.filter { expo ->
+                            when (currentFilter) {
+                                FilterOptionEnum.TRAINING_FORM_TRUE -> expo.traineeFormCreatedStatus
+                                FilterOptionEnum.TRAINING_FORM_FALSE -> !expo.traineeFormCreatedStatus
+                                FilterOptionEnum.STUDENT_FORM_TRUE -> expo.standardFormCreatedStatus
+                                FilterOptionEnum.STUDENT_FORM_FALSE -> !expo.standardFormCreatedStatus
+                            }
+                        }.map { it.expoId }
+
+                        val filteredData = _allExpoList.value.filter { it.id in filterExpoId }
+
+                        _getExpoListUiState.value = if (filteredData.isEmpty()) {
+                            GetExpoListUiState.Empty
+                        } else {
+                            GetExpoListUiState.Success(filteredData)
+                        }
+                    }
+                    is Result.Error -> _checkExpoSurveyDynamicFormEnableUiState.value = CheckExpoSurveyDynamicFormEnableUiState.Error(result.exception)
+                }
+            }
+    }
+
+    internal fun onFilterSelected(filter: FilterOptionEnum) {
+        _selectedFilter.value = if (_selectedFilter.value == filter) null else filter
+
+        if (_selectedFilter.value != null) {
+            checkExpoSurveyDynamicFormEnable()
+        } else {
+            _getExpoListUiState.value = GetExpoListUiState.Success(_allExpoList.value)
+        }
     }
 
     internal fun updateTrainingProgramModifyText(index: Int, updateItem: TrainingProIdRequestParam) {

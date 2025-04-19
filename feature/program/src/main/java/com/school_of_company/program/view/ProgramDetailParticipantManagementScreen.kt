@@ -397,41 +397,29 @@ private fun ProgramDetailParticipantManagementScreen(
             }
 
             Spacer(modifier = Modifier.height(18.dp))
+            if (selectedItem == 2) {
 
-            ExpoNoneLabelTextField(
-                placeholder = "참가자 이름을 입력해주세요.",
-                isError = false,
-                isDisabled = false,
-                errorText = "",
-                value = when (selectedItem) {
-                    0 -> preParticipantName
-                    1 -> fieldParticipantName
-                    2 -> traineeName
-                    else -> ""
-                },
-                onValueChange = when (selectedItem) {
-                    0 -> onPreParticipantNameChange
-                    1 -> onFieldParticipantNameChange
-                    2 -> onTraineeNameChange
-                    else -> ({})
-                },
-                trailingIcon = {
-                    SearchIcon(
-                        tint = colors.black,
-                        modifier = Modifier.clickable {
-                            when (selectedItem) {
-                                0 -> getAheadParticipantList(preParticipantName)
-                                1 -> getFieldParticipantList(fieldParticipantName)
-                                2 -> getTraineeList(traineeName)
+                ExpoNoneLabelTextField(
+                    placeholder = "참가자 이름을 입력해주세요.",
+                    isError = false,
+                    isDisabled = false,
+                    errorText = "",
+                    value = traineeName,
+                    onValueChange = onTraineeNameChange,
+                    trailingIcon = {
+                        SearchIcon(
+                            tint = colors.black,
+                            modifier = Modifier.clickable {
+                                getTraineeList(traineeName)
                             }
-                        }
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(44.dp)
-                    .padding(horizontal = 16.dp)
-            )
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(44.dp)
+                        .padding(horizontal = 16.dp)
+                )
+            }
 
 
             Spacer(modifier = Modifier.height(16.dp))

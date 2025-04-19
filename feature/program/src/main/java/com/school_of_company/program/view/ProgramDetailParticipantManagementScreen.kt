@@ -116,20 +116,20 @@ internal fun ProgramDetailParticipantManagementRoute(
             viewModel.getParticipantInformationList(
                 expoId = id,
                 type = ParticipantEnum.PRE,
-                name = null
+                localDate = selectedDate.toString()
             )
         },
         getFieldParticipantList = {
             viewModel.getParticipantInformationList(
                 expoId = id,
                 type = ParticipantEnum.FIELD,
-                name = null
+                localDate = selectedDate.toString()
             )
         },
         getTraineeList = {
             viewModel.getTraineeList(
                 expoId = id,
-                name = traineeName
+                name = traineeName,
             )
         },
     )
@@ -383,6 +383,15 @@ private fun ProgramDetailParticipantManagementScreen(
             }
 
             Spacer(modifier = Modifier.height(18.dp))
+
+            LazyRow(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth()
+            ) {
+
+            }
+
             if (selectedItem == 2) {
                 ExpoNoneLabelTextField(
                     placeholder = "참가자 이름을 입력해주세요.",

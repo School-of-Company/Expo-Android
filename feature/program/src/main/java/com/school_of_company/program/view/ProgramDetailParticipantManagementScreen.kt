@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,6 +23,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -58,6 +60,7 @@ import com.school_of_company.program.viewmodel.ProgramViewModel
 import com.school_of_company.program.viewmodel.uistate.ParticipantResponseListUiState
 import com.school_of_company.program.viewmodel.uistate.TraineeResponseListUiState
 import kotlinx.coroutines.delay
+import java.time.LocalDate
 
 @Composable
 internal fun ProgramDetailParticipantManagementRoute(
@@ -74,6 +77,7 @@ internal fun ProgramDetailParticipantManagementRoute(
     val traineeInformationUiState by viewModel.traineeResponseListUiState.collectAsStateWithLifecycle()
 
     val traineeName by viewModel.traineeName.collectAsStateWithLifecycle()
+    var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
 
     LaunchedEffect(id) {
 
@@ -104,6 +108,7 @@ internal fun ProgramDetailParticipantManagementRoute(
         participantAheadResponseListUiState = participantAheadResponseListUiState,
         participantFieldResponseListUiState = participantFieldResponseListUiState,
         traineeInformationUiState = traineeInformationUiState,
+        selectedDate = selectedDate,
         traineeName = traineeName,
         onBackClick = onBackClick,
         onTraineeNameChange = viewModel::onTraineeNameChange,
@@ -136,6 +141,7 @@ private fun ProgramDetailParticipantManagementScreen(
     swipeRefreshState: SwipeRefreshState,
     scrollState: ScrollState = rememberScrollState(),
     focusManager: FocusManager = LocalFocusManager.current,
+    selectedDate: LocalDate?,
     traineeName: String,
     participantAheadResponseListUiState: ParticipantResponseListUiState,
     participantFieldResponseListUiState: ParticipantResponseListUiState,
@@ -149,7 +155,15 @@ private fun ProgramDetailParticipantManagementScreen(
     var participantTextState by rememberSaveable { mutableStateOf("사전 행사 참가자") }
     var isDropdownExpanded by rememberSaveable { mutableStateOf(false) }
     var selectedItem by rememberSaveable { mutableIntStateOf(0) }
+    val dateList = remember(selectedDate) {
+        val selectedDateNotNull = selectedDate ?: LocalDate.now()
+        val startDate = selectedDateNotNull.minusDays(10)
+        val endDate = selectedDateNotNull.plusDays(10)
 
+        generateSequence(startDate) { it.plusDays(1) }
+            .takeWhile { !it.isAfter(endDate) }
+            .toList()
+    }
 
     ExpoAndroidTheme { colors, typography ->
 
@@ -370,7 +384,6 @@ private fun ProgramDetailParticipantManagementScreen(
 
             Spacer(modifier = Modifier.height(18.dp))
             if (selectedItem == 2) {
-
                 ExpoNoneLabelTextField(
                     placeholder = "참가자 이름을 입력해주세요.",
                     isError = false,
@@ -513,15 +526,16 @@ private fun ProgramDetailParticipantManagementScreen(
 @Composable
 private fun HomeDetailParticipantManagementScreenPreview() {
     ProgramDetailParticipantManagementScreen(
-        onBackClick = {},
         swipeRefreshState = rememberSwipeRefreshState(isRefreshing = false),
+        traineeName = "",
         participantAheadResponseListUiState = ParticipantResponseListUiState.Loading,
         participantFieldResponseListUiState = ParticipantResponseListUiState.Loading,
         traineeInformationUiState = TraineeResponseListUiState.Loading,
-        traineeName = "",
+        onBackClick = {},
         onTraineeNameChange = {},
         getAheadParticipantList = {},
         getFieldParticipantList = {},
         getTraineeList = {},
+        selectedDate = LocalDate.now(),
     )
 }

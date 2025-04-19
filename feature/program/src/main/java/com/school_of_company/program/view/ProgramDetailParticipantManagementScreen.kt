@@ -107,24 +107,24 @@ internal fun ProgramDetailParticipantManagementRoute(
         traineeName = traineeName,
         onBackClick = onBackClick,
         onTraineeNameChange = viewModel::onTraineeNameChange,
-        getAheadParticipantList = { name ->
+        getAheadParticipantList = {
             viewModel.getParticipantInformationList(
                 expoId = id,
                 type = ParticipantEnum.PRE,
                 name = null
             )
         },
-        getFieldParticipantList = { name ->
+        getFieldParticipantList = {
             viewModel.getParticipantInformationList(
                 expoId = id,
                 type = ParticipantEnum.FIELD,
-                name = name
+                name = null
             )
         },
-        getTraineeList = { name ->
+        getTraineeList = {
             viewModel.getTraineeList(
                 expoId = id,
-                name = name
+                name = traineeName
             )
         },
     )
@@ -142,9 +142,9 @@ private fun ProgramDetailParticipantManagementScreen(
     traineeInformationUiState: TraineeResponseListUiState,
     onBackClick: () -> Unit,
     onTraineeNameChange: (String) -> Unit,
-    getAheadParticipantList: (String?) -> Unit,
-    getFieldParticipantList: (String?) -> Unit,
-    getTraineeList: (String?) -> Unit,
+    getAheadParticipantList: () -> Unit,
+    getFieldParticipantList: () -> Unit,
+    getTraineeList: () -> Unit,
 ) {
     var participantTextState by rememberSaveable { mutableStateOf("사전 행사 참가자") }
     var isDropdownExpanded by rememberSaveable { mutableStateOf(false) }
@@ -381,9 +381,7 @@ private fun ProgramDetailParticipantManagementScreen(
                     trailingIcon = {
                         SearchIcon(
                             tint = colors.black,
-                            modifier = Modifier.clickable {
-                                getTraineeList(traineeName)
-                            }
+                            modifier = Modifier.clickable(onClick = getTraineeList)
                         )
                     },
                     modifier = Modifier
@@ -400,9 +398,9 @@ private fun ProgramDetailParticipantManagementScreen(
                 state = swipeRefreshState,
                 onRefresh = {
                     when (selectedItem) {
-                        0 -> getAheadParticipantList(null)
-                        1 -> getFieldParticipantList(null)
-                        2 -> getTraineeList(null)
+                        0 -> getAheadParticipantList()
+                        1 -> getFieldParticipantList()
+                        2 -> getTraineeList()
                     }
                 },
                 indicator = { state, refreshTrigger ->

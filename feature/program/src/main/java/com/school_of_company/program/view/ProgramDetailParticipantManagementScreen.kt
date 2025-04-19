@@ -73,8 +73,6 @@ internal fun ProgramDetailParticipantManagementRoute(
     val participantFieldResponseListUiState by viewModel.participantFieldResponseListUiState.collectAsStateWithLifecycle()
     val traineeInformationUiState by viewModel.traineeResponseListUiState.collectAsStateWithLifecycle()
 
-    val fieldParticipantName by viewModel.fieldParticipantName.collectAsStateWithLifecycle()
-    val preParticipantName by viewModel.preParticipantName.collectAsStateWithLifecycle()
     val traineeName by viewModel.traineeName.collectAsStateWithLifecycle()
 
     LaunchedEffect(id) {
@@ -92,24 +90,6 @@ internal fun ProgramDetailParticipantManagementRoute(
         viewModel.getTraineeList(expoId = id)
     }
 
-    LaunchedEffect(preParticipantName) {
-        delay(300L)
-        viewModel.getParticipantInformationList(
-            expoId = id,
-            type = ParticipantEnum.PRE,
-            name = preParticipantName
-        )
-    }
-
-    LaunchedEffect(fieldParticipantName) {
-        delay(300L)
-        viewModel.getParticipantInformationList(
-            expoId = id,
-            type = ParticipantEnum.FIELD,
-            name = fieldParticipantName
-        )
-    }
-
     LaunchedEffect(traineeName) {
         delay(300L)
         viewModel.getTraineeList(
@@ -124,18 +104,14 @@ internal fun ProgramDetailParticipantManagementRoute(
         participantAheadResponseListUiState = participantAheadResponseListUiState,
         participantFieldResponseListUiState = participantFieldResponseListUiState,
         traineeInformationUiState = traineeInformationUiState,
-        fieldParticipantName = fieldParticipantName,
-        preParticipantName = preParticipantName,
         traineeName = traineeName,
         onBackClick = onBackClick,
-        onFieldParticipantNameChange = viewModel::onFieldParticipantNameChange,
-        onPreParticipantNameChange = viewModel::onPreParticipantNameChange,
         onTraineeNameChange = viewModel::onTraineeNameChange,
         getAheadParticipantList = { name ->
             viewModel.getParticipantInformationList(
                 expoId = id,
                 type = ParticipantEnum.PRE,
-                name = name
+                name = null
             )
         },
         getFieldParticipantList = { name ->
@@ -160,15 +136,11 @@ private fun ProgramDetailParticipantManagementScreen(
     swipeRefreshState: SwipeRefreshState,
     scrollState: ScrollState = rememberScrollState(),
     focusManager: FocusManager = LocalFocusManager.current,
-    fieldParticipantName: String,
-    preParticipantName: String,
     traineeName: String,
     participantAheadResponseListUiState: ParticipantResponseListUiState,
     participantFieldResponseListUiState: ParticipantResponseListUiState,
     traineeInformationUiState: TraineeResponseListUiState,
     onBackClick: () -> Unit,
-    onFieldParticipantNameChange: (String) -> Unit,
-    onPreParticipantNameChange: (String) -> Unit,
     onTraineeNameChange: (String) -> Unit,
     getAheadParticipantList: (String?) -> Unit,
     getFieldParticipantList: (String?) -> Unit,
@@ -548,11 +520,7 @@ private fun HomeDetailParticipantManagementScreenPreview() {
         participantAheadResponseListUiState = ParticipantResponseListUiState.Loading,
         participantFieldResponseListUiState = ParticipantResponseListUiState.Loading,
         traineeInformationUiState = TraineeResponseListUiState.Loading,
-        fieldParticipantName = "",
-        preParticipantName = "",
         traineeName = "",
-        onFieldParticipantNameChange = {},
-        onPreParticipantNameChange = {},
         onTraineeNameChange = {},
         getAheadParticipantList = {},
         getFieldParticipantList = {},

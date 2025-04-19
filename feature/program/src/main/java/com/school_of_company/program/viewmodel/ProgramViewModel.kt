@@ -40,8 +40,6 @@ internal class ProgramViewModel @Inject constructor(
 ) : ViewModel() {
     companion object {
         private const val REQUEST_DELAY_MS = 2000L
-        private const val FIELD_PARTICIPANT_NAME = "field_participant_name"
-        private const val PRE_PARTICIPANT_NAME = "pre_participant_name"
         private const val TRAINEE_NAME = "trainee_name"
     }
 
@@ -68,8 +66,6 @@ internal class ProgramViewModel @Inject constructor(
     private val _participantAheadResponseListUiState = MutableStateFlow<ParticipantResponseListUiState>(ParticipantResponseListUiState.Loading)
     internal val participantAheadResponseListUiState = _participantAheadResponseListUiState.asStateFlow()
 
-    internal val fieldParticipantName = savedStateHandle.getStateFlow(FIELD_PARTICIPANT_NAME, "")
-    internal val preParticipantName = savedStateHandle.getStateFlow(PRE_PARTICIPANT_NAME, "")
     internal val traineeName = savedStateHandle.getStateFlow(TRAINEE_NAME, "")
 
     internal fun trainingProgramList(expoId: String) = viewModelScope.launch {
@@ -255,14 +251,6 @@ internal class ProgramViewModel @Inject constructor(
                     }
                 }
             }
-    }
-
-    internal fun onFieldParticipantNameChange(value: String) {
-        savedStateHandle[FIELD_PARTICIPANT_NAME] = value
-    }
-
-    internal fun onPreParticipantNameChange(value: String) {
-        savedStateHandle[PRE_PARTICIPANT_NAME] = value
     }
 
     internal fun onTraineeNameChange(value: String) {

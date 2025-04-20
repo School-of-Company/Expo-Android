@@ -26,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -63,6 +64,7 @@ import com.school_of_company.program.viewmodel.ProgramViewModel
 import com.school_of_company.program.viewmodel.uistate.ParticipantResponseListUiState
 import com.school_of_company.program.viewmodel.uistate.TraineeResponseListUiState
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 @Composable
@@ -175,6 +177,8 @@ private fun ProgramDetailParticipantManagementScreen(
     var isDropdownExpanded by rememberSaveable { mutableStateOf(false) }
     var selectedItem by rememberSaveable { mutableIntStateOf(0) }
     val dateTagLazyRowState = rememberLazyListState(initialFirstVisibleItemIndex = 10)
+    val coroutineScope = rememberCoroutineScope()
+
     val dateList = remember(selectedDate) {
         val selectedDateNotNull = selectedDate ?: LocalDate.now()
         val startDate = selectedDateNotNull.minusDays(10)
@@ -422,6 +426,10 @@ private fun ProgramDetailParticipantManagementScreen(
                                     onSelectedDateChange(null)
                                 } else {
                                     onSelectedDateChange(date)
+                                }
+
+                                coroutineScope.launch {
+                                    dateTagLazyRowState.scrollToItem(10)
                                 }
                             }
                         )

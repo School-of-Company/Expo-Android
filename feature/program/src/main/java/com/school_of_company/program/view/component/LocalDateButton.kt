@@ -47,7 +47,10 @@ internal fun LocalDateButton(
                     color = outlineColor,
                     shape = RoundedCornerShape(size = 6.dp)
                 )
-                .padding(horizontal = 12.dp, vertical = 8.dp),
+                .padding(
+                    horizontal = 12.dp,
+                    vertical = 8.dp,
+                ),
         ) {
             Text(
                 text = date.toString(),

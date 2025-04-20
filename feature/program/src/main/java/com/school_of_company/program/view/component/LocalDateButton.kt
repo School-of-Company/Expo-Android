@@ -3,7 +3,10 @@ package com.school_of_company.program.view.component
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -60,10 +63,19 @@ internal fun LocalDateButton(
 @Composable
 @Preview
 private fun LocalDateButtonPreview() {
-    LocalDateButton(
-        modifier = Modifier,
-        date = LocalDate.now(),
-        selected = false,
-        onClick = {},
-    )
+    Column {
+        LocalDateButton(
+            modifier = Modifier,
+            date = LocalDate.now(),
+            selected = false,
+            onClick = {},
+        )
+        Spacer(Modifier.height(16.dp))
+        LocalDateButton(
+            modifier = Modifier,
+            date = LocalDate.now(),
+            selected = true,
+            onClick = {},
+        )
+    }
 }

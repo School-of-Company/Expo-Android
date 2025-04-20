@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -51,6 +52,7 @@ import com.school_of_company.design_system.icon.UpArrowIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.program.enum.ParticipantEnum
+import com.school_of_company.program.view.component.LocalDateButton
 import com.school_of_company.program.view.component.ProgramDetailParticipantDropdownMenu
 import com.school_of_company.program.view.component.ProgramDetailParticipantManagementList
 import com.school_of_company.program.view.component.ProgramDetailParticipantTable
@@ -102,6 +104,20 @@ internal fun ProgramDetailParticipantManagementRoute(
         )
     }
 
+    LaunchedEffect(selectedDate) {
+        delay(300L)
+        viewModel.getParticipantInformationList(
+            expoId = id,
+            type = ParticipantEnum.FIELD,
+            localDate = selectedDate.toString(),
+        )
+        viewModel.getParticipantInformationList(
+            expoId = id,
+            type = ParticipantEnum.PRE,
+            localDate = selectedDate.toString(),
+        )
+    }
+
     ProgramDetailParticipantManagementScreen(
         modifier = modifier,
         swipeRefreshState = swipeRefreshState,
@@ -111,6 +127,7 @@ internal fun ProgramDetailParticipantManagementRoute(
         selectedDate = selectedDate,
         traineeName = traineeName,
         onBackClick = onBackClick,
+        onSelectedDateChange = { selectedDate = it },
         onTraineeNameChange = viewModel::onTraineeNameChange,
         getAheadParticipantList = {
             viewModel.getParticipantInformationList(
@@ -147,6 +164,7 @@ private fun ProgramDetailParticipantManagementScreen(
     participantFieldResponseListUiState: ParticipantResponseListUiState,
     traineeInformationUiState: TraineeResponseListUiState,
     onBackClick: () -> Unit,
+    onSelectedDateChange: (LocalDate?) -> Unit,
     onTraineeNameChange: (String) -> Unit,
     getAheadParticipantList: () -> Unit,
     getFieldParticipantList: () -> Unit,
@@ -384,12 +402,28 @@ private fun ProgramDetailParticipantManagementScreen(
 
             Spacer(modifier = Modifier.height(18.dp))
 
-            LazyRow(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth()
-            ) {
+            if (selectedItem != 2) {
 
+                LazyRow(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(dateList) { date: LocalDate ->
+                        LocalDateButton(
+                            date = date,
+                            selected = selectedDate == date,
+                            onClick = {
+                                if (selectedDate == date) {
+                                    onSelectedDateChange(null)
+                                } else {
+                                    onSelectedDateChange(date)
+                                }
+                            }
+                        )
+                    }
+                }
             }
 
             if (selectedItem == 2) {
@@ -536,6 +570,7 @@ private fun ProgramDetailParticipantManagementScreen(
 private fun HomeDetailParticipantManagementScreenPreview() {
     ProgramDetailParticipantManagementScreen(
         swipeRefreshState = rememberSwipeRefreshState(isRefreshing = false),
+        selectedDate = LocalDate.now(),
         traineeName = "",
         participantAheadResponseListUiState = ParticipantResponseListUiState.Loading,
         participantFieldResponseListUiState = ParticipantResponseListUiState.Loading,
@@ -545,6 +580,6 @@ private fun HomeDetailParticipantManagementScreenPreview() {
         getAheadParticipantList = {},
         getFieldParticipantList = {},
         getTraineeList = {},
-        selectedDate = LocalDate.now(),
+        onSelectedDateChange = { _ -> },
     )
 }

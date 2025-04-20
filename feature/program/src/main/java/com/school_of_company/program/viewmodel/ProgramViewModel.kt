@@ -219,7 +219,6 @@ internal class ProgramViewModel @Inject constructor(
     internal fun getParticipantInformationList(
         expoId: String,
         type: ParticipantEnum,
-        name: String? = null,
         localDate: String? = null
     ) = viewModelScope.launch {
         _swipeRefreshLoading.value = true
@@ -232,7 +231,6 @@ internal class ProgramViewModel @Inject constructor(
         getParticipantListInformationUseCase(
             type = type.name,
             expoId = expoId,
-            name = name,
             localDate = localDate
         )
             .asResult()

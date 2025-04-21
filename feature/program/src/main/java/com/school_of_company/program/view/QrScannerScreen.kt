@@ -1,12 +1,15 @@
 package com.school_of_company.program.view
 
 import android.Manifest
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.material3.MaterialTheme.typography
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -15,8 +18,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -39,6 +44,7 @@ import com.school_of_company.program.util.QrReadScreenType
 import com.school_of_company.program.util.parseStandardQrScanModel
 import com.school_of_company.program.util.parseTrainingQr
 import com.school_of_company.ui.toast.makeToast
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -144,7 +150,19 @@ private fun QrScannerScreen(
     onBackClick: () -> Unit,
     onQrcodeScan: (String) -> Unit,
 ) {
+    var qrSettingCountdown by rememberSaveable { mutableStateOf(3) }
+    var showCountdown by rememberSaveable { mutableStateOf(true) }
+
+    LaunchedEffect(Unit) {
+        while (qrSettingCountdown > 0) {
+            delay(1000)
+            qrSettingCountdown--
+        }
+        showCountdown = false
+    }
+
     ExpoAndroidTheme { colors, _ ->
+
         Box(contentAlignment = Alignment.Center) {
             QrcodeScanView(
                 onQrcodeScan = onQrcodeScan,
@@ -153,13 +171,29 @@ private fun QrScannerScreen(
 
             QrGuideImage()
 
+            if (showCountdown) {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.Black.copy(alpha = 0.7f))
+                ) {
+                    Text(
+                        text = "QR 스캔 준비중...$qrSettingCountdown",
+                        style = typography.bodyLarge,
+                        color = colors.white,
+                        fontSize = 24.sp
+                    )
+                }
+            }
+
             Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = modifier
                     .fillMaxSize()
                     .navigationBarsPadding()
                     .statusBarsPadding()
-                    .padding(horizontal = 16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .padding(horizontal = 16.dp)
             ) {
                 ExpoTopBar(
                     startIcon = {

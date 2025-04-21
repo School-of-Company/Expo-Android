@@ -65,7 +65,7 @@ internal fun ExpoDetailRoute(
     modifier: Modifier = Modifier,
     id: String,
     onBackClick: () -> Unit,
-    onCheckClick: (String) -> Unit,
+    onCheckClick: (String, String, String) -> Unit,
     onModifyClick: (String) -> Unit,
     onProgramClick: (String) -> Unit,
     onMessageClick: (String, String) -> Unit,
@@ -86,6 +86,7 @@ internal fun ExpoDetailRoute(
                 null,
                 R.string.convert_coordinates_to_address_success
             )
+
             is GetCoordinatesToAddressUiState.Error -> onErrorToast(
                 null,
                 R.string.convert_coordinates_to_address_fail
@@ -104,7 +105,7 @@ internal fun ExpoDetailRoute(
         onMessageClick = { authority ->
             onMessageClick(id, authority)
         },
-        onCheckClick = onCheckClick,
+        onCheckClick = { start, end -> onCheckClick(id, start, end) },
         onModifyClick = onModifyClick,
         onProgramClick = onProgramClick,
         navigationToFormCreate = { type ->
@@ -139,9 +140,9 @@ private fun ExpoDetailScreen(
     scrollState: ScrollState = rememberScrollState(),
     onBackClick: () -> Unit,
     onMessageClick: (String) -> Unit,
-    onCheckClick: (String) -> Unit,
     onModifyClick: (String) -> Unit,
     onProgramClick: (String) -> Unit,
+    onCheckClick: (String, String) -> Unit,
     navigationToFormCreate: (String) -> Unit,
     navigationToFormModify: (String) -> Unit,
 ) {
@@ -272,7 +273,10 @@ private fun ExpoDetailScreen(
                                             .align(Alignment.BottomCenter)
                                             .background(
                                                 brush = Brush.verticalGradient(
-                                                    colors = listOf(Color.Transparent, colors.white),
+                                                    colors = listOf(
+                                                        Color.Transparent,
+                                                        colors.white
+                                                    ),
                                                     startY = 0f,
                                                     endY = 120f
                                                 )
@@ -286,7 +290,8 @@ private fun ExpoDetailScreen(
                                     text = if (expandedExpoIntroductionTextState) "접기" else "더보기",
                                     color = if (expandedExpoIntroductionTextState) colors.main else colors.gray200,
                                     modifier = Modifier.expoClickable {
-                                        expandedExpoIntroductionTextState = !expandedExpoIntroductionTextState
+                                        expandedExpoIntroductionTextState =
+                                            !expandedExpoIntroductionTextState
                                     },
                                     style = typography.bodyRegular2
                                 )
@@ -426,7 +431,12 @@ private fun ExpoDetailScreen(
                                     text = "조회하기",
                                     textColor = colors.main,
                                     backgroundColor = colors.white,
-                                    onClick = { onCheckClick(id) },
+                                    onClick = {
+                                        onCheckClick(
+                                            getExpoInformationUiState.data.startedDay,
+                                            getExpoInformationUiState.data.finishedDay,
+                                        )
+                                    },
                                     modifier = Modifier
                                         .weight(1f)
                                         .border(
@@ -615,7 +625,7 @@ private fun HomeDetailScreenPreview() {
         scrollState = ScrollState(0),
         onBackClick = {},
         onMessageClick = {},
-        onCheckClick = {},
+        onCheckClick = { _, _ -> },
         onModifyClick = {},
         onProgramClick = {},
         navigationToFormCreate = { _ -> },

@@ -10,8 +10,6 @@ interface ParticipantAPI {
     @GET("/participant/{expo_id}")
     suspend fun getParticipantInformationList(
         @Path("expo_id") expoId: String,
-        @Query("type") type: String,
-        @Query("name") name: String? = null,
         @Query("page") page: Int? = null,
         @Query("size") size: Int? = null,
         @Query("LocalDate") localDate: String? = null

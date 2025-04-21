@@ -176,8 +176,6 @@ private fun ProgramDetailParticipantManagementScreen(
     var participantTextState by rememberSaveable { mutableStateOf("사전 행사 참가자") }
     var isDropdownExpanded by rememberSaveable { mutableStateOf(false) }
     var selectedItem by rememberSaveable { mutableIntStateOf(0) }
-    val dateTagLazyRowState = rememberLazyListState(initialFirstVisibleItemIndex = 10)
-    val coroutineScope = rememberCoroutineScope()
 
     val dateList = remember(selectedDate) {
         val selectedDateNotNull = selectedDate ?: LocalDate.now()
@@ -414,7 +412,6 @@ private fun ProgramDetailParticipantManagementScreen(
                     modifier = Modifier
                         .padding(16.dp)
                         .fillMaxWidth(),
-                    state = dateTagLazyRowState,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     items(dateList) { date: LocalDate ->
@@ -426,10 +423,6 @@ private fun ProgramDetailParticipantManagementScreen(
                                     onSelectedDateChange(null)
                                 } else {
                                     onSelectedDateChange(date)
-                                }
-
-                                coroutineScope.launch {
-                                    dateTagLazyRowState.scrollToItem(10)
                                 }
                             }
                         )

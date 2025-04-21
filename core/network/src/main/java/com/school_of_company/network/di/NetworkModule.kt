@@ -2,7 +2,6 @@ package com.school_of_company.network.di
 
 import android.content.Context
 import android.util.Log
-import com.readystatesoftware.chuck.ChuckInterceptor
 import com.school_of_company.network.BuildConfig
 import com.school_of_company.network.api.AddressAPI
 import com.school_of_company.network.api.AdminAPI

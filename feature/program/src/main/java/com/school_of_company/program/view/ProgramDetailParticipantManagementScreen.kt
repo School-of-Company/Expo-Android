@@ -301,42 +301,6 @@ private fun ProgramDetailParticipantManagementScreen(
                         }
 
                         1 -> {
-                            when (participantListUiState) {
-                                is ParticipantResponseListUiState.Loading -> {
-                                    Text(
-                                        text = "로딩중..",
-                                        style = typography.captionRegular2,
-                                        color = colors.main
-                                    )
-                                }
-
-                                is ParticipantResponseListUiState.Success -> {
-                                    Text(
-                                        text = "${participantListUiState.data}명",
-                                        style = typography.captionRegular2,
-                                        color = colors.main
-                                    )
-                                }
-
-                                is ParticipantResponseListUiState.Error -> {
-                                    Text(
-                                        text = "데이터를 불러올 수 없습니다..",
-                                        style = typography.captionRegular2,
-                                        color = colors.main
-                                    )
-                                }
-
-                                is ParticipantResponseListUiState.Empty -> {
-                                    Text(
-                                        text = "0명",
-                                        style = typography.captionRegular2,
-                                        color = colors.main
-                                    )
-                                }
-                            }
-                        }
-
-                        2 -> {
                             when (traineeInformationUiState) {
                                 is TraineeResponseListUiState.Loading -> {
                                     Text(
@@ -430,8 +394,7 @@ private fun ProgramDetailParticipantManagementScreen(
                 onRefresh = {
                     when (selectedItem) {
                         0 -> getParticipantList()
-                        1 -> getParticipantList()
-                        2 -> getTraineeList()
+                        1 -> getTraineeList()
                     }
                 },
                 indicator = { state, refreshTrigger ->
@@ -459,14 +422,14 @@ private fun ProgramDetailParticipantManagementScreen(
 
                             is ParticipantResponseListUiState.Error -> {
                                 ShowErrorState(
-                                    errorText = "사전 행사 참가자를 불러올 수 없습니다..",
+                                    errorText = "행사 참가자를 불러올 수 없습니다..",
                                     scrollState = scrollState
                                 )
                             }
 
                             is ParticipantResponseListUiState.Empty -> {
                                 ShowEmptyState(
-                                    emptyMessage = "사전 행사 참가자가 존재하지 않습니다..",
+                                    emptyMessage = "행사 참가자가 존재하지 않습니다..",
                                     scrollState = scrollState
                                 )
                             }
@@ -474,38 +437,6 @@ private fun ProgramDetailParticipantManagementScreen(
                     }
 
                     1 -> {
-                        when (participantListUiState) {
-                            is ParticipantResponseListUiState.Loading -> Unit
-                            is ParticipantResponseListUiState.Success -> {
-                                Column {
-                                    ProgramDetailParticipantTable(scrollState = scrollState)
-
-                                    ProgramDetailParticipantManagementList(
-                                        scrollState = scrollState,
-                                        item = participantListUiState.data
-                                    )
-                                }
-                            }
-
-                            is ParticipantResponseListUiState.Error -> {
-                                ShowErrorState(
-                                    errorText = "현장 행사 참가자를 불러올 수 없습니다..",
-                                    scrollState = scrollState
-                                )
-                            }
-
-                            is ParticipantResponseListUiState.Empty -> {
-
-                                ShowEmptyState(
-                                    emptyMessage = "현장 행사 참가자가 존재하지 않습니다..",
-                                    scrollState = scrollState
-                                )
-
-                            }
-                        }
-                    }
-
-                    2 -> {
                         when (traineeInformationUiState) {
                             is TraineeResponseListUiState.Loading -> Unit
                             is TraineeResponseListUiState.Success -> {
@@ -521,14 +452,14 @@ private fun ProgramDetailParticipantManagementScreen(
 
                             is TraineeResponseListUiState.Error -> {
                                 ShowErrorState(
-                                    errorText = "사전 교원 원수를 불러올 수 없습니다..",
+                                    errorText = "교원 원수를 불러올 수 없습니다..",
                                     scrollState = scrollState
                                 )
                             }
 
                             is TraineeResponseListUiState.Empty -> {
                                 ShowEmptyState(
-                                    emptyMessage = "사전 교원 원수가 존재하지 않습니다..",
+                                    emptyMessage = "교원 원수가 존재하지 않습니다..",
                                     scrollState = scrollState
                                 )
                             }

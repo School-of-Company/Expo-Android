@@ -179,7 +179,7 @@ private fun ProgramDetailParticipantManagementScreen(
 
     val dateList = remember {
         val start = LocalDate.of(2025, 5, 19)
-        val end = LocalDate.of(2025, 5, 20)
+        val end = LocalDate.of(2025, 5, 30)
 
         generateSequence(start) { it.plusDays(1) }
             .takeWhile { !it.isAfter(end) }

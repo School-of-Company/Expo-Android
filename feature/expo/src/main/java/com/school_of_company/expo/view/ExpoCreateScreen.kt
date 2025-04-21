@@ -545,8 +545,6 @@ private fun ExpoCreateScreen(
                             introduceTitleState.isNotEmpty() &&
                             addressState.isNotEmpty() &&
                             locationState.isNotEmpty() &&
-                            trainingProgramTextState.isNotEmpty() &&
-                            standardProgramTextState.isNotEmpty() &&
                             startedDateState.isValidDateSequence(endedDateState)
                         ) {
                             ButtonState.Enable

@@ -177,13 +177,12 @@ private fun ProgramDetailParticipantManagementScreen(
     var isDropdownExpanded by rememberSaveable { mutableStateOf(false) }
     var selectedItem by rememberSaveable { mutableIntStateOf(0) }
 
-    val dateList = remember(selectedDate) {
-        val selectedDateNotNull = selectedDate ?: LocalDate.now()
-        val startDate = selectedDateNotNull.minusDays(10)
-        val endDate = selectedDateNotNull.plusDays(10)
+    val dateList = remember {
+        val start = LocalDate.of(2025, 5, 19)
+        val end = LocalDate.of(2025, 5, 20)
 
-        generateSequence(startDate) { it.plusDays(1) }
-            .takeWhile { !it.isAfter(endDate) }
+        generateSequence(start) { it.plusDays(1) }
+            .takeWhile { !it.isAfter(end) }
             .toList()
     }
 

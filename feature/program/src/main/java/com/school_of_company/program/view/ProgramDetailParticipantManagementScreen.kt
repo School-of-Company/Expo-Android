@@ -206,7 +206,7 @@ private fun ProgramDetailParticipantManagementScreen(
                         modifier = Modifier.expoClickable { onBackClick() }
                     )
                 },
-                betweenText = "참가자 관리",
+                betweenText = "참가자 조회",
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
 

@@ -62,7 +62,7 @@ fun NavGraphBuilder.programDetailProgramScreen(
 }
 
 fun NavGraphBuilder.programDetailParticipantManagementScreen(onBackClick: () -> Unit) {
-    composable(route = "$programDetailParticipantManagementRoute/{id}") { backStackEntry ->
+    composable(route = "$programDetailParticipantManagementRoute/{id}/{startDate}/{endDate}") { backStackEntry ->
         val id = backStackEntry.arguments?.getString("id") ?: ""
         val startDate = backStackEntry.arguments?.getString("startDate") ?: ""
         val endDate = backStackEntry.arguments?.getString("endDate") ?: ""

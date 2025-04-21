@@ -6,7 +6,7 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class ParticipantInformationResponse(
     @Json(name = "info") val info: PageInfo,
-    @Json(name = "participant") val participant: List<ParticipantResponse>
+    @Json(name = "participants") val participants: List<ParticipantResponse>
 )
 
 @JsonClass(generateAdapter = true)

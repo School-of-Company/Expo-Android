@@ -5,9 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface ParticipantRepository {
     fun getParticipantInformationList(
-        type: String,
         expoId: String,
-        name: String? = null,
         page: Int? = null,
         size: Int? = null,
         localDate: String? = null

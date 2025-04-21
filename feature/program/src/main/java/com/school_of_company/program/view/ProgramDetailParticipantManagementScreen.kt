@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,7 +25,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -64,15 +62,16 @@ import com.school_of_company.program.viewmodel.ProgramViewModel
 import com.school_of_company.program.viewmodel.uistate.ParticipantResponseListUiState
 import com.school_of_company.program.viewmodel.uistate.TraineeResponseListUiState
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 @Composable
 internal fun ProgramDetailParticipantManagementRoute(
     modifier: Modifier = Modifier,
     id: String,
+    startDate: String,
+    endDate: String,
     onBackClick: () -> Unit,
-    viewModel: ProgramViewModel = hiltViewModel()
+    viewModel: ProgramViewModel = hiltViewModel(),
 ) {
     val swipeRefreshLoading by viewModel.swipeRefreshLoading.collectAsStateWithLifecycle()
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = swipeRefreshLoading)
@@ -128,6 +127,8 @@ internal fun ProgramDetailParticipantManagementRoute(
         participantFieldResponseListUiState = participantFieldResponseListUiState,
         traineeInformationUiState = traineeInformationUiState,
         selectedDate = selectedDate,
+        startDate = LocalDate.parse(startDate),
+        endDate = LocalDate.parse(endDate),
         traineeName = traineeName,
         onBackClick = onBackClick,
         onSelectedDateChange = { selectedDate = it },
@@ -162,6 +163,8 @@ private fun ProgramDetailParticipantManagementScreen(
     scrollState: ScrollState = rememberScrollState(),
     focusManager: FocusManager = LocalFocusManager.current,
     selectedDate: LocalDate?,
+    startDate: LocalDate,
+    endDate: LocalDate,
     traineeName: String,
     participantAheadResponseListUiState: ParticipantResponseListUiState,
     participantFieldResponseListUiState: ParticipantResponseListUiState,
@@ -178,11 +181,8 @@ private fun ProgramDetailParticipantManagementScreen(
     var selectedItem by rememberSaveable { mutableIntStateOf(0) }
 
     val dateList = remember {
-        val start = LocalDate.of(2025, 5, 19)
-        val end = LocalDate.of(2025, 5, 30)
-
-        generateSequence(start) { it.plusDays(1) }
-            .takeWhile { !it.isAfter(end) }
+        generateSequence(startDate) { it.plusDays(1) }
+            .takeWhile { !it.isAfter(endDate) }
             .toList()
     }
 
@@ -584,5 +584,7 @@ private fun HomeDetailParticipantManagementScreenPreview() {
         getFieldParticipantList = {},
         getTraineeList = {},
         onSelectedDateChange = { _ -> },
+        endDate = LocalDate.of(2025, 5, 30),
+        startDate = LocalDate.of(2025, 5, 19),
     )
 }

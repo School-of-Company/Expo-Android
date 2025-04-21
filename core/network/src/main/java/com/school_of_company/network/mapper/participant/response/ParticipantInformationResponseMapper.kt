@@ -10,7 +10,7 @@ import com.school_of_company.network.dto.participant.response.ParticipantRespons
 fun ParticipantInformationResponse.toEntity(): ParticipantInformationResponseEntity =
     ParticipantInformationResponseEntity(
         info = this.info.toEntity(),
-        participant = this.participant.map { it.toEntity() }
+        participant = this.participants.map { it.toEntity() }
     )
 
 fun PageInfo.toEntity(): PageInfoEntity =

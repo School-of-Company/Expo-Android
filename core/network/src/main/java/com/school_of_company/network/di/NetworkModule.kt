@@ -65,16 +65,6 @@ object NetworkModule {
             .writeTimeout(30, TimeUnit.SECONDS)
             .addInterceptor(httpLoggingInterceptor)
             .addInterceptor(authInterceptor)
-            .addInterceptor(
-                if (BuildConfig.DEBUG) {
-                    ChuckInterceptor(context)
-                        .showNotification(true)
-                        .maxContentLength(250000)
-                        .retainDataFor(ChuckInterceptor.Period.ONE_DAY)
-                } else {
-                    Interceptor { chain -> chain.proceed(chain.request()) }
-                }
-            )
             .authenticator(tokenAuthenticator)
             .build()
     }

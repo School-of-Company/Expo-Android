@@ -11,17 +11,13 @@ class ParticipantRepositoryImpl @Inject constructor(
     private val dataSource: ParticipantDataSource
 ) : ParticipantRepository {
     override fun getParticipantInformationList(
-        type: String,
         expoId: String,
-        name: String?,
         page: Int?,
         size: Int?,
         localDate: String?
     ): Flow<ParticipantInformationResponseEntity> {
         return dataSource.getParticipantInformationList(
-            type = type,
             expoId = expoId,
-            name = name,
             page = page,
             size = size,
             localDate = localDate

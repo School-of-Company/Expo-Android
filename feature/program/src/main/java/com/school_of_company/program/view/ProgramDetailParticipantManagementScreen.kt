@@ -247,9 +247,8 @@ private fun ProgramDetailParticipantManagementScreen(
                             isDropdownExpanded = false
 
                             participantTextState = when (index) {
-                                0 -> "사전 행사 참가자"
-                                1 -> "현장 행사 참가자"
-                                2 -> "사전 교원 원수 참가자"
+                                0 -> "사전 & 현장 행사 참가자"
+                                1 -> "교원 원수 참가자"
                                 else -> participantTextState
                             }
                         },

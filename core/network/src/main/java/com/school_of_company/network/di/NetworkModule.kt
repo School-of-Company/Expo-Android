@@ -2,7 +2,6 @@ package com.school_of_company.network.di
 
 import android.content.Context
 import android.util.Log
-import com.readystatesoftware.chuck.ChuckInterceptor
 import com.school_of_company.network.BuildConfig
 import com.school_of_company.network.api.AddressAPI
 import com.school_of_company.network.api.AdminAPI
@@ -65,16 +64,6 @@ object NetworkModule {
             .writeTimeout(30, TimeUnit.SECONDS)
             .addInterceptor(httpLoggingInterceptor)
             .addInterceptor(authInterceptor)
-            .addInterceptor(
-                if (BuildConfig.DEBUG) {
-                    ChuckInterceptor(context)
-                        .showNotification(true)
-                        .maxContentLength(250000)
-                        .retainDataFor(ChuckInterceptor.Period.ONE_DAY)
-                } else {
-                    Interceptor { chain -> chain.proceed(chain.request()) }
-                }
-            )
             .authenticator(tokenAuthenticator)
             .build()
     }

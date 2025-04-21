@@ -3,7 +3,6 @@ package com.school_of_company.program.view.component
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -30,7 +29,7 @@ internal fun ProgramDetailParticipantDropdownMenu(
             modifier = modifier.background(color = colors.white)
         ) {
 
-            val menuItems = listOf("사전 행사 참가자", "현장 행사 참가자", "사전 교원 원수 참가자")
+            val menuItems = listOf("사전 & 현장 행사 참가자", "교원 원수 참가자")
 
             menuItems.forEachIndexed { index, title ->
                 DropdownMenuItem(

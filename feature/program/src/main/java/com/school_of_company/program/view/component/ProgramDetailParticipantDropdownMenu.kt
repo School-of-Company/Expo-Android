@@ -16,7 +16,6 @@ import com.school_of_company.design_system.theme.ExpoAndroidTheme
 @Composable
 internal fun ProgramDetailParticipantDropdownMenu(
     modifier: Modifier = Modifier,
-    onExpandClick: Boolean,
     selectedItem: Int?,
     onCancelClick: () -> Unit,
     onItemSelected: (Int) -> Unit
@@ -24,8 +23,8 @@ internal fun ProgramDetailParticipantDropdownMenu(
     ExpoAndroidTheme { colors, typography ->
 
         DropdownMenu(
-            expanded = onExpandClick,
-            onDismissRequest = { onCancelClick() },
+            expanded = true,
+            onDismissRequest = onCancelClick,
             modifier = modifier.background(color = colors.white)
         ) {
 

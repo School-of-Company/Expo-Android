@@ -209,11 +209,16 @@ private fun ProgramDetailParticipantManagementScreen(
                 }
             }
 
-            Box(modifier = Modifier.padding(start = 16.dp, top = 10.dp)) {
+            Box(
+                modifier = Modifier.padding(
+                    start = 16.dp,
+                    top = 10.dp
+                ),
+            ) {
                 if (isDropdownExpanded) {
+
                     ProgramDetailParticipantDropdownMenu(
                         onCancelClick = { isDropdownExpanded = false },
-                        onExpandClick = isDropdownExpanded,
                         selectedItem = selectedItem,
                         onItemSelected = { index ->
                             selectedItem = index

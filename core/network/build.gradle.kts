@@ -48,9 +48,6 @@ dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:datastore"))
 
-    debugImplementation(libs.debug.chuck)
-    releaseImplementation(libs.release.chuck)
-
     implementation(libs.kotlinx.datetime)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.okhttp.logging)

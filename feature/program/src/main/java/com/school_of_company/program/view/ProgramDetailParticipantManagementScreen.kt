@@ -82,7 +82,7 @@ internal fun ProgramDetailParticipantManagementRoute(
     val traineeInformationUiState by viewModel.traineeResponseListUiState.collectAsStateWithLifecycle()
 
     val traineeName by viewModel.traineeName.collectAsStateWithLifecycle()
-    var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
+    var selectedDate by rememberSaveable { mutableStateOf<LocalDate?>(null) }
 
     LaunchedEffect(id) {
 

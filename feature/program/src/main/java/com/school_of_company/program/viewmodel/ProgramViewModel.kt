@@ -12,13 +12,13 @@ import com.school_of_company.domain.usecase.standard.StandardProgramListUseCase
 import com.school_of_company.domain.usecase.trainee.TraineeResponseListUseCase
 import com.school_of_company.domain.usecase.training.TrainingProgramListUseCase
 import com.school_of_company.model.param.attendance.StandardQrCodeRequestParam
-import com.school_of_company.program.viewmodel.uistate.StandardProgramListUiState
-import com.school_of_company.program.viewmodel.uistate.TrainingProgramListUiState
-import com.school_of_company.program.viewmodel.uistate.ReadQrCodeUiState
 import com.school_of_company.model.param.attendance.TrainingQrCodeRequestParam
 import com.school_of_company.program.enum.ParticipantEnum
 import com.school_of_company.program.viewmodel.uistate.ParticipantResponseListUiState
+import com.school_of_company.program.viewmodel.uistate.ReadQrCodeUiState
+import com.school_of_company.program.viewmodel.uistate.StandardProgramListUiState
 import com.school_of_company.program.viewmodel.uistate.TraineeResponseListUiState
+import com.school_of_company.program.viewmodel.uistate.TrainingProgramListUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,6 +26,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,13 +36,11 @@ internal class ProgramViewModel @Inject constructor(
     private val traineeResponseListUseCase: TraineeResponseListUseCase,
     private val trainingQrCodeRequestUseCase: TrainingQrCodeRequestUseCase,
     private val standardQrCodeRequestUseCase: StandardQrCodeRequestUseCase,
-    private val participantInformationResponseUseCase: ParticipantInformationResponseUseCase,
+    private val getParticipantListInformationUseCase: ParticipantInformationResponseUseCase,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     companion object {
         private const val REQUEST_DELAY_MS = 2000L
-        private const val FIELD_PARTICIPANT_NAME = "field_participant_name"
-        private const val PRE_PARTICIPANT_NAME = "pre_participant_name"
         private const val TRAINEE_NAME = "trainee_name"
     }
 
@@ -68,8 +67,6 @@ internal class ProgramViewModel @Inject constructor(
     private val _participantAheadResponseListUiState = MutableStateFlow<ParticipantResponseListUiState>(ParticipantResponseListUiState.Loading)
     internal val participantAheadResponseListUiState = _participantAheadResponseListUiState.asStateFlow()
 
-    internal val fieldParticipantName = savedStateHandle.getStateFlow(FIELD_PARTICIPANT_NAME, "")
-    internal val preParticipantName = savedStateHandle.getStateFlow(PRE_PARTICIPANT_NAME, "")
     internal val traineeName = savedStateHandle.getStateFlow(TRAINEE_NAME, "")
 
     internal fun trainingProgramList(expoId: String) = viewModelScope.launch {
@@ -222,7 +219,7 @@ internal class ProgramViewModel @Inject constructor(
     internal fun getParticipantInformationList(
         expoId: String,
         type: ParticipantEnum,
-        name: String? = null
+        localDate: String? = null
     ) = viewModelScope.launch {
         _swipeRefreshLoading.value = true
 
@@ -231,10 +228,10 @@ internal class ProgramViewModel @Inject constructor(
             ParticipantEnum.FIELD -> _participantFieldResponseListUiState
         }
 
-        participantInformationResponseUseCase(
+        getParticipantListInformationUseCase(
             type = type.name,
             expoId = expoId,
-            name = name
+            localDate = localDate
         )
             .asResult()
             .collectLatest { result ->
@@ -255,14 +252,6 @@ internal class ProgramViewModel @Inject constructor(
                     }
                 }
             }
-    }
-
-    internal fun onFieldParticipantNameChange(value: String) {
-        savedStateHandle[FIELD_PARTICIPANT_NAME] = value
-    }
-
-    internal fun onPreParticipantNameChange(value: String) {
-        savedStateHandle[PRE_PARTICIPANT_NAME] = value
     }
 
     internal fun onTraineeNameChange(value: String) {

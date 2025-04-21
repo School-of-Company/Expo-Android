@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,6 +24,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -49,6 +52,7 @@ import com.school_of_company.design_system.icon.UpArrowIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.program.enum.ParticipantEnum
+import com.school_of_company.program.view.component.LocalDateButton
 import com.school_of_company.program.view.component.ProgramDetailParticipantDropdownMenu
 import com.school_of_company.program.view.component.ProgramDetailParticipantManagementList
 import com.school_of_company.program.view.component.ProgramDetailParticipantTable
@@ -58,13 +62,16 @@ import com.school_of_company.program.viewmodel.ProgramViewModel
 import com.school_of_company.program.viewmodel.uistate.ParticipantResponseListUiState
 import com.school_of_company.program.viewmodel.uistate.TraineeResponseListUiState
 import kotlinx.coroutines.delay
+import java.time.LocalDate
 
 @Composable
 internal fun ProgramDetailParticipantManagementRoute(
     modifier: Modifier = Modifier,
     id: String,
+    startDate: String,
+    endDate: String,
     onBackClick: () -> Unit,
-    viewModel: ProgramViewModel = hiltViewModel()
+    viewModel: ProgramViewModel = hiltViewModel(),
 ) {
     val swipeRefreshLoading by viewModel.swipeRefreshLoading.collectAsStateWithLifecycle()
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = swipeRefreshLoading)
@@ -73,9 +80,8 @@ internal fun ProgramDetailParticipantManagementRoute(
     val participantFieldResponseListUiState by viewModel.participantFieldResponseListUiState.collectAsStateWithLifecycle()
     val traineeInformationUiState by viewModel.traineeResponseListUiState.collectAsStateWithLifecycle()
 
-    val fieldParticipantName by viewModel.fieldParticipantName.collectAsStateWithLifecycle()
-    val preParticipantName by viewModel.preParticipantName.collectAsStateWithLifecycle()
     val traineeName by viewModel.traineeName.collectAsStateWithLifecycle()
+    var selectedDate by rememberSaveable { mutableStateOf<LocalDate?>(null) }
 
     LaunchedEffect(id) {
 
@@ -92,29 +98,25 @@ internal fun ProgramDetailParticipantManagementRoute(
         viewModel.getTraineeList(expoId = id)
     }
 
-    LaunchedEffect(preParticipantName) {
-        delay(300L)
-        viewModel.getParticipantInformationList(
-            expoId = id,
-            type = ParticipantEnum.PRE,
-            name = preParticipantName
-        )
-    }
-
-    LaunchedEffect(fieldParticipantName) {
-        delay(300L)
-        viewModel.getParticipantInformationList(
-            expoId = id,
-            type = ParticipantEnum.FIELD,
-            name = fieldParticipantName
-        )
-    }
-
     LaunchedEffect(traineeName) {
         delay(300L)
         viewModel.getTraineeList(
             expoId = id,
             name = traineeName
+        )
+    }
+
+    LaunchedEffect(selectedDate) {
+        delay(300L)
+        viewModel.getParticipantInformationList(
+            expoId = id,
+            type = ParticipantEnum.FIELD,
+            localDate = selectedDate.toString(),
+        )
+        viewModel.getParticipantInformationList(
+            expoId = id,
+            type = ParticipantEnum.PRE,
+            localDate = selectedDate.toString(),
         )
     }
 
@@ -124,31 +126,31 @@ internal fun ProgramDetailParticipantManagementRoute(
         participantAheadResponseListUiState = participantAheadResponseListUiState,
         participantFieldResponseListUiState = participantFieldResponseListUiState,
         traineeInformationUiState = traineeInformationUiState,
-        fieldParticipantName = fieldParticipantName,
-        preParticipantName = preParticipantName,
+        selectedDate = selectedDate,
+        startDate = LocalDate.parse(startDate),
+        endDate = LocalDate.parse(endDate),
         traineeName = traineeName,
         onBackClick = onBackClick,
-        onFieldParticipantNameChange = viewModel::onFieldParticipantNameChange,
-        onPreParticipantNameChange = viewModel::onPreParticipantNameChange,
+        onSelectedDateChange = { selectedDate = it },
         onTraineeNameChange = viewModel::onTraineeNameChange,
-        getAheadParticipantList = { name ->
+        getAheadParticipantList = {
             viewModel.getParticipantInformationList(
                 expoId = id,
                 type = ParticipantEnum.PRE,
-                name = name
+                localDate = selectedDate.toString()
             )
         },
-        getFieldParticipantList = { name ->
+        getFieldParticipantList = {
             viewModel.getParticipantInformationList(
                 expoId = id,
                 type = ParticipantEnum.FIELD,
-                name = name
+                localDate = selectedDate.toString()
             )
         },
-        getTraineeList = { name ->
+        getTraineeList = {
             viewModel.getTraineeList(
                 expoId = id,
-                name = name
+                name = traineeName,
             )
         },
     )
@@ -160,24 +162,29 @@ private fun ProgramDetailParticipantManagementScreen(
     swipeRefreshState: SwipeRefreshState,
     scrollState: ScrollState = rememberScrollState(),
     focusManager: FocusManager = LocalFocusManager.current,
-    fieldParticipantName: String,
-    preParticipantName: String,
+    selectedDate: LocalDate?,
+    startDate: LocalDate,
+    endDate: LocalDate,
     traineeName: String,
     participantAheadResponseListUiState: ParticipantResponseListUiState,
     participantFieldResponseListUiState: ParticipantResponseListUiState,
     traineeInformationUiState: TraineeResponseListUiState,
     onBackClick: () -> Unit,
-    onFieldParticipantNameChange: (String) -> Unit,
-    onPreParticipantNameChange: (String) -> Unit,
+    onSelectedDateChange: (LocalDate?) -> Unit,
     onTraineeNameChange: (String) -> Unit,
-    getAheadParticipantList: (String?) -> Unit,
-    getFieldParticipantList: (String?) -> Unit,
-    getTraineeList: (String?) -> Unit,
+    getAheadParticipantList: () -> Unit,
+    getFieldParticipantList: () -> Unit,
+    getTraineeList: () -> Unit,
 ) {
     var participantTextState by rememberSaveable { mutableStateOf("사전 행사 참가자") }
     var isDropdownExpanded by rememberSaveable { mutableStateOf(false) }
     var selectedItem by rememberSaveable { mutableIntStateOf(0) }
 
+    val dateList = remember {
+        generateSequence(startDate) { it.plusDays(1) }
+            .takeWhile { !it.isAfter(endDate) }
+            .toList()
+    }
 
     ExpoAndroidTheme { colors, typography ->
 
@@ -398,40 +405,50 @@ private fun ProgramDetailParticipantManagementScreen(
 
             Spacer(modifier = Modifier.height(18.dp))
 
-            ExpoNoneLabelTextField(
-                placeholder = "참가자 이름을 입력해주세요.",
-                isError = false,
-                isDisabled = false,
-                errorText = "",
-                value = when (selectedItem) {
-                    0 -> preParticipantName
-                    1 -> fieldParticipantName
-                    2 -> traineeName
-                    else -> ""
-                },
-                onValueChange = when (selectedItem) {
-                    0 -> onPreParticipantNameChange
-                    1 -> onFieldParticipantNameChange
-                    2 -> onTraineeNameChange
-                    else -> ({})
-                },
-                trailingIcon = {
-                    SearchIcon(
-                        tint = colors.black,
-                        modifier = Modifier.clickable {
-                            when (selectedItem) {
-                                0 -> getAheadParticipantList(preParticipantName)
-                                1 -> getFieldParticipantList(fieldParticipantName)
-                                2 -> getTraineeList(traineeName)
+            if (selectedItem != 2) {
+
+                LazyRow(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(dateList) { date: LocalDate ->
+                        LocalDateButton(
+                            date = date,
+                            selected = selectedDate == date,
+                            onClick = {
+                                if (selectedDate == date) {
+                                    onSelectedDateChange(null)
+                                } else {
+                                    onSelectedDateChange(date)
+                                }
                             }
-                        }
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(44.dp)
-                    .padding(horizontal = 16.dp)
-            )
+                        )
+                    }
+                }
+            }
+
+            if (selectedItem == 2) {
+                ExpoNoneLabelTextField(
+                    placeholder = "참가자 이름을 입력해주세요.",
+                    isError = false,
+                    isDisabled = false,
+                    errorText = "",
+                    value = traineeName,
+                    onValueChange = onTraineeNameChange,
+                    trailingIcon = {
+                        SearchIcon(
+                            tint = colors.black,
+                            modifier = Modifier.clickable(onClick = getTraineeList)
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(44.dp)
+                        .padding(horizontal = 16.dp)
+                )
+            }
 
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -440,9 +457,9 @@ private fun ProgramDetailParticipantManagementScreen(
                 state = swipeRefreshState,
                 onRefresh = {
                     when (selectedItem) {
-                        0 -> getAheadParticipantList(null)
-                        1 -> getFieldParticipantList(null)
-                        2 -> getTraineeList(null)
+                        0 -> getAheadParticipantList()
+                        1 -> getFieldParticipantList()
+                        2 -> getTraineeList()
                     }
                 },
                 indicator = { state, refreshTrigger ->
@@ -555,19 +572,19 @@ private fun ProgramDetailParticipantManagementScreen(
 @Composable
 private fun HomeDetailParticipantManagementScreenPreview() {
     ProgramDetailParticipantManagementScreen(
-        onBackClick = {},
         swipeRefreshState = rememberSwipeRefreshState(isRefreshing = false),
+        selectedDate = LocalDate.now(),
+        traineeName = "",
         participantAheadResponseListUiState = ParticipantResponseListUiState.Loading,
         participantFieldResponseListUiState = ParticipantResponseListUiState.Loading,
         traineeInformationUiState = TraineeResponseListUiState.Loading,
-        fieldParticipantName = "",
-        preParticipantName = "",
-        traineeName = "",
-        onFieldParticipantNameChange = {},
-        onPreParticipantNameChange = {},
+        onBackClick = {},
         onTraineeNameChange = {},
         getAheadParticipantList = {},
         getFieldParticipantList = {},
         getTraineeList = {},
+        onSelectedDateChange = { _ -> },
+        endDate = LocalDate.of(2025, 5, 30),
+        startDate = LocalDate.of(2025, 5, 19),
     )
 }

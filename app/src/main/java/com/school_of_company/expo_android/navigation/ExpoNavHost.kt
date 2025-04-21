@@ -16,7 +16,6 @@ import com.school_of_company.expo.navigation.expoCreatedRoute
 import com.school_of_company.expo.navigation.expoCreatedScreen
 import com.school_of_company.expo.navigation.expoDetailScreen
 import com.school_of_company.expo.navigation.expoModifyScreen
-import com.school_of_company.expo.navigation.expoNavigationHomeRoute
 import com.school_of_company.expo.navigation.expoNavigationHomeScreen
 import com.school_of_company.expo.navigation.expoScreen
 import com.school_of_company.expo.navigation.homeRoute
@@ -114,15 +113,9 @@ fun ExpoNavHost(
 
         expoDetailScreen(
             onBackClick = navController::popBackStack,
-            onCheckClick = { id ->
-                navController.navigateToProgramDetailParticipantManagement(id)
-            },
-            onModifyClick = { id ->
-                navController.navigateToExpoModify(id)
-            },
-            onProgramClick = { id ->
-                navController.navigateToProgramDetailProgram(id)
-            },
+            onCheckClick = navController::navigateToProgramDetailParticipantManagement,
+            onModifyClick = navController::navigateToExpoModify,
+            onProgramClick = navController::navigateToProgramDetailProgram,
             onMessageClick = navController::navigateToSmsSendMessage,
             navigationToFormCreate = navController::navigationToCreateForm,
             navigationToFormModify = navController::navigationToModifyForm,

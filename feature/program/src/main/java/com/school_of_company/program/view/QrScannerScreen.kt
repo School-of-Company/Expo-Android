@@ -30,6 +30,7 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
 import com.school_of_company.design_system.R
+import com.school_of_company.design_system.component.loading.LoadingDot
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.component.topbar.ExpoTopBar
 import com.school_of_company.design_system.icon.LeftArrowIcon
@@ -150,7 +151,7 @@ private fun QrScannerScreen(
     onBackClick: () -> Unit,
     onQrcodeScan: (String) -> Unit,
 ) {
-    var qrSettingCountdown by rememberSaveable { mutableStateOf(3) }
+    var qrSettingCountdown by rememberSaveable { mutableStateOf(2) }
     var showCountdown by rememberSaveable { mutableStateOf(true) }
 
     LaunchedEffect(Unit) {
@@ -164,47 +165,45 @@ private fun QrScannerScreen(
     ExpoAndroidTheme { colors, _ ->
 
         Box(contentAlignment = Alignment.Center) {
-            QrcodeScanView(
-                onQrcodeScan = onQrcodeScan,
-                lifecycleOwner = lifecycleOwner,
-            )
-
-            QrGuideImage()
 
             if (showCountdown) {
+
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
                         .fillMaxSize()
                         .background(Color.Black.copy(alpha = 0.7f))
                 ) {
-                    Text(
-                        text = "QR 스캔 준비중...$qrSettingCountdown",
-                        style = typography.bodyLarge,
-                        color = colors.white,
-                        fontSize = 24.sp
+                    LoadingDot()
+                }
+            } else {
+
+                QrcodeScanView(
+                    onQrcodeScan = onQrcodeScan,
+                    lifecycleOwner = lifecycleOwner,
+                )
+
+                QrGuideImage()
+
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = modifier
+                        .fillMaxSize()
+                        .navigationBarsPadding()
+                        .statusBarsPadding()
+                        .padding(horizontal = 16.dp)
+                ) {
+                    ExpoTopBar(
+                        startIcon = {
+                            LeftArrowIcon(
+                                tint = colors.white,
+                                modifier = Modifier
+                                    .expoClickable { onBackClick() }
+                                    .padding(top = 16.dp)
+                            )
+                        }
                     )
                 }
-            }
-
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = modifier
-                    .fillMaxSize()
-                    .navigationBarsPadding()
-                    .statusBarsPadding()
-                    .padding(horizontal = 16.dp)
-            ) {
-                ExpoTopBar(
-                    startIcon = {
-                        LeftArrowIcon(
-                            tint = colors.white,
-                            modifier = Modifier
-                                .expoClickable { onBackClick() }
-                                .padding(top = 16.dp)
-                        )
-                    }
-                )
             }
         }
     }

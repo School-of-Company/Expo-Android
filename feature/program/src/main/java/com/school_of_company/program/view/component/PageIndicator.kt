@@ -26,7 +26,7 @@ internal fun PageIndicator(
 ) {
     val half = maxVisible / 2
     val start = maxOf(1, minOf(currentPage - half, totalPages - maxVisible + 1))
-    val end = minOf(totalPages + 1, start + maxVisible - 1)
+    val end = minOf(totalPages, start + maxVisible - 1)
     val pageList = (start..end).toList()
 
     ExpoAndroidTheme { colors, typography ->

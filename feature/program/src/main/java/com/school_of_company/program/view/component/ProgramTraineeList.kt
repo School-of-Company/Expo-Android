@@ -2,7 +2,6 @@ package com.school_of_company.program.view.component
 
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -23,7 +22,6 @@ internal fun ProgramTraineeList(
 
         LazyColumn(
             modifier = modifier
-                .fillMaxSize()
                 .background(color = colors.white)
                 .padding(start = 16.dp)
         ) {

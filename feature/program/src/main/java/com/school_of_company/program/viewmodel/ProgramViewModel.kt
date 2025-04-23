@@ -40,6 +40,8 @@ internal class ProgramViewModel @Inject constructor(
     companion object {
         private const val REQUEST_DELAY_MS = 2000L
         private const val TRAINEE_NAME = "trainee_name"
+        private const val CURRENT_PAGE = "current_page"
+        private const val PAGE_SIZE = 75
     }
 
     private var isRequestInProgress = false
@@ -63,6 +65,7 @@ internal class ProgramViewModel @Inject constructor(
     internal val participantListUiState = _participantListUiState.asStateFlow()
 
     internal val traineeName = savedStateHandle.getStateFlow(TRAINEE_NAME, "")
+    internal val currentPage = savedStateHandle.getStateFlow(CURRENT_PAGE, 0)
 
     internal fun trainingProgramList(expoId: String) = viewModelScope.launch {
         _swipeRefreshLoading.value = true
@@ -213,6 +216,7 @@ internal class ProgramViewModel @Inject constructor(
 
     internal fun getParticipantInformationList(
         expoId: String,
+        currentPage: Int,
         localDate: String? = null
     ) = viewModelScope.launch {
         _swipeRefreshLoading.value = true
@@ -220,7 +224,9 @@ internal class ProgramViewModel @Inject constructor(
 
         getParticipantListInformationUseCase(
             expoId = expoId,
-            localDate = localDate
+            localDate = localDate,
+            page = currentPage,
+            size = PAGE_SIZE
         )
             .asResult()
             .collectLatest { result ->
@@ -245,5 +251,9 @@ internal class ProgramViewModel @Inject constructor(
 
     internal fun onTraineeNameChange(value: String) {
         savedStateHandle[TRAINEE_NAME] = value
+    }
+
+    internal fun onCurrentPageChange(value: Int) {
+        savedStateHandle[CURRENT_PAGE] = value
     }
 }

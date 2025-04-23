@@ -435,11 +435,12 @@ private fun ProgramDetailParticipantManagementScreen(
                                     ProgramDetailParticipantTable(scrollState = scrollState)
 
                                     ProgramDetailParticipantManagementList(
+                                        modifier = Modifier.weight(1f),
                                         scrollState = scrollState,
                                         item = data
                                     )
 
-                                    Spacer(modifier = Modifier.weight(1f))
+                                    Spacer(modifier = Modifier.height(16.dp))
 
                                     PageIndicator(
                                         totalPages = data.info.totalPage,

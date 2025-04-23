@@ -52,6 +52,7 @@ import com.school_of_company.design_system.icon.UpArrowIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.program.view.component.LocalDateButton
+import com.school_of_company.program.view.component.PageIndicator
 import com.school_of_company.program.view.component.ProgramDetailParticipantDropdownMenu
 import com.school_of_company.program.view.component.ProgramDetailParticipantManagementList
 import com.school_of_company.program.view.component.ProgramDetailParticipantTable
@@ -79,11 +80,15 @@ internal fun ProgramDetailParticipantManagementRoute(
     val traineeInformationUiState by viewModel.traineeResponseListUiState.collectAsStateWithLifecycle()
 
     val traineeName by viewModel.traineeName.collectAsStateWithLifecycle()
+    val currentPage by viewModel.currentPage.collectAsStateWithLifecycle()
     var selectedDate by rememberSaveable { mutableStateOf<LocalDate?>(null) }
 
     LaunchedEffect(id) {
 
-        viewModel.getParticipantInformationList(expoId = id)
+        viewModel.getParticipantInformationList(
+            expoId = id,
+            currentPage = 0,
+        )
 
         viewModel.getTraineeList(expoId = id)
     }
@@ -96,11 +101,12 @@ internal fun ProgramDetailParticipantManagementRoute(
         )
     }
 
-    LaunchedEffect(selectedDate) {
+    LaunchedEffect(selectedDate, currentPage) {
         delay(300L)
         viewModel.getParticipantInformationList(
             expoId = id,
             localDate = selectedDate.toString(),
+            currentPage = currentPage,
         )
     }
 
@@ -112,14 +118,17 @@ internal fun ProgramDetailParticipantManagementRoute(
         selectedDate = selectedDate,
         startDate = LocalDate.parse(startDate),
         endDate = LocalDate.parse(endDate),
+        currentPage = currentPage,
         traineeName = traineeName,
         onBackClick = onBackClick,
         onSelectedDateChange = { selectedDate = it },
         onTraineeNameChange = viewModel::onTraineeNameChange,
+        onCurrentPageChange = viewModel::onCurrentPageChange,
         getParticipantList = {
             viewModel.getParticipantInformationList(
                 expoId = id,
-                localDate = selectedDate.toString()
+                localDate = selectedDate.toString(),
+                currentPage = currentPage,
             )
         },
         getTraineeList = {
@@ -140,12 +149,14 @@ private fun ProgramDetailParticipantManagementScreen(
     selectedDate: LocalDate?,
     startDate: LocalDate,
     endDate: LocalDate,
+    currentPage: Int,
     traineeName: String,
     participantListUiState: ParticipantResponseListUiState,
     traineeInformationUiState: TraineeResponseListUiState,
     onBackClick: () -> Unit,
     onSelectedDateChange: (LocalDate?) -> Unit,
     onTraineeNameChange: (String) -> Unit,
+    onCurrentPageChange: (Int) -> Unit,
     getParticipantList: () -> Unit,
     getTraineeList: () -> Unit,
 ) {
@@ -415,13 +426,25 @@ private fun ProgramDetailParticipantManagementScreen(
                         when (participantListUiState) {
                             is ParticipantResponseListUiState.Loading -> Unit
                             is ParticipantResponseListUiState.Success -> {
+                                val data = participantListUiState.data
+
                                 Column {
                                     ProgramDetailParticipantTable(scrollState = scrollState)
 
                                     ProgramDetailParticipantManagementList(
                                         scrollState = scrollState,
-                                        item = participantListUiState.data
+                                        item = data
                                     )
+
+                                    Spacer(modifier = Modifier.weight(1f))
+
+                                    PageIndicator(
+                                        totalPages = data.info.totalPage,
+                                        currentPage = currentPage,
+                                        onCurrentPageChange = onCurrentPageChange,
+                                    )
+
+                                    Spacer(modifier = Modifier.height(16.dp))
                                 }
                             }
 
@@ -483,6 +506,7 @@ private fun HomeDetailParticipantManagementScreenPreview() {
         swipeRefreshState = rememberSwipeRefreshState(isRefreshing = false),
         selectedDate = LocalDate.now(),
         traineeName = "",
+        currentPage = 0,
         participantListUiState = ParticipantResponseListUiState.Loading,
         traineeInformationUiState = TraineeResponseListUiState.Loading,
         onBackClick = {},
@@ -490,6 +514,7 @@ private fun HomeDetailParticipantManagementScreenPreview() {
         getParticipantList = {},
         getTraineeList = {},
         onSelectedDateChange = { _ -> },
+        onCurrentPageChange = { _ -> },
         endDate = LocalDate.of(2025, 5, 30),
         startDate = LocalDate.of(2025, 5, 19),
     )

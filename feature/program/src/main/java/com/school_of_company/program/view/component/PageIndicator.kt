@@ -24,6 +24,7 @@ internal fun PageIndicator(
     maxVisible: Int = 7,
     onCurrentPageChange: (Int) -> Unit
 ) {
+    val currentPage = currentPage + 1
     val half = maxVisible / 2
     val start = maxOf(1, minOf(currentPage - half, totalPages - maxVisible + 1))
     val end = minOf(totalPages, start + maxVisible - 1)
@@ -73,7 +74,7 @@ internal fun PageIndicator(
 @Composable
 @Preview
 internal fun PageIndicatorPreview() {
-    val page = remember { mutableIntStateOf(1) }
+    val page = remember { mutableIntStateOf(0) }
 
     PageIndicator(
         totalPages = 13,

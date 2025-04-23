@@ -24,9 +24,9 @@ internal fun PageIndicator(
     maxVisible: Int = 7,
     onCurrentPageChange: (Int) -> Unit
 ) {
-    val page = currentPage + 1
+    val displayPage = currentPage + 1
     val half = maxVisible / 2
-    val start = maxOf(1, minOf(page - half, totalPages - maxVisible + 1))
+    val start = maxOf(1, minOf(displayPage - half, totalPages - maxVisible + 1))
     val end = minOf(totalPages, start + maxVisible - 1)
     val pageList = (start..end).toList()
 
@@ -41,7 +41,7 @@ internal fun PageIndicator(
                 tint = colors.black,
                 contentDescription = null,
                 modifier = Modifier.expoClickable {
-                    if (page != 1) {
+                    if (displayPage != 1) {
                         onCurrentPageChange(currentPage - 1)
                     }
                 },
@@ -50,7 +50,7 @@ internal fun PageIndicator(
                 Text(
                     text = it.toString(),
                     style = typography.captionRegular2,
-                    color = if (it == page) colors.main else colors.gray600,
+                    color = if (it == displayPage) colors.main else colors.gray600,
                     modifier = Modifier.expoClickable { onCurrentPageChange(it - 1) }
                 )
             }
@@ -59,7 +59,7 @@ internal fun PageIndicator(
                 tint = colors.black,
                 contentDescription = null,
                 modifier = Modifier.expoClickable {
-                    if (totalPages != page) {
+                    if (totalPages != displayPage) {
                         onCurrentPageChange(currentPage + 1)
                     }
                 },

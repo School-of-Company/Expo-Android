@@ -51,7 +51,11 @@ import com.school_of_company.design_system.icon.SearchIcon
 import com.school_of_company.design_system.icon.UpArrowIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
+import com.school_of_company.model.entity.participant.PageInfoEntity
+import com.school_of_company.model.entity.participant.ParticipantEntity
+import com.school_of_company.model.entity.participant.ParticipantInformationResponseEntity
 import com.school_of_company.program.view.component.LocalDateButton
+import com.school_of_company.program.view.component.PageIndicator
 import com.school_of_company.program.view.component.ProgramDetailParticipantDropdownMenu
 import com.school_of_company.program.view.component.ProgramDetailParticipantManagementList
 import com.school_of_company.program.view.component.ProgramDetailParticipantTable
@@ -79,11 +83,15 @@ internal fun ProgramDetailParticipantManagementRoute(
     val traineeInformationUiState by viewModel.traineeResponseListUiState.collectAsStateWithLifecycle()
 
     val traineeName by viewModel.traineeName.collectAsStateWithLifecycle()
+    val currentPage by viewModel.currentPage.collectAsStateWithLifecycle()
     var selectedDate by rememberSaveable { mutableStateOf<LocalDate?>(null) }
 
     LaunchedEffect(id) {
 
-        viewModel.getParticipantInformationList(expoId = id)
+        viewModel.getParticipantInformationList(
+            expoId = id,
+            currentPage = 0,
+        )
 
         viewModel.getTraineeList(expoId = id)
     }
@@ -96,11 +104,12 @@ internal fun ProgramDetailParticipantManagementRoute(
         )
     }
 
-    LaunchedEffect(selectedDate) {
+    LaunchedEffect(selectedDate, currentPage) {
         delay(300L)
         viewModel.getParticipantInformationList(
             expoId = id,
             localDate = selectedDate.toString(),
+            currentPage = currentPage,
         )
     }
 
@@ -112,14 +121,17 @@ internal fun ProgramDetailParticipantManagementRoute(
         selectedDate = selectedDate,
         startDate = LocalDate.parse(startDate),
         endDate = LocalDate.parse(endDate),
+        currentPage = currentPage,
         traineeName = traineeName,
         onBackClick = onBackClick,
         onSelectedDateChange = { selectedDate = it },
         onTraineeNameChange = viewModel::onTraineeNameChange,
+        onCurrentPageChange = viewModel::onCurrentPageChange,
         getParticipantList = {
             viewModel.getParticipantInformationList(
                 expoId = id,
-                localDate = selectedDate.toString()
+                localDate = selectedDate.toString(),
+                currentPage = currentPage,
             )
         },
         getTraineeList = {
@@ -140,12 +152,14 @@ private fun ProgramDetailParticipantManagementScreen(
     selectedDate: LocalDate?,
     startDate: LocalDate,
     endDate: LocalDate,
+    currentPage: Int,
     traineeName: String,
     participantListUiState: ParticipantResponseListUiState,
     traineeInformationUiState: TraineeResponseListUiState,
     onBackClick: () -> Unit,
     onSelectedDateChange: (LocalDate?) -> Unit,
     onTraineeNameChange: (String) -> Unit,
+    onCurrentPageChange: (Int) -> Unit,
     getParticipantList: () -> Unit,
     getTraineeList: () -> Unit,
 ) {
@@ -281,7 +295,7 @@ private fun ProgramDetailParticipantManagementScreen(
 
                                 is ParticipantResponseListUiState.Success -> {
                                     Text(
-                                        text = "${participantListUiState.data.participant.size}명",
+                                        text = "${participantListUiState.data.info.totalElement}명",
                                         style = typography.captionRegular2,
                                         color = colors.main
                                     )
@@ -415,13 +429,26 @@ private fun ProgramDetailParticipantManagementScreen(
                         when (participantListUiState) {
                             is ParticipantResponseListUiState.Loading -> Unit
                             is ParticipantResponseListUiState.Success -> {
-                                Column {
+                                val data = participantListUiState.data
+
+                                Column (horizontalAlignment = Alignment.CenterHorizontally){
                                     ProgramDetailParticipantTable(scrollState = scrollState)
 
                                     ProgramDetailParticipantManagementList(
+                                        modifier = Modifier.weight(1f),
                                         scrollState = scrollState,
-                                        item = participantListUiState.data
+                                        item = data
                                     )
+
+                                    Spacer(modifier = Modifier.height(16.dp))
+
+                                    PageIndicator(
+                                        totalPages = data.info.totalPage,
+                                        currentPage = currentPage,
+                                        onCurrentPageChange = onCurrentPageChange,
+                                    )
+
+                                    Spacer(modifier = Modifier.height(16.dp))
                                 }
                             }
 
@@ -483,13 +510,56 @@ private fun HomeDetailParticipantManagementScreenPreview() {
         swipeRefreshState = rememberSwipeRefreshState(isRefreshing = false),
         selectedDate = LocalDate.now(),
         traineeName = "",
-        participantListUiState = ParticipantResponseListUiState.Loading,
+        currentPage = 0,
+        participantListUiState = ParticipantResponseListUiState.Success(
+            ParticipantInformationResponseEntity(
+                info = PageInfoEntity(1, 10), participant = listOf(
+                    ParticipantEntity(
+                        id = 1,
+                        name = "John Doe",
+                        phoneNumber = "1234567890",
+                        informationStatus = true
+                    ),
+                    ParticipantEntity(
+                        id = 2,
+                        name = "Jane Smith",
+                        phoneNumber = "0987654321",
+                        informationStatus = false
+                    ),
+                    ParticipantEntity(
+                        id = 3,
+                        name = "Alice Johnson",
+                        phoneNumber = "1122334455",
+                        informationStatus = true,
+                    ),
+                    ParticipantEntity(
+                        id = 1,
+                        name = "John Doe",
+                        phoneNumber = "1234567890",
+                        informationStatus = true
+                    ),
+                    ParticipantEntity(
+                        id = 2,
+                        name = "Jane Smith",
+                        phoneNumber = "0987654321",
+                        informationStatus = false
+                    ),
+                    ParticipantEntity(
+                        id = 3,
+                        name = "Alice Johnson",
+                        phoneNumber = "1122334455",
+                        informationStatus = true,
+                    )
+                )
+            ),
+        ),
         traineeInformationUiState = TraineeResponseListUiState.Loading,
         onBackClick = {},
         onTraineeNameChange = {},
         getParticipantList = {},
         getTraineeList = {},
         onSelectedDateChange = { _ -> },
+        onCurrentPageChange = { _ -> },
         endDate = LocalDate.of(2025, 5, 30),
         startDate = LocalDate.of(2025, 5, 19),
     )

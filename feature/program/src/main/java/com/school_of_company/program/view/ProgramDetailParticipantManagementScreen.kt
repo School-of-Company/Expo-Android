@@ -51,6 +51,9 @@ import com.school_of_company.design_system.icon.SearchIcon
 import com.school_of_company.design_system.icon.UpArrowIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
+import com.school_of_company.model.entity.participant.PageInfoEntity
+import com.school_of_company.model.entity.participant.ParticipantEntity
+import com.school_of_company.model.entity.participant.ParticipantInformationResponseEntity
 import com.school_of_company.program.view.component.LocalDateButton
 import com.school_of_company.program.view.component.PageIndicator
 import com.school_of_company.program.view.component.ProgramDetailParticipantDropdownMenu
@@ -292,7 +295,7 @@ private fun ProgramDetailParticipantManagementScreen(
 
                                 is ParticipantResponseListUiState.Success -> {
                                     Text(
-                                        text = "${participantListUiState.data.participant.size}명",
+                                        text = "${participantListUiState.data.info.totalElement}명",
                                         style = typography.captionRegular2,
                                         color = colors.main
                                     )
@@ -507,7 +510,48 @@ private fun HomeDetailParticipantManagementScreenPreview() {
         selectedDate = LocalDate.now(),
         traineeName = "",
         currentPage = 0,
-        participantListUiState = ParticipantResponseListUiState.Loading,
+        participantListUiState = ParticipantResponseListUiState.Success(
+            ParticipantInformationResponseEntity(
+                info = PageInfoEntity(1, 10), participant = listOf(
+                    ParticipantEntity(
+                        id = 1,
+                        name = "John Doe",
+                        phoneNumber = "1234567890",
+                        informationStatus = true
+                    ),
+                    ParticipantEntity(
+                        id = 2,
+                        name = "Jane Smith",
+                        phoneNumber = "0987654321",
+                        informationStatus = false
+                    ),
+                    ParticipantEntity(
+                        id = 3,
+                        name = "Alice Johnson",
+                        phoneNumber = "1122334455",
+                        informationStatus = true,
+                    ),
+                    ParticipantEntity(
+                        id = 1,
+                        name = "John Doe",
+                        phoneNumber = "1234567890",
+                        informationStatus = true
+                    ),
+                    ParticipantEntity(
+                        id = 2,
+                        name = "Jane Smith",
+                        phoneNumber = "0987654321",
+                        informationStatus = false
+                    ),
+                    ParticipantEntity(
+                        id = 3,
+                        name = "Alice Johnson",
+                        phoneNumber = "1122334455",
+                        informationStatus = true,
+                    )
+                )
+            ),
+        ),
         traineeInformationUiState = TraineeResponseListUiState.Loading,
         onBackClick = {},
         onTraineeNameChange = {},

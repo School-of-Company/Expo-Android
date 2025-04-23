@@ -428,7 +428,7 @@ private fun ProgramDetailParticipantManagementScreen(
                             is ParticipantResponseListUiState.Success -> {
                                 val data = participantListUiState.data
 
-                                Column {
+                                Column (horizontalAlignment = Alignment.CenterHorizontally){
                                     ProgramDetailParticipantTable(scrollState = scrollState)
 
                                     ProgramDetailParticipantManagementList(

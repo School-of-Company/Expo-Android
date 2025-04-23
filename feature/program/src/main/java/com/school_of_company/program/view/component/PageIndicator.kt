@@ -32,9 +32,9 @@ internal fun PageIndicator(
 
     ExpoAndroidTheme { colors, typography ->
         Row(
-            modifier = modifier,
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically,
+            modifier = modifier,
         ) {
             Icon(
                 modifier = Modifier.expoClickable {

@@ -37,34 +37,32 @@ internal fun PageIndicator(
             modifier = modifier,
         ) {
             Icon(
+                painter = painterResource(R.drawable.ic_left_arrow),
+                tint = colors.black,
+                contentDescription = null,
                 modifier = Modifier.expoClickable {
                     if (page != 1) {
                         onCurrentPageChange(currentPage - 1)
                     }
                 },
-                painter = painterResource(R.drawable.ic_left_arrow),
-                tint = colors.black,
-                contentDescription = null,
             )
             pageList.forEach {
                 Text(
                     text = it.toString(),
                     style = typography.captionRegular2,
                     color = if (it == page) colors.main else colors.gray600,
-                    modifier = Modifier.expoClickable {
-                        onCurrentPageChange(it - 1)
-                    }
+                    modifier = Modifier.expoClickable { onCurrentPageChange(it - 1) }
                 )
             }
             Icon(
+                painter = painterResource(R.drawable.ic_right_arrow),
+                tint = colors.black,
+                contentDescription = null,
                 modifier = Modifier.expoClickable {
                     if (totalPages != page) {
                         onCurrentPageChange(currentPage + 1)
                     }
                 },
-                painter = painterResource(R.drawable.ic_right_arrow),
-                tint = colors.black,
-                contentDescription = null,
             )
         }
     }
@@ -73,7 +71,7 @@ internal fun PageIndicator(
 
 @Composable
 @Preview
-internal fun PageIndicatorPreview() {
+private fun PageIndicatorPreview() {
     val page = remember { mutableIntStateOf(0) }
 
     PageIndicator(

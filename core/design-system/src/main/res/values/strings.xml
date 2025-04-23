@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="main_expo_logo_description">엑스포 메인 로고</string>
+    <string name="qr_guide">큐알 가이드</string>
+    <string name="down_arrow_description">아래 방향 아이콘</string>
+    <string name="right_arrow_description">오른쪽 방향 아이콘</string>
+    <string name="left_arrow_description">왼쪽 방향 아이콘</string>
+    <string name="up_arrow_description">윗 방향 아이콘</string>
+    <string name="x_description">x 아이콘</string>
+    <string name="expo_description">박람회 아이콘</string>
+    <string name="filter_description">필터 아이콘</string>
+    <string name="image_description">이미지 아이콘</string>
+    <string name="check_description">체크 아이콘</string>
+    <string name="plus_description">플러스 아이콘</string>
+    <string name="trash_description">스레기통 아이콘</string>
+    <string name="user_description">유저 아이콘</string>
+    <string name="warn_description">경고 아이콘</string>
+    <string name="wonder_description">물음표 아이콘</string>
+    <string name="copy_description">복사 아이콘</string>
+    <string name="circle_description">원형 아이콘</string>
+    <string name="bell_description">알림 아이콘</string>
+    <string name="logout_description">로그아웃 아이콘</string>
+    <string name="setting_description">세팅 아이콘</string>
+    <string name="checkbox_description">체크박스 아이콘</string>
+    <string name="drop_down_description">드롭다운 아이콘</string>
+    <string name="two_circle_description">질문 아이콘</string>
+    <string name="long_content_description">장문 아이콘</string>
+    <string name="short_content_description">단문 아이콘</string>
+    <string name="home_description">홈 아이콘</string>
+    <string name="append_description">출력 아이콘</string>
+    <string name="program_description">프로그래밍 아이콘</string>
+    <string name="HomeScreen_Image_description">홈스크린 리스트 이미지</string>
+    <string name="location_icon_description">위치 아이콘</string>
+
+    <string name="close_app">\'뒤로\'버튼 한번 더 누르시면 종료됩니다.</string>
+    <string name="error_for_bidden">학생회 권한인 학생만 요청 가능해요</string>
+    <string name="error_time_out">서버 응답이 지연되고 있습니다, 잠시 후 다시 시도해주세요</string>
+    <string name="error_server">서버 에러, 관리자에게 문의하세요</string>
+    <string name="error_no_internet">네트워크가 불안정합니다, 데이터나 와이파이 연결 상태를 확인해주세요</string>
+    <string name="error_other_http">알 수 없는 오류가 발생했습니다</string>
+    <string name="error_un_known">예상치 못한 오류가 발생했습니다</string>
+    <string name="error_default">오류가 발생했습니다</string>
+
+    <string name="expection_saveToken">토큰이 저장되지 않았습니다.</string>
+    <string name="expection_signIn">로그인에 실패했습니다.</string>
+    <string name="expection_server_error">서버 관리자에서 문의해주세요..</string>
+    <string name="expection_id_not_valid">아이디가 올바르지 않습니다.</string>
+    <string name="expection_password_valid">비밀번호가 올바르지 않습니다.</string>
+    <string name="expection_password_validdd">비밀번호가 유효하지 않습니다.</string>
+    <string name="expection_email_validdddd">이메일이 유효하지 않습니다.</string>
+    <string name="expection_bad_request">잘못된 요청입니다.</string>
+    <string name="exception_forbidden">회원가입 수락이 보류 중입니다.</string>
+    <string name="expeciton_not_found">회원 정보를 찾지 못했습니다.</string>
+
+    <string name="main_string">EXPO</string>
+    <string name="admin_sign_in">관리자 로그인</string>
+    <string name="admin_sign_up">관리자 회원가입</string>
+    <string name="name_label">이름</string>
+    <string name="name_hint">이름을 입력해주세요.</string>
+    <string name="email_hint">이메일을 입력해주세요.</string>
+    <string name="password_hint">비밀번호를 입력해주세요.</string>
+    <string name="wrong_email">이메일을 잘못 입력하셨습니다.</string>
+    <string name="wrong_password">비밀번호를 잘못 입력하셨습니다.</string>
+    <string name="email_label">이메일</string>
+    <string name="password_label">비밀번호</string>
+    <string name="not_member">아직 관리자 로그인을 안 하셨나요?</string>
+    <string name="sign_out_bar">회원가입</string>
+    <string name="sign_in">로그인</string>
+    <string name="retry_password">비밀번호를 다시 입력해주세요.</string>
+    <string name="mismatch_password">비밀번호가 일치하지 않습니다.</string>
+    <string name="number">연락처</string>
+    <string name="write_number">연락처를 입력해주세요.(ex.01012345678)</string>
+    <string name="check">확인</string>
+    <string name="check_sign_up">회원가입 완료</string>
+    <string name="duplication_account_error">등록된 사용자가 있습니다.</string>
+    <string name="sign_up_fail">회원가입에 실패하였습니다.</string>
+    <string name="nickname_label">아이디</string>
+    <string name="hint_nickname">아이디를 입력해주세요.</string>
+    <string name="success_sign_up">회원가입에 성공하였습니다.</string>
+
+    <string name="expo_modify_fail">박람회 수정을 실패하였습니다.</string>
+    <string name="expo_register_fail">박람회 생성을 실패하였습니다.</string>
+
+    <string name="sms_send_fail">문자 전송을 실패하였습니다.</string>
+    <string name="sms_send_success">문자 전송을 성공하였습니다.</string>
+
+    <string name="get_created_expo_list_fail">박람회 리스트를 불러오지 못했습니다.</string>
+    <string name="expo_not_selected">박람회를 선택하고 삭제버튼을 눌러주세요.</string>
+    <string name="get_created_expo_list_empty">박람회 리스트가 비어있습니다.</string>
+    <string name="expo_delete_fail">박람회 삭제를 실패하였습니다.</string>
+
+    <string name="form_modify_fail">폼 수정을 실패했습니다.</string>
+    <string name="form_create_fail">폼 생성을 실패했습니다.</string>
+    <string name="form_create_success">폼 생성을 성공했습니다.</string>
+    <string name="form_modify_success">폼 수정을 성공했습니다.</string>
+
+    <string name="expo_image_fail">박람회 이미지가 유효하지 않습니다.</string>
+
+    <string name="convert_coordinates_to_address_fail">좌표를 주소로 변환하는 과정에서 오류가 발생했습니다.</string>
+    <string name="convert_coordinates_to_address_success">좌표를 주소로 성공적으로 변환했습니다.</string>
+
+    <string name="get_address_success">주소검색을 성공했습니다</string>
+    <string name="get_address_fail">주소검색을 실패했습니다.</string>
+
+    <string name="get_address_convert_success">주소변환을 성공했습니다.</string>
+    <string name="get_address_convert_fail">주소변환을 실패했습니다.</string>
+
+    <string name="get_address_lack_of_length">2글자 이상 입력해주세요</string>
+
+    <string name="expo_image_size_fail">박람회 이미지를 다시 업로드 해주세요.</string>
+
+    <string name="write_certification">인증 번호 입력</string>
+    <string name="valid_certification">인증번호가 올바르지 않습니다.</string>
+    <string name="fail_certification">인증에 실패하셨습니다.</string>
+    <string name="sms_not_certification">인증번호를 발급해주세요.</string>
+
+    <string name="re_certificationCode">인증번호 재발송</string>
+    <string name="certificationCode">인증번호 발송</string>
+
+    <string name="date_type">%s ~ %s</string>
+    <string name="expo_register">박람회 신청</string>
+    <string name="array_recent">최신순</string>
+    <string name="array_older">오랜된 순</string>
+    <string name="cancel">취소</string>
+    <string name="filter">필터</string>
+    <string name="not_image_description">이미지 없음</string>
+    <string name="register_temp">행사 기간</string>
+
+    <string name="id_hint">아이디를 입력해주세요.</string>
+    <string name="wrong_id">아이디를 잘못 입력하셨습니다.</string>
+    <string name="id">아이디</string>
+
+    <string name="slash">/</string>
+
+    <string name="string_type">%s</string>
+
+    <string name="image_size_error">이미지 크기는 328 × 178이어야 합니다.</string>
+
+    <string name="sign_up_request_allow_success">회원가입 요청 수락 성공</string>
+    <string name="sign_up_request_allow_fail">회원가입 요청 수락 실패</string>
+    <string name="sign_up_request_reject_success">회원가입 요청 거절 성공</string>
+    <string name="sign_up_request_reject_fail">회원가입 요청 거절 실패</string>
+    <string name="check_sign_up_request_list_item">가입을 수락할 회원을 선택해주세요.</string>
+
+    <string name="camera_access_allow_in_setting">카메라 권한이 필요합니다. 설정에서 권한을 허용해주세요.</string>
+
+    <string name="logout_success">로그아웃을 성공하였습니다.</string>
+    <string name="logout_fail">로그아웃을 실패하였습니다.</string>
+
+    <string name="withdraw_success">회원 탈퇴를 성공하였습니다.</string>
+    <string name="withdraw_fail">회원 탈퇴를 실패하였습니다.</string>
+</resources>

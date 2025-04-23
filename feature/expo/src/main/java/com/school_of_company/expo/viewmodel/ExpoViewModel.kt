@@ -1,0 +1,732 @@
+package com.school_of_company.expo.viewmodel
+
+import android.content.Context
+import android.net.Uri
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.school_of_company.common.exception.NoResponseException
+import com.school_of_company.common.result.Result
+import com.school_of_company.common.result.asResult
+import com.school_of_company.domain.usecase.Image.ImageUpLoadUseCase
+import com.school_of_company.domain.usecase.expo.CheckExpoSurveyDynamicFormEnableUseCase
+import com.school_of_company.domain.usecase.expo.DeleteExpoInformationUseCase
+import com.school_of_company.domain.usecase.expo.GetExpoInformationUseCase
+import com.school_of_company.domain.usecase.expo.GetExpoListUseCase
+import com.school_of_company.domain.usecase.expo.ModifyExpoInformationUseCase
+import com.school_of_company.domain.usecase.expo.RegisterExpoInformationUseCase
+import com.school_of_company.domain.usecase.juso.GetAddressUseCase
+import com.school_of_company.domain.usecase.kakao.GetCoordinatesToAddressUseCase
+import com.school_of_company.domain.usecase.kakao.GetCoordinatesUseCase
+import com.school_of_company.domain.usecase.standard.StandardProgramListUseCase
+import com.school_of_company.domain.usecase.training.TrainingProgramListUseCase
+import com.school_of_company.expo.enum.CurrentScreen
+import com.school_of_company.expo.enum.FilterOptionEnum
+import com.school_of_company.expo.enum.TrainingCategory
+import com.school_of_company.expo.util.getMultipartFile
+import com.school_of_company.expo.viewmodel.uistate.CheckExpoSurveyDynamicFormEnableUiState
+import com.school_of_company.expo.viewmodel.uistate.DeleteExpoInformationUiState
+import com.school_of_company.expo.viewmodel.uistate.GetAddressUiState
+import com.school_of_company.expo.viewmodel.uistate.GetCoordinatesToAddressUiState
+import com.school_of_company.expo.viewmodel.uistate.GetCoordinatesUiState
+import com.school_of_company.expo.viewmodel.uistate.GetExpoInformationUiState
+import com.school_of_company.expo.viewmodel.uistate.GetExpoListUiState
+import com.school_of_company.expo.viewmodel.uistate.GetStandardProgramListUiState
+import com.school_of_company.expo.viewmodel.uistate.GetTrainingProgramListUiState
+import com.school_of_company.expo.viewmodel.uistate.ImageUpLoadUiState
+import com.school_of_company.expo.viewmodel.uistate.ModifyExpoInformationUiState
+import com.school_of_company.expo.viewmodel.uistate.RegisterExpoInformationUiState
+import com.school_of_company.model.entity.expo.ExpoListResponseEntity
+import com.school_of_company.model.model.juso.JusoModel
+import com.school_of_company.model.param.expo.ExpoAllRequestParam
+import com.school_of_company.model.param.expo.ExpoModifyRequestParam
+import com.school_of_company.model.param.expo.StandardProIdRequestParam
+import com.school_of_company.model.param.expo.StandardProRequestParam
+import com.school_of_company.model.param.expo.TrainingProIdRequestParam
+import com.school_of_company.model.param.expo.TrainingProRequestParam
+import com.school_of_company.ui.util.autoFormatToDateTime
+import com.school_of_company.ui.util.formatNoneHyphenServerDate
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+@HiltViewModel
+internal class ExpoViewModel @Inject constructor(
+    private val getAddressUseCase: GetAddressUseCase,
+    private val getExpoListUseCase: GetExpoListUseCase,
+    private val imageUpLoadUseCase: ImageUpLoadUseCase,
+    private val getCoordinatesUseCase: GetCoordinatesUseCase,
+    private val getExpoInformationUseCase: GetExpoInformationUseCase,
+    private val standardProgramListUseCase: StandardProgramListUseCase,
+    private val trainingProgramListUseCase: TrainingProgramListUseCase,
+    private val deleteExpoInformationUseCase: DeleteExpoInformationUseCase,
+    private val modifyExpoInformationUseCase: ModifyExpoInformationUseCase,
+    private val getCoordinatesToAddressUseCase: GetCoordinatesToAddressUseCase,
+    private val registerExpoInformationUseCase: RegisterExpoInformationUseCase,
+    private val checkExpoSurveyDynamicFormEnableUseCase: CheckExpoSurveyDynamicFormEnableUseCase,
+    private val savedStateHandle: SavedStateHandle,
+) : ViewModel() {
+    companion object {
+        private const val MODIFY_TITLE = "modify_title"
+        private const val STARTED_DATE = "started_date"
+        private const val ENDED_DATE = "ended_date"
+        private const val INTRODUCE_TITLE = "introduce_title"
+        private const val COORDINATEX = "coordinatesx"
+        private const val COORDINATEY = "coordinatesy"
+        private const val COVER_IMAGE = "cover_image"
+        private const val STARTED = "started"
+        private const val ENDED = "ended"
+        private const val MODIFY_ADDRESS = "modify_address"
+        private const val MODIFY_LOCATION = "modify_location"
+        private const val CREATE_ADDRESS = "create_address"
+        private const val CREATE_LOCATION = "create_location"
+        private const val CURRENT_SCREEN = "current_screen"
+    }
+
+    internal var currentScreen = savedStateHandle.getStateFlow(CURRENT_SCREEN, CurrentScreen.NONE.name)
+
+    internal var modify_address = savedStateHandle.getStateFlow(key = MODIFY_ADDRESS, initialValue = "")
+    internal var modify_location = savedStateHandle.getStateFlow(key = MODIFY_LOCATION, initialValue = "")
+
+    internal var create_address = savedStateHandle.getStateFlow(key = CREATE_ADDRESS, initialValue = "")
+    internal var create_location = savedStateHandle.getStateFlow(key = CREATE_LOCATION, initialValue = "")
+
+    private val _swipeRefreshLoading = MutableStateFlow(false)
+    val swipeRefreshLoading = _swipeRefreshLoading.asStateFlow()
+
+    private val _trainingProgramTextState = MutableStateFlow<List<TrainingProRequestParam>>(emptyList())
+    internal val trainingProgramTextState = _trainingProgramTextState.asStateFlow()
+
+    private val _standardProgramTextState = MutableStateFlow<List<StandardProRequestParam>>(emptyList())
+    internal val standardProgramTextState = _standardProgramTextState.asStateFlow()
+
+    private val _trainingProgramModifyTextState = MutableStateFlow<List<TrainingProIdRequestParam>>(emptyList())
+    internal val trainingProgramModifyTextState = _trainingProgramModifyTextState.asStateFlow()
+
+    private val _standardProgramModifyTextState = MutableStateFlow<List<StandardProIdRequestParam>>(emptyList())
+    internal val standardProgramModifyTextState = _standardProgramModifyTextState.asStateFlow()
+
+    private val _getExpoInformationUiState = MutableStateFlow<GetExpoInformationUiState>(GetExpoInformationUiState.Loading)
+    internal val getExpoInformationUiState = _getExpoInformationUiState.asStateFlow()
+
+    private val _getCoordinatesUiState = MutableStateFlow<GetCoordinatesUiState>(GetCoordinatesUiState.Loading)
+    internal val getCoordinatesUiState = _getCoordinatesUiState.asStateFlow()
+
+    private val _getCoordinatesToAddressUiState = MutableStateFlow<GetCoordinatesToAddressUiState>(GetCoordinatesToAddressUiState.Loading)
+    internal val getCoordinatesToAddressUiState = _getCoordinatesToAddressUiState.asStateFlow()
+
+    private val _getAddressUiState = MutableStateFlow<GetAddressUiState>(GetAddressUiState.Loading)
+    internal val getAddressUiState = _getAddressUiState.asStateFlow()
+
+    private val _registerExpoInformationUiState = MutableStateFlow<RegisterExpoInformationUiState>(RegisterExpoInformationUiState.Loading)
+    internal val registerExpoInformationUiState = _registerExpoInformationUiState.asStateFlow()
+
+    private val _modifyExpoInformationUiState = MutableStateFlow<ModifyExpoInformationUiState>(ModifyExpoInformationUiState.Loading)
+    internal val modifyExpoInformationUiState = _modifyExpoInformationUiState.asStateFlow()
+
+    private val _deleteExpoInformationUiState = MutableStateFlow<DeleteExpoInformationUiState>(DeleteExpoInformationUiState.Loading)
+    internal val deleteExpoInformationUiState = _deleteExpoInformationUiState.asStateFlow()
+
+    private val _getExpoListUiState = MutableStateFlow<GetExpoListUiState>(GetExpoListUiState.Loading)
+    internal val getExpoListUiState = _getExpoListUiState.asStateFlow()
+
+    private val _imageUpLoadUiState = MutableStateFlow<ImageUpLoadUiState>(ImageUpLoadUiState.Loading)
+    internal val imageUpLoadUiState = _imageUpLoadUiState.asStateFlow()
+
+    private val _getStandardProgramListUiState = MutableStateFlow<GetStandardProgramListUiState>(GetStandardProgramListUiState.Loading)
+    internal val getStandardProgramListUiState = _getStandardProgramListUiState.asStateFlow()
+
+    private val _getTrainingProgramListUiState = MutableStateFlow<GetTrainingProgramListUiState>(GetTrainingProgramListUiState.Loading)
+    internal val getTrainingProgramListUiState = _getTrainingProgramListUiState.asStateFlow()
+
+    private val _checkExpoSurveyDynamicFormEnableUiState = MutableStateFlow<CheckExpoSurveyDynamicFormEnableUiState>(CheckExpoSurveyDynamicFormEnableUiState.Loading)
+
+    private val _allExpoList = MutableStateFlow<List<ExpoListResponseEntity>>(emptyList())
+
+    private val _selectedFilter = MutableStateFlow<FilterOptionEnum?>(null)
+    internal val selectedFilter: StateFlow<FilterOptionEnum?> = _selectedFilter.asStateFlow()
+
+    internal var modify_title = savedStateHandle.getStateFlow(key = MODIFY_TITLE, initialValue = "")
+
+    internal var started_date = savedStateHandle.getStateFlow(key = STARTED_DATE, initialValue = "")
+
+    internal var ended_date = savedStateHandle.getStateFlow(key = ENDED_DATE, initialValue = "")
+
+    internal var introduce_title = savedStateHandle.getStateFlow(key = INTRODUCE_TITLE, initialValue = "")
+
+    internal var cover_image = savedStateHandle.getStateFlow(key = COVER_IMAGE, initialValue = "")
+
+    internal var coordinateX = savedStateHandle.getStateFlow(key = COORDINATEX, initialValue = "")
+
+    internal var coordinateY = savedStateHandle.getStateFlow(key = COORDINATEY, initialValue = "")
+
+    val expoListSize: StateFlow<Int> = getExpoListUiState
+        .map { state ->
+            when (state) {
+                is GetExpoListUiState.Success -> state.data.size
+                else -> 0
+            }
+        }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0)
+
+    val addressList: StateFlow<List<JusoModel>> = getAddressUiState
+        .map { state ->
+            when (state) {
+                is GetAddressUiState.Success -> state.data
+                else -> listOf()
+            }
+        }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), listOf())
+
+    internal val address: StateFlow<String> = combine(
+        currentScreen,
+        modify_address,
+        create_address
+    ) { screen, modifyAddress, createAddress ->
+        when (CurrentScreen.valueOf(screen)) {
+            CurrentScreen.MODIFY -> modifyAddress
+            CurrentScreen.CREATE -> createAddress
+            else -> ""
+        }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "")
+
+
+    internal val location: StateFlow<String> = combine(
+        currentScreen,
+        modify_location,
+        create_location
+    ) { screen, modifyLocation, createLocation ->
+        when (CurrentScreen.valueOf(screen)) {
+            CurrentScreen.MODIFY -> modifyLocation
+            CurrentScreen.CREATE -> createLocation
+            else -> ""
+        }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "")
+
+    internal fun getExpoInformation(expoId: String) = viewModelScope.launch {
+        getExpoInformationUseCase(expoId = expoId)
+            .asResult()
+            .collectLatest { result ->
+                when (result) {
+                    is Result.Loading -> _getExpoInformationUiState.value = GetExpoInformationUiState.Loading
+                    is Result.Success -> {
+                        _getExpoInformationUiState.value = GetExpoInformationUiState.Success(result.data)
+
+                        result.data.let {
+                            onModifyTitleChange(it.title)
+                            onStartedDateChange(it.startedDay.formatNoneHyphenServerDate())
+                            onEndedDateChange(it.finishedDay.formatNoneHyphenServerDate())
+                            onIntroduceTitleChange(it.description)
+                            if (address.value.isNotBlank()) {
+                                setSearchedData()
+                                onCoordinateChange(x = coordinateX.value, y = coordinateY.value)
+                                convertXYToJibun(x = coordinateX.value, y = coordinateY.value)
+                            } else {
+                                onLocationChange(it.location)
+                                onCoordinateChange(x = it.x, y = it.y)
+                                convertXYToJibun(x = it.x, y = it.y)
+                            }
+                            onCoverImageChange(it.coverImage)
+                        }
+                    }
+                    is Result.Error -> _getExpoInformationUiState.value = GetExpoInformationUiState.Error(result.exception)
+                }
+            }
+    }
+
+    internal fun registerExpoInformation(body: ExpoAllRequestParam) =
+        viewModelScope.launch {
+            _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Loading
+            registerExpoInformationUseCase(
+                body = body.copy(
+                    startedDay = body.startedDay.autoFormatToDateTime(),
+                    finishedDay = body.finishedDay.autoFormatToDateTime(),
+                    addStandardProRequestDto = body.addStandardProRequestDto.map { list ->
+                        list.copy(
+                            startedAt = list.startedAt.autoFormatToDateTime(),
+                            endedAt = list.endedAt.autoFormatToDateTime(),
+                        )
+                    },
+                    addTrainingProRequestDto = body.addTrainingProRequestDto.map { list ->
+                        list.copy(
+                            startedAt = list.startedAt.autoFormatToDateTime(),
+                            endedAt = list.endedAt.autoFormatToDateTime(),
+                        )
+                    }
+                ),
+            )
+                .asResult()
+                .collectLatest { result ->
+                    when (result) {
+                        is Result.Loading -> _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Loading
+                        is Result.Success -> _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Success(result.data)
+                        is Result.Error -> _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Error(result.exception)
+                    }
+                }
+        }
+
+    internal fun initRegisterExpo() {
+        _imageUpLoadUiState.value = ImageUpLoadUiState.Loading
+        _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Loading
+        _getCoordinatesUiState.value = GetCoordinatesUiState.Loading
+        _getAddressUiState.value = GetAddressUiState.Loading
+    }
+
+    internal fun modifyExpoInformation(
+        expoId: String,
+        body: ExpoModifyRequestParam
+    ) = viewModelScope.launch {
+        _modifyExpoInformationUiState.value = ModifyExpoInformationUiState.Loading
+        modifyExpoInformationUseCase(
+            expoId = expoId,
+            body = body.copy(
+                startedDay = body.startedDay.autoFormatToDateTime(),
+                finishedDay = body.finishedDay.autoFormatToDateTime(),
+                updateStandardProRequestDto = body.updateStandardProRequestDto.map { list ->
+                    list.copy(
+                        startedAt = list.startedAt.autoFormatToDateTime(),
+                        endedAt = list.endedAt.autoFormatToDateTime(),
+                    )
+                },
+                updateTrainingProRequestDto = body.updateTrainingProRequestDto.map { list ->
+                    list.copy(
+                        startedAt = list.startedAt.autoFormatToDateTime(),
+                        endedAt = list.endedAt.autoFormatToDateTime(),
+                    )
+                }
+            )
+        )
+            .onSuccess {
+                it.catch { remoteError ->
+                    _modifyExpoInformationUiState.value = ModifyExpoInformationUiState.Error(remoteError)
+                }.collect {
+                    _modifyExpoInformationUiState.value = ModifyExpoInformationUiState.Success
+                }
+            }
+            .onFailure { error ->
+                _modifyExpoInformationUiState.value = ModifyExpoInformationUiState.Error(error)
+            }
+    }
+
+    internal fun initModifyExpo() {
+        _imageUpLoadUiState.value = ImageUpLoadUiState.Loading
+        _modifyExpoInformationUiState.value = ModifyExpoInformationUiState.Loading
+    }
+
+    internal fun resetExpoInformation() {
+        onCoordinateChange("", "")
+        onSearchedCoordinateChange("", "")
+        onIntroduceTitleChange("")
+        onStartedDateChange("")
+        onEndedDateChange("")
+        onLocationChange("")
+        onAddressChange("")
+        onCoverImageChange(null)
+        onModifyTitleChange("")
+        onStartedChange("")
+        onEndedChange("")
+        _trainingProgramTextState.value = emptyList()
+        _standardProgramTextState.value = emptyList()
+    }
+
+    internal fun deleteExpoInformation(expoId: String) = viewModelScope.launch {
+        _deleteExpoInformationUiState.value = DeleteExpoInformationUiState.Loading
+        deleteExpoInformationUseCase(expoId = expoId)
+            .onSuccess {
+                it.catch { remoteError ->
+                    _deleteExpoInformationUiState.value = DeleteExpoInformationUiState.Error(remoteError)
+                }.collect {
+                    _deleteExpoInformationUiState.value = DeleteExpoInformationUiState.Success
+                    getExpoList()
+                }
+            }
+            .onFailure { error ->
+                _deleteExpoInformationUiState.value = DeleteExpoInformationUiState.Error(error)
+            }
+    }
+
+    internal fun resetDeleteExpoInformationState() {
+        _deleteExpoInformationUiState.value = DeleteExpoInformationUiState.Loading
+    }
+
+    internal fun getExpoList() = viewModelScope.launch {
+        _swipeRefreshLoading.value = true
+        getExpoListUseCase()
+            .asResult()
+            .collectLatest { result ->
+                when (result) {
+                    is Result.Loading -> _getExpoListUiState.value = GetExpoListUiState.Loading
+                    is Result.Success -> {
+                        _allExpoList.value = result.data
+
+                        if (result.data.isEmpty()) {
+                            _getExpoListUiState.value = GetExpoListUiState.Empty
+                            _swipeRefreshLoading.value = false
+                        } else {
+                            if (_selectedFilter.value != null) {
+                                checkExpoSurveyDynamicFormEnable()
+                                _swipeRefreshLoading.value = false
+                            } else {
+                                _getExpoListUiState.value = GetExpoListUiState.Success(result.data)
+                                _swipeRefreshLoading.value = false
+                            }
+                        }
+                    }
+                    is Result.Error -> {
+                        _getExpoListUiState.value = GetExpoListUiState.Error(result.exception)
+                        _swipeRefreshLoading.value = false
+                    }
+                }
+            }
+    }
+
+    internal fun imageUpLoad(
+        context: Context,
+        image: Uri
+    ) = viewModelScope.launch {
+        val multipartFile = getMultipartFile(context, image)
+
+        if (multipartFile == null) {
+            _imageUpLoadUiState.value = ImageUpLoadUiState.Error(IllegalStateException("이미지 파일 변환 실패"))
+            return@launch
+        }
+
+        imageUpLoadUseCase(multipartFile)
+            .asResult()
+            .collectLatest { result ->
+                when (result) {
+                    is Result.Loading -> _imageUpLoadUiState.value = ImageUpLoadUiState.Loading
+                    is Result.Success -> _imageUpLoadUiState.value = ImageUpLoadUiState.Success(result.data)
+                    is Result.Error -> _imageUpLoadUiState.value = ImageUpLoadUiState.Error(result.exception)
+                }
+            }
+    }
+
+    internal fun getStandardProgramList(expoId: String) = viewModelScope.launch {
+        _getStandardProgramListUiState.value = GetStandardProgramListUiState.Loading
+        standardProgramListUseCase(expoId = expoId)
+            .asResult()
+            .collectLatest { result ->
+                when (result) {
+                    is Result.Loading -> _getStandardProgramListUiState.value = GetStandardProgramListUiState.Loading
+                    is Result.Success -> {
+                        _getStandardProgramListUiState.value = GetStandardProgramListUiState.Success(result.data)
+
+                        _standardProgramModifyTextState.value = result.data.map { program ->
+                            StandardProIdRequestParam(
+                                id = program.id,
+                                title = program.title,
+                                startedAt = program.startedAt.formatNoneHyphenServerDate(),
+                                endedAt = program.endedAt.formatNoneHyphenServerDate()
+                            )
+                        }
+                    }
+                    is Result.Error -> _getStandardProgramListUiState.value = GetStandardProgramListUiState.Error(result.exception)
+                }
+            }
+    }
+
+
+    internal fun getTrainingProgramList(expoId: String) = viewModelScope.launch {
+        _getTrainingProgramListUiState.value = GetTrainingProgramListUiState.Loading
+        trainingProgramListUseCase(expoId = expoId)
+            .asResult()
+            .collectLatest { result ->
+                when (result) {
+                    is Result.Loading -> _getTrainingProgramListUiState.value = GetTrainingProgramListUiState.Loading
+                    is Result.Success -> {
+                        _getTrainingProgramListUiState.value = GetTrainingProgramListUiState.Success(result.data)
+
+                        _trainingProgramModifyTextState.value = result.data.map { program ->
+                            TrainingProIdRequestParam(
+                                id = program.id,
+                                title = program.title,
+                                startedAt = program.startedAt.formatNoneHyphenServerDate(),
+                                endedAt = program.endedAt.formatNoneHyphenServerDate(),
+                                category = program.category
+                            )
+                        }
+                    }
+                    is Result.Error -> _getTrainingProgramListUiState.value = GetTrainingProgramListUiState.Error(result.exception)
+                }
+            }
+    }
+
+    internal fun initSearchedUiState() {
+        _getAddressUiState.value = GetAddressUiState.Loading
+        _getCoordinatesUiState.value = GetCoordinatesUiState.Loading
+    }
+
+    internal fun searchLocation(searchText: String) =
+        viewModelScope.launch {
+            onSearchedCoordinateChange(x = "", y = "")
+            getAddressUseCase(searchText = searchText)
+                .asResult()
+                .collectLatest { result ->
+                    when (result) {
+                        is Result.Loading -> _getAddressUiState.value = GetAddressUiState.Loading
+                        is Result.Success -> {
+                            if (result.data.isNotEmpty()) {
+                                _getAddressUiState.value = GetAddressUiState.Success(result.data)
+                            } else {
+                                _getAddressUiState.value = GetAddressUiState.Error(
+                                    NoResponseException()
+                                )
+                            }
+                        }
+                        is Result.Error -> _getAddressUiState.value = GetAddressUiState.Error(result.exception)
+                    }
+                }
+        }
+
+    internal fun convertJibunToXY(searchText: String) = viewModelScope.launch {
+        _getAddressUiState.value = GetAddressUiState.Loading
+        getCoordinatesUseCase(address = searchText)
+            .asResult()
+            .collectLatest { result ->
+                when(result){
+                    is Result.Loading -> _getCoordinatesUiState.value = GetCoordinatesUiState.Loading
+                    is Result.Success -> if (result.data.addressName == "Unknown") {
+                        _getCoordinatesUiState.value = GetCoordinatesUiState.Error(NoResponseException())
+                    } else {
+                        onSearchedCoordinateChange(
+                            x = result.data.x.toDoubleOrNull()?.let { "%.6f".format(it) } ?: "0.000000",
+                            y = result.data.y.toDoubleOrNull()?.let { "%.6f".format(it) } ?: "0.000000"
+                        )
+                        onAddressChange(result.data.addressName)
+
+                        _getCoordinatesUiState.value = GetCoordinatesUiState.Success(result.data)
+                    }
+                    is Result.Error -> _getCoordinatesUiState.value = GetCoordinatesUiState.Error(result.exception)
+                }
+            }
+    }
+
+    private fun convertXYToJibun(x: String, y: String) = viewModelScope.launch {
+        getCoordinatesToAddressUseCase(x = x, y = y)
+            .asResult()
+            .collectLatest { result ->
+                when (result) {
+                    is Result.Loading -> _getCoordinatesToAddressUiState.value = GetCoordinatesToAddressUiState.Loading
+                    is Result.Success -> if (result.data.addressName == "Unknown") {
+                        _getCoordinatesToAddressUiState.value = GetCoordinatesToAddressUiState.Error(NoResponseException())
+                    } else {
+                        _getCoordinatesToAddressUiState.value = GetCoordinatesToAddressUiState.Success(result.data)
+                        onAddressChange(result.data.addressName)
+                    }
+                    is Result.Error -> _getCoordinatesToAddressUiState.value = GetCoordinatesToAddressUiState.Error(result.exception)
+                }
+            }
+    }
+
+    private fun checkExpoSurveyDynamicFormEnable() = viewModelScope.launch {
+        val currentFilter = _selectedFilter.value ?: return@launch
+        _checkExpoSurveyDynamicFormEnableUiState.value = CheckExpoSurveyDynamicFormEnableUiState.Loading
+        checkExpoSurveyDynamicFormEnableUseCase()
+            .asResult()
+            .collectLatest { result ->
+                when (result) {
+                    is Result.Loading -> _checkExpoSurveyDynamicFormEnableUiState.value = CheckExpoSurveyDynamicFormEnableUiState.Loading
+                    is Result.Success -> {
+                        val filterExpoId = result.data.expoValid.filter { expo ->
+                            when (currentFilter) {
+                                FilterOptionEnum.TRAINING_FORM_TRUE -> expo.traineeFormCreatedStatus
+                                FilterOptionEnum.TRAINING_FORM_FALSE -> !expo.traineeFormCreatedStatus
+                                FilterOptionEnum.STUDENT_FORM_TRUE -> expo.standardFormCreatedStatus
+                                FilterOptionEnum.STUDENT_FORM_FALSE -> !expo.standardFormCreatedStatus
+                            }
+                        }.map { it.expoId }
+
+                        val filteredData = _allExpoList.value.filter { it.id in filterExpoId }
+
+                        _getExpoListUiState.value = if (filteredData.isEmpty()) {
+                            GetExpoListUiState.Empty
+                        } else {
+                            GetExpoListUiState.Success(filteredData)
+                        }
+                    }
+                    is Result.Error -> _checkExpoSurveyDynamicFormEnableUiState.value = CheckExpoSurveyDynamicFormEnableUiState.Error(result.exception)
+                }
+            }
+    }
+
+    internal fun onFilterSelected(filter: FilterOptionEnum) {
+        _selectedFilter.value = if (_selectedFilter.value == filter) null else filter
+
+        if (_selectedFilter.value != null) {
+            checkExpoSurveyDynamicFormEnable()
+        } else {
+            _getExpoListUiState.value = GetExpoListUiState.Success(_allExpoList.value)
+        }
+    }
+
+    internal fun updateTrainingProgramModifyText(index: Int, updateItem: TrainingProIdRequestParam) {
+        _trainingProgramModifyTextState.value = _trainingProgramModifyTextState.value.toMutableList().apply {
+            set(index, updateItem)
+        }
+    }
+
+    internal fun updateStandardProgramModifyText(index: Int, updateItem: StandardProIdRequestParam) {
+        _standardProgramModifyTextState.value = _standardProgramModifyTextState.value.toMutableList().apply {
+            set(index, updateItem)
+        }
+    }
+
+    internal fun addTrainingProgramModifyText() {
+        _trainingProgramModifyTextState.value += TrainingProIdRequestParam(
+            id = 0,
+            title = "",
+            startedAt = "",
+            endedAt = "",
+            category = ""
+        )
+    }
+
+    internal fun addStandardProgramModifyText() {
+        _standardProgramModifyTextState.value += StandardProIdRequestParam(
+            id = 0,
+            title = "",
+            startedAt = "",
+            endedAt = ""
+        )
+    }
+
+    private fun setSearchedData() {
+        if (address.value.isNotEmpty()) {
+            onCoordinateChange(coordinateX.value, coordinateY.value)
+            onAddressChange(address.value)
+        }
+    }
+
+    internal fun removeTrainingProgramModifyText(index: Int) {
+        _trainingProgramModifyTextState.value = _trainingProgramModifyTextState.value.toMutableList().apply {
+            removeAt(index)
+        }
+    }
+
+    internal fun removeStandardProgramModifyText(index: Int) {
+        _standardProgramModifyTextState.value = _standardProgramModifyTextState.value.toMutableList().apply {
+            removeAt(index)
+        }
+    }
+
+    internal fun updateExistingTrainingProgramModify(index: Int, updatedItem: TrainingProIdRequestParam) {
+        _trainingProgramModifyTextState.value = _trainingProgramModifyTextState.value.toMutableList().apply {
+            this[index] = updatedItem
+        }
+    }
+
+    internal fun updateExistingStandardProgramModify(index: Int, updatedItem: StandardProIdRequestParam) {
+        _standardProgramModifyTextState.value = _standardProgramModifyTextState.value.toMutableList().apply {
+            this[index] = updatedItem
+        }
+    }
+
+    internal fun updateTrainingProgramText(index: Int, updateItem: TrainingProRequestParam) {
+        _trainingProgramTextState.value = _trainingProgramTextState.value.toMutableList().apply {
+            set(index, updateItem)
+        }
+    }
+
+    internal fun addTrainingProgramText() {
+        _trainingProgramTextState.value += TrainingProRequestParam(
+            title = "",
+            startedAt = "",
+            endedAt = "",
+            category = TrainingCategory.CHOICE.name
+        )
+    }
+
+    internal fun removeTrainingProgramText(index: Int) {
+        _trainingProgramTextState.value = _trainingProgramTextState.value.toMutableList().apply {
+            removeAt(index)
+        }
+    }
+
+    internal fun updateStandardProgramText(index: Int, updateItem: StandardProRequestParam) {
+        _standardProgramTextState.value = _standardProgramTextState.value.toMutableList().apply {
+            set(index, updateItem)
+        }
+    }
+
+    internal fun addStandardProgramText() {
+        _standardProgramTextState.value += StandardProRequestParam(
+            title = "",
+            startedAt = "",
+            endedAt = ""
+        )
+    }
+
+    internal fun removeStandardProgramText(index: Int) {
+        _standardProgramTextState.value = _standardProgramTextState.value.toMutableList().apply {
+            removeAt(index)
+        }
+    }
+
+    internal fun onModifyTitleChange(value: String) {
+        savedStateHandle[MODIFY_TITLE] = value
+    }
+
+    internal fun onStartedDateChange(value: String) {
+        savedStateHandle[STARTED_DATE] = value
+    }
+
+    internal fun onEndedDateChange(value: String) {
+        savedStateHandle[ENDED_DATE] = value
+    }
+
+    internal fun onIntroduceTitleChange(value: String) {
+        savedStateHandle[INTRODUCE_TITLE] = value
+    }
+
+    internal fun onCoverImageChange(value: String?) {
+        savedStateHandle[COVER_IMAGE] = value
+    }
+
+    private fun onStartedChange(value: String) {
+        savedStateHandle[STARTED] = value
+    }
+
+    private fun onEndedChange(value: String) {
+        savedStateHandle[ENDED] = value
+    }
+
+    private fun onCoordinateChange(x: String, y: String) {
+        savedStateHandle[COORDINATEX] = x
+        savedStateHandle[COORDINATEY] = y
+    }
+
+    private fun onSearchedCoordinateChange(x: String, y: String) {
+        savedStateHandle[COORDINATEX] = x
+        savedStateHandle[COORDINATEY] = y
+    }
+
+    internal fun onAddressChange(value: String) {
+        when (CurrentScreen.valueOf(currentScreen.value)) {
+            CurrentScreen.MODIFY -> savedStateHandle[MODIFY_ADDRESS] = value
+            CurrentScreen.CREATE -> savedStateHandle[CREATE_ADDRESS] = value
+            else -> Unit
+        }
+    }
+
+    internal fun onLocationChange(value: String) {
+        when (CurrentScreen.valueOf(currentScreen.value)) {
+            CurrentScreen.MODIFY -> savedStateHandle[MODIFY_LOCATION] = value
+            CurrentScreen.CREATE -> savedStateHandle[CREATE_LOCATION] = value
+            else -> Unit
+        }
+    }
+
+    internal fun setCurrentScreen(screen: CurrentScreen) {
+        savedStateHandle[CURRENT_SCREEN] = screen.name
+    }
+}

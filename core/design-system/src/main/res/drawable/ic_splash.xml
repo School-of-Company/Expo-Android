@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/expo_svg"
+    android:insetLeft="40dp"
+    android:insetRight="40dp"
+    android:insetTop="69.5dp"
+    android:insetBottom="69.5dp"/>

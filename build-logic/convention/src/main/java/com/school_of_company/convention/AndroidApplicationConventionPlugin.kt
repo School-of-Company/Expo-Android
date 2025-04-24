@@ -30,7 +30,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                 defaultConfig {
                     applicationId = "com.school_of_company.expo_android"
                     minSdk = 26
-                    targetSdk = 30
+                    targetSdk = 34
                     versionCode = 1
                     versionName = "1.0"
                     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

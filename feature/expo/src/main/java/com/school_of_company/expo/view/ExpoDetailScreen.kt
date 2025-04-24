@@ -82,11 +82,7 @@ internal fun ExpoDetailRoute(
     LaunchedEffect(getCoordinatesToAddressUiState) {
         when (getCoordinatesToAddressUiState) {
             is GetCoordinatesToAddressUiState.Loading -> Unit
-            is GetCoordinatesToAddressUiState.Success -> onErrorToast(
-                null,
-                R.string.convert_coordinates_to_address_success
-            )
-
+            is GetCoordinatesToAddressUiState.Success -> Unit
             is GetCoordinatesToAddressUiState.Error -> onErrorToast(
                 null,
                 R.string.convert_coordinates_to_address_fail

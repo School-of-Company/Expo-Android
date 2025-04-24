@@ -576,8 +576,6 @@ private fun ExpoModifyScreen(
                             introduceTitleState.isNotEmpty() &&
                             addressState.isNotEmpty() &&
                             locationState.isNotEmpty() &&
-                            trainingProgramTextState.isNotEmpty() &&
-                            standardProgramTextState.isNotEmpty() &&
                             startedDateState.isValidDateSequence(endedDateState)
                         ) {
                             ButtonState.Enable

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -57,11 +58,12 @@ internal fun ExpoFormFilterDialog(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = modifier
+                .fillMaxWidth()
                 .background(
                     color = colors.white,
                     shape = RoundedCornerShape(6.dp)
                 )
-                .padding(all = 28.dp)
+                .padding(all = 18.dp)
         ) {
 
             Row(

@@ -34,8 +34,8 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                     applicationId = "com.school_of_company.expo_android"
                     minSdk = 26
                     targetSdk = 34
-                    versionCode = 20250424
-                    versionName = "1.0"
+                    versionCode = 20250426
+                    versionName = "1.2"
                     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
                     vectorDrawables.useSupportLibrary = true
@@ -47,8 +47,8 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                 // Configure build types
                 buildTypes {
                     getByName("release") {
-                        isMinifyEnabled = true
-                        isShrinkResources = true
+                        isMinifyEnabled = false
+                        isShrinkResources = false
                         isDebuggable = false
                         proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
                     }

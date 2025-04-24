@@ -1,11 +1,14 @@
 package com.school_of_company.expo.view.component
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
@@ -30,8 +33,9 @@ internal fun ExpoFormFilterGroupButton(
 ) {
     ExpoAndroidTheme { colors, typography ->
         FlowRow(
+            horizontalArrangement = Arrangement.Start,
+            maxItemsInEachRow = 2,
             modifier = modifier.fillMaxWidth(),
-            maxItemsInEachRow = 2
         ) {
             options.forEach { option ->
                 ExpoFormFilterButton(
@@ -39,8 +43,8 @@ internal fun ExpoFormFilterGroupButton(
                     onClick = option.onClick,
                     buttonLabel = option.label,
                     modifier = Modifier.padding(
-                        end = 16.dp,
-                        top = 16.dp
+                        end = 5.dp,
+                        top = 10.dp
                     )
                 )
             }
@@ -75,7 +79,9 @@ private fun ExpoFormFilterButton(
                 selectedContainerColor = colors.main,
             ),
             onClick = onClick,
-            modifier = modifier.height(46.dp)
+            modifier = modifier
+                .wrapContentWidth()
+                .height(46.dp)
         )
     }
 }

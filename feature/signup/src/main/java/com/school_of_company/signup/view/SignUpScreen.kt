@@ -180,7 +180,8 @@ internal fun SignUpRoute(
         onRePasswordChange = viewModel::onRePasswordChange,
         onPhoneNumberChange = viewModel::onPhoneNumberChange,
         onCertificationNumberChange = viewModel::onCertificationNumberChange,
-        smsSignUpCertificationSendCodeUiState = smsSignUpCertificationSendCodeUiState
+        smsSignUpCertificationSendCodeUiState = smsSignUpCertificationSendCodeUiState,
+        smsSignUpCertificationCodeUiState = smsSignUpCertificationCodeUiState
     )
 }
 
@@ -190,6 +191,7 @@ private fun SignUpScreen(
     isPasswordValidError: Boolean,
     isPasswordMismatchError: Boolean,
     isEmailValidError: Boolean,
+    smsSignUpCertificationCodeUiState: SmsSignUpCertificationCodeUiState,
     smsSignUpCertificationSendCodeUiState: SmsSignUpCertificationSendCodeUiState,
     isCertificationCodeError: Boolean,
     name: String,
@@ -411,7 +413,11 @@ private fun SignUpScreen(
 
                     ExpoStateButton(
                         text = stringResource(id = R.string.check),
-                        state = if (certificationNumber.isNotBlank()) ButtonState.Enable else ButtonState.Disable,
+                        state = when {
+                            smsSignUpCertificationCodeUiState is SmsSignUpCertificationCodeUiState.Success -> ButtonState.Disable
+                            certificationNumber.isNotBlank() -> ButtonState.Enable
+                            else -> ButtonState.Disable
+                        },
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         certificationCallBack()
@@ -460,6 +466,7 @@ private fun SignUpScreenPreview() {
         certificationCallBack = {},
         sendCertificationCodeCallBack = {},
         isCertificationCodeError = false,
-        smsSignUpCertificationSendCodeUiState = SmsSignUpCertificationSendCodeUiState.Loading
+        smsSignUpCertificationSendCodeUiState = SmsSignUpCertificationSendCodeUiState.Loading,
+        smsSignUpCertificationCodeUiState = SmsSignUpCertificationCodeUiState.Loading
     )
 }

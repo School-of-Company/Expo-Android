@@ -538,18 +538,24 @@ private fun ExpoCreateScreen(
 
                     ExpoStateButton(
                         text = "생성하기",
-                        state = if (
+                        state = when {
                             modifyTitleState.isNotEmpty() &&
-                            startedDateState.isNotEmpty() &&
-                            endedDateState.isNotEmpty() &&
-                            introduceTitleState.isNotEmpty() &&
-                            addressState.isNotEmpty() &&
-                            locationState.isNotEmpty() &&
-                            startedDateState.isValidDateSequence(endedDateState)
-                        ) {
-                            ButtonState.Enable
-                        } else {
-                            ButtonState.Disable
+                                    startedDateState.isNotEmpty() &&
+                                    endedDateState.isNotEmpty() &&
+                                    introduceTitleState.isNotEmpty() &&
+                                    addressState.isNotEmpty() &&
+                                    locationState.isNotEmpty() &&
+                                    startedDateState.isValidDateSequence(endedDateState) -> {
+                                if (trainingProgramTextState.isEmpty() && standardProgramTextState.isEmpty()) {
+                                    ButtonState.Enable
+                                } else if (trainingProgramTextState.all { it.title.isNotEmpty() && it.startedAt.isNotEmpty() && it.endedAt.isNotEmpty() } &&
+                                    standardProgramTextState.all { it.title.isNotEmpty() && it.startedAt.isNotEmpty() && it.endedAt.isNotEmpty() }) {
+                                    ButtonState.Enable
+                                } else {
+                                    ButtonState.Disable
+                                }
+                            }
+                            else -> ButtonState.Disable
                         },
                         onClick = onExpoCreateCallBack,
                         modifier = Modifier.fillMaxWidth(),

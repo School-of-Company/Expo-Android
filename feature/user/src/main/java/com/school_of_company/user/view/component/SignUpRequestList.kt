@@ -57,7 +57,9 @@ internal fun SignUpRequestList(
                         Alignment.CenterHorizontally
                     ),
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 74.dp)
                 ) {
                     UserAllowButton(
                         enabled = selectedId != 0L,

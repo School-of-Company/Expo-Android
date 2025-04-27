@@ -34,7 +34,7 @@ internal class SignUpViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     companion object {
-        private const val NAME = "nickname"
+        private const val NAME = "name"
         private const val NICKNAME = "nickname"
         private const val EMAIL = "email"
         private const val PASSWORD = "password"

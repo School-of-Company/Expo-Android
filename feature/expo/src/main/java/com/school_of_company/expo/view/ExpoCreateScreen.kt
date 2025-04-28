@@ -46,8 +46,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -274,9 +277,15 @@ private fun ExpoCreateScreen(
         ) {
             Column(modifier = Modifier.verticalScroll(scrollState)) {
                 Text(
-                    text = "사진",
-                    style = typography.bodyBold2,
-                    color = colors.black,
+                    text = buildAnnotatedString {
+                        withStyle(style = SpanStyle(color = colors.black)) {
+                            append("사진")
+                        }
+                        withStyle(style = SpanStyle(color = colors.main)) {
+                            append(" *")
+                        }
+                    },
+                    style = typography.bodyBold2
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -392,7 +401,19 @@ private fun ExpoCreateScreen(
                 Spacer(modifier = Modifier.padding(top = 28.dp))
 
                 LimitedLengthTextField(
-                    label = "제목",
+                    labelComposable = {
+                        Text(
+                            text = buildAnnotatedString {
+                                withStyle(style = SpanStyle(color = colors.black)) {
+                                    append("제목")
+                                }
+                                withStyle(style = SpanStyle(color = colors.main)) {
+                                    append(" *")
+                                }
+                            },
+                            style = typography.bodyBold2
+                        )
+                    },
                     value = modifyTitleState,
                     placeholder = "제목을 입력해주세요.",
                     isError = false,
@@ -403,7 +424,19 @@ private fun ExpoCreateScreen(
 
                 Row(horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.Start)) {
                     LimitedLengthTextField(
-                        label = "행사 기간",
+                        labelComposable = {
+                            Text(
+                                text = buildAnnotatedString {
+                                    withStyle(style = SpanStyle(color = colors.black)) {
+                                        append("행사 기간")
+                                    }
+                                    withStyle(style = SpanStyle(color = colors.main)) {
+                                        append(" *")
+                                    }
+                                },
+                                style = typography.bodyBold2
+                            )
+                        },
                         value = startedDateState,
                         lengthLimit = 8,
                         showLengthCounter = false,
@@ -416,6 +449,13 @@ private fun ExpoCreateScreen(
                     )
 
                     LimitedLengthTextField(
+                        labelComposable = {
+                            Text(
+                                text = "행사기간",
+                                color = colors.white,
+                                style = typography.bodyBold2
+                            )
+                        },
                         value = endedDateState,
                         lengthLimit = 8,
                         showLengthCounter = false,
@@ -449,8 +489,19 @@ private fun ExpoCreateScreen(
                 Spacer(modifier = Modifier.padding(top = 28.dp))
 
                 LimitedLengthTextField(
-                    label = "소개글",
-                    value = introduceTitleState,
+                    labelComposable = {
+                        Text(
+                            text = buildAnnotatedString {
+                                withStyle(style = SpanStyle(color = colors.black)) {
+                                    append("소개글")
+                                }
+                                withStyle(style = SpanStyle(color = colors.main)) {
+                                    append(" *")
+                                }
+                            },
+                            style = typography.bodyBold2
+                        )
+                    },                    value = introduceTitleState,
                     placeholder = "소개글을 작성해주세요.",
                     isError = false,
                     updateTextValue = onIntroduceTitleChange,
@@ -511,10 +562,15 @@ private fun ExpoCreateScreen(
 
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top)) {
                         Text(
-                            text = "장소",
-                            style = typography.bodyRegular2,
-                            color = colors.black,
-                            fontWeight = FontWeight.W600,
+                            text = buildAnnotatedString {
+                                withStyle(style = SpanStyle(color = colors.black)) {
+                                    append("장소")
+                                }
+                                withStyle(style = SpanStyle(color = colors.main)) {
+                                    append(" *")
+                                }
+                            },
+                            style = typography.bodyBold2
                         )
 
                         ExpoLocationIconTextField(

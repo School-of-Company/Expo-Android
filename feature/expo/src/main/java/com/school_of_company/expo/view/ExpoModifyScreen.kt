@@ -412,7 +412,8 @@ private fun ExpoModifyScreen(
                             },
                             style = typography.bodyBold2
                         )
-                    },                    value = modifyTitleState,
+                    },
+                    value = modifyTitleState,
                     placeholder = "제목을 입력해주세요.",
                     isError = false,
                     updateTextValue = onModifyTitleChange,
@@ -498,7 +499,7 @@ private fun ExpoModifyScreen(
                             },
                             style = typography.bodyBold2
                         )
-                    },                    value = introduceTitleState,
+                    }, value = introduceTitleState,
                     placeholder = "소개글을 작성해주세요.",
                     isError = false,
                     updateTextValue = onIntroduceTitleChange,

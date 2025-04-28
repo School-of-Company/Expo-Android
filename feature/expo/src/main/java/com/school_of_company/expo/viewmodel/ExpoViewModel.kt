@@ -90,6 +90,7 @@ internal class ExpoViewModel @Inject constructor(
         private const val CREATE_ADDRESS = "create_address"
         private const val CREATE_LOCATION = "create_location"
         private const val CURRENT_SCREEN = "current_screen"
+        private const val IMAGE_URL = "image_url"
     }
 
     internal var currentScreen = savedStateHandle.getStateFlow(CURRENT_SCREEN, CurrentScreen.NONE.name)
@@ -168,6 +169,8 @@ internal class ExpoViewModel @Inject constructor(
     internal var coordinateX = savedStateHandle.getStateFlow(key = COORDINATEX, initialValue = "")
 
     internal var coordinateY = savedStateHandle.getStateFlow(key = COORDINATEY, initialValue = "")
+
+    private var imageUrl = savedStateHandle.getStateFlow(key = IMAGE_URL, initialValue = "")
 
     val expoListSize: StateFlow<Int> = getExpoListUiState
         .map { state ->
@@ -726,5 +729,9 @@ internal class ExpoViewModel @Inject constructor(
 
     internal fun setCurrentScreen(screen: CurrentScreen) {
         savedStateHandle[CURRENT_SCREEN] = screen.name
+    }
+
+    private fun setImageUrl(url: String) {
+        savedStateHandle[IMAGE_URL] = url
     }
 }

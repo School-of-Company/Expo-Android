@@ -165,6 +165,9 @@ internal fun ExpoModifyRoute(
             is ImageUpLoadUiState.Error -> {
                 onErrorToast(null, R.string.expo_image_fail)
             }
+    LaunchedEffect(selectedImageUri) {
+        if (selectedImageUri != null) {
+            viewModel.imageUpLoad(context, selectedImageUri!!)
         }
     }
 

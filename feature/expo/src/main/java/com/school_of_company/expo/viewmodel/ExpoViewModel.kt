@@ -287,21 +287,30 @@ internal class ExpoViewModel @Inject constructor(
 
     internal fun modifyExpoInformation(
         expoId: String,
-        body: ExpoModifyRequestParam
     ) = viewModelScope.launch {
+        val imageUrlToUse = when (val state = imageUpLoadUiState.value) {
+            is ImageUpLoadUiState.Success -> state.data.imageURL
+            else -> imageUrl.value
+        }
         _modifyExpoInformationUiState.value = ModifyExpoInformationUiState.Loading
         modifyExpoInformationUseCase(
             expoId = expoId,
-            body = body.copy(
-                startedDay = body.startedDay.autoFormatToDateTime(),
-                finishedDay = body.finishedDay.autoFormatToDateTime(),
-                updateStandardProRequestDto = body.updateStandardProRequestDto.map { list ->
+            body = ExpoModifyRequestParam(
+                title = modify_title.value,
+                startedDay = started_date.value.autoFormatToDateTime(),
+                finishedDay = ended_date.value.autoFormatToDateTime(),
+                description = introduce_title.value,
+                location = location.value,
+                coverImage = imageUrlToUse,
+                x = coordinateX.value,
+                y = coordinateY.value,
+                updateStandardProRequestDto = standardProgramModifyTextState.value.map { list ->
                     list.copy(
                         startedAt = list.startedAt.autoFormatToDateTime(),
                         endedAt = list.endedAt.autoFormatToDateTime(),
                     )
                 },
-                updateTrainingProRequestDto = body.updateTrainingProRequestDto.map { list ->
+                updateTrainingProRequestDto = trainingProgramModifyTextState.value.map { list ->
                     list.copy(
                         startedAt = list.startedAt.autoFormatToDateTime(),
                         endedAt = list.endedAt.autoFormatToDateTime(),

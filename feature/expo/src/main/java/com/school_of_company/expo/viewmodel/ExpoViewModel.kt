@@ -741,7 +741,7 @@ internal class ExpoViewModel @Inject constructor(
         savedStateHandle[CURRENT_SCREEN] = screen.name
     }
 
-    private fun setImageUrl(url: String) {
-        savedStateHandle[IMAGE_URL] = url
+    private fun setImageUrl(value: String) {
+        savedStateHandle[IMAGE_URL] = value
     }
 }

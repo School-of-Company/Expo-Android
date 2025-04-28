@@ -164,11 +164,7 @@ internal fun ExpoModifyRoute(
     ExpoModifyScreen(
         imageUri = selectedImageUri?.toString() ?: coverImageState,
         modifyCallBack = {
-            if (selectedImageUri != null) {
-                viewModel.imageUpLoad(context, selectedImageUri!!)
-            } else {
-                onErrorToast(null, R.string.expo_image_size_fail)
-            }
+            viewModel.modifyExpoInformation(id)
         },
         onBackClick = onBackClick,
         onImageClick = { galleryLauncher.launch("image/*") },

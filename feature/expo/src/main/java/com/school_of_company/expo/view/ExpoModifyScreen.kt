@@ -97,7 +97,6 @@ internal fun ExpoModifyRoute(
     viewModel: ExpoViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
 ) {
     val modifyExpoInformationUiState by viewModel.modifyExpoInformationUiState.collectAsStateWithLifecycle()
-    val imageUpLoadUiState by viewModel.imageUpLoadUiState.collectAsStateWithLifecycle()
 
     val modifyTitleState by viewModel.modify_title.collectAsStateWithLifecycle()
     val startedDateState by viewModel.started_date.collectAsStateWithLifecycle()
@@ -435,7 +434,8 @@ private fun ExpoModifyScreen(
                                 },
                                 style = typography.bodyBold2
                             )
-                        },                        value = startedDateState,
+                        },
+                        value = startedDateState,
                         lengthLimit = 8,
                         placeholder = "시작일",
                         isError = false,

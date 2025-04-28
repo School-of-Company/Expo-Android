@@ -141,30 +141,6 @@ internal fun ExpoModifyRoute(
         }
     }
 
-    LaunchedEffect(imageUpLoadUiState) {
-        when (imageUpLoadUiState) {
-            is ImageUpLoadUiState.Loading -> Unit
-            is ImageUpLoadUiState.Success -> {
-                viewModel.modifyExpoInformation(
-                    expoId = id,
-                    body = ExpoModifyRequestParam(
-                        title = viewModel.modify_title.value,
-                        startedDay = viewModel.started_date.value,
-                        finishedDay = viewModel.ended_date.value,
-                        description = viewModel.introduce_title.value,
-                        location = viewModel.location.value,
-                        coverImage = (imageUpLoadUiState as ImageUpLoadUiState.Success).data.imageURL,
-                        x = viewModel.coordinateX.value,
-                        y = viewModel.coordinateY.value,
-                        updateStandardProRequestDto = standardProgramTextState,
-                        updateTrainingProRequestDto = trainingProgramTextState
-                    )
-                )
-            }
-
-            is ImageUpLoadUiState.Error -> {
-                onErrorToast(null, R.string.expo_image_fail)
-            }
     LaunchedEffect(selectedImageUri) {
         if (selectedImageUri != null) {
             viewModel.imageUpLoad(context, selectedImageUri!!)

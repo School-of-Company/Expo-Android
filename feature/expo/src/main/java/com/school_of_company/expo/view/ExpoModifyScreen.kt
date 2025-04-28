@@ -137,7 +137,7 @@ internal fun ExpoModifyRoute(
 
     DisposableEffect(Unit) {
         onDispose {
-            viewModel.initModifyExpo()
+            viewModel.resetExpoInformation()
         }
     }
 
@@ -173,8 +173,6 @@ internal fun ExpoModifyRoute(
             is ModifyExpoInformationUiState.Loading -> Unit
             is ModifyExpoInformationUiState.Success -> {
                 onBackClick()
-                viewModel.resetExpoInformation()
-                viewModel.initModifyExpo()
                 makeToast(context, "박람회 수정을 완료하였습니다.")
             }
 
@@ -206,7 +204,6 @@ internal fun ExpoModifyRoute(
         navigateToExpoAddressSearch = navigateToExpoAddressSearch,
         onAddStandardProgram = viewModel::addStandardProgramModifyText,
         onAddTrainingProgram = viewModel::addTrainingProgramModifyText,
-        clearExpoInformation = viewModel::resetExpoInformation,
         onStartedDateChange = viewModel::onStartedDateChange,
         onEndedDateChange = viewModel::onEndedDateChange,
         onModifyTitleChange = viewModel::onModifyTitleChange,
@@ -242,7 +239,6 @@ private fun ExpoModifyScreen(
     navigateToExpoAddressSearch: () -> Unit,
     onAddStandardProgram: () -> Unit,
     onAddTrainingProgram: () -> Unit,
-    clearExpoInformation: () -> Unit,
     onStartedDateChange: (String) -> Unit,
     onEndedDateChange: (String) -> Unit,
     onModifyTitleChange: (String) -> Unit,
@@ -293,10 +289,7 @@ private fun ExpoModifyScreen(
                 startIcon = {
                     LeftArrowIcon(
                         tint = colors.black,
-                        modifier = Modifier.expoClickable {
-                            onBackClick()
-                            clearExpoInformation()
-                        }
+                        modifier = Modifier.expoClickable { onBackClick() }
                     )
                 },
                 betweenText = "박람회 수정하기"
@@ -704,7 +697,6 @@ private fun HomeDetailModifyScreenPreview() {
         locationState = "",
         onModifyTitleChange = {},
         onLocationChange = {},
-        clearExpoInformation = {},
         onStartedDateChange = {},
         onEndedDateChange = {},
         onIntroduceTitleChange = {},

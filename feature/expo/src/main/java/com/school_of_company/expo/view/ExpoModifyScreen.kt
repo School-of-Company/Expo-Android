@@ -529,7 +529,7 @@ private fun ExpoModifyScreen(
 
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top)) {
                     Text(
-                        text = "참가자 연수 종류",
+                        text = "참가자 프로그램",
                         style = typography.bodyBold2,
                         color = colors.black,
                     )
@@ -553,7 +553,7 @@ private fun ExpoModifyScreen(
                     Spacer(modifier = Modifier.padding(top = 28.dp))
 
                     Text(
-                        text = "연수자 연수 종류",
+                        text = "연수자 프로그램",
                         style = typography.bodyBold2,
                         color = colors.black,
                     )

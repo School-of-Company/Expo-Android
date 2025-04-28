@@ -471,7 +471,13 @@ private fun ExpoModifyScreen(
                     )
 
                     LimitedLengthTextField(
-                        labelComposable = {},
+                        labelComposable = {
+                            Text(
+                                text = "행사기간",
+                                color = colors.white,
+                                style = typography.bodyBold2
+                            )
+                        },
                         value = endedDateState,
                         lengthLimit = 8,
                         placeholder = "마감일",

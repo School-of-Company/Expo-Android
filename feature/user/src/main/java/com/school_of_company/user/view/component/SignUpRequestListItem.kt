@@ -43,7 +43,7 @@ internal fun SignUpRequestListItem(
                     color = if (selectedIndex == data.id) colors.main100 else colors.white,
                     shape = RoundedCornerShape(size = 4.dp)
                 )
-                .padding(vertical = 8.dp)
+                .padding(all = 8.dp)
                 .horizontalScroll(horizontalScrollState)
                 .expoClickable { onClick(data.id) }
         ) {

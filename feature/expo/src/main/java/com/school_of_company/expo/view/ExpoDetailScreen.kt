@@ -444,8 +444,8 @@ private fun ExpoDetailScreen(
                             }
 
                             ExpoEnableButton(
-                                text = "문자 보내기",
-                                onClick = { isOpenDialog(true) },
+                                text = "문자 보내기(사용X)",
+                                onClick = { isOpenDialog(false) },
                                 textColor = colors.main,
                                 backgroundColor = colors.white,
                                 modifier = Modifier

@@ -317,12 +317,10 @@ internal class ExpoViewModel @Inject constructor(
             }
     }
 
-    internal fun initModifyExpo() {
+    internal fun resetExpoInformation() {
         _imageUpLoadUiState.value = ImageUpLoadUiState.Loading
         _modifyExpoInformationUiState.value = ModifyExpoInformationUiState.Loading
-    }
 
-    internal fun resetExpoInformation() {
         onCoordinateChange("", "")
         onSearchedCoordinateChange("", "")
         onIntroduceTitleChange("")

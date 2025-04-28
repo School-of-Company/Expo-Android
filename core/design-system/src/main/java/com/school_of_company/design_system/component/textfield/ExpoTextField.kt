@@ -238,6 +238,7 @@ fun LimitedLengthTextField(
     placeholder: String,
     overflowErrorMessage: String = "",
     label: String = "",
+    labelComposable: @Composable () -> Unit,
     isError: Boolean,
     showLengthCounter: Boolean = true,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
@@ -252,13 +253,18 @@ fun LimitedLengthTextField(
             horizontalAlignment = Alignment.Start,
             modifier = modifier.background(color = Color.Transparent)
         ) {
-            Text(
-                text = label,
-                style = typography.bodyBold2,
-                color = colors.black,
-                fontWeight = FontWeight(600),
-                modifier = Modifier.padding(bottom = 10.dp)
-            )
+
+            if (label.isNotEmpty()) {
+                Text(
+                    text = label,
+                    style = typography.bodyBold2,
+                    color = colors.black,
+                    fontWeight = FontWeight(600),
+                    modifier = Modifier.padding(bottom = 10.dp)
+                )
+            } else {
+                labelComposable()
+            }
 
             Box(
                 modifier = Modifier
@@ -573,10 +579,12 @@ fun ExpoOutlinedTextFieldPreview() {
                 label = "비밀번호"
             )
             LimitedLengthTextField(
+                labelComposable = {},
                 value = "",
                 placeholder = "",
                 isError = false,
-                updateTextValue = {})
+                updateTextValue = {}
+            )
 
             NoneLimitedLengthTextField(value = "", placeholder = "", updateTextValue = {})
 

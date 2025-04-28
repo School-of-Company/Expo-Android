@@ -225,6 +225,7 @@ internal class ExpoViewModel @Inject constructor(
                         _getExpoInformationUiState.value = GetExpoInformationUiState.Success(result.data)
 
                         result.data.let {
+                            setImageUrl(it.coverImage ?: "")
                             onModifyTitleChange(it.title)
                             onStartedDateChange(it.startedDay.formatNoneHyphenServerDate())
                             onEndedDateChange(it.finishedDay.formatNoneHyphenServerDate())

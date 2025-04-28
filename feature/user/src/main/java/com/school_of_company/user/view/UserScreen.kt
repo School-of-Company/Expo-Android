@@ -38,6 +38,7 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.school_of_company.design_system.R
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.component.modifier.padding.paddingHorizontal
+import com.school_of_company.design_system.component.modifier.padding.paddingVertical
 import com.school_of_company.design_system.component.uistate.empty.ShowEmptyState
 import com.school_of_company.design_system.component.uistate.error.ShowErrorState
 import com.school_of_company.design_system.icon.LogoutIcon
@@ -407,7 +408,10 @@ private fun UserScreen(
                         color = colors.white
                     )
                     .fillMaxWidth()
-                    .padding(vertical = 16.dp)
+                    .paddingVertical(
+                        vertical = 16.dp,
+                        start = 8.dp
+                    )
             ) {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(20.dp),

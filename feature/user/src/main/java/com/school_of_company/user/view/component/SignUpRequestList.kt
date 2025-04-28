@@ -36,7 +36,7 @@ internal fun SignUpRequestList(
         LazyColumn(
             modifier = modifier
                 .background(color = colors.white)
-                .padding(start = 16.dp)
+                .padding(horizontal = 16.dp)
         ) {
             itemsIndexed(item) { index, item ->
                SignUpRequestListItem(

@@ -436,7 +436,8 @@ private fun ExpoCreateScreen(
                                 },
                                 style = typography.bodyBold2
                             )
-                        },                        value = startedDateState,
+                        },
+                        value = startedDateState,
                         lengthLimit = 8,
                         showLengthCounter = false,
                         placeholder = "시작일",

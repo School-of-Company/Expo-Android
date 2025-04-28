@@ -97,6 +97,7 @@ internal fun ExpoModifyRoute(
     viewModel: ExpoViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
 ) {
     val modifyExpoInformationUiState by viewModel.modifyExpoInformationUiState.collectAsStateWithLifecycle()
+    val imageUpLoadUiState by viewModel.imageUpLoadUiState.collectAsStateWithLifecycle()
 
     val modifyTitleState by viewModel.modify_title.collectAsStateWithLifecycle()
     val startedDateState by viewModel.started_date.collectAsStateWithLifecycle()
@@ -123,6 +124,15 @@ internal fun ExpoModifyRoute(
                 }
             }
         }
+
+    LaunchedEffect(imageUpLoadUiState) {
+        when (imageUpLoadUiState) {
+            is ImageUpLoadUiState.Error -> {
+                onErrorToast(null, R.string.expo_image_fail)
+            }
+            else -> Unit
+        }
+    }
 
     LaunchedEffect(Unit) {
         viewModel.setCurrentScreen(CurrentScreen.MODIFY)

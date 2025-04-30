@@ -48,8 +48,11 @@ import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.model.param.auth.AdminSignUpRequestParam
 import com.school_of_company.model.param.sms.SmsSignUpCertificationNumberSendRequestParam
+import com.school_of_company.signup.view.component.TimeExpoStateButton
 import com.school_of_company.signup.viewmodel.SignUpViewModel
 import com.school_of_company.signup.viewmodel.uistate.SignUpUiState
+import com.school_of_company.signup.viewmodel.uistate.SmsSignUpCertificationCodeUiState
+import com.school_of_company.signup.viewmodel.uistate.SmsSignUpCertificationSendCodeUiState
 import com.school_of_company.ui.toast.makeToast
 
 @Composable
@@ -62,7 +65,9 @@ internal fun SignUpRoute(
 ) {
     val signUpUiState by viewModel.signUpUiState.collectAsStateWithLifecycle()
     val name by viewModel.name.collectAsStateWithLifecycle()
+    val smsSignUpCertificationSendCodeUiState by viewModel.smsSignUpCertificationSendCodeUiState.collectAsStateWithLifecycle()
     val nickname by viewModel.nickname.collectAsStateWithLifecycle()
+    val smsSignUpCertificationCodeUiState by viewModel.smsSignUpCertificationCodeUiState.collectAsStateWithLifecycle()
     val email by viewModel.email.collectAsStateWithLifecycle()
     val password by viewModel.password.collectAsStateWithLifecycle()
     val rePassword by viewModel.rePassword.collectAsStateWithLifecycle()
@@ -95,6 +100,21 @@ internal fun SignUpRoute(
             is SignUpUiState.NotSmsCheck -> {
                 viewModel.setError(true)
                 onErrorToast(null, R.string.not_sms_check)
+            }
+        }
+    }
+
+    LaunchedEffect(smsSignUpCertificationCodeUiState){
+        when(smsSignUpCertificationCodeUiState){
+            is SmsSignUpCertificationCodeUiState.Loading -> Unit
+
+            is SmsSignUpCertificationCodeUiState.Success -> {
+                makeToast(context, "인증을 성공했습니다.")
+            }
+
+            is SmsSignUpCertificationCodeUiState.Error -> {
+                val error = smsSignUpCertificationCodeUiState as SmsSignUpCertificationCodeUiState.Error
+                onErrorToast(error.exception, error.messageResId)
             }
         }
     }
@@ -145,7 +165,8 @@ internal fun SignUpRoute(
         onRePasswordChange = viewModel::onRePasswordChange,
         onPhoneNumberChange = viewModel::onPhoneNumberChange,
         onCertificationNumberChange = viewModel::onCertificationNumberChange,
-
+        smsSignUpCertificationSendCodeUiState = smsSignUpCertificationSendCodeUiState,
+        smsSignUpCertificationCodeUiState = smsSignUpCertificationCodeUiState
     )
 }
 
@@ -155,6 +176,8 @@ private fun SignUpScreen(
     isPasswordValidError: Boolean,
     isPasswordMismatchError: Boolean,
     isEmailValidError: Boolean,
+    smsSignUpCertificationCodeUiState: SmsSignUpCertificationCodeUiState,
+    smsSignUpCertificationSendCodeUiState: SmsSignUpCertificationSendCodeUiState,
     isCertificationCodeError: Boolean,
     name: String,
     nickname: String,
@@ -179,6 +202,9 @@ private fun SignUpScreen(
 ) {
     var isPasswordVisible by remember { mutableStateOf(false) }
     var isCheckPasswordVisible by remember { mutableStateOf(false) }
+    var isFirstAttempt by remember { mutableStateOf(true) }
+    val isSuccess = smsSignUpCertificationSendCodeUiState is SmsSignUpCertificationSendCodeUiState.Success
+
 
     ExpoAndroidTheme { colors, typography ->
 
@@ -330,12 +356,22 @@ private fun SignUpScreen(
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                     )
 
-                    ExpoStateButton(
-                        text = "인증번호",
-                        state = if (phoneNumber.isNotBlank()) ButtonState.Enable else ButtonState.Disable,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        sendCertificationCodeCallBack()
+                    if (isSuccess || !isFirstAttempt) {
+                        TimeExpoStateButton (
+                            modifier = Modifier.fillMaxWidth(),
+                            text = "재발송"
+                        ){
+                            sendCertificationCodeCallBack()
+                        }
+                    } else {
+                        ExpoStateButton(
+                            text = "인증번호",
+                            state = if (phoneNumber.isNotBlank()) ButtonState.Enable else ButtonState.Disable,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            sendCertificationCodeCallBack()
+                            isFirstAttempt = false
+                        }
                     }
                 }
 
@@ -362,7 +398,11 @@ private fun SignUpScreen(
 
                     ExpoStateButton(
                         text = stringResource(id = R.string.check),
-                        state = if (certificationNumber.isNotBlank()) ButtonState.Enable else ButtonState.Disable,
+                        state = when {
+                            smsSignUpCertificationCodeUiState is SmsSignUpCertificationCodeUiState.Success -> ButtonState.Disable
+                            certificationNumber.isNotBlank() -> ButtonState.Enable
+                            else -> ButtonState.Disable
+                        },
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         certificationCallBack()
@@ -411,5 +451,7 @@ private fun SignUpScreenPreview() {
         certificationCallBack = {},
         sendCertificationCodeCallBack = {},
         isCertificationCodeError = false,
+        smsSignUpCertificationSendCodeUiState = SmsSignUpCertificationSendCodeUiState.Loading,
+        smsSignUpCertificationCodeUiState = SmsSignUpCertificationCodeUiState.Loading
     )
 }

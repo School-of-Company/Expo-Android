@@ -78,6 +78,9 @@
     <string name="hint_nickname">아이디를 입력해주세요.</string>
     <string name="success_sign_up">회원가입에 성공하였습니다.</string>
 
+    <string name="conflict_info">중복되는 이메일, 전화번호, 아이디가 있습니다.</string>
+    <string name="not_sms_check">sms 인증을 하지 않았습니다.</string>
+
     <string name="expo_modify_fail">박람회 수정을 실패하였습니다.</string>
     <string name="expo_register_fail">박람회 생성을 실패하였습니다.</string>
 

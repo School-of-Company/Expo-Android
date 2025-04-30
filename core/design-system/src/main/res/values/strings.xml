@@ -93,6 +93,8 @@
     <string name="form_create_fail">폼 생성을 실패했습니다.</string>
     <string name="form_create_success">폼 생성을 성공했습니다.</string>
     <string name="form_modify_success">폼 수정을 성공했습니다.</string>
+    <string name="form_modify_not_found">폼을 먼저 생성해주세요.</string>
+    <string name="form_conflict_error">이미 폼이 생성되어 있습니다.</string>
 
     <string name="expo_image_fail">박람회 이미지가 유효하지 않습니다.</string>
 

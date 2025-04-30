@@ -125,6 +125,15 @@ internal fun ExpoModifyRoute(
             }
         }
 
+    LaunchedEffect(imageUpLoadUiState) {
+        when (imageUpLoadUiState) {
+            is ImageUpLoadUiState.Error -> {
+                onErrorToast(null, R.string.expo_image_fail)
+            }
+            else -> Unit
+        }
+    }
+
     LaunchedEffect(Unit) {
         viewModel.setCurrentScreen(CurrentScreen.MODIFY)
     }
@@ -141,30 +150,9 @@ internal fun ExpoModifyRoute(
         }
     }
 
-    LaunchedEffect(imageUpLoadUiState) {
-        when (imageUpLoadUiState) {
-            is ImageUpLoadUiState.Loading -> Unit
-            is ImageUpLoadUiState.Success -> {
-                viewModel.modifyExpoInformation(
-                    expoId = id,
-                    body = ExpoModifyRequestParam(
-                        title = viewModel.modify_title.value,
-                        startedDay = viewModel.started_date.value,
-                        finishedDay = viewModel.ended_date.value,
-                        description = viewModel.introduce_title.value,
-                        location = viewModel.location.value,
-                        coverImage = (imageUpLoadUiState as ImageUpLoadUiState.Success).data.imageURL,
-                        x = viewModel.coordinateX.value,
-                        y = viewModel.coordinateY.value,
-                        updateStandardProRequestDto = standardProgramTextState,
-                        updateTrainingProRequestDto = trainingProgramTextState
-                    )
-                )
-            }
-
-            is ImageUpLoadUiState.Error -> {
-                onErrorToast(null, R.string.expo_image_fail)
-            }
+    LaunchedEffect(selectedImageUri) {
+        if (selectedImageUri != null) {
+            viewModel.imageUpLoad(context, selectedImageUri!!)
         }
     }
 
@@ -185,11 +173,7 @@ internal fun ExpoModifyRoute(
     ExpoModifyScreen(
         imageUri = selectedImageUri?.toString() ?: coverImageState,
         modifyCallBack = {
-            if (selectedImageUri != null) {
-                viewModel.imageUpLoad(context, selectedImageUri!!)
-            } else {
-                onErrorToast(null, R.string.expo_image_size_fail)
-            }
+            viewModel.modifyExpoInformation(id)
         },
         onBackClick = onBackClick,
         onImageClick = { galleryLauncher.launch("image/*") },
@@ -437,7 +421,8 @@ private fun ExpoModifyScreen(
                             },
                             style = typography.bodyBold2
                         )
-                    },                    value = modifyTitleState,
+                    },
+                    value = modifyTitleState,
                     placeholder = "제목을 입력해주세요.",
                     isError = false,
                     updateTextValue = onModifyTitleChange,
@@ -459,7 +444,8 @@ private fun ExpoModifyScreen(
                                 },
                                 style = typography.bodyBold2
                             )
-                        },                        value = startedDateState,
+                        },
+                        value = startedDateState,
                         lengthLimit = 8,
                         placeholder = "시작일",
                         isError = false,
@@ -471,7 +457,13 @@ private fun ExpoModifyScreen(
                     )
 
                     LimitedLengthTextField(
-                        labelComposable = {},
+                        labelComposable = {
+                            Text(
+                                text = "행사기간",
+                                color = colors.white,
+                                style = typography.bodyBold2
+                            )
+                        },
                         value = endedDateState,
                         lengthLimit = 8,
                         placeholder = "마감일",
@@ -517,7 +509,7 @@ private fun ExpoModifyScreen(
                             },
                             style = typography.bodyBold2
                         )
-                    },                    value = introduceTitleState,
+                    }, value = introduceTitleState,
                     placeholder = "소개글을 작성해주세요.",
                     isError = false,
                     updateTextValue = onIntroduceTitleChange,

@@ -89,7 +89,7 @@ internal fun SignUpRoute(
 
             is SignUpUiState.Error -> {
                 viewModel.setError(true)
-                onErrorToast((signUpUiState as SignUpUiState.Error).exception,null)
+                onErrorToast((signUpUiState as SignUpUiState.Error).exception, null)
             }
 
             is SignUpUiState.Conflict -> {
@@ -104,8 +104,24 @@ internal fun SignUpRoute(
         }
     }
 
-    LaunchedEffect(smsSignUpCertificationCodeUiState){
-        when(smsSignUpCertificationCodeUiState){
+    LaunchedEffect(
+        isPasswordValidError,
+        isPasswordMismatchError,
+        isEmailValidError,
+    ) {
+        if (isPasswordValidError) {
+            onErrorToast(null, R.string.expection_password_validdd)
+        }
+        if (isPasswordMismatchError) {
+            onErrorToast(null, R.string.mismatch_password)
+        }
+        if (isEmailValidError) {
+            onErrorToast(null, R.string.expection_email_validdddd)
+        }
+    }
+
+    LaunchedEffect(smsSignUpCertificationCodeUiState) {
+        when (smsSignUpCertificationCodeUiState) {
             is SmsSignUpCertificationCodeUiState.Loading -> Unit
 
             is SmsSignUpCertificationCodeUiState.Success -> {
@@ -357,12 +373,10 @@ private fun SignUpScreen(
                     )
 
                     if (isSuccess || !isFirstAttempt) {
-                        TimeExpoStateButton (
+                        TimeExpoStateButton(
                             modifier = Modifier.fillMaxWidth(),
                             text = "재발송"
-                        ){
-                            sendCertificationCodeCallBack()
-                        }
+                        ) { sendCertificationCodeCallBack() }
                     } else {
                         ExpoStateButton(
                             text = "인증번호",

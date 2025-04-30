@@ -148,29 +148,28 @@ internal class SignUpViewModel @Inject constructor(
             }
 
             else -> {
-                signUpRequestUseCase(body = body)
-                    .asResult()
-                    .collectLatest { result ->
-                        when (result) {
-                            is Result.Loading -> _signUpUiState.value = SignUpUiState.Loading
-                            is Result.Success -> _signUpUiState.value = SignUpUiState.Success
-                            is Result.Error -> {
-                                val exception = result.exception
-                                _signUpUiState.value = when {
-                                    exception is HttpException -> when (exception.code()) {
-                                        409 -> SignUpUiState.Conflict
-                                        404  -> SignUpUiState.NotSmsCheck
-                                        else -> SignUpUiState.Error(exception)
-                                    }
+                _signUpUiState.value = SignUpUiState.Loading
 
-                                    else -> SignUpUiState.Error(exception)
-                                }
+                signUpRequestUseCase(body = body)
+                    .onSuccess {
+                        it.catch { remoteError ->
+                            _signUpUiState.value = SignUpUiState.Error(remoteError)
+                        }.collect {  _signUpUiState.value = SignUpUiState.Success }
+                    }
+                    .onFailure { error ->
+                        _signUpUiState.value = when {
+                            error is HttpException -> when (error.code()) {
+                                409 -> SignUpUiState.Conflict
+                                404  -> SignUpUiState.NotSmsCheck
+                                else -> SignUpUiState.Error(error)
                             }
+
+                            else -> SignUpUiState.Error(error)
                         }
                     }
+                }
             }
         }
-    }
 
     internal fun certificationCode(phoneNumber: String, certificationNumber: String) =
         viewModelScope.launch {

@@ -58,10 +58,12 @@ internal fun FormCreateRoute(
     LaunchedEffect(formUiState) {
         when (formUiState) {
             is FormUiState.Loading -> Unit
-            is FormUiState.Success -> {
-                navigateToExpoNavigationHome()
+            is FormUiState.Success -> navigateToExpoNavigationHome()
+            is FormUiState.NotFound -> Unit
+            is FormUiState.Conflict -> {
+                viewModel.setIsConflictError(true)
+                onErrorToast(null, R.string.form_conflict_error)
             }
-
             is FormUiState.Error -> {
                 onErrorToast(null, R.string.form_create_fail)
             }

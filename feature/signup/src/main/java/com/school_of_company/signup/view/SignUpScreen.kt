@@ -82,31 +82,19 @@ internal fun SignUpRoute(
                 makeToast(context, "회원가입 성공, 다시 로그인 해주세요.")
             }
 
-            is SignUpUiState.EmailValid -> {
-                viewModel.setEmailValidError(true)
-                onErrorToast(null, R.string.expection_email_validdddd)
-            }
-
-            is SignUpUiState.PasswordValid -> {
-                viewModel.setPasswordValidError(true)
-                onErrorToast(null, R.string.expection_password_validdd)
-            }
-
-            is SignUpUiState.PasswordMismatch -> {
-                viewModel.setPasswordMismatchError(true)
-                onErrorToast(null, R.string.mismatch_password)
-            }
-
-            is SignUpUiState.DuplicateAccount -> {
-                viewModel.setDuplicateAccountError(true)
-                onErrorToast(null, R.string.duplication_account_error)
-            }
-
             is SignUpUiState.Error -> {
                 viewModel.setError(true)
-                onErrorToast(
-                    (signUpUiState as SignUpUiState.Error).exception, R.string.sign_up_fail
-                )
+                onErrorToast((signUpUiState as SignUpUiState.Error).exception,null)
+            }
+
+            is SignUpUiState.Conflict -> {
+                viewModel.setError(true)
+                onErrorToast(null, R.string.conflict_info)
+            }
+
+            is SignUpUiState.NotSmsCheck -> {
+                viewModel.setError(true)
+                onErrorToast(null, R.string.not_sms_check)
             }
         }
     }

@@ -134,32 +134,39 @@ internal class SignUpViewModel @Inject constructor(
         setPasswordValidError(false)
         setPasswordMismatchError(false)
         setDuplicateAccountError(false)
-        _signUpUiState.value = SignUpUiState.Loading
         when {
             !email.value.checkEmailRegex() -> {
-                _signUpUiState.value = SignUpUiState.EmailValid
                 setEmailValidError(true)
             }
 
             password.value != rePassword.value -> {
-                _signUpUiState.value = SignUpUiState.PasswordMismatch
                 setPasswordMismatchError(true)
             }
 
             !password.value.checkPasswordRegex() -> {
-                _signUpUiState.value = SignUpUiState.PasswordValid
                 setPasswordValidError(true)
             }
 
             else -> {
                 signUpRequestUseCase(body = body)
-                    .onSuccess {
-                        it.catch { remoteError ->
-                            _signUpUiState.value = SignUpUiState.Error(remoteError)
-                        }.collect { _signUpUiState.value = SignUpUiState.Success }
-                    }
-                    .onFailure { error ->
-                        _signUpUiState.value = SignUpUiState.Error(error)
+                    .asResult()
+                    .collectLatest { result ->
+                        when (result) {
+                            is Result.Loading -> _signUpUiState.value = SignUpUiState.Loading
+                            is Result.Success -> _signUpUiState.value = SignUpUiState.Success
+                            is Result.Error -> {
+                                val exception = result.exception
+                                _signUpUiState.value = when {
+                                    exception is HttpException -> when (exception.code()) {
+                                        409 -> SignUpUiState.Conflict
+                                        404  -> SignUpUiState.NotSmsCheck
+                                        else -> SignUpUiState.Error(exception)
+                                    }
+
+                                    else -> SignUpUiState.Error(exception)
+                                }
+                            }
+                        }
                     }
             }
         }

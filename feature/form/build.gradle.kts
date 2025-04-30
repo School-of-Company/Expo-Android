@@ -9,6 +9,4 @@ android {
 
 dependencies {
     implementation(libs.retrofit.core)
-    implementation(libs.retrofit.kotlin.serialization)
-    implementation(libs.retrofit.moshi.converter)
 }

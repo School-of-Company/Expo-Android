@@ -7,8 +7,6 @@ fun TeacherTrainingProgramResponse.toEntity(): TeacherTrainingProgramResponseEnt
     TeacherTrainingProgramResponseEntity(
         id = this.id,
         name = this.name,
-        organization = this.organization,
-        position = this.position,
         programName = this.programName,
         status = this.status,
         entryTime = this.entryTime,

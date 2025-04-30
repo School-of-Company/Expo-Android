@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,6 +20,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
@@ -32,6 +34,7 @@ import com.school_of_company.design_system.R
 import com.school_of_company.design_system.component.button.ExpoStateButton
 import com.school_of_company.design_system.component.button.state.ButtonState
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
+import com.school_of_company.design_system.component.modifier.padding.paddingHorizontal
 import com.school_of_company.design_system.component.textfield.ExpoSearchIconTextField
 import com.school_of_company.design_system.component.topbar.ExpoTopBar
 import com.school_of_company.design_system.icon.LeftArrowIcon
@@ -54,18 +57,14 @@ internal fun ExpoAddressSearchRoute(
     val getCoordinatesUiState by viewModel.getCoordinatesUiState.collectAsStateWithLifecycle()
 
     val addressList by viewModel.addressList.collectAsStateWithLifecycle()
-    val location by viewModel.searched_location.collectAsStateWithLifecycle()
-    val coordinateX by viewModel.searched_coordinateX.collectAsStateWithLifecycle()
-    val coordinateY by viewModel.searched_coordinateY.collectAsStateWithLifecycle()
+    val location by viewModel.address.collectAsStateWithLifecycle()
+    val coordinateX by viewModel.coordinateX.collectAsStateWithLifecycle()
+    val coordinateY by viewModel.coordinateY.collectAsStateWithLifecycle()
 
     DisposableEffect(Unit) {
         onDispose {
             viewModel.initSearchedUiState()
         }
-    }
-
-    LaunchedEffect(Unit) {
-        viewModel.initSearchedData()
     }
 
     LaunchedEffect(getCoordinatesUiState) {
@@ -102,10 +101,10 @@ internal fun ExpoAddressSearchRoute(
         addressList = addressList,
         popUpBackStack = popUpBackStack,
         onLocationSearch = { viewModel.searchLocation(location) },
-        onLocationChange = viewModel::onSearchedLocationChange,
+        onLocationChange = viewModel::onAddressChange,
         onAddressItemClick = { item ->
             viewModel.convertJibunToXY(item)
-            viewModel.onSearchedLocationChange(item)
+            viewModel.onAddressChange(item)
         },
     )
 }
@@ -128,7 +127,11 @@ private fun ExpoAddressSearchScreen(
             modifier = modifier
                 .fillMaxSize()
                 .background(color = colors.white)
-                .padding(16.dp)
+                .paddingHorizontal(
+                    horizontal = 16.dp,
+                    top = 68.dp,
+                    bottom = 24.dp
+                )
                 .pointerInput(Unit) {
                     detectTapGestures(
                         onTap = {
@@ -138,7 +141,6 @@ private fun ExpoAddressSearchScreen(
                 },
         ) {
             ExpoTopBar(
-                modifier = Modifier.padding(vertical = 16.dp),
                 startIcon = {
                     LeftArrowIcon(
                         tint = colors.black,
@@ -146,6 +148,7 @@ private fun ExpoAddressSearchScreen(
                     )
                 },
                 betweenText = "장소",
+                modifier = Modifier.padding(bottom = 38.dp)
             )
 
             Column(modifier = Modifier.fillMaxWidth()) {
@@ -196,6 +199,7 @@ private fun ExpoAddressSearchScreen(
                     HomeKakaoMap(
                         locationX = coordinateX.toDouble(),
                         locationY = coordinateY.toDouble(),
+                        modifier = Modifier.clip(RoundedCornerShape(8.dp)),
                     )
                 }
             }
@@ -213,10 +217,8 @@ private fun ExpoAddressSearchScreen(
                 } else {
                     ButtonState.Disable
                 },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(14.dp),
-                onClick = popUpBackStack
+                onClick = popUpBackStack,
+                modifier = Modifier.fillMaxWidth()
             )
         }
     }

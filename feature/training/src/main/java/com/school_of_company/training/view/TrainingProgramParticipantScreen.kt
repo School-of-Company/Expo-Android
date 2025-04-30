@@ -223,17 +223,10 @@ private fun TrainingProgramParticipantScreen(
                     )
 
                     Text(
-                        text = "소속",
+                        text = "프로그램 이름",
                         style = typography.captionBold1,
                         color = colors.gray600,
                         modifier = Modifier.width(100.dp)
-                    )
-
-                    Text(
-                        text = "직급",
-                        style = typography.captionBold1,
-                        color = colors.gray600,
-                        modifier = Modifier.width(80.dp)
                     )
 
                     Text(

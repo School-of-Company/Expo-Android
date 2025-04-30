@@ -18,6 +18,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -67,7 +68,7 @@ internal fun SignInRoute(
         }
     }
 
-    DisposableEffect(signInUiState) {
+    LaunchedEffect(signInUiState) {
         when (signInUiState) {
             is SignInUiState.Loading -> Unit
             is SignInUiState.Success -> {
@@ -75,35 +76,20 @@ internal fun SignInRoute(
                 makeToast(context, "로그인 성공")
             }
 
-            is SignInUiState.NotFound -> {
-                viewModel.setNotFoundError(true)
-                onErrorToast(null, R.string.expection_not_found)
-            }
-
-            is SignInUiState.EmailNotValid -> {
-                viewModel.setIdError(true)
-                onErrorToast(null, R.string.expection_id_not_valid)
-            }
-
-            is SignInUiState.PasswordValid -> {
-                viewModel.setPasswordError(true)
-                onErrorToast(null, R.string.expection_password_valid)
-            }
-
-            is SignInUiState.BadRequest -> {
-                viewModel.setBadRequestError(true)
-                onErrorToast(null, R.string.expection_bad_request)
-            }
-
             is SignInUiState.Error -> {
-                viewModel.setError(true)
-                onErrorToast(
-                    (signInUiState as SignInUiState.Error).exception,
-                    R.string.expection_signIn
-                )
+                val error = signInUiState as SignInUiState.Error
+
+                when (error.errorType) {
+                    SignInUiState.ErrorType.PASSWORD -> viewModel.setPasswordError(true)
+                    SignInUiState.ErrorType.NOT_FOUND -> viewModel.setNotFoundError(true)
+                    SignInUiState.ErrorType.BAD_REQUEST -> viewModel.setBadRequestError(true)
+                    SignInUiState.ErrorType.SERVER, SignInUiState.ErrorType.GENERAL -> viewModel.setError(true)
+                    else -> Unit
+                }
+
+                onErrorToast(error.exception, error.messageResId)
             }
         }
-        onDispose { }
     }
 
     SignInScreen(

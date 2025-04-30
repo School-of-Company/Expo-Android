@@ -38,6 +38,7 @@ import com.school_of_company.expo.viewmodel.ExpoViewModel
 import com.school_of_company.expo.viewmodel.uistate.DeleteExpoInformationUiState
 import com.school_of_company.expo.viewmodel.uistate.GetExpoListUiState
 import com.school_of_company.model.entity.expo.ExpoListResponseEntity
+import com.school_of_company.ui.preview.ExpoPreviews
 import com.school_of_company.ui.toast.makeToast
 import kotlinx.collections.immutable.immutableListOf
 import kotlinx.collections.immutable.toPersistentList
@@ -57,7 +58,7 @@ internal fun ExpoCreatedRoute(
 
     val context = LocalContext.current
 
-    LaunchedEffect("initCreatedExpo") {
+    LaunchedEffect(Unit) {
         expoViewModel.getExpoList()
     }
 
@@ -71,6 +72,7 @@ internal fun ExpoCreatedRoute(
         when (deleteExpoInformationUiState) {
             is DeleteExpoInformationUiState.Loading -> Unit
             is DeleteExpoInformationUiState.Success -> {
+                setSelectedIndex(-1)
                 makeToast(context, "박람회가 삭제되었습니다.")
             }
             is DeleteExpoInformationUiState.Error -> {
@@ -143,7 +145,10 @@ private fun ExpoCreatedScreen(
                     when (getExpoListUiState) {
                         is GetExpoListUiState.Loading -> Unit
                         is GetExpoListUiState.Success -> {
-                            Column(horizontalAlignment = Alignment.CenterHorizontally,) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier.padding(horizontal = 8.dp)
+                            ) {
                                 CreatedExpoList(
                                     selectedIndex = selectedIndex,
                                     expoList = getExpoListUiState.data.toPersistentList(),
@@ -177,7 +182,7 @@ private fun ExpoCreatedScreen(
     }
 }
 
-@Preview
+@ExpoPreviews
 @Composable
 private fun ExpoCreatedScreenPreview() {
     ExpoCreatedScreen(

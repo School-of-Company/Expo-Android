@@ -23,6 +23,6 @@ class KakaoRepositoryImpl @Inject constructor(
         return kakaoLocalDataSource.getAddress(
             x = x,
             y = y,
-        ).transform { response -> (response.toModel()) }
+        ).transform { response -> emit(response.toModel()) }
     }
 }

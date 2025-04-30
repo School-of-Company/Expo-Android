@@ -7,8 +7,6 @@ fun StandardAttendListResponse.toModel(): StandardAttendListResponseEntity =
     StandardAttendListResponseEntity(
         id = id,
         name = this.name,
-        affiliation = this.affiliation,
-        position = this.position,
         programName = this.programName,
         status = this.status,
         entryTime = this.entryTime,

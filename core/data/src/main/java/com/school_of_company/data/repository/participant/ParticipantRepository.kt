@@ -4,5 +4,10 @@ import com.school_of_company.model.entity.participant.ParticipantInformationResp
 import kotlinx.coroutines.flow.Flow
 
 interface ParticipantRepository {
-    fun getParticipantInformationList(type: String, expoId: String, name: String? = null): Flow<List<ParticipantInformationResponseEntity>>
+    fun getParticipantInformationList(
+        expoId: String,
+        page: Int? = null,
+        size: Int? = null,
+        localDate: String? = null
+    ): Flow<ParticipantInformationResponseEntity>
 }

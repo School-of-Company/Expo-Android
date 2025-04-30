@@ -29,7 +29,6 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -47,7 +46,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -59,6 +62,7 @@ import com.school_of_company.design_system.R
 import com.school_of_company.design_system.component.bottomsheet.SettingBottomSheet
 import com.school_of_company.design_system.component.button.ExpoStateButton
 import com.school_of_company.design_system.component.button.state.ButtonState
+import com.school_of_company.design_system.component.loading.LoadingDot
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.component.modifier.padding.paddingHorizontal
 import com.school_of_company.design_system.component.textfield.ExpoLocationIconTextField
@@ -67,6 +71,8 @@ import com.school_of_company.design_system.component.textfield.NoneLimitedLength
 import com.school_of_company.design_system.icon.ImageIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
+import com.school_of_company.design_system.theme.color.ExpoColor
+import com.school_of_company.expo.enum.CurrentScreen
 import com.school_of_company.expo.view.component.ExpoAddTextField
 import com.school_of_company.expo.view.component.ExpoSettingBottomSheet
 import com.school_of_company.expo.view.component.ExpoStandardAddTextField
@@ -102,7 +108,9 @@ internal fun ExpoCreateRoute(
     val trainingProgramTextState by viewModel.trainingProgramTextState.collectAsStateWithLifecycle()
     val standardProgramTextState by viewModel.standardProgramTextState.collectAsStateWithLifecycle()
 
-    var selectedImageUri by rememberSaveable { mutableStateOf<Uri?>(null) }
+    var selectedImageUriString by rememberSaveable { mutableStateOf<String?>(null) }
+    var selectedImageUri: Uri? = selectedImageUriString?.let { Uri.parse(it) }
+
 
     val context = LocalContext.current
 
@@ -112,13 +120,14 @@ internal fun ExpoCreateRoute(
                 val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
                 context.contentResolver.openInputStream(uri)?.use { inputStream ->
                     BitmapFactory.decodeStream(inputStream, null, options)
+                    selectedImageUriString = uri.toString()
                     selectedImageUri = uri
                 }
             }
         }
 
-    LaunchedEffect("InitializeWithSearchedData") {
-        viewModel.initializeWithSearchedData()
+    LaunchedEffect(Unit) {
+        viewModel.setCurrentScreen(CurrentScreen.CREATE)
     }
 
     DisposableEffect(Unit) {
@@ -154,18 +163,26 @@ internal fun ExpoCreateRoute(
     }
 
     LaunchedEffect(registerExpoInformationUiState) {
-        when (registerExpoInformationUiState) {
-            is RegisterExpoInformationUiState.Loading -> Unit
-            is RegisterExpoInformationUiState.Success -> {
-                viewModel.resetExpoInformation()
-                selectedImageUri = null
-                makeToast(context, "박람회 등록을 완료하였습니다.")
-                viewModel.initRegisterExpo()
-            }
+        if (registerExpoInformationUiState is RegisterExpoInformationUiState.Success) {
+            viewModel.resetExpoInformation()
+            selectedImageUri = null
+            selectedImageUriString = null
+            makeToast(context, "박람회 등록을 완료하였습니다.")
+            viewModel.initRegisterExpo()
+        } else if (registerExpoInformationUiState is RegisterExpoInformationUiState.Error) {
+            onErrorToast(null, R.string.expo_register_fail)
+        }
+    }
 
-            is RegisterExpoInformationUiState.Error -> {
-                onErrorToast(null, R.string.expo_register_fail)
-            }
+    if (registerExpoInformationUiState is RegisterExpoInformationUiState.Loading) {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = ExpoColor.main)
+        ) {
+            LoadingDot()
         }
     }
 
@@ -184,7 +201,7 @@ internal fun ExpoCreateRoute(
         onStartedDateChange = viewModel::onStartedDateChange,
         onEndedDateChange = viewModel::onEndedDateChange,
         onIntroduceTitleChange = viewModel::onIntroduceTitleChange,
-        onAddressChange = viewModel::onAddressChange,
+        onLocationChange = viewModel::onLocationChange,
         onExpoCreateCallBack = {
             if (selectedImageUri != null) {
                 viewModel.imageUpLoad(context, selectedImageUri!!)
@@ -228,7 +245,7 @@ private fun ExpoCreateScreen(
     onEndedDateChange: (String) -> Unit,
     onModifyTitleChange: (String) -> Unit,
     onIntroduceTitleChange: (String) -> Unit,
-    onAddressChange: (String) -> Unit,
+    onLocationChange: (String) -> Unit,
     onRemoveTrainingProgram: (Int) -> Unit,
     onRemoveStandardProgram: (Int) -> Unit,
     onTrainingProgramChange: (Int, TrainingProRequestParam) -> Unit,
@@ -238,8 +255,8 @@ private fun ExpoCreateScreen(
     val (openTrainingSettingBottomSheet, isOpenTrainingSettingBottomSheet) = rememberSaveable { mutableStateOf(false) }
     val (openStandardSettingBottomSheet, isOpenStandardSettingBottomSheet) = rememberSaveable { mutableStateOf(false) }
 
-    var selectedTrainingIndex by remember { mutableStateOf<Int?>(null) }
-    var selectedStandardIndex by remember { mutableStateOf<Int?>(null) }
+    var selectedTrainingIndex by rememberSaveable { mutableStateOf<Int?>(null) }
+    var selectedStandardIndex by rememberSaveable { mutableStateOf<Int?>(null) }
 
     ExpoAndroidTheme { colors, typography ->
         Column(
@@ -260,9 +277,15 @@ private fun ExpoCreateScreen(
         ) {
             Column(modifier = Modifier.verticalScroll(scrollState)) {
                 Text(
-                    text = "사진",
-                    style = typography.bodyBold2,
-                    color = colors.black,
+                    text = buildAnnotatedString {
+                        withStyle(style = SpanStyle(color = colors.black)) {
+                            append("사진")
+                        }
+                        withStyle(style = SpanStyle(color = colors.main)) {
+                            append(" *")
+                        }
+                    },
+                    style = typography.bodyBold2
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -355,10 +378,42 @@ private fun ExpoCreateScreen(
                     )
                 }
 
+                Spacer(modifier = Modifier.height(3.dp))
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.Start),
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.expoClickable { onImageClick() }
+                ) {
+                    ImageIcon(
+                        tint = colors.gray300,
+                        modifier = Modifier.size(16.dp)
+                    )
+
+                    Text(
+                        text = "이미지 수정하기(클릭)",
+                        style = typography.captionRegular2,
+                        color = colors.gray300,
+                        textDecoration = TextDecoration.Underline
+                    )
+                }
+
                 Spacer(modifier = Modifier.padding(top = 28.dp))
 
                 LimitedLengthTextField(
-                    label = "제목",
+                    labelComposable = {
+                        Text(
+                            text = buildAnnotatedString {
+                                withStyle(style = SpanStyle(color = colors.black)) {
+                                    append("제목")
+                                }
+                                withStyle(style = SpanStyle(color = colors.main)) {
+                                    append(" *")
+                                }
+                            },
+                            style = typography.bodyBold2
+                        )
+                    },
                     value = modifyTitleState,
                     placeholder = "제목을 입력해주세요.",
                     isError = false,
@@ -369,7 +424,19 @@ private fun ExpoCreateScreen(
 
                 Row(horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.Start)) {
                     LimitedLengthTextField(
-                        label = "모집기간",
+                        labelComposable = {
+                            Text(
+                                text = buildAnnotatedString {
+                                    withStyle(style = SpanStyle(color = colors.black)) {
+                                        append("행사 기간")
+                                    }
+                                    withStyle(style = SpanStyle(color = colors.main)) {
+                                        append(" *")
+                                    }
+                                },
+                                style = typography.bodyBold2
+                            )
+                        },
                         value = startedDateState,
                         lengthLimit = 8,
                         showLengthCounter = false,
@@ -382,6 +449,13 @@ private fun ExpoCreateScreen(
                     )
 
                     LimitedLengthTextField(
+                        labelComposable = {
+                            Text(
+                                text = "행사기간",
+                                color = colors.white,
+                                style = typography.bodyBold2
+                            )
+                        },
                         value = endedDateState,
                         lengthLimit = 8,
                         showLengthCounter = false,
@@ -415,8 +489,19 @@ private fun ExpoCreateScreen(
                 Spacer(modifier = Modifier.padding(top = 28.dp))
 
                 LimitedLengthTextField(
-                    label = "소개글",
-                    value = introduceTitleState,
+                    labelComposable = {
+                        Text(
+                            text = buildAnnotatedString {
+                                withStyle(style = SpanStyle(color = colors.black)) {
+                                    append("소개글")
+                                }
+                                withStyle(style = SpanStyle(color = colors.main)) {
+                                    append(" *")
+                                }
+                            },
+                            style = typography.bodyBold2
+                        )
+                    },                    value = introduceTitleState,
                     placeholder = "소개글을 작성해주세요.",
                     isError = false,
                     updateTextValue = onIntroduceTitleChange,
@@ -428,7 +513,7 @@ private fun ExpoCreateScreen(
 
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top)) {
                     Text(
-                        text = "참가자 연수 종류",
+                        text = "참가자 프로그램",
                         style = typography.bodyBold2,
                         color = colors.black,
                     )
@@ -452,7 +537,7 @@ private fun ExpoCreateScreen(
                     Spacer(modifier = Modifier.padding(top = 28.dp))
 
                     Text(
-                        text = "연수자 연수 종류",
+                        text = "연수자 프로그램",
                         style = typography.bodyBold2,
                         color = colors.black,
                     )
@@ -477,24 +562,29 @@ private fun ExpoCreateScreen(
 
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top)) {
                         Text(
-                            text = "장소",
-                            style = typography.bodyRegular2,
-                            color = colors.gray600,
-                            fontWeight = FontWeight.W600,
+                            text = buildAnnotatedString {
+                                withStyle(style = SpanStyle(color = colors.black)) {
+                                    append("장소")
+                                }
+                                withStyle(style = SpanStyle(color = colors.main)) {
+                                    append(" *")
+                                }
+                            },
+                            style = typography.bodyBold2
                         )
 
                         ExpoLocationIconTextField(
-                            placeholder = "위치를 알려주세요.",
+                            placeholder = "장소를 선택해주세요.",
                             isDisabled = true,
                             onButtonClicked = navigateToExpoAddressSearch,
-                            value = locationState,
+                            value = addressState,
                             onValueChange = { _ -> },
                         )
 
                         NoneLimitedLengthTextField(
-                            value = addressState,
+                            value = locationState,
                             placeholder = "상세주소를 입력해주세요.",
-                            updateTextValue = onAddressChange
+                            updateTextValue = onLocationChange
                         )
                     }
 
@@ -504,27 +594,28 @@ private fun ExpoCreateScreen(
 
                     ExpoStateButton(
                         text = "생성하기",
-                        state = if (
+                        state = when {
                             modifyTitleState.isNotEmpty() &&
-                            startedDateState.isNotEmpty() &&
-                            endedDateState.isNotEmpty() &&
-                            introduceTitleState.isNotEmpty() &&
-                            addressState.isNotEmpty() &&
-                            locationState.isNotEmpty() &&
-                            trainingProgramTextState.isNotEmpty() &&
-                            standardProgramTextState.isNotEmpty() &&
-                            startedDateState.isValidDateSequence(endedDateState)
-                        ) {
-                            ButtonState.Enable
-                        } else {
-                            ButtonState.Disable
+                                    startedDateState.isNotEmpty() &&
+                                    endedDateState.isNotEmpty() &&
+                                    introduceTitleState.isNotEmpty() &&
+                                    addressState.isNotEmpty() &&
+                                    locationState.isNotEmpty() &&
+                                    startedDateState.isValidDateSequence(endedDateState) -> {
+                                if (trainingProgramTextState.isEmpty() && standardProgramTextState.isEmpty()) {
+                                    ButtonState.Enable
+                                } else if (trainingProgramTextState.all { it.title.isNotEmpty() && it.startedAt.isNotEmpty() && it.endedAt.isNotEmpty() } &&
+                                    standardProgramTextState.all { it.title.isNotEmpty() && it.startedAt.isNotEmpty() && it.endedAt.isNotEmpty() }) {
+                                    ButtonState.Enable
+                                } else {
+                                    ButtonState.Disable
+                                }
+                            }
+                            else -> ButtonState.Disable
                         },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(14.dp),
-                        onClick = onExpoCreateCallBack
+                        onClick = onExpoCreateCallBack,
+                        modifier = Modifier.fillMaxWidth(),
                     )
-
 
                     Spacer(modifier = Modifier.height(48.dp))
                 }
@@ -602,7 +693,7 @@ private fun ExpoCreateScreenPreview() {
         onEndedDateChange = {},
         onModifyTitleChange = {},
         onIntroduceTitleChange = {},
-        onAddressChange = {},
+        onLocationChange = {},
         onRemoveTrainingProgram = {},
         onRemoveStandardProgram = {},
         navigateToExpoAddressSearch = {},

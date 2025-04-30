@@ -1,6 +1,7 @@
 package com.school_of_company.model.model.form
 
 data class FormRequestAndResponseModel(
+    val informationText: String,
     val participantType: String, // TRAINEE, STANDARD
     val dynamicForm: List<DynamicFormModel>,
 )

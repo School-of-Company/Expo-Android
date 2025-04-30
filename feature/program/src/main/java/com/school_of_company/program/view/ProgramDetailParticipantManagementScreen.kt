@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,6 +24,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -48,7 +51,11 @@ import com.school_of_company.design_system.icon.SearchIcon
 import com.school_of_company.design_system.icon.UpArrowIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
-import com.school_of_company.program.enum.ParticipantEnum
+import com.school_of_company.model.entity.participant.PageInfoEntity
+import com.school_of_company.model.entity.participant.ParticipantEntity
+import com.school_of_company.model.entity.participant.ParticipantInformationResponseEntity
+import com.school_of_company.program.view.component.LocalDateButton
+import com.school_of_company.program.view.component.PageIndicator
 import com.school_of_company.program.view.component.ProgramDetailParticipantDropdownMenu
 import com.school_of_company.program.view.component.ProgramDetailParticipantManagementList
 import com.school_of_company.program.view.component.ProgramDetailParticipantTable
@@ -57,58 +64,36 @@ import com.school_of_company.program.view.component.ProgramTraineeTable
 import com.school_of_company.program.viewmodel.ProgramViewModel
 import com.school_of_company.program.viewmodel.uistate.ParticipantResponseListUiState
 import com.school_of_company.program.viewmodel.uistate.TraineeResponseListUiState
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.delay
+import java.time.LocalDate
 
 @Composable
 internal fun ProgramDetailParticipantManagementRoute(
     modifier: Modifier = Modifier,
     id: String,
+    startDate: String,
+    endDate: String,
     onBackClick: () -> Unit,
-    viewModel: ProgramViewModel = hiltViewModel()
+    viewModel: ProgramViewModel = hiltViewModel(),
 ) {
     val swipeRefreshLoading by viewModel.swipeRefreshLoading.collectAsStateWithLifecycle()
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = swipeRefreshLoading)
 
-    val participantAheadResponseListUiState by viewModel.participantAheadResponseListUiState.collectAsStateWithLifecycle()
-    val participantFieldResponseListUiState by viewModel.participantFieldResponseListUiState.collectAsStateWithLifecycle()
+    val participantListUiState by viewModel.participantListUiState.collectAsStateWithLifecycle()
     val traineeInformationUiState by viewModel.traineeResponseListUiState.collectAsStateWithLifecycle()
 
-    val fieldParticipantName by viewModel.fieldParticipantName.collectAsStateWithLifecycle()
-    val preParticipantName by viewModel.preParticipantName.collectAsStateWithLifecycle()
     val traineeName by viewModel.traineeName.collectAsStateWithLifecycle()
+    val currentPage by viewModel.currentPage.collectAsStateWithLifecycle()
+    var selectedDate by rememberSaveable { mutableStateOf<LocalDate?>(null) }
 
     LaunchedEffect(id) {
 
         viewModel.getParticipantInformationList(
             expoId = id,
-            type = ParticipantEnum.PRE
-        )
-
-        viewModel.getParticipantInformationList(
-            expoId = id,
-            type = ParticipantEnum.FIELD
+            currentPage = 0,
         )
 
         viewModel.getTraineeList(expoId = id)
-    }
-
-    LaunchedEffect(preParticipantName) {
-        delay(300L)
-        viewModel.getParticipantInformationList(
-            expoId = id,
-            type = ParticipantEnum.PRE,
-            name = preParticipantName
-        )
-    }
-
-    LaunchedEffect(fieldParticipantName) {
-        delay(300L)
-        viewModel.getParticipantInformationList(
-            expoId = id,
-            type = ParticipantEnum.FIELD,
-            name = fieldParticipantName
-        )
     }
 
     LaunchedEffect(traineeName) {
@@ -119,37 +104,40 @@ internal fun ProgramDetailParticipantManagementRoute(
         )
     }
 
+    LaunchedEffect(selectedDate, currentPage) {
+        delay(300L)
+        viewModel.getParticipantInformationList(
+            expoId = id,
+            localDate = selectedDate.toString(),
+            currentPage = currentPage,
+        )
+    }
+
     ProgramDetailParticipantManagementScreen(
         modifier = modifier,
         swipeRefreshState = swipeRefreshState,
-        participantAheadResponseListUiState = participantAheadResponseListUiState,
-        participantFieldResponseListUiState = participantFieldResponseListUiState,
+        participantListUiState = participantListUiState,
         traineeInformationUiState = traineeInformationUiState,
-        fieldParticipantName = fieldParticipantName,
-        preParticipantName = preParticipantName,
+        selectedDate = selectedDate,
+        startDate = LocalDate.parse(startDate),
+        endDate = LocalDate.parse(endDate),
+        currentPage = currentPage,
         traineeName = traineeName,
         onBackClick = onBackClick,
-        onFieldParticipantNameChange = viewModel::onFieldParticipantNameChange,
-        onPreParticipantNameChange = viewModel::onPreParticipantNameChange,
+        onSelectedDateChange = { selectedDate = it },
         onTraineeNameChange = viewModel::onTraineeNameChange,
-        getAheadParticipantList = { name ->
+        onCurrentPageChange = viewModel::onCurrentPageChange,
+        getParticipantList = {
             viewModel.getParticipantInformationList(
                 expoId = id,
-                type = ParticipantEnum.PRE,
-                name = name
+                localDate = selectedDate.toString(),
+                currentPage = currentPage,
             )
         },
-        getFieldParticipantList = { name ->
-            viewModel.getParticipantInformationList(
-                expoId = id,
-                type = ParticipantEnum.FIELD,
-                name = name
-            )
-        },
-        getTraineeList = { name ->
+        getTraineeList = {
             viewModel.getTraineeList(
                 expoId = id,
-                name = name
+                name = traineeName,
             )
         },
     )
@@ -161,24 +149,29 @@ private fun ProgramDetailParticipantManagementScreen(
     swipeRefreshState: SwipeRefreshState,
     scrollState: ScrollState = rememberScrollState(),
     focusManager: FocusManager = LocalFocusManager.current,
-    fieldParticipantName: String,
-    preParticipantName: String,
+    selectedDate: LocalDate?,
+    startDate: LocalDate,
+    endDate: LocalDate,
+    currentPage: Int,
     traineeName: String,
-    participantAheadResponseListUiState: ParticipantResponseListUiState,
-    participantFieldResponseListUiState: ParticipantResponseListUiState,
+    participantListUiState: ParticipantResponseListUiState,
     traineeInformationUiState: TraineeResponseListUiState,
     onBackClick: () -> Unit,
-    onFieldParticipantNameChange: (String) -> Unit,
-    onPreParticipantNameChange: (String) -> Unit,
+    onSelectedDateChange: (LocalDate?) -> Unit,
     onTraineeNameChange: (String) -> Unit,
-    getAheadParticipantList: (String?) -> Unit,
-    getFieldParticipantList: (String?) -> Unit,
-    getTraineeList: (String?) -> Unit,
+    onCurrentPageChange: (Int) -> Unit,
+    getParticipantList: () -> Unit,
+    getTraineeList: () -> Unit,
 ) {
-    var participantTextState by rememberSaveable { mutableStateOf("사전 행사 참가자") }
+    var participantTextState by rememberSaveable { mutableStateOf("사전 & 현장 행사 참가자") }
     var isDropdownExpanded by rememberSaveable { mutableStateOf(false) }
     var selectedItem by rememberSaveable { mutableIntStateOf(0) }
 
+    val dateList = remember {
+        generateSequence(startDate) { it.plusDays(1) }
+            .takeWhile { !it.isAfter(endDate) }
+            .toList()
+    }
 
     ExpoAndroidTheme { colors, typography ->
 
@@ -200,7 +193,7 @@ private fun ProgramDetailParticipantManagementScreen(
                         modifier = Modifier.expoClickable { onBackClick() }
                     )
                 },
-                betweenText = "참가자 관리",
+                betweenText = "참가자 조회",
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
 
@@ -230,20 +223,24 @@ private fun ProgramDetailParticipantManagementScreen(
                 }
             }
 
-            Box(modifier = Modifier.padding(start = 16.dp, top = 10.dp)) {
+            Box(
+                modifier = Modifier.padding(
+                    start = 16.dp,
+                    top = 10.dp
+                ),
+            ) {
                 if (isDropdownExpanded) {
+
                     ProgramDetailParticipantDropdownMenu(
                         onCancelClick = { isDropdownExpanded = false },
-                        onExpandClick = isDropdownExpanded,
                         selectedItem = selectedItem,
                         onItemSelected = { index ->
                             selectedItem = index
                             isDropdownExpanded = false
 
                             participantTextState = when (index) {
-                                0 -> "사전 행사 참가자"
-                                1 -> "현장 행사 참가자"
-                                2 -> "사전 교원 원수 참가자"
+                                0 -> "사전 & 현장 행사 참가자"
+                                1 -> "교원 원수 참가자"
                                 else -> participantTextState
                             }
                         },
@@ -287,7 +284,7 @@ private fun ProgramDetailParticipantManagementScreen(
 
                     when (selectedItem) {
                         0 -> {
-                            when (participantAheadResponseListUiState) {
+                            when (participantListUiState) {
                                 is ParticipantResponseListUiState.Loading -> {
                                     Text(
                                         text = "로딩중..",
@@ -298,7 +295,7 @@ private fun ProgramDetailParticipantManagementScreen(
 
                                 is ParticipantResponseListUiState.Success -> {
                                     Text(
-                                        text = "${participantAheadResponseListUiState.data.size}명",
+                                        text = "${participantListUiState.data.info.totalElement}명",
                                         style = typography.captionRegular2,
                                         color = colors.main
                                     )
@@ -323,42 +320,6 @@ private fun ProgramDetailParticipantManagementScreen(
                         }
 
                         1 -> {
-                            when (participantFieldResponseListUiState) {
-                                is ParticipantResponseListUiState.Loading -> {
-                                    Text(
-                                        text = "로딩중..",
-                                        style = typography.captionRegular2,
-                                        color = colors.main
-                                    )
-                                }
-
-                                is ParticipantResponseListUiState.Success -> {
-                                    Text(
-                                        text = "${participantFieldResponseListUiState.data.size}명",
-                                        style = typography.captionRegular2,
-                                        color = colors.main
-                                    )
-                                }
-
-                                is ParticipantResponseListUiState.Error -> {
-                                    Text(
-                                        text = "데이터를 불러올 수 없습니다..",
-                                        style = typography.captionRegular2,
-                                        color = colors.main
-                                    )
-                                }
-
-                                is ParticipantResponseListUiState.Empty -> {
-                                    Text(
-                                        text = "0명",
-                                        style = typography.captionRegular2,
-                                        color = colors.main
-                                    )
-                                }
-                            }
-                        }
-
-                        2 -> {
                             when (traineeInformationUiState) {
                                 is TraineeResponseListUiState.Loading -> {
                                     Text(
@@ -399,40 +360,50 @@ private fun ProgramDetailParticipantManagementScreen(
 
             Spacer(modifier = Modifier.height(18.dp))
 
-            ExpoNoneLabelTextField(
-                placeholder = "참가자 이름을 입력해주세요.",
-                isError = false,
-                isDisabled = false,
-                errorText = "",
-                value = when (selectedItem) {
-                    0 -> preParticipantName
-                    1 -> fieldParticipantName
-                    2 -> traineeName
-                    else -> ""
-                },
-                onValueChange = when (selectedItem) {
-                    0 -> onPreParticipantNameChange
-                    1 -> onFieldParticipantNameChange
-                    2 -> onTraineeNameChange
-                    else -> ({})
-                },
-                trailingIcon = {
-                    SearchIcon(
-                        tint = colors.black,
-                        modifier = Modifier.clickable {
-                            when (selectedItem) {
-                                0 -> getAheadParticipantList(preParticipantName)
-                                1 -> getFieldParticipantList(fieldParticipantName)
-                                2 -> getTraineeList(traineeName)
+            if (selectedItem != 2) {
+
+                LazyRow(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(dateList) { date: LocalDate ->
+                        LocalDateButton(
+                            date = date,
+                            selected = selectedDate == date,
+                            onClick = {
+                                if (selectedDate == date) {
+                                    onSelectedDateChange(null)
+                                } else {
+                                    onSelectedDateChange(date)
+                                }
                             }
-                        }
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(44.dp)
-                    .padding(horizontal = 16.dp)
-            )
+                        )
+                    }
+                }
+            }
+
+            if (selectedItem == 2) {
+                ExpoNoneLabelTextField(
+                    placeholder = "참가자 이름을 입력해주세요.",
+                    isError = false,
+                    isDisabled = false,
+                    errorText = "",
+                    value = traineeName,
+                    onValueChange = onTraineeNameChange,
+                    trailingIcon = {
+                        SearchIcon(
+                            tint = colors.black,
+                            modifier = Modifier.clickable(onClick = getTraineeList)
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(44.dp)
+                        .padding(horizontal = 16.dp)
+                )
+            }
 
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -441,9 +412,8 @@ private fun ProgramDetailParticipantManagementScreen(
                 state = swipeRefreshState,
                 onRefresh = {
                     when (selectedItem) {
-                        0 -> getAheadParticipantList(null)
-                        1 -> getFieldParticipantList(null)
-                        2 -> getTraineeList(null)
+                        0 -> getParticipantList()
+                        1 -> getTraineeList()
                     }
                 },
                 indicator = { state, refreshTrigger ->
@@ -456,29 +426,42 @@ private fun ProgramDetailParticipantManagementScreen(
             ) {
                 when (selectedItem) {
                     0 -> {
-                        when (participantAheadResponseListUiState) {
+                        when (participantListUiState) {
                             is ParticipantResponseListUiState.Loading -> Unit
                             is ParticipantResponseListUiState.Success -> {
-                                Column {
+                                val data = participantListUiState.data
+
+                                Column (horizontalAlignment = Alignment.CenterHorizontally){
                                     ProgramDetailParticipantTable(scrollState = scrollState)
 
                                     ProgramDetailParticipantManagementList(
+                                        modifier = Modifier.weight(1f),
                                         scrollState = scrollState,
-                                        item = participantAheadResponseListUiState.data.toImmutableList()
+                                        item = data
                                     )
+
+                                    Spacer(modifier = Modifier.height(16.dp))
+
+                                    PageIndicator(
+                                        totalPages = data.info.totalPage,
+                                        currentPage = currentPage,
+                                        onCurrentPageChange = onCurrentPageChange,
+                                    )
+
+                                    Spacer(modifier = Modifier.height(16.dp))
                                 }
                             }
 
                             is ParticipantResponseListUiState.Error -> {
                                 ShowErrorState(
-                                    errorText = "사전 행사 참가자를 불러올 수 없습니다..",
+                                    errorText = "행사 참가자를 불러올 수 없습니다..",
                                     scrollState = scrollState
                                 )
                             }
 
                             is ParticipantResponseListUiState.Empty -> {
                                 ShowEmptyState(
-                                    emptyMessage = "사전 행사 참가자가 존재하지 않습니다..",
+                                    emptyMessage = "행사 참가자가 존재하지 않습니다..",
                                     scrollState = scrollState
                                 )
                             }
@@ -486,38 +469,6 @@ private fun ProgramDetailParticipantManagementScreen(
                     }
 
                     1 -> {
-                        when (participantFieldResponseListUiState) {
-                            is ParticipantResponseListUiState.Loading -> Unit
-                            is ParticipantResponseListUiState.Success -> {
-                                Column {
-                                    ProgramDetailParticipantTable(scrollState = scrollState)
-
-                                    ProgramDetailParticipantManagementList(
-                                        scrollState = scrollState,
-                                        item = participantFieldResponseListUiState.data.toImmutableList()
-                                    )
-                                }
-                            }
-
-                            is ParticipantResponseListUiState.Error -> {
-                                ShowErrorState(
-                                    errorText = "현장 행사 참가자를 불러올 수 없습니다..",
-                                    scrollState = scrollState
-                                )
-                            }
-
-                            is ParticipantResponseListUiState.Empty -> {
-
-                                ShowEmptyState(
-                                    emptyMessage = "현장 행사 참가자가 존재하지 않습니다..",
-                                    scrollState = scrollState
-                                )
-
-                            }
-                        }
-                    }
-
-                    2 -> {
                         when (traineeInformationUiState) {
                             is TraineeResponseListUiState.Loading -> Unit
                             is TraineeResponseListUiState.Success -> {
@@ -526,21 +477,21 @@ private fun ProgramDetailParticipantManagementScreen(
 
                                     ProgramTraineeList(
                                         scrollState = scrollState,
-                                        item = traineeInformationUiState.data.toImmutableList()
+                                        item = traineeInformationUiState.data
                                     )
                                 }
                             }
 
                             is TraineeResponseListUiState.Error -> {
                                 ShowErrorState(
-                                    errorText = "사전 교원 원수를 불러올 수 없습니다..",
+                                    errorText = "교원 원수를 불러올 수 없습니다..",
                                     scrollState = scrollState
                                 )
                             }
 
                             is TraineeResponseListUiState.Empty -> {
                                 ShowEmptyState(
-                                    emptyMessage = "사전 교원 원수가 존재하지 않습니다..",
+                                    emptyMessage = "교원 원수가 존재하지 않습니다..",
                                     scrollState = scrollState
                                 )
                             }
@@ -556,19 +507,60 @@ private fun ProgramDetailParticipantManagementScreen(
 @Composable
 private fun HomeDetailParticipantManagementScreenPreview() {
     ProgramDetailParticipantManagementScreen(
-        onBackClick = {},
         swipeRefreshState = rememberSwipeRefreshState(isRefreshing = false),
-        participantAheadResponseListUiState = ParticipantResponseListUiState.Loading,
-        participantFieldResponseListUiState = ParticipantResponseListUiState.Loading,
-        traineeInformationUiState = TraineeResponseListUiState.Loading,
-        fieldParticipantName = "",
-        preParticipantName = "",
+        selectedDate = LocalDate.now(),
         traineeName = "",
-        onFieldParticipantNameChange = {},
-        onPreParticipantNameChange = {},
+        currentPage = 0,
+        participantListUiState = ParticipantResponseListUiState.Success(
+            ParticipantInformationResponseEntity(
+                info = PageInfoEntity(1, 10), participant = listOf(
+                    ParticipantEntity(
+                        id = 1,
+                        name = "John Doe",
+                        phoneNumber = "1234567890",
+                        informationStatus = true
+                    ),
+                    ParticipantEntity(
+                        id = 2,
+                        name = "Jane Smith",
+                        phoneNumber = "0987654321",
+                        informationStatus = false
+                    ),
+                    ParticipantEntity(
+                        id = 3,
+                        name = "Alice Johnson",
+                        phoneNumber = "1122334455",
+                        informationStatus = true,
+                    ),
+                    ParticipantEntity(
+                        id = 1,
+                        name = "John Doe",
+                        phoneNumber = "1234567890",
+                        informationStatus = true
+                    ),
+                    ParticipantEntity(
+                        id = 2,
+                        name = "Jane Smith",
+                        phoneNumber = "0987654321",
+                        informationStatus = false
+                    ),
+                    ParticipantEntity(
+                        id = 3,
+                        name = "Alice Johnson",
+                        phoneNumber = "1122334455",
+                        informationStatus = true,
+                    )
+                )
+            ),
+        ),
+        traineeInformationUiState = TraineeResponseListUiState.Loading,
+        onBackClick = {},
         onTraineeNameChange = {},
-        getAheadParticipantList = {},
-        getFieldParticipantList = {},
+        getParticipantList = {},
         getTraineeList = {},
+        onSelectedDateChange = { _ -> },
+        onCurrentPageChange = { _ -> },
+        endDate = LocalDate.of(2025, 5, 30),
+        startDate = LocalDate.of(2025, 5, 19),
     )
 }

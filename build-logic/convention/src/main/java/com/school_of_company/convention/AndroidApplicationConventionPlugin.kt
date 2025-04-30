@@ -26,13 +26,16 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                 // Apply common Kotlin Android settings
                 configureKotlinAndroid(this)
 
+                // Compile SDK - 34 Version
+                compileSdk = 34
+
                 // Configure default settings for the application
                 defaultConfig {
                     applicationId = "com.school_of_company.expo_android"
                     minSdk = 26
-                    targetSdk = 30
-                    versionCode = 1
-                    versionName = "1.0"
+                    targetSdk = 34
+                    versionCode = 20250426
+                    versionName = "1.2"
                     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
                     vectorDrawables.useSupportLibrary = true
@@ -44,8 +47,8 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                 // Configure build types
                 buildTypes {
                     getByName("release") {
-                        isMinifyEnabled = true
-                        isShrinkResources = true
+                        isMinifyEnabled = false
+                        isShrinkResources = false
                         isDebuggable = false
                         proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
                     }

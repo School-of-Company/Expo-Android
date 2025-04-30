@@ -2,6 +2,7 @@ package com.school_of_company.domain.usecase.sms
 
 import android.util.Log
 import com.school_of_company.data.repository.sms.SmsRepository
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class SmsSignUpCertificationNumberCertificationRequestUseCase @Inject constructor(

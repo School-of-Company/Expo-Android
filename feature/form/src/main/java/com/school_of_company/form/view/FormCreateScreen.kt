@@ -26,13 +26,17 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.school_of_company.design_system.R
 import com.school_of_company.design_system.component.button.ExpoButton
+import com.school_of_company.design_system.component.button.ExpoStateButton
+import com.school_of_company.design_system.component.button.state.ButtonState
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
+import com.school_of_company.design_system.component.modifier.padding.paddingHorizontal
 import com.school_of_company.design_system.component.topbar.ExpoTopBar
 import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.form.enum.FormType
 import com.school_of_company.form.view.component.FormAddButton
 import com.school_of_company.form.view.component.FormCard
+import com.school_of_company.form.view.component.PersonaInformationFormCard
 import com.school_of_company.form.viewModel.FormViewModel
 import com.school_of_company.form.viewModel.uiState.FormUiState
 import com.school_of_company.model.model.form.DynamicFormModel
@@ -42,20 +46,22 @@ internal fun FormCreateRoute(
     modifier: Modifier = Modifier,
     expoId: String,
     participantType: String,
+    navigateToExpoNavigationHome: () -> Unit,
     popUpBackStack: () -> Unit,
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
     viewModel: FormViewModel = hiltViewModel(),
 ) {
     val formState by viewModel.formState.collectAsStateWithLifecycle()
     val formUiState by viewModel.formUiState.collectAsStateWithLifecycle()
+    val informationTextState by viewModel.informationTextState.collectAsStateWithLifecycle()
 
     LaunchedEffect(formUiState) {
         when (formUiState) {
             is FormUiState.Loading -> Unit
             is FormUiState.Success -> {
-                popUpBackStack()
-                onErrorToast(null, R.string.form_create_success)
+                navigateToExpoNavigationHome()
             }
+
             is FormUiState.Error -> {
                 onErrorToast(null, R.string.form_create_fail)
             }
@@ -64,11 +70,13 @@ internal fun FormCreateRoute(
 
     FormCreateScreen(
         modifier = modifier,
+        informationTextState = informationTextState,
         formList = formState,
         popUpBackStack = popUpBackStack,
         addFormAtList = viewModel::addEmptyDynamicFormItem,
-        createForm = { viewModel.createForm(expoId, participantType) },
+        createForm = { viewModel.createForm(expoId, participantType, informationTextState) },
         deleteForm = viewModel::removeDynamicFormItem,
+        onInformationTextStateChange = viewModel::setInformationTextState,
         onFormDataChange = viewModel::updateDynamicFormItem
     )
 }
@@ -76,6 +84,7 @@ internal fun FormCreateRoute(
 @Composable
 private fun FormCreateScreen(
     modifier: Modifier = Modifier,
+    informationTextState: String,
     formList: List<DynamicFormModel>,
     focusManager: FocusManager = LocalFocusManager.current,
     scrollState: ScrollState = rememberScrollState(),
@@ -83,15 +92,16 @@ private fun FormCreateScreen(
     addFormAtList: () -> Unit,
     createForm: () -> Unit,
     deleteForm: (Int) -> Unit,
+    onInformationTextStateChange: (String) -> Unit,
     onFormDataChange: (Int, DynamicFormModel) -> Unit,
 ) {
     ExpoAndroidTheme { colors, _ ->
         Column(
             modifier = modifier
-                .verticalScroll(scrollState)
                 .fillMaxSize()
+                .verticalScroll(scrollState)
                 .background(color = colors.white)
-                .padding(16.dp)
+                .padding(horizontal = 16.dp,)
                 .pointerInput(Unit) {
                     detectTapGestures(
                         onTap = {
@@ -108,7 +118,10 @@ private fun FormCreateScreen(
                     )
                 },
                 betweenText = "신정차 폼",
-                modifier = Modifier.padding(vertical = 16.dp),
+                modifier = Modifier.padding(
+                    top = 68.dp,
+                    bottom = 16.dp
+                ),
             )
 
             Column(
@@ -124,6 +137,11 @@ private fun FormCreateScreen(
                     )
                 }
 
+                PersonaInformationFormCard(
+                    value = informationTextState,
+                    onTextChange = onInformationTextStateChange
+                )
+
                 FormAddButton(onClick = addFormAtList)
             }
 
@@ -131,15 +149,25 @@ private fun FormCreateScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            ExpoButton(
-                text = "다음",
-                color = colors.main,
+            ExpoStateButton(
+                text = "생성 완료",
+                state = if (
+                    informationTextState.isNotEmpty() &&
+                    formList.isNotEmpty() &&
+                    formList.all { form ->
+                        when (FormType.valueOf(form.formType)) {
+                            FormType.SENTENCE -> form.title.isNotEmpty()
+                            FormType.CHECKBOX, FormType.DROPDOWN, FormType.MULTIPLE ->
+                                form.title.isNotEmpty() &&
+                                form.itemList.isNotEmpty() &&
+                                form.itemList.all { it.isNotEmpty() }
+                        }
+                    }) ButtonState.Enable else ButtonState.Disable,
                 onClick = createForm,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(46.dp)
-                    .padding(vertical = 12.dp),
+                modifier = Modifier.fillMaxWidth()
             )
+
+            Spacer(modifier = Modifier.padding(bottom = 28.dp))
         }
     }
 }
@@ -148,18 +176,8 @@ private fun FormCreateScreen(
 @Composable
 private fun FormCreateScreenPreview() {
     FormCreateScreen(
-        addFormAtList = { },
-        onFormDataChange = { _, _ -> },
-        createForm = {},
-        deleteForm = { _ -> },
+        informationTextState = "informationTextState",
         formList = listOf(
-            DynamicFormModel(
-                title = "제목",
-                formType = FormType.DROPDOWN.name,
-                itemList = listOf("예시", "예시 1"),
-                requiredStatus = true,
-                otherJson = true,
-            ),
             DynamicFormModel(
                 title = "제목",
                 formType = FormType.DROPDOWN.name,
@@ -169,5 +187,10 @@ private fun FormCreateScreenPreview() {
             ),
         ),
         popUpBackStack = {},
+        addFormAtList = { },
+        createForm = {},
+        deleteForm = { _ -> },
+        onFormDataChange = { _, _ -> },
+        onInformationTextStateChange = { _ -> },
     )
 }

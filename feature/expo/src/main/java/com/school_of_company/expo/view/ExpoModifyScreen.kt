@@ -46,7 +46,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -68,6 +72,7 @@ import com.school_of_company.design_system.icon.ImageIcon
 import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
+import com.school_of_company.expo.enum.CurrentScreen
 import com.school_of_company.expo.view.component.ExpoAddModifyTextField
 import com.school_of_company.expo.view.component.ExpoSettingModifyBottomSheet
 import com.school_of_company.expo.view.component.ExpoStandardAddModifyTextField
@@ -108,7 +113,8 @@ internal fun ExpoModifyRoute(
 
     val context = LocalContext.current
 
-    val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+    val galleryLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             if (uri != null) {
                 val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
                 context.contentResolver.openInputStream(uri)?.use { inputStream ->
@@ -119,6 +125,19 @@ internal fun ExpoModifyRoute(
             }
         }
 
+    LaunchedEffect(imageUpLoadUiState) {
+        when (imageUpLoadUiState) {
+            is ImageUpLoadUiState.Error -> {
+                onErrorToast(null, R.string.expo_image_fail)
+            }
+            else -> Unit
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.setCurrentScreen(CurrentScreen.MODIFY)
+    }
+
     LaunchedEffect(id) {
         viewModel.getExpoInformation(id)
         viewModel.getStandardProgramList(id)
@@ -128,34 +147,12 @@ internal fun ExpoModifyRoute(
     DisposableEffect(Unit) {
         onDispose {
             viewModel.resetExpoInformation()
-            viewModel.initModifyExpo()
         }
     }
 
-    LaunchedEffect(imageUpLoadUiState) {
-        when (imageUpLoadUiState) {
-            is ImageUpLoadUiState.Loading -> Unit
-            is ImageUpLoadUiState.Success -> {
-                viewModel.modifyExpoInformation(
-                    expoId = id,
-                    body = ExpoModifyRequestParam(
-                        title = viewModel.modify_title.value,
-                        startedDay = viewModel.started_date.value,
-                        finishedDay = viewModel.ended_date.value,
-                        description = viewModel.introduce_title.value,
-                        location = viewModel.location.value,
-                        coverImage = (imageUpLoadUiState as ImageUpLoadUiState.Success).data.imageURL,
-                        x = "37.511734",
-                        y = "127.05905",
-                        updateStandardProRequestDto = standardProgramTextState,
-                        updateTrainingProRequestDto = trainingProgramTextState
-                    )
-                )
-            }
-
-            is ImageUpLoadUiState.Error -> {
-                onErrorToast(null, R.string.expo_image_fail)
-            }
+    LaunchedEffect(selectedImageUri) {
+        if (selectedImageUri != null) {
+            viewModel.imageUpLoad(context, selectedImageUri!!)
         }
     }
 
@@ -164,10 +161,9 @@ internal fun ExpoModifyRoute(
             is ModifyExpoInformationUiState.Loading -> Unit
             is ModifyExpoInformationUiState.Success -> {
                 onBackClick()
-                viewModel.resetExpoInformation()
-                viewModel.initModifyExpo()
                 makeToast(context, "박람회 수정을 완료하였습니다.")
             }
+
             is ModifyExpoInformationUiState.Error -> {
                 onErrorToast(null, R.string.expo_modify_fail)
             }
@@ -177,11 +173,7 @@ internal fun ExpoModifyRoute(
     ExpoModifyScreen(
         imageUri = selectedImageUri?.toString() ?: coverImageState,
         modifyCallBack = {
-            if (selectedImageUri != null) {
-                viewModel.imageUpLoad(context, selectedImageUri!!)
-            } else {
-                onErrorToast(null, R.string.expo_image_size_fail)
-            }
+            viewModel.modifyExpoInformation(id)
         },
         onBackClick = onBackClick,
         onImageClick = { galleryLauncher.launch("image/*") },
@@ -199,7 +191,6 @@ internal fun ExpoModifyRoute(
         onStartedDateChange = viewModel::onStartedDateChange,
         onEndedDateChange = viewModel::onEndedDateChange,
         onModifyTitleChange = viewModel::onModifyTitleChange,
-        onAddressChange = viewModel::onAddressChange,
         onLocationChange = viewModel::onLocationChange,
         onIntroduceTitleChange = viewModel::onIntroduceTitleChange,
         onRemoveTrainingProgram = viewModel::removeTrainingProgramModifyText,
@@ -235,7 +226,6 @@ private fun ExpoModifyScreen(
     onStartedDateChange: (String) -> Unit,
     onEndedDateChange: (String) -> Unit,
     onModifyTitleChange: (String) -> Unit,
-    onAddressChange: (String) -> Unit,
     onLocationChange: (String) -> Unit,
     onIntroduceTitleChange: (String) -> Unit,
     onRemoveTrainingProgram: (Int) -> Unit,
@@ -295,9 +285,15 @@ private fun ExpoModifyScreen(
                 modifier = Modifier.verticalScroll(scrollState)
             ) {
                 Text(
-                    text = "사진",
-                    style = typography.bodyBold2,
-                    color = colors.black,
+                    text = buildAnnotatedString {
+                        withStyle(style = SpanStyle(color = colors.black)) {
+                            append("사진")
+                        }
+                        withStyle(style = SpanStyle(color = colors.main)) {
+                            append(" *")
+                        }
+                    },
+                    style = typography.bodyBold2
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -413,7 +409,19 @@ private fun ExpoModifyScreen(
                 Spacer(modifier = Modifier.padding(top = 28.dp))
 
                 LimitedLengthTextField(
-                    label = "제목",
+                    labelComposable = {
+                        Text(
+                            text = buildAnnotatedString {
+                                withStyle(style = SpanStyle(color = colors.black)) {
+                                    append("제목")
+                                }
+                                withStyle(style = SpanStyle(color = colors.main)) {
+                                    append(" *")
+                                }
+                            },
+                            style = typography.bodyBold2
+                        )
+                    },
                     value = modifyTitleState,
                     placeholder = "제목을 입력해주세요.",
                     isError = false,
@@ -424,7 +432,19 @@ private fun ExpoModifyScreen(
 
                 Row(horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.Start)) {
                     LimitedLengthTextField(
-                        label = "모집기간",
+                        labelComposable = {
+                            Text(
+                                text = buildAnnotatedString {
+                                    withStyle(style = SpanStyle(color = colors.black)) {
+                                        append("행사 기간")
+                                    }
+                                    withStyle(style = SpanStyle(color = colors.main)) {
+                                        append(" *")
+                                    }
+                                },
+                                style = typography.bodyBold2
+                            )
+                        },
                         value = startedDateState,
                         lengthLimit = 8,
                         placeholder = "시작일",
@@ -437,6 +457,13 @@ private fun ExpoModifyScreen(
                     )
 
                     LimitedLengthTextField(
+                        labelComposable = {
+                            Text(
+                                text = "행사기간",
+                                color = colors.white,
+                                style = typography.bodyBold2
+                            )
+                        },
                         value = endedDateState,
                         lengthLimit = 8,
                         placeholder = "마감일",
@@ -470,8 +497,19 @@ private fun ExpoModifyScreen(
                 Spacer(modifier = Modifier.padding(top = 28.dp))
 
                 LimitedLengthTextField(
-                    label = "소개글",
-                    value = introduceTitleState,
+                    labelComposable = {
+                        Text(
+                            text = buildAnnotatedString {
+                                withStyle(style = SpanStyle(color = colors.black)) {
+                                    append("소개글")
+                                }
+                                withStyle(style = SpanStyle(color = colors.main)) {
+                                    append(" *")
+                                }
+                            },
+                            style = typography.bodyBold2
+                        )
+                    }, value = introduceTitleState,
                     placeholder = "소개글을 작성해주세요.",
                     isError = false,
                     updateTextValue = onIntroduceTitleChange,
@@ -483,7 +521,7 @@ private fun ExpoModifyScreen(
 
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top)) {
                     Text(
-                        text = "참가자 연수 종류",
+                        text = "참가자 프로그램",
                         style = typography.bodyBold2,
                         color = colors.black,
                     )
@@ -507,7 +545,7 @@ private fun ExpoModifyScreen(
                     Spacer(modifier = Modifier.padding(top = 28.dp))
 
                     Text(
-                        text = "연수자 연수 종류",
+                        text = "연수자 프로그램",
                         style = typography.bodyBold2,
                         color = colors.black,
                     )
@@ -531,19 +569,30 @@ private fun ExpoModifyScreen(
                     Spacer(modifier = Modifier.padding(top = 28.dp))
 
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top)) {
+                        Text(
+                            text = buildAnnotatedString {
+                                withStyle(style = SpanStyle(color = colors.black)) {
+                                    append("장소")
+                                }
+                                withStyle(style = SpanStyle(color = colors.main)) {
+                                    append(" *")
+                                }
+                            },
+                            style = typography.bodyBold2
+                        )
 
                         ExpoLocationIconTextField(
-                            placeholder = "장소를 입력해주세요.",
+                            value = addressState,
+                            onValueChange = { _ -> },
+                            placeholder = "장소를 선택해주세요.",
                             isDisabled = true,
-                            onValueChange = onLocationChange,
                             onButtonClicked = navigateToExpoAddressSearch,
-                            value = locationState,
                         )
 
                         NoneLimitedLengthTextField(
-                            value = addressState,
-                            placeholder = "상세주소를 입력해주세요.",
-                            updateTextValue = onAddressChange
+                            value = locationState,
+                            updateTextValue = onLocationChange,
+                            placeholder = "상세주소를 입력해주세요."
                         )
                     }
 
@@ -560,8 +609,6 @@ private fun ExpoModifyScreen(
                             introduceTitleState.isNotEmpty() &&
                             addressState.isNotEmpty() &&
                             locationState.isNotEmpty() &&
-                            trainingProgramTextState.isNotEmpty() &&
-                            standardProgramTextState.isNotEmpty() &&
                             startedDateState.isValidDateSequence(endedDateState)
                         ) {
                             ButtonState.Enable
@@ -642,7 +689,6 @@ private fun HomeDetailModifyScreenPreview() {
         locationState = "",
         onModifyTitleChange = {},
         onLocationChange = {},
-        onAddressChange = {},
         onStartedDateChange = {},
         onEndedDateChange = {},
         onIntroduceTitleChange = {},

@@ -46,7 +46,13 @@ fun String.isValidDate(): Boolean {
         else -> return false
     }
 
-    return day <= daysInMonth
+    if (day > daysInMonth) return false
+
+    // 기준 날짜(2025년 03월 18일 05시 50분)와 비교
+    val targetDate = "20250318"
+
+    // 입력된 날짜가 기준 날짜보다 이후인지를 확인
+    return this > targetDate
 }
 
 /**
@@ -122,3 +128,16 @@ fun String.isValidDateTimeSequence(laterTime: String): Boolean =
             && this.isValidDateTime()
             && laterTime.isValidDateTime()
             && this <= laterTime
+
+/**
+ * 주어진 날짜가 2025년 03월 18일 05시 50분 이후인지 확인하는 함수.
+ */
+fun String.isAfterTargetDateTime(): Boolean {
+    val targetDateTime = "202503180550" // 기준 날짜-시간: 2025년 03월 18일 05시 50분
+
+    // 날짜-시간 형식이 올바른지 확인
+    if (!this.isValidDateTime()) return false
+
+    // 현재 날짜-시간이 기준 날짜-시간보다 뒤에 있는지 비교
+    return this > targetDateTime
+}

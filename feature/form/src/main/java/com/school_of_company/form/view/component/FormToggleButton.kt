@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -29,6 +30,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
+import kotlinx.coroutines.flow.flow
 import kotlin.math.roundToInt
 
 @Composable
@@ -47,8 +49,21 @@ internal fun FormToggleButton(
         var thumbOffset by remember { mutableFloatStateOf(if (check) maxBound else minBound) }
         var isDragging by remember { mutableStateOf(false) }
 
-        val positionFraction = (thumbOffset - minBound) / (maxBound - minBound)
+        val positionFraction = thumbOffset / maxBound
 
+        LaunchedEffect(isDragging) {
+            if (!isDragging) {
+                val isOverHalf = if (check) thumbOffset < (maxBound / 2)
+                else thumbOffset > (maxBound / 2)
+
+                if (isOverHalf) onClick()
+                else thumbOffset = if (check) maxBound else minBound
+            }
+        }
+
+        LaunchedEffect(check) {
+            thumbOffset = if (check) maxBound else minBound
+        }
         val trackColor by animateColorAsState(
             targetValue = lerp(colors.gray100, colors.main100, positionFraction),
             animationSpec = spring(),
@@ -62,9 +77,9 @@ internal fun FormToggleButton(
         )
 
         val animatedOffset by animateFloatAsState(
-            targetValue = if (isDragging) thumbOffset else if (check) maxBound else minBound,
+            targetValue = thumbOffset,
             animationSpec = spring(),
-            label = "custom_switch"
+            label = "thumb_offset"
         )
 
         val dragModifier = Modifier.pointerInput(Unit) {
@@ -76,9 +91,6 @@ internal fun FormToggleButton(
                 },
                 onDragEnd = {
                     isDragging = false
-                    val shouldToggle = thumbOffset > (maxBound / 2)
-                    onClick()
-                    thumbOffset = if (shouldToggle) maxBound else minBound
                 }
             )
         }
@@ -126,4 +138,10 @@ private fun ExpoToggleButtonPreview() {
         width = 70.dp,
         onClick = { isToggled = !isToggled },
     )
+    val numbers = flow {
+        println("Flow started!")
+        emit(1) // 데이터 방출
+        emit(2) // 데이터 방출
+    }
+
 }

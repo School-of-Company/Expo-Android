@@ -16,11 +16,14 @@ import com.school_of_company.expo.navigation.expoCreatedRoute
 import com.school_of_company.expo.navigation.expoCreatedScreen
 import com.school_of_company.expo.navigation.expoDetailScreen
 import com.school_of_company.expo.navigation.expoModifyScreen
+import com.school_of_company.expo.navigation.expoNavigationHomeScreen
 import com.school_of_company.expo.navigation.expoScreen
 import com.school_of_company.expo.navigation.homeRoute
 import com.school_of_company.expo.navigation.navigateToExpoAddressSearch
 import com.school_of_company.expo.navigation.navigateToExpoDetail
 import com.school_of_company.expo.navigation.navigateToExpoModify
+import com.school_of_company.expo.navigation.navigateToExpoNavigationHome
+import com.school_of_company.expo.navigation.navigateToHome
 import com.school_of_company.expo_android.ui.ExpoAppState
 import com.school_of_company.expo_android.ui.navigateToHomeAndClearLogin
 import com.school_of_company.expo_android.ui.navigationPopUpToLogin
@@ -110,15 +113,9 @@ fun ExpoNavHost(
 
         expoDetailScreen(
             onBackClick = navController::popBackStack,
-            onCheckClick = { id ->
-                navController.navigateToProgramDetailParticipantManagement(id)
-            },
-            onModifyClick = { id ->
-                navController.navigateToExpoModify(id)
-            },
-            onProgramClick = { id ->
-                navController.navigateToProgramDetailProgram(id)
-            },
+            onCheckClick = navController::navigateToProgramDetailParticipantManagement,
+            onModifyClick = navController::navigateToExpoModify,
+            onProgramClick = navController::navigateToProgramDetailProgram,
             onMessageClick = navController::navigateToSmsSendMessage,
             navigationToFormCreate = navController::navigationToCreateForm,
             navigationToFormModify = navController::navigationToModifyForm,
@@ -184,6 +181,10 @@ fun ExpoNavHost(
             onErrorToast = makeErrorToast
         )
 
+        expoNavigationHomeScreen(
+            navigationToHome = navController::navigateToHome
+        )
+
         qrScannerScreen(
             onBackClick = navController::popBackStack,
             onPermissionBlock = navController::popBackStack,
@@ -198,6 +199,7 @@ fun ExpoNavHost(
         formCreateScreen(
             popUpBackStack = navController::popBackStack,
             onErrorToast = makeErrorToast,
+            navigateToExpoNavigationHome = navController::navigateToExpoNavigationHome
         )
 
         formModifyScreen(

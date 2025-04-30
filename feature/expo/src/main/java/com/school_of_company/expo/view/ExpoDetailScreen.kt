@@ -23,12 +23,17 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -36,9 +41,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import com.school_of_company.design_system.R
-import com.school_of_company.design_system.component.button.EffectButton
 import com.school_of_company.design_system.component.button.ExpoEnableButton
 import com.school_of_company.design_system.component.button.ExpoEnableDetailButton
+import com.school_of_company.design_system.component.loading.LoadingDot
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.component.topbar.ExpoTopBar
 import com.school_of_company.design_system.icon.LeftArrowIcon
@@ -60,7 +65,7 @@ internal fun ExpoDetailRoute(
     modifier: Modifier = Modifier,
     id: String,
     onBackClick: () -> Unit,
-    onCheckClick: (String) -> Unit,
+    onCheckClick: (String, String, String) -> Unit,
     onModifyClick: (String) -> Unit,
     onProgramClick: (String) -> Unit,
     onMessageClick: (String, String) -> Unit,
@@ -77,10 +82,7 @@ internal fun ExpoDetailRoute(
     LaunchedEffect(getCoordinatesToAddressUiState) {
         when (getCoordinatesToAddressUiState) {
             is GetCoordinatesToAddressUiState.Loading -> Unit
-            is GetCoordinatesToAddressUiState.Success -> onErrorToast(
-                null,
-                R.string.convert_coordinates_to_address_success
-            )
+            is GetCoordinatesToAddressUiState.Success -> Unit
             is GetCoordinatesToAddressUiState.Error -> onErrorToast(
                 null,
                 R.string.convert_coordinates_to_address_fail
@@ -99,7 +101,7 @@ internal fun ExpoDetailRoute(
         onMessageClick = { authority ->
             onMessageClick(id, authority)
         },
-        onCheckClick = onCheckClick,
+        onCheckClick = { start, end -> onCheckClick(id, start, end) },
         onModifyClick = onModifyClick,
         onProgramClick = onProgramClick,
         navigationToFormCreate = { type ->
@@ -134,9 +136,9 @@ private fun ExpoDetailScreen(
     scrollState: ScrollState = rememberScrollState(),
     onBackClick: () -> Unit,
     onMessageClick: (String) -> Unit,
-    onCheckClick: (String) -> Unit,
     onModifyClick: (String) -> Unit,
     onProgramClick: (String) -> Unit,
+    onCheckClick: (String, String) -> Unit,
     navigationToFormCreate: (String) -> Unit,
     navigationToFormModify: (String) -> Unit,
 ) {
@@ -144,6 +146,11 @@ private fun ExpoDetailScreen(
     val (openModifyDialog, isOpenModifyDialog) = rememberSaveable { mutableStateOf(false) }
     val (openFormModifyDialog, isOpenFormModifyDialog) = rememberSaveable { mutableStateOf(false) }
     val (openFormCreateDialog, isOpenFormCreateDialog) = rememberSaveable { mutableStateOf(false) }
+
+    var expandedExpoIntroductionTextState by rememberSaveable { mutableStateOf(false) }
+    var showReadMoreButtonState by rememberSaveable { mutableStateOf(false) }
+
+    val maxLines = if (expandedExpoIntroductionTextState) 100 else 5
 
     ExpoAndroidTheme { colors, typography ->
         when {
@@ -167,7 +174,6 @@ private fun ExpoDetailScreen(
                     )
 
                     Spacer(modifier = Modifier.height(28.dp))
-
 
                     Column(modifier = Modifier.verticalScroll(scrollState)) {
                         if (getExpoInformationUiState.data.coverImage != null) {
@@ -211,39 +217,79 @@ private fun ExpoDetailScreen(
 
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Bottom)) {
                             Text(
-                                text = "소개글",
+                                text = "행사 기간",
                                 style = typography.bodyRegular2,
                                 color = colors.gray600,
                                 fontWeight = FontWeight(600),
                             )
 
                             Text(
-                                text = getExpoInformationUiState.data.description,
+                                text = stringResource(
+                                    R.string.date_type,
+                                    getExpoInformationUiState.data.startedDay.formatServerDate(),
+                                    getExpoInformationUiState.data.finishedDay.formatServerDate()
+                                ),
+                                style = typography.captionRegular1,
+                                color = colors.gray600,
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(18.dp))
+
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Bottom)) {
+                            Text(
+                                text = "소개글",
                                 style = typography.bodyRegular2,
-                                color = colors.gray400
+                                color = colors.gray600,
+                                fontWeight = FontWeight(600),
                             )
 
-                            Row(
-                                horizontalArrangement = Arrangement.spacedBy(
-                                    11.dp,
-                                    Alignment.Start
-                                )
-                            ) {
-
+                            Box(modifier = Modifier.fillMaxWidth()) {
                                 Text(
-                                    text = stringResource(id = R.string.register_temp),
-                                    style = typography.captionRegular2,
-                                    color = colors.gray600
+                                    text = getExpoInformationUiState.data.description,
+                                    style = typography.bodyRegular2,
+                                    color = colors.gray400,
+                                    overflow = TextOverflow.Ellipsis,
+                                    maxLines = maxLines,
+                                    onTextLayout = { textLayoutResult: TextLayoutResult ->
+                                        if (textLayoutResult.lineCount > 4) {
+                                            if (textLayoutResult.isLineEllipsized(4)) showReadMoreButtonState =
+                                                true
+                                        } else {
+                                            showReadMoreButtonState = false
+                                        }
+                                    }
                                 )
 
+                                if (!expandedExpoIntroductionTextState && showReadMoreButtonState) {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(40.dp)
+                                            .align(Alignment.BottomCenter)
+                                            .background(
+                                                brush = Brush.verticalGradient(
+                                                    colors = listOf(
+                                                        Color.Transparent,
+                                                        colors.white
+                                                    ),
+                                                    startY = 0f,
+                                                    endY = 120f
+                                                )
+                                            )
+                                    )
+                                }
+                            }
+
+                            if (showReadMoreButtonState) {
                                 Text(
-                                    text = stringResource(
-                                        R.string.date_type,
-                                        getExpoInformationUiState.data.startedDay.formatServerDate(),
-                                        getExpoInformationUiState.data.finishedDay.formatServerDate()
-                                    ),
-                                    style = typography.captionRegular2,
-                                    color = colors.gray600,
+                                    text = if (expandedExpoIntroductionTextState) "접기" else "더보기",
+                                    color = if (expandedExpoIntroductionTextState) colors.main else colors.gray200,
+                                    modifier = Modifier.expoClickable {
+                                        expandedExpoIntroductionTextState =
+                                            !expandedExpoIntroductionTextState
+                                    },
+                                    style = typography.bodyRegular2
                                 )
                             }
                         }
@@ -266,12 +312,20 @@ private fun ExpoDetailScreen(
                                     color = colors.gray400
                                 )
 
-                                getStandardProgramUiState.data.forEach { program ->
+                                if (getStandardProgramUiState.data.isEmpty()) {
                                     Text(
-                                        text = "· ${program.title}",
+                                        text = "· 일반 프로그램이 존재하지 않음",
                                         style = typography.bodyRegular2,
                                         color = colors.gray400
                                     )
+                                } else {
+                                    getStandardProgramUiState.data.forEach { program ->
+                                        Text(
+                                            text = "· ${program.title}",
+                                            style = typography.bodyRegular2,
+                                            color = colors.gray400
+                                        )
+                                    }
                                 }
                             }
 
@@ -282,12 +336,20 @@ private fun ExpoDetailScreen(
                                     color = colors.gray400
                                 )
 
-                                getTrainingProgramUiState.data.forEach { program ->
+                                if (getTrainingProgramUiState.data.isEmpty()) {
                                     Text(
-                                        text = "· ${program.title}",
+                                        text = "· 연수자 프로그램이 존재하지 않음",
                                         style = typography.bodyRegular2,
                                         color = colors.gray400
                                     )
+                                } else {
+                                    getTrainingProgramUiState.data.forEach { program ->
+                                        Text(
+                                            text = "· ${program.title}",
+                                            style = typography.bodyRegular2,
+                                            color = colors.gray400
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -334,50 +396,9 @@ private fun ExpoDetailScreen(
 
                         Spacer(modifier = Modifier.weight(1f))
 
+                        Spacer(modifier = Modifier.padding(bottom = 38.dp))
+
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top)) {
-                            Row(
-                                horizontalArrangement = Arrangement.spacedBy(
-                                    16.dp,
-                                    Alignment.CenterHorizontally
-                                ),
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(top = 38.dp)
-                            ) {
-
-                                EffectButton(
-                                    text = "문자 보내기",
-                                    defaultBackgroundColor = colors.white,
-                                    defaultTextColor = colors.main,
-                                    clickedTextColor = colors.white,
-                                    clickedBackgroundColor = colors.main,
-                                    onClick = { isOpenDialog(true) },
-                                    modifier = Modifier
-                                        .weight(1f)
-                                        .border(
-                                            width = 1.dp,
-                                            color = colors.main,
-                                            shape = RoundedCornerShape(6.dp)
-                                        )
-                                )
-
-                                EffectButton(
-                                    text = "통계 확인하기",
-                                    defaultBackgroundColor = colors.white,
-                                    defaultTextColor = colors.main,
-                                    clickedTextColor = colors.white,
-                                    clickedBackgroundColor = colors.main,
-                                    onClick = {  }, // todo : Navigate To Statistics Screen Logic
-                                    modifier = Modifier
-                                        .weight(1f)
-                                        .border(
-                                            width = 1.dp,
-                                            color = colors.main,
-                                            shape = RoundedCornerShape(6.dp)
-                                        )
-                                )
-                            }
 
                             Row(
                                 horizontalArrangement = Arrangement.spacedBy(
@@ -388,12 +409,10 @@ private fun ExpoDetailScreen(
                                 modifier = Modifier.fillMaxWidth()
                             ) {
 
-                                EffectButton(
+                                ExpoEnableButton(
                                     text = "프로그램",
-                                    defaultBackgroundColor = colors.white,
-                                    defaultTextColor = colors.main,
-                                    clickedTextColor = colors.white,
-                                    clickedBackgroundColor = colors.main,
+                                    textColor = colors.main,
+                                    backgroundColor = colors.white,
                                     onClick = { onProgramClick(id) },
                                     modifier = Modifier
                                         .weight(1f)
@@ -404,13 +423,16 @@ private fun ExpoDetailScreen(
                                         )
                                 )
 
-                                EffectButton(
+                                ExpoEnableButton(
                                     text = "조회하기",
-                                    defaultBackgroundColor = colors.white,
-                                    defaultTextColor = colors.main,
-                                    clickedTextColor = colors.white,
-                                    clickedBackgroundColor = colors.main,
-                                    onClick = { onCheckClick(id) },
+                                    textColor = colors.main,
+                                    backgroundColor = colors.white,
+                                    onClick = {
+                                        onCheckClick(
+                                            getExpoInformationUiState.data.startedDay,
+                                            getExpoInformationUiState.data.finishedDay,
+                                        )
+                                    },
                                     modifier = Modifier
                                         .weight(1f)
                                         .border(
@@ -420,6 +442,20 @@ private fun ExpoDetailScreen(
                                         )
                                 )
                             }
+
+                            ExpoEnableButton(
+                                text = "문자 보내기(사용X)",
+                                onClick = { isOpenDialog(false) },
+                                textColor = colors.main,
+                                backgroundColor = colors.white,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .border(
+                                        width = 1.dp,
+                                        color = colors.main,
+                                        shape = RoundedCornerShape(6.dp)
+                                    )
+                            )
 
                             ExpoEnableDetailButton(
                                 text = "폼 생성하기",
@@ -441,7 +477,17 @@ private fun ExpoDetailScreen(
                 }
             }
 
-            getExpoInformationUiState is GetExpoInformationUiState.Loading || getTrainingProgramUiState is GetTrainingProgramListUiState.Loading || getStandardProgramUiState is GetStandardProgramListUiState.Loading -> Unit
+            getExpoInformationUiState is GetExpoInformationUiState.Loading || getTrainingProgramUiState is GetTrainingProgramListUiState.Loading || getStandardProgramUiState is GetStandardProgramListUiState.Loading -> {
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(color = colors.white)
+                ) {
+                    LoadingDot()
+                }
+            }
 
             getExpoInformationUiState is GetExpoInformationUiState.Error || getTrainingProgramUiState is GetTrainingProgramListUiState.Error || getStandardProgramUiState is GetStandardProgramListUiState.Error -> {
 
@@ -575,7 +621,7 @@ private fun HomeDetailScreenPreview() {
         scrollState = ScrollState(0),
         onBackClick = {},
         onMessageClick = {},
-        onCheckClick = {},
+        onCheckClick = { _, _ -> },
         onModifyClick = {},
         onProgramClick = {},
         navigationToFormCreate = { _ -> },

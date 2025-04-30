@@ -26,6 +26,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.school_of_company.design_system.R
 import com.school_of_company.design_system.component.button.ExpoButton
+import com.school_of_company.design_system.component.button.ExpoStateButton
+import com.school_of_company.design_system.component.button.state.ButtonState
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.component.topbar.ExpoTopBar
 import com.school_of_company.design_system.icon.LeftArrowIcon
@@ -33,6 +35,7 @@ import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.form.enum.FormType
 import com.school_of_company.form.view.component.FormAddButton
 import com.school_of_company.form.view.component.FormCard
+import com.school_of_company.form.view.component.PersonaInformationFormCard
 import com.school_of_company.form.viewModel.FormViewModel
 import com.school_of_company.form.viewModel.uiState.FormUiState
 import com.school_of_company.model.model.form.DynamicFormModel
@@ -48,6 +51,7 @@ internal fun FormModifyRoute(
 ) {
     val formState by viewModel.formState.collectAsStateWithLifecycle()
     val formActionUiState by viewModel.formUiState.collectAsStateWithLifecycle()
+    val informationTextState by viewModel.informationTextState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.getForm(
@@ -65,12 +69,12 @@ internal fun FormModifyRoute(
             }
 
             is FormUiState.Error -> onErrorToast(null, R.string.form_modify_fail)
-
         }
     }
 
     FormModifyScreen(
         modifier = modifier,
+        informationTextState = informationTextState,
         formList = formState,
         popUpBackStack = popUpBackStack,
         addFormAtList = viewModel::addEmptyDynamicFormItem,
@@ -78,9 +82,11 @@ internal fun FormModifyRoute(
             viewModel.modifyForm(
                 expoId,
                 participantType,
+                informationTextState,
             )
         },
         deleteForm = viewModel::removeDynamicFormItem,
+        onInformationTextStateChange = viewModel::setInformationTextState,
         onFormDataChange = viewModel::updateDynamicFormItem
     )
 }
@@ -88,6 +94,7 @@ internal fun FormModifyRoute(
 @Composable
 private fun FormModifyScreen(
     modifier: Modifier = Modifier,
+    informationTextState: String,
     formList: List<DynamicFormModel>,
     focusManager: FocusManager = LocalFocusManager.current,
     scrollState: ScrollState = rememberScrollState(),
@@ -95,15 +102,16 @@ private fun FormModifyScreen(
     addFormAtList: () -> Unit,
     submitForm: () -> Unit,
     deleteForm: (Int) -> Unit,
+    onInformationTextStateChange: (String) -> Unit,
     onFormDataChange: (Int, DynamicFormModel) -> Unit,
 ) {
     ExpoAndroidTheme { colors, _ ->
         Column(
             modifier = modifier
-                .verticalScroll(scrollState)
                 .fillMaxSize()
+                .verticalScroll(scrollState)
                 .background(color = colors.white)
-                .padding(16.dp)
+                .padding(horizontal = 16.dp,)
                 .pointerInput(Unit) {
                     detectTapGestures(
                         onTap = {
@@ -120,7 +128,10 @@ private fun FormModifyScreen(
                     )
                 },
                 betweenText = "폼 수정하기",
-                modifier = Modifier.padding(vertical = 16.dp),
+                modifier = Modifier.padding(
+                    top = 68.dp,
+                    bottom = 16.dp
+                ),
             )
 
             Column(
@@ -136,6 +147,11 @@ private fun FormModifyScreen(
                     )
                 }
 
+                PersonaInformationFormCard(
+                    value = informationTextState,
+                    onTextChange = onInformationTextStateChange
+                )
+
                 FormAddButton(onClick = addFormAtList)
             }
 
@@ -143,15 +159,25 @@ private fun FormModifyScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            ExpoButton(
-                text = "다음",
-                color = colors.main,
+            ExpoStateButton(
+                text = "수정 완료",
+                state = if (
+                    informationTextState.isNotEmpty() &&
+                    formList.isNotEmpty() &&
+                    formList.all { form ->
+                        when (FormType.valueOf(form.formType)) {
+                            FormType.SENTENCE -> form.title.isNotEmpty()
+                            FormType.CHECKBOX, FormType.DROPDOWN, FormType.MULTIPLE ->
+                                form.title.isNotEmpty() &&
+                                form.itemList.isNotEmpty() &&
+                                form.itemList.all { it.isNotEmpty() }
+                        }
+                    }) ButtonState.Enable else ButtonState.Disable,
                 onClick = submitForm,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(46.dp)
-                    .padding(vertical = 12.dp),
+                modifier = Modifier.fillMaxWidth()
             )
+
+            Spacer(modifier = Modifier.padding(bottom = 28.dp))
         }
     }
 }
@@ -160,14 +186,8 @@ private fun FormModifyScreen(
 @Composable
 private fun FormModifyScreenPreview() {
     FormModifyScreen(
+        informationTextState = "informationTextState",
         formList = listOf(
-            DynamicFormModel(
-                title = "제목",
-                formType = FormType.DROPDOWN.name,
-                itemList = listOf("예시", "예시 1"),
-                requiredStatus = true,
-                otherJson = true,
-            ),
             DynamicFormModel(
                 title = "제목",
                 formType = FormType.DROPDOWN.name,
@@ -181,5 +201,6 @@ private fun FormModifyScreenPreview() {
         submitForm = {},
         deleteForm = { _ -> },
         onFormDataChange = { _, _ -> },
+        onInformationTextStateChange = { _ -> },
     )
 }

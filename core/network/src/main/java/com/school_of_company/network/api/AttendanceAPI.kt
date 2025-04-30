@@ -13,7 +13,7 @@ interface AttendanceAPI {
         @Path("trainingPro_id") trainingId: Long,
         @Body body: TrainingQrCodeRequest
     )
-    @PATCH("/attendance/training/{standardPro_id}")
+    @PATCH("/attendance/standard/{standardPro_id}")
     suspend fun standardQrCode(
         @Path("standardPro_id") standardId: Long,
         @Body body: StandardQrCodeRequest

@@ -29,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -237,15 +238,14 @@ fun LimitedLengthTextField(
     placeholder: String,
     overflowErrorMessage: String = "",
     label: String = "",
+    labelComposable: @Composable () -> Unit,
     isError: Boolean,
     showLengthCounter: Boolean = true,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     lengthLimit: Int = 0,
 ) {
-    val lengthCheck = remember {
-        if (lengthLimit != 0) value.length >= lengthLimit else false
-    }
+    val lengthCheck = lengthLimit != 0 && value.length > lengthLimit
 
     ExpoAndroidTheme { colors, typography ->
         Column(
@@ -253,13 +253,18 @@ fun LimitedLengthTextField(
             horizontalAlignment = Alignment.Start,
             modifier = modifier.background(color = Color.Transparent)
         ) {
-            Text(
-                text = label,
-                style = typography.bodyBold2,
-                color = colors.black,
-                fontWeight = FontWeight(600),
-                modifier = Modifier.padding(bottom = 10.dp)
-            )
+
+            if (label.isNotEmpty()) {
+                Text(
+                    text = label,
+                    style = typography.bodyBold2,
+                    color = colors.black,
+                    fontWeight = FontWeight(600),
+                    modifier = Modifier.padding(bottom = 10.dp)
+                )
+            } else {
+                labelComposable()
+            }
 
             Box(
                 modifier = Modifier
@@ -396,7 +401,7 @@ fun ExpoLocationIconTextField(
     onButtonClicked: () -> Unit,
 ) {
     ExpoAndroidTheme { colors, typography ->
-        Box {
+        Box(modifier = modifier.clip(RoundedCornerShape(8.dp))) {
             OutlinedTextField(
                 placeholder = {
                     Text(
@@ -413,7 +418,7 @@ fun ExpoLocationIconTextField(
                     .height(50.dp)
                     .border(
                         width = 1.dp,
-                        shape = RoundedCornerShape(6.dp),
+                        shape = RoundedCornerShape(8.dp),
                         color = colors.gray100
                     )
                     .background(color = Color.Transparent)
@@ -475,6 +480,7 @@ fun TransparentTextField(
                 if (value.isEmpty()) {
                     Text(
                         text = placeholder,
+                        color = colors.gray500,
                         style = placeholderTextStyle ?: textStyle,
                     )
                 }
@@ -573,10 +579,12 @@ fun ExpoOutlinedTextFieldPreview() {
                 label = "비밀번호"
             )
             LimitedLengthTextField(
+                labelComposable = {},
                 value = "",
                 placeholder = "",
                 isError = false,
-                updateTextValue = {})
+                updateTextValue = {}
+            )
 
             NoneLimitedLengthTextField(value = "", placeholder = "", updateTextValue = {})
 
@@ -585,6 +593,14 @@ fun ExpoOutlinedTextFieldPreview() {
                 placeholder = "",
                 updateTextValue = {},
                 textStyle = ExpoTypography.bodyBold2.copy(fontWeight = FontWeight.W600)
+            )
+
+            ExpoLocationIconTextField(
+                value = "",
+                onValueChange = {},
+                placeholder = "",
+                isDisabled = false,
+                onButtonClicked = {}
             )
         }
     }

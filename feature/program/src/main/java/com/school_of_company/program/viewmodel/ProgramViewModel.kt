@@ -12,13 +12,12 @@ import com.school_of_company.domain.usecase.standard.StandardProgramListUseCase
 import com.school_of_company.domain.usecase.trainee.TraineeResponseListUseCase
 import com.school_of_company.domain.usecase.training.TrainingProgramListUseCase
 import com.school_of_company.model.param.attendance.StandardQrCodeRequestParam
-import com.school_of_company.program.viewmodel.uistate.StandardProgramListUiState
-import com.school_of_company.program.viewmodel.uistate.TrainingProgramListUiState
-import com.school_of_company.program.viewmodel.uistate.ReadQrCodeUiState
 import com.school_of_company.model.param.attendance.TrainingQrCodeRequestParam
-import com.school_of_company.program.enum.ParticipantEnum
 import com.school_of_company.program.viewmodel.uistate.ParticipantResponseListUiState
+import com.school_of_company.program.viewmodel.uistate.ReadQrCodeUiState
+import com.school_of_company.program.viewmodel.uistate.StandardProgramListUiState
 import com.school_of_company.program.viewmodel.uistate.TraineeResponseListUiState
+import com.school_of_company.program.viewmodel.uistate.TrainingProgramListUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,14 +34,14 @@ internal class ProgramViewModel @Inject constructor(
     private val traineeResponseListUseCase: TraineeResponseListUseCase,
     private val trainingQrCodeRequestUseCase: TrainingQrCodeRequestUseCase,
     private val standardQrCodeRequestUseCase: StandardQrCodeRequestUseCase,
-    private val participantInformationResponseUseCase: ParticipantInformationResponseUseCase,
+    private val getParticipantListInformationUseCase: ParticipantInformationResponseUseCase,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     companion object {
         private const val REQUEST_DELAY_MS = 2000L
-        private const val FIELD_PARTICIPANT_NAME = "field_participant_name"
-        private const val PRE_PARTICIPANT_NAME = "pre_participant_name"
         private const val TRAINEE_NAME = "trainee_name"
+        private const val CURRENT_PAGE = "current_page"
+        private const val PAGE_SIZE = 75
     }
 
     private var isRequestInProgress = false
@@ -62,15 +61,11 @@ internal class ProgramViewModel @Inject constructor(
     private val _traineeResponseListUiState = MutableStateFlow<TraineeResponseListUiState>(TraineeResponseListUiState.Loading)
     internal val traineeResponseListUiState = _traineeResponseListUiState.asStateFlow()
 
-    private val _participantFieldResponseListUiState = MutableStateFlow<ParticipantResponseListUiState>(ParticipantResponseListUiState.Loading)
-    internal val participantFieldResponseListUiState = _participantFieldResponseListUiState.asStateFlow()
+    private val _participantListUiState = MutableStateFlow<ParticipantResponseListUiState>(ParticipantResponseListUiState.Loading)
+    internal val participantListUiState = _participantListUiState.asStateFlow()
 
-    private val _participantAheadResponseListUiState = MutableStateFlow<ParticipantResponseListUiState>(ParticipantResponseListUiState.Loading)
-    internal val participantAheadResponseListUiState = _participantAheadResponseListUiState.asStateFlow()
-
-    internal val fieldParticipantName = savedStateHandle.getStateFlow(FIELD_PARTICIPANT_NAME, "")
-    internal val preParticipantName = savedStateHandle.getStateFlow(PRE_PARTICIPANT_NAME, "")
     internal val traineeName = savedStateHandle.getStateFlow(TRAINEE_NAME, "")
+    internal val currentPage = savedStateHandle.getStateFlow(CURRENT_PAGE, 0)
 
     internal fun trainingProgramList(expoId: String) = viewModelScope.launch {
         _swipeRefreshLoading.value = true
@@ -221,51 +216,44 @@ internal class ProgramViewModel @Inject constructor(
 
     internal fun getParticipantInformationList(
         expoId: String,
-        type: ParticipantEnum,
-        name: String? = null
+        currentPage: Int,
+        localDate: String? = null
     ) = viewModelScope.launch {
         _swipeRefreshLoading.value = true
 
-        val enumData = when (type) {
-            ParticipantEnum.PRE -> _participantAheadResponseListUiState
-            ParticipantEnum.FIELD -> _participantFieldResponseListUiState
-        }
 
-        participantInformationResponseUseCase(
-            type = type.name,
+        getParticipantListInformationUseCase(
             expoId = expoId,
-            name = name
+            localDate = localDate,
+            page = currentPage,
+            size = PAGE_SIZE
         )
             .asResult()
             .collectLatest { result ->
                 when (result) {
-                    is Result.Loading -> enumData.value = ParticipantResponseListUiState.Loading
+                    is Result.Loading -> _participantListUiState.value = ParticipantResponseListUiState.Loading
                     is Result.Success -> {
-                        if (result.data.isEmpty()) {
+                        if (result.data.participant.isEmpty()) {
                             _swipeRefreshLoading.value = false
-                            enumData.value = ParticipantResponseListUiState.Empty
+                            _participantListUiState.value = ParticipantResponseListUiState.Empty
                         } else {
                             _swipeRefreshLoading.value = false
-                            enumData.value = ParticipantResponseListUiState.Success(result.data)
+                            _participantListUiState.value = ParticipantResponseListUiState.Success(result.data)
                         }
                     }
                     is Result.Error -> {
                         _swipeRefreshLoading.value = false
-                        enumData.value = ParticipantResponseListUiState.Error(result.exception)
+                        _participantListUiState.value = ParticipantResponseListUiState.Error(result.exception)
                     }
                 }
             }
     }
 
-    internal fun onFieldParticipantNameChange(value: String) {
-        savedStateHandle[FIELD_PARTICIPANT_NAME] = value
-    }
-
-    internal fun onPreParticipantNameChange(value: String) {
-        savedStateHandle[PRE_PARTICIPANT_NAME] = value
-    }
-
     internal fun onTraineeNameChange(value: String) {
         savedStateHandle[TRAINEE_NAME] = value
+    }
+
+    internal fun onCurrentPageChange(value: Int) {
+        savedStateHandle[CURRENT_PAGE] = value
     }
 }

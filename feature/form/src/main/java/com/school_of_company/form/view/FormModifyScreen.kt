@@ -39,6 +39,7 @@ import com.school_of_company.form.view.component.PersonaInformationFormCard
 import com.school_of_company.form.viewModel.FormViewModel
 import com.school_of_company.form.viewModel.uiState.FormUiState
 import com.school_of_company.model.model.form.DynamicFormModel
+import java.text.Normalizer.Form
 
 @Composable
 internal fun FormModifyRoute(
@@ -67,7 +68,11 @@ internal fun FormModifyRoute(
                 popUpBackStack()
                 onErrorToast(null, R.string.form_modify_success)
             }
-
+            is FormUiState.NotFound -> {
+                viewModel.setIsNotFoundError(true)
+                onErrorToast(null, R.string.form_modify_not_found)
+            }
+            is FormUiState.Conflict -> Unit
             is FormUiState.Error -> onErrorToast(null, R.string.form_modify_fail)
         }
     }

@@ -6,3 +6,7 @@ plugins {
 android {
     namespace = "com.school_of_company.form"
 }
+
+dependencies {
+    implementation(libs.retrofit.core)
+}

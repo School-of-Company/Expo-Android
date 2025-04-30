@@ -1,11 +1,9 @@
 package com.school_of_company.signup.viewmodel.uistate
 
 sealed interface SignUpUiState {
-    object Success: SignUpUiState
-    object Loading: SignUpUiState
-    object EmailValid: SignUpUiState
-    object PasswordMismatch: SignUpUiState
-    object PasswordValid: SignUpUiState
-    object DuplicateAccount: SignUpUiState
-    data class Error(val exception: Throwable): SignUpUiState
+    object Success : SignUpUiState
+    object Loading : SignUpUiState
+    object NotSmsCheck : SignUpUiState
+    object Conflict : SignUpUiState
+    data class Error(val exception: Throwable) : SignUpUiState
 }

@@ -9,6 +9,7 @@ import com.school_of_company.common.exception.NoResponseException
 import com.school_of_company.common.result.Result
 import com.school_of_company.common.result.asResult
 import com.school_of_company.data.repository.juso.AddressRepository
+import com.school_of_company.data.repository.kakao.KakaoRepository
 import com.school_of_company.domain.usecase.Image.ImageUpLoadUseCase
 import com.school_of_company.domain.usecase.expo.CheckExpoSurveyDynamicFormEnableUseCase
 import com.school_of_company.domain.usecase.expo.DeleteExpoInformationUseCase
@@ -16,8 +17,6 @@ import com.school_of_company.domain.usecase.expo.GetExpoInformationUseCase
 import com.school_of_company.domain.usecase.expo.GetExpoListUseCase
 import com.school_of_company.domain.usecase.expo.ModifyExpoInformationUseCase
 import com.school_of_company.domain.usecase.expo.RegisterExpoInformationUseCase
-import com.school_of_company.domain.usecase.kakao.GetCoordinatesToAddressUseCase
-import com.school_of_company.domain.usecase.kakao.GetCoordinatesUseCase
 import com.school_of_company.domain.usecase.standard.StandardProgramListUseCase
 import com.school_of_company.domain.usecase.training.TrainingProgramListUseCase
 import com.school_of_company.expo.enum.CurrentScreen
@@ -61,16 +60,15 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class ExpoViewModel @Inject constructor(
+    private val kakaoRepository: KakaoRepository,
     private val addressRepository: AddressRepository,
     private val getExpoListUseCase: GetExpoListUseCase,
     private val imageUpLoadUseCase: ImageUpLoadUseCase,
-    private val getCoordinatesUseCase: GetCoordinatesUseCase,
     private val getExpoInformationUseCase: GetExpoInformationUseCase,
     private val standardProgramListUseCase: StandardProgramListUseCase,
     private val trainingProgramListUseCase: TrainingProgramListUseCase,
     private val deleteExpoInformationUseCase: DeleteExpoInformationUseCase,
     private val modifyExpoInformationUseCase: ModifyExpoInformationUseCase,
-    private val getCoordinatesToAddressUseCase: GetCoordinatesToAddressUseCase,
     private val registerExpoInformationUseCase: RegisterExpoInformationUseCase,
     private val checkExpoSurveyDynamicFormEnableUseCase: CheckExpoSurveyDynamicFormEnableUseCase,
     private val savedStateHandle: SavedStateHandle,
@@ -501,7 +499,7 @@ internal class ExpoViewModel @Inject constructor(
 
     internal fun convertJibunToXY(searchText: String) = viewModelScope.launch {
         _getAddressUiState.value = GetAddressUiState.Loading
-        getCoordinatesUseCase(address = searchText)
+        kakaoRepository.getCoordinates(address = searchText)
             .asResult()
             .collectLatest { result ->
                 when(result){
@@ -523,7 +521,7 @@ internal class ExpoViewModel @Inject constructor(
     }
 
     private fun convertXYToJibun(x: String, y: String) = viewModelScope.launch {
-        getCoordinatesToAddressUseCase(x = x, y = y)
+        kakaoRepository.getAddress(x = x, y = y)
             .asResult()
             .collectLatest { result ->
                 when (result) {

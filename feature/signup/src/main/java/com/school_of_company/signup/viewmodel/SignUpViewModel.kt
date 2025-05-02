@@ -128,46 +128,48 @@ internal class SignUpViewModel @Inject constructor(
         _isCertificationResent.value = value
     }
 
-    internal fun initSignUp() {
-        _signUpUiState.value = SignUpUiState.Loading
-    }
-
     internal fun signUp(body: AdminSignUpRequestParam) = viewModelScope.launch {
         setError(false)
         setEmailValidError(false)
         setPasswordValidError(false)
         setPasswordMismatchError(false)
         setDuplicateAccountError(false)
-        _signUpUiState.value = SignUpUiState.Loading
         when {
             !email.value.checkEmailRegex() -> {
-                _signUpUiState.value = SignUpUiState.EmailValid
                 setEmailValidError(true)
             }
 
             password.value != rePassword.value -> {
-                _signUpUiState.value = SignUpUiState.PasswordMismatch
                 setPasswordMismatchError(true)
             }
 
             !password.value.checkPasswordRegex() -> {
-                _signUpUiState.value = SignUpUiState.PasswordValid
                 setPasswordValidError(true)
             }
 
             else -> {
+                _signUpUiState.value = SignUpUiState.Loading
+
                 signUpRequestUseCase(body = body)
                     .onSuccess {
                         it.catch { remoteError ->
                             _signUpUiState.value = SignUpUiState.Error(remoteError)
-                        }.collect { _signUpUiState.value = SignUpUiState.Success }
+                        }.collect {  _signUpUiState.value = SignUpUiState.Success }
                     }
                     .onFailure { error ->
-                        _signUpUiState.value = SignUpUiState.Error(error)
+                        _signUpUiState.value = when {
+                            error is HttpException -> when (error.code()) {
+                                409 -> SignUpUiState.Conflict
+                                404  -> SignUpUiState.NotSmsCheck
+                                else -> SignUpUiState.Error(error)
+                            }
+
+                            else -> SignUpUiState.Error(error)
+                        }
                     }
+                }
             }
         }
-    }
 
     internal fun certificationCode(phoneNumber: String, certificationNumber: String) =
         viewModelScope.launch {

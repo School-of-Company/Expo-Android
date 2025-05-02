@@ -4,9 +4,5 @@ import com.school_of_company.model.model.juso.JusoModel
 import kotlinx.coroutines.flow.Flow
 
 interface AddressRepository {
-    fun getAddress(
-        currentPage: Int,
-        countPerPage: Int,
-        keyword: String,
-    ): Flow<List<JusoModel>>
+    fun getAddress(keyword: String): Flow<List<JusoModel>>
 }

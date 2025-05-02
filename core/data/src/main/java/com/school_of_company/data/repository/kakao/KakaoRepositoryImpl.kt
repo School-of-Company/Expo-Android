@@ -5,17 +5,16 @@ import com.school_of_company.model.model.kakao.KakaoGetCoordinatesModel
 import com.school_of_company.network.datasource.kakao.KakaoLocalDataSource
 import com.school_of_company.network.mapper.kakao.toModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.transform
 import javax.inject.Inject
 
 class KakaoRepositoryImpl @Inject constructor(
     private val kakaoLocalDataSource: KakaoLocalDataSource,
 ) : KakaoRepository {
-    override fun getCoordinates(address: String, size: Int): Flow<KakaoGetCoordinatesModel> {
+    override fun getCoordinates(address: String): Flow<KakaoGetCoordinatesModel> {
         return kakaoLocalDataSource.getCoordinates(
             address = address,
-            size = size
+            size = 1
         ).transform { response -> emit(response.toModel()) }
     }
 

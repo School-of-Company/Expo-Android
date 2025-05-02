@@ -17,8 +17,8 @@ class AddressRepositoryImpl @Inject constructor(
 
     override fun getAddress(keyword: String): Flow<List<JusoModel>> =
         addressDataSource.getAddress(
-            countPerPage = DEFAULT_PAGE,
-            currentPage = DEFAULT_PAGE_SIZE,
+            countPerPage = DEFAULT_PAGE_SIZE,
+            currentPage = DEFAULT_PAGE,
             keyword = keyword
         ).transform { list ->
             emit(list.results.juso?.map { juso -> juso.toModel() } ?: emptyList())

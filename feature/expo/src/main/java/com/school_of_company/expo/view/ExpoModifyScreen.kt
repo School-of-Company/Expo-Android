@@ -131,6 +131,7 @@ internal fun ExpoModifyRoute(
         when (imageUpLoadUiState) {
             is ImageUpLoadUiState.Error -> {
                 selectedImageUri = previousImageUri
+                viewModel.onCoverImageChange(selectedImageUri.toString())
                 previousImageUri = null
                 onErrorToast(null, R.string.expo_image_fail)
             }

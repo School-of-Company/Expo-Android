@@ -57,19 +57,10 @@ import javax.inject.Inject
 internal class ExpoViewModel @Inject constructor(
     private val kakaoRepository: KakaoRepository,
     private val addressRepository: AddressRepository,
-    private val getExpoListUseCase: GetExpoListUseCase,
-    private val getAddressUseCase: GetAddressUseCase,
     private val expoRepository: ExpoRepository,
     private val imageUpLoadUseCase: ImageUpLoadUseCase,
-    private val getExpoInformationUseCase: GetExpoInformationUseCase,
-    private val getCoordinatesUseCase: GetCoordinatesUseCase,
     private val standardProgramListUseCase: StandardProgramListUseCase,
     private val trainingProgramListUseCase: TrainingProgramListUseCase,
-    private val deleteExpoInformationUseCase: DeleteExpoInformationUseCase,
-    private val modifyExpoInformationUseCase: ModifyExpoInformationUseCase,
-    private val registerExpoInformationUseCase: RegisterExpoInformationUseCase,
-    private val checkExpoSurveyDynamicFormEnableUseCase: CheckExpoSurveyDynamicFormEnableUseCase,
-    private val getCoordinatesToAddressUseCase: GetCoordinatesToAddressUseCase,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     companion object {
@@ -472,7 +463,7 @@ internal class ExpoViewModel @Inject constructor(
     internal fun searchLocation(searchText: String) =
         viewModelScope.launch {
             onSearchedCoordinateChange(x = "", y = "")
-            addressRepository.getAddress(keyword = searchText)
+            addressRepository.getAddress(keyword = searchText, currentPage = 1, countPerPage = 5)
                 .asResult()
                 .collectLatest { result ->
                     when (result) {

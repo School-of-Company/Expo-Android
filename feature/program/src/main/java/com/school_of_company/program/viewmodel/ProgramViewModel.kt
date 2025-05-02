@@ -5,8 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.school_of_company.common.result.Result
 import com.school_of_company.common.result.asResult
-import com.school_of_company.domain.usecase.attendance.StandardQrCodeRequestUseCase
-import com.school_of_company.domain.usecase.attendance.TrainingQrCodeRequestUseCase
+import com.school_of_company.data.repository.attendance.AttendanceRepository
 import com.school_of_company.domain.usecase.participant.ParticipantInformationResponseUseCase
 import com.school_of_company.domain.usecase.standard.StandardProgramListUseCase
 import com.school_of_company.domain.usecase.trainee.TraineeResponseListUseCase
@@ -32,8 +31,7 @@ internal class ProgramViewModel @Inject constructor(
     private val trainingProgramListUseCase: TrainingProgramListUseCase,
     private val standardProgramListUseCase: StandardProgramListUseCase,
     private val traineeResponseListUseCase: TraineeResponseListUseCase,
-    private val trainingQrCodeRequestUseCase: TrainingQrCodeRequestUseCase,
-    private val standardQrCodeRequestUseCase: StandardQrCodeRequestUseCase,
+    private val attendanceRepository: AttendanceRepository,
     private val getParticipantListInformationUseCase: ParticipantInformationResponseUseCase,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -126,23 +124,22 @@ internal class ProgramViewModel @Inject constructor(
             isRequestInProgress = true
 
             viewModelScope.launch {
-
-                _readQrCodeUiState.value = ReadQrCodeUiState.Loading
                 try {
-                    trainingQrCodeRequestUseCase(
+                    _readQrCodeUiState.value = ReadQrCodeUiState.Loading
+                    attendanceRepository.trainingQrCode(
                         trainingId = trainingId,
                         body = body
                     )
-                        .onSuccess {
-                            it.catch { remoteError ->
-                                _readQrCodeUiState.value = ReadQrCodeUiState.Error(remoteError)
-                            }.collect {
-                                _readQrCodeUiState.value = ReadQrCodeUiState.Success
+                        .asResult()
+                        .collectLatest { result ->
+                            when (result) {
+                                is Result.Loading -> _readQrCodeUiState.value = ReadQrCodeUiState.Loading
+                                is Result.Success -> {
+                                    _readQrCodeUiState.value = ReadQrCodeUiState.Success
+                                    delay(REQUEST_DELAY_MS)
+                                }
+                                is Result.Error -> _readQrCodeUiState.value = ReadQrCodeUiState.Error(result.exception)
                             }
-                            delay(REQUEST_DELAY_MS)
-                        }
-                        .onFailure { error ->
-                            _readQrCodeUiState.value = ReadQrCodeUiState.Error(error)
                         }
                 } finally {
                     isRequestInProgress = false
@@ -150,6 +147,7 @@ internal class ProgramViewModel @Inject constructor(
             }
         }
     }
+
 
     internal fun standardQrCode(
         standardId: Long,
@@ -162,20 +160,20 @@ internal class ProgramViewModel @Inject constructor(
 
                 _readQrCodeUiState.value = ReadQrCodeUiState.Loading
                 try {
-                    standardQrCodeRequestUseCase(
+                    attendanceRepository.standardQrCode(
                         standardId = standardId,
                         body = body
                     )
-                        .onSuccess {
-                            it.catch { remoteError ->
-                                _readQrCodeUiState.value = ReadQrCodeUiState.Error(remoteError)
-                            }.collect {
-                                _readQrCodeUiState.value = ReadQrCodeUiState.Success
+                        .asResult()
+                        .collectLatest { result ->
+                            when (result) {
+                                is Result.Loading -> _readQrCodeUiState.value = ReadQrCodeUiState.Loading
+                                is Result.Success -> {
+                                    _readQrCodeUiState.value = ReadQrCodeUiState.Success
+                                    delay(REQUEST_DELAY_MS)
+                                }
+                                is Result.Error -> _readQrCodeUiState.value = ReadQrCodeUiState.Error(result.exception)
                             }
-                            delay(REQUEST_DELAY_MS)
-                        }
-                        .onFailure { error ->
-                            _readQrCodeUiState.value = ReadQrCodeUiState.Error(error)
                         }
                 } finally {
                     isRequestInProgress = false

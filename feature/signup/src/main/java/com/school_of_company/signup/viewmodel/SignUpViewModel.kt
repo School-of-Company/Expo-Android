@@ -165,7 +165,7 @@ internal class SignUpViewModel @Inject constructor(
                         }.collect {  _signUpUiState.value = SignUpUiState.Success }
                     }
                     .onFailure { error ->
-                        SignUpUiState.Error(error)
+                        _signUpUiState.value = SignUpUiState.Error(error)
                     }
                 }
             }

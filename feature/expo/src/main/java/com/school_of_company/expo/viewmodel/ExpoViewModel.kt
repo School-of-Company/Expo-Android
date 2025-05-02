@@ -9,8 +9,8 @@ import com.school_of_company.common.exception.NoResponseException
 import com.school_of_company.common.result.Result
 import com.school_of_company.common.result.asResult
 import com.school_of_company.data.repository.expo.ExpoRepository
-import com.school_of_company.data.repository.juso.AddressRepository
 import com.school_of_company.domain.usecase.Image.ImageUpLoadUseCase
+import com.school_of_company.domain.usecase.juso.GetAddressUseCase
 import com.school_of_company.domain.usecase.kakao.GetCoordinatesToAddressUseCase
 import com.school_of_company.domain.usecase.kakao.GetCoordinatesUseCase
 import com.school_of_company.domain.usecase.standard.StandardProgramListUseCase
@@ -55,7 +55,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class ExpoViewModel @Inject constructor(
-    private val addressRepository: AddressRepository,
+    private val getAddressUseCase: GetAddressUseCase,
     private val expoRepository: ExpoRepository,
     private val imageUpLoadUseCase: ImageUpLoadUseCase,
     private val getCoordinatesUseCase: GetCoordinatesUseCase,

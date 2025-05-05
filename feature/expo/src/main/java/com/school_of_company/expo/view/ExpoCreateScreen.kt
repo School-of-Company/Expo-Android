@@ -180,7 +180,7 @@ internal fun ExpoCreateRoute(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = ExpoColor.main)
+                .background(color = ExpoColor.white)
         ) {
             LoadingDot()
         }

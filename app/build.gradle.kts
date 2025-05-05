@@ -35,6 +35,7 @@ dependencies {
     // todo : Add Other Project Implementation -> ex) implementation(project(":core:___")) / (project(":feature:____"))
     implementation(project(":core:ui"))
     implementation(project(":core:model"))
+    implementation(project(":core:data"))
     implementation(project(":core:common"))
     implementation(project(":core:domain"))
     implementation(project(":core:datastore"))

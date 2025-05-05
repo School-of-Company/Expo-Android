@@ -12,7 +12,7 @@ import com.school_of_company.data.repository.expo.ExpoRepository
 import com.school_of_company.data.repository.image.ImageRepository
 import com.school_of_company.data.repository.juso.AddressRepository
 import com.school_of_company.data.repository.kakao.KakaoRepository
-import com.school_of_company.domain.usecase.standard.StandardProgramListUseCase
+import com.school_of_company.data.repository.standard.StandardRepository
 import com.school_of_company.domain.usecase.training.TrainingProgramListUseCase
 import com.school_of_company.expo.enum.CurrentScreen
 import com.school_of_company.expo.enum.FilterOptionEnum
@@ -58,7 +58,7 @@ internal class ExpoViewModel @Inject constructor(
     private val addressRepository: AddressRepository,
     private val expoRepository: ExpoRepository,
     private val imageRepository: ImageRepository,
-    private val standardProgramListUseCase: StandardProgramListUseCase,
+    private val standardRepository: StandardRepository,
     private val trainingProgramListUseCase: TrainingProgramListUseCase,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
@@ -405,7 +405,7 @@ internal class ExpoViewModel @Inject constructor(
 
     internal fun getStandardProgramList(expoId: String) = viewModelScope.launch {
         _getStandardProgramListUiState.value = GetStandardProgramListUiState.Loading
-        standardProgramListUseCase(expoId = expoId)
+        standardRepository.standardProgramList(expoId = expoId)
             .asResult()
             .collectLatest { result ->
                 when (result) {

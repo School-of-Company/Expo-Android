@@ -73,6 +73,7 @@ internal fun ExpoCreatedRoute(
             is DeleteExpoInformationUiState.Loading -> Unit
             is DeleteExpoInformationUiState.Success -> {
                 setSelectedIndex(-1)
+                expoViewModel.getExpoList()
                 makeToast(context, "박람회가 삭제되었습니다.")
             }
             is DeleteExpoInformationUiState.Error -> {

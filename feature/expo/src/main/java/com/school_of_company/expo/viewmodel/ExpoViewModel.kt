@@ -9,9 +9,9 @@ import com.school_of_company.common.exception.NoResponseException
 import com.school_of_company.common.result.Result
 import com.school_of_company.common.result.asResult
 import com.school_of_company.data.repository.expo.ExpoRepository
+import com.school_of_company.data.repository.image.ImageRepository
 import com.school_of_company.data.repository.juso.AddressRepository
 import com.school_of_company.data.repository.kakao.KakaoRepository
-import com.school_of_company.domain.usecase.Image.ImageUpLoadUseCase
 import com.school_of_company.domain.usecase.standard.StandardProgramListUseCase
 import com.school_of_company.domain.usecase.training.TrainingProgramListUseCase
 import com.school_of_company.expo.enum.CurrentScreen
@@ -57,7 +57,7 @@ internal class ExpoViewModel @Inject constructor(
     private val kakaoRepository: KakaoRepository,
     private val addressRepository: AddressRepository,
     private val expoRepository: ExpoRepository,
-    private val imageUpLoadUseCase: ImageUpLoadUseCase,
+    private val imageRepository: ImageRepository,
     private val standardProgramListUseCase: StandardProgramListUseCase,
     private val trainingProgramListUseCase: TrainingProgramListUseCase,
     private val savedStateHandle: SavedStateHandle,
@@ -393,7 +393,7 @@ internal class ExpoViewModel @Inject constructor(
             return@launch
         }
 
-        imageUpLoadUseCase(multipartFile)
+        imageRepository.imageUpLoad(multipartFile)
             .asResult()
             .collectLatest { result ->
                 when (result) {

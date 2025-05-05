@@ -12,7 +12,6 @@ import com.school_of_company.data.repository.expo.ExpoRepository
 import com.school_of_company.data.repository.juso.AddressRepository
 import com.school_of_company.data.repository.kakao.KakaoRepository
 import com.school_of_company.domain.usecase.Image.ImageUpLoadUseCase
-import com.school_of_company.domain.usecase.juso.GetAddressUseCase
 import com.school_of_company.domain.usecase.standard.StandardProgramListUseCase
 import com.school_of_company.domain.usecase.training.TrainingProgramListUseCase
 import com.school_of_company.expo.enum.CurrentScreen
@@ -463,7 +462,7 @@ internal class ExpoViewModel @Inject constructor(
     internal fun searchLocation(searchText: String) =
         viewModelScope.launch {
             onSearchedCoordinateChange(x = "", y = "")
-            addressRepository.getAddress(keyword = searchText, currentPage = 1, countPerPage = 5)
+            addressRepository.getAddress(keyword = searchText)
                 .asResult()
                 .collectLatest { result ->
                     when (result) {

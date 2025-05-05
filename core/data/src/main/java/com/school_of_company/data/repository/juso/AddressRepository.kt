@@ -5,8 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface AddressRepository {
     fun getAddress(
-        currentPage: Int,
-        countPerPage: Int,
         keyword: String,
     ): Flow<List<JusoModel>>
 }

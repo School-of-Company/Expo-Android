@@ -5,11 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.school_of_company.common.regex.checkEmailRegex
 import com.school_of_company.common.regex.checkPasswordRegex
-import com.school_of_company.common.result.Result
-import com.school_of_company.common.result.asResult
 import com.school_of_company.domain.usecase.auth.AdminSignUpRequestUseCase
-import com.school_of_company.domain.usecase.sms.SmsSignUpCertificationNumberCertificationRequestUseCase
-import com.school_of_company.domain.usecase.sms.SmsSignUpCertificationNumberSendRequestUseCase
 import com.school_of_company.model.param.auth.AdminSignUpRequestParam
 import com.school_of_company.model.param.sms.SmsSignUpCertificationNumberSendRequestParam
 import com.school_of_company.design_system.R
@@ -21,7 +17,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import javax.inject.Inject

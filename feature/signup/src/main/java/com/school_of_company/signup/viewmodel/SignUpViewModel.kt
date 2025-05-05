@@ -7,8 +7,9 @@ import com.school_of_company.common.regex.checkEmailRegex
 import com.school_of_company.common.regex.checkPasswordRegex
 import com.school_of_company.common.result.Result
 import com.school_of_company.common.result.asResult
-import com.school_of_company.data.repository.sms.SmsRepository
-import com.school_of_company.domain.usecase.auth.AdminSignUpRequestUseCase
+import com.school_of_company.data.repository.auth.AuthRepository
+import com.school_of_company.domain.usecase.sms.SmsSignUpCertificationNumberCertificationRequestUseCase
+import com.school_of_company.domain.usecase.sms.SmsSignUpCertificationNumberSendRequestUseCase
 import com.school_of_company.model.param.auth.AdminSignUpRequestParam
 import com.school_of_company.model.param.sms.SmsSignUpCertificationNumberSendRequestParam
 import com.school_of_company.design_system.R
@@ -28,7 +29,8 @@ import javax.inject.Inject
 @HiltViewModel
 internal class SignUpViewModel @Inject constructor(
     private val signUpRequestUseCase: AdminSignUpRequestUseCase,
-    private val smsRepository: SmsRepository,
+    private val smsSignUpCertificationNumberSendRequestUseCase: SmsSignUpCertificationNumberSendRequestUseCase,
+    private val smsSignUpCertificationNumberCertificationRequestUseCase: SmsSignUpCertificationNumberCertificationRequestUseCase,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     companion object {
@@ -148,22 +150,26 @@ internal class SignUpViewModel @Inject constructor(
             else -> {
                 _signUpUiState.value = SignUpUiState.Loading
 
-                signUpRequestUseCase(body = body)
-                    .onSuccess {
-                        it.catch { remoteError ->
-                            _signUpUiState.value = when {
-                                remoteError is HttpException -> when (remoteError.code()) {
-                                    409 -> SignUpUiState.Conflict
-                                    404  -> SignUpUiState.NotSmsCheck
-                                    else -> SignUpUiState.Error(remoteError)
+                authRepository.adminSignUp(body = body)
+                    .asResult()
+                    .collectLatest { result ->
+                        when (result) {
+                            is Result.Loading -> _signUpUiState.value = SignUpUiState.Loading
+                            is Result.Success -> _signUpUiState.value = SignUpUiState.Success
+                            is Result.Error -> {
+                                val exception = result.exception
+                                _signUpUiState.value = when (exception) {
+                                    is HttpException -> {
+                                        when (exception.code()) {
+                                            409 -> SignUpUiState.Conflict
+                                            404  -> SignUpUiState.NotSmsCheck
+                                            else -> SignUpUiState.Error(exception)
+                                        }
+                                    }
+                                    else -> SignUpUiState.Error(exception)
                                 }
-
-                                else -> SignUpUiState.Error(remoteError)
                             }
-                        }.collect {  _signUpUiState.value = SignUpUiState.Success }
-                    }
-                    .onFailure { error ->
-                        _signUpUiState.value = SignUpUiState.Error(error)
+                        }
                     }
                 }
             }

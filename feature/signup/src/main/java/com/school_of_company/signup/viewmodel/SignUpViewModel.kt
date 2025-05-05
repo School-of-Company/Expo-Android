@@ -153,19 +153,19 @@ internal class SignUpViewModel @Inject constructor(
                 signUpRequestUseCase(body = body)
                     .onSuccess {
                         it.catch { remoteError ->
-                            _signUpUiState.value = SignUpUiState.Error(remoteError)
+                            _signUpUiState.value = when {
+                                remoteError is HttpException -> when (remoteError.code()) {
+                                    409 -> SignUpUiState.Conflict
+                                    404  -> SignUpUiState.NotSmsCheck
+                                    else -> SignUpUiState.Error(remoteError)
+                                }
+
+                                else -> SignUpUiState.Error(remoteError)
+                            }
                         }.collect {  _signUpUiState.value = SignUpUiState.Success }
                     }
                     .onFailure { error ->
-                        _signUpUiState.value = when {
-                            error is HttpException -> when (error.code()) {
-                                409 -> SignUpUiState.Conflict
-                                404  -> SignUpUiState.NotSmsCheck
-                                else -> SignUpUiState.Error(error)
-                            }
-
-                            else -> SignUpUiState.Error(error)
-                        }
+                        _signUpUiState.value = SignUpUiState.Error(error)
                     }
                 }
             }

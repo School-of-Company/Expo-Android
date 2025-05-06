@@ -7,7 +7,7 @@ import com.school_of_company.common.result.Result
 import com.school_of_company.common.result.asResult
 import com.school_of_company.data.repository.attendance.AttendanceRepository
 import com.school_of_company.data.repository.participant.ParticipantRepository
-import com.school_of_company.domain.usecase.standard.StandardProgramListUseCase
+import com.school_of_company.data.repository.standard.StandardRepository
 import com.school_of_company.domain.usecase.trainee.TraineeResponseListUseCase
 import com.school_of_company.domain.usecase.training.TrainingProgramListUseCase
 import com.school_of_company.model.param.attendance.StandardQrCodeRequestParam
@@ -28,7 +28,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class ProgramViewModel @Inject constructor(
     private val trainingProgramListUseCase: TrainingProgramListUseCase,
-    private val standardProgramListUseCase: StandardProgramListUseCase,
+    private val standardRepository: StandardRepository,
     private val traineeResponseListUseCase: TraineeResponseListUseCase,
     private val attendanceRepository: AttendanceRepository,
     private val participantRepository: ParticipantRepository,
@@ -93,7 +93,7 @@ internal class ProgramViewModel @Inject constructor(
 
     internal fun standardProgramList(expoId: String) = viewModelScope.launch {
         _swipeRefreshLoading.value = true
-        standardProgramListUseCase(expoId = expoId)
+        standardRepository.standardProgramList(expoId = expoId)
             .asResult()
             .collectLatest { result ->
                 when (result) {

@@ -8,16 +8,20 @@ import kotlinx.coroutines.flow.transform
 import javax.inject.Inject
 
 class AddressRepositoryImpl @Inject constructor(
-    private val addressDataSource: AddressDataSource
+    private val addressDataSource: AddressDataSource,
 ) : AddressRepository {
+
+    companion object {
+        private const val DEFAULT_PAGE = 1
+        private const val DEFAULT_PAGE_SIZE = 5
+    }
+
     override fun getAddress(
-        currentPage: Int,
-        countPerPage: Int,
         keyword: String
     ): Flow<List<JusoModel>> =
         addressDataSource.getAddress(
-            countPerPage = countPerPage,
-            currentPage = currentPage,
+            countPerPage = DEFAULT_PAGE_SIZE,
+            currentPage = DEFAULT_PAGE,
             keyword = keyword
         ).transform { list ->
             emit(list.results.juso?.map { juso -> juso.toModel() } ?: emptyList())

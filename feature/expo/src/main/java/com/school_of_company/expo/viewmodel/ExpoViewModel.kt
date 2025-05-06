@@ -9,10 +9,9 @@ import com.school_of_company.common.exception.NoResponseException
 import com.school_of_company.common.result.Result
 import com.school_of_company.common.result.asResult
 import com.school_of_company.data.repository.expo.ExpoRepository
-import com.school_of_company.domain.usecase.Image.ImageUpLoadUseCase
-import com.school_of_company.domain.usecase.juso.GetAddressUseCase
-import com.school_of_company.domain.usecase.kakao.GetCoordinatesToAddressUseCase
-import com.school_of_company.domain.usecase.kakao.GetCoordinatesUseCase
+import com.school_of_company.data.repository.image.ImageRepository
+import com.school_of_company.data.repository.juso.AddressRepository
+import com.school_of_company.data.repository.kakao.KakaoRepository
 import com.school_of_company.domain.usecase.standard.StandardProgramListUseCase
 import com.school_of_company.domain.usecase.training.TrainingProgramListUseCase
 import com.school_of_company.expo.enum.CurrentScreen
@@ -55,13 +54,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class ExpoViewModel @Inject constructor(
-    private val getAddressUseCase: GetAddressUseCase,
+    private val kakaoRepository: KakaoRepository,
+    private val addressRepository: AddressRepository,
     private val expoRepository: ExpoRepository,
-    private val imageUpLoadUseCase: ImageUpLoadUseCase,
-    private val getCoordinatesUseCase: GetCoordinatesUseCase,
+    private val imageRepository: ImageRepository,
     private val standardProgramListUseCase: StandardProgramListUseCase,
     private val trainingProgramListUseCase: TrainingProgramListUseCase,
-    private val getCoordinatesToAddressUseCase: GetCoordinatesToAddressUseCase,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     companion object {
@@ -395,7 +393,7 @@ internal class ExpoViewModel @Inject constructor(
             return@launch
         }
 
-        imageUpLoadUseCase(multipartFile)
+        imageRepository.imageUpLoad(multipartFile)
             .asResult()
             .collectLatest { result ->
                 when (result) {
@@ -464,7 +462,7 @@ internal class ExpoViewModel @Inject constructor(
     internal fun searchLocation(searchText: String) =
         viewModelScope.launch {
             onSearchedCoordinateChange(x = "", y = "")
-            getAddressUseCase(searchText = searchText)
+            addressRepository.getAddress(keyword = searchText)
                 .asResult()
                 .collectLatest { result ->
                     when (result) {
@@ -485,7 +483,7 @@ internal class ExpoViewModel @Inject constructor(
 
     internal fun convertJibunToXY(searchText: String) = viewModelScope.launch {
         _getAddressUiState.value = GetAddressUiState.Loading
-        getCoordinatesUseCase(address = searchText)
+        kakaoRepository.getCoordinates(address = searchText)
             .asResult()
             .collectLatest { result ->
                 when(result){
@@ -507,7 +505,7 @@ internal class ExpoViewModel @Inject constructor(
     }
 
     private fun convertXYToJibun(x: String, y: String) = viewModelScope.launch {
-        getCoordinatesToAddressUseCase(x = x, y = y)
+        kakaoRepository.getAddress(x = x, y = y)
             .asResult()
             .collectLatest { result ->
                 when (result) {

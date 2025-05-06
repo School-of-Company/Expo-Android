@@ -7,9 +7,8 @@ import com.school_of_company.common.regex.checkEmailRegex
 import com.school_of_company.common.regex.checkPasswordRegex
 import com.school_of_company.common.result.Result
 import com.school_of_company.common.result.asResult
+import com.school_of_company.data.repository.sms.SmsRepository
 import com.school_of_company.domain.usecase.auth.AdminSignUpRequestUseCase
-import com.school_of_company.domain.usecase.sms.SmsSignUpCertificationNumberCertificationRequestUseCase
-import com.school_of_company.domain.usecase.sms.SmsSignUpCertificationNumberSendRequestUseCase
 import com.school_of_company.model.param.auth.AdminSignUpRequestParam
 import com.school_of_company.model.param.sms.SmsSignUpCertificationNumberSendRequestParam
 import com.school_of_company.design_system.R
@@ -29,8 +28,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class SignUpViewModel @Inject constructor(
     private val signUpRequestUseCase: AdminSignUpRequestUseCase,
-    private val smsSignUpCertificationNumberSendRequestUseCase: SmsSignUpCertificationNumberSendRequestUseCase,
-    private val smsSignUpCertificationNumberCertificationRequestUseCase: SmsSignUpCertificationNumberCertificationRequestUseCase,
+    private val smsRepository: SmsRepository,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     companion object {
@@ -171,32 +169,47 @@ internal class SignUpViewModel @Inject constructor(
             }
         }
 
-    internal fun certificationCode(phoneNumber: String, certificationNumber: String) =
-        viewModelScope.launch {
+    internal fun certificationCode(phoneNumber: String, certificationNumber: String) = viewModelScope.launch {
             setCodeError(false)
-            smsSignUpCertificationNumberCertificationRequestUseCase(
+            smsRepository.smsSignUpCertificationNumberCertification(
                 phoneNumber = phoneNumber,
                 code = certificationNumber
             )
-                .onSuccess {
-                    it.catch { exception ->
-                        _smsSignUpCertificationCodeUiState.value = when {
-                            exception is HttpException -> when (exception.code()) {
-                                401 -> {
-                                    setUnauthorizedError(true)
-                                    SmsSignUpCertificationCodeUiState.Error(
-                                        exception,
-                                        R.string.valid_certification,
-                                        SmsSignUpCertificationCodeUiState.ErrorType.Unauthorized
-                                    )
-                                }
-                                404 -> {
-                                    setBadRequestError(true)
-                                    SmsSignUpCertificationCodeUiState.Error(
-                                        exception,
-                                        R.string.sms_not_certification,
-                                        SmsSignUpCertificationCodeUiState.ErrorType.BAD_REQUEST
-                                    )
+                .asResult()
+                .collectLatest { result ->
+                    when (result) {
+                        is Result.Loading -> _smsSignUpCertificationCodeUiState.value = SmsSignUpCertificationCodeUiState.Loading
+                        is Result.Success -> _smsSignUpCertificationCodeUiState.value = SmsSignUpCertificationCodeUiState.Success
+                        is Result.Error -> {
+                            val exception = result.exception
+                            _smsSignUpCertificationCodeUiState.value = when (exception) {
+                                is HttpException -> {
+                                    when (exception.code()) {
+                                        401 -> {
+                                            setUnauthorizedError(true)
+                                            SmsSignUpCertificationCodeUiState.Error(
+                                                exception,
+                                                R.string.valid_certification,
+                                                SmsSignUpCertificationCodeUiState.ErrorType.Unauthorized
+                                            )
+                                        }
+                                        404 -> {
+                                            setBadRequestError(true)
+                                            SmsSignUpCertificationCodeUiState.Error(
+                                                exception,
+                                                R.string.sms_not_certification,
+                                                SmsSignUpCertificationCodeUiState.ErrorType.BAD_REQUEST
+                                            )
+                                        }
+                                        else -> {
+                                            setError(true)
+                                            SmsSignUpCertificationCodeUiState.Error(
+                                                exception,
+                                                R.string.fail_certification,
+                                                SmsSignUpCertificationCodeUiState.ErrorType.GENERAL
+                                            )
+                                        }
+                                    }
                                 }
                                 else -> {
                                     setError(true)
@@ -207,37 +220,22 @@ internal class SignUpViewModel @Inject constructor(
                                     )
                                 }
                             }
-                            else -> {
-                                setError(true)
-                                SmsSignUpCertificationCodeUiState.Error(
-                                    exception,
-                                    R.string.fail_certification,
-                                    SmsSignUpCertificationCodeUiState.ErrorType.GENERAL
-                                )
-                            }
                         }
-                    }.collect { _smsSignUpCertificationCodeUiState.value = SmsSignUpCertificationCodeUiState.Success }
-                }
-                .onFailure { error ->
-                    _smsSignUpCertificationCodeUiState.value = SmsSignUpCertificationCodeUiState.Error(
-                        error,
-                        R.string.fail_certification,
-                        SmsSignUpCertificationCodeUiState.ErrorType.GENERAL
-                    )
+                    }
                 }
         }
 
     internal fun sendCertificationCode(body: SmsSignUpCertificationNumberSendRequestParam) =
         viewModelScope.launch {
             _smsSignUpCertificationSendCodeUiState.value = SmsSignUpCertificationSendCodeUiState.Loading
-            smsSignUpCertificationNumberSendRequestUseCase(body = body)
-                .onSuccess {
-                    it.catch { remoteError ->
-                        _smsSignUpCertificationSendCodeUiState.value = SmsSignUpCertificationSendCodeUiState.Error(remoteError)
-                    }.collect { _smsSignUpCertificationSendCodeUiState.value = SmsSignUpCertificationSendCodeUiState.Success }
-                }
-                .onFailure { error ->
-                    _smsSignUpCertificationSendCodeUiState.value = SmsSignUpCertificationSendCodeUiState.Error(error)
+            smsRepository.smsSignUpCertificationNumberSend(body = body)
+                .asResult()
+                .collectLatest { result ->
+                    when (result) {
+                        is Result.Loading -> _smsSignUpCertificationSendCodeUiState.value = SmsSignUpCertificationSendCodeUiState.Loading
+                        is Result.Success -> _smsSignUpCertificationSendCodeUiState.value = SmsSignUpCertificationSendCodeUiState.Success
+                        is Result.Error -> _smsSignUpCertificationSendCodeUiState.value = SmsSignUpCertificationSendCodeUiState.Error(result.exception)
+                    }
                 }
         }
 

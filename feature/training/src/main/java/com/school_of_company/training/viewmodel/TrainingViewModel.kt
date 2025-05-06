@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.school_of_company.common.result.Result
 import com.school_of_company.common.result.asResult
-import com.school_of_company.domain.usecase.training.TeacherTrainingProgramListUseCase
+import com.school_of_company.data.repository.training.TrainingRepository
 import com.school_of_company.training.viewmodel.uistate.TeacherTrainingProgramListUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class TrainingViewModel @Inject constructor(
-    private val teacherTrainingProgramListUseCase: TeacherTrainingProgramListUseCase
+    private val trainingRepository: TrainingRepository
 ) : ViewModel() {
     private val _swipeRefreshLoading = MutableStateFlow(false)
     internal val swipeRefreshLoading = _swipeRefreshLoading.asStateFlow()
@@ -25,7 +25,7 @@ internal class TrainingViewModel @Inject constructor(
 
     internal fun teacherTrainingProgramList(trainingProId: Long) = viewModelScope.launch {
         _teacherTrainingProgramListUiState.value = TeacherTrainingProgramListUiState.Loading
-        teacherTrainingProgramListUseCase(trainingProId = trainingProId)
+        trainingRepository.teacherTrainingProgramList(trainingProId = trainingProId)
             .asResult()
             .collectLatest { result ->
                 when (result) {

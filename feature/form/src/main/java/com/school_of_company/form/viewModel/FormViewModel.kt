@@ -66,14 +66,16 @@ internal class FormViewModel @Inject constructor(
                 when(result) {
                     is Result.Loading -> _formUiState.value = FormUiState.Loading
                     is Result.Success -> _formUiState.value = FormUiState.Success
-                    is Result.Error ->
-                        _formUiState.value = when {
-                            result is HttpException -> when (result.code()) {
+                    is Result.Error -> {
+                        val exception = result.exception
+                        _formUiState.value = when (exception) {
+                            is HttpException -> when (exception.code()) {
                                 409 -> FormUiState.Conflict
-                                else -> FormUiState.Error(result)
+                                else -> FormUiState.Error(exception)
                             }
-                            else -> FormUiState.Error(result.exception)
+                            else -> FormUiState.Error(exception)
                         }
+                    }
                 }
         }
     }
@@ -97,14 +99,16 @@ internal class FormViewModel @Inject constructor(
                 when (result) {
                     is Result.Loading -> _formUiState.value = FormUiState.Loading
                     is Result.Success -> _formUiState.value = FormUiState.Success
-                    is Result.Error ->
-                        _formUiState.value = when {
-                            result is HttpException -> when (result.code()) {
-                                404 -> FormUiState.NotFound
-                                else -> FormUiState.Error(result)
+                    is Result.Error -> {
+                        val exception = result.exception
+                        _formUiState.value = when (exception) {
+                            is HttpException -> when (exception.code()) {
+                                409 -> FormUiState.Conflict
+                                else -> FormUiState.Error(exception)
                             }
-                            else -> FormUiState.Error(result.exception)
+                            else -> FormUiState.Error(exception)
                         }
+                    }
                 }
             }
     }

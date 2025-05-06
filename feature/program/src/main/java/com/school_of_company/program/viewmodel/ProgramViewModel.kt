@@ -6,8 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.school_of_company.common.result.Result
 import com.school_of_company.common.result.asResult
 import com.school_of_company.data.repository.attendance.AttendanceRepository
+import com.school_of_company.data.repository.participant.ParticipantRepository
 import com.school_of_company.data.repository.standard.StandardRepository
-import com.school_of_company.domain.usecase.participant.ParticipantInformationResponseUseCase
 import com.school_of_company.domain.usecase.trainee.TraineeResponseListUseCase
 import com.school_of_company.domain.usecase.training.TrainingProgramListUseCase
 import com.school_of_company.model.param.attendance.StandardQrCodeRequestParam

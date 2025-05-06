@@ -115,7 +115,7 @@ internal class ExpoViewModel @Inject constructor(
     private val _getAddressUiState = MutableStateFlow<GetAddressUiState>(GetAddressUiState.Loading)
     internal val getAddressUiState = _getAddressUiState.asStateFlow()
 
-    private val _registerExpoInformationUiState = MutableStateFlow<RegisterExpoInformationUiState>(RegisterExpoInformationUiState.Loading)
+    private val _registerExpoInformationUiState = MutableStateFlow<RegisterExpoInformationUiState>(RegisterExpoInformationUiState.Initial)
     internal val registerExpoInformationUiState = _registerExpoInformationUiState.asStateFlow()
 
     private val _modifyExpoInformationUiState = MutableStateFlow<ModifyExpoInformationUiState>(ModifyExpoInformationUiState.Loading)
@@ -236,7 +236,6 @@ internal class ExpoViewModel @Inject constructor(
 
     internal fun registerExpoInformation(body: ExpoAllRequestParam) =
         viewModelScope.launch {
-            _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Loading
             expoRepository.registerExpoInformation(
                 body = body.copy(
                     startedDay = body.startedDay.autoFormatToDateTime(),
@@ -267,7 +266,7 @@ internal class ExpoViewModel @Inject constructor(
 
     internal fun initRegisterExpo() {
         _imageUpLoadUiState.value = ImageUpLoadUiState.Loading
-        _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Loading
+        _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Initial
         _getCoordinatesUiState.value = GetCoordinatesUiState.Loading
         _getAddressUiState.value = GetAddressUiState.Loading
     }

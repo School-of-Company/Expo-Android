@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.school_of_company.common.regex.checkPasswordRegex
 import com.school_of_company.common.result.Result
 import com.school_of_company.common.result.asResult
-import com.school_of_company.domain.usecase.auth.AdminSignInRequestUseCase
+import com.school_of_company.data.repository.auth.AuthRepository
 import com.school_of_company.model.param.auth.AdminSignInRequestParam
 import com.school_of_company.design_system.R
 import com.school_of_company.signin.viewmodel.uistate.SignInUiState
@@ -21,7 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class SignInViewModel @Inject constructor(
-    private val signInUseCase: AdminSignInRequestUseCase,
+    private val authRepository: AuthRepository,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     companion object {
@@ -87,12 +87,15 @@ internal class SignInViewModel @Inject constructor(
             return@launch
         }
 
-            signInUseCase(body = body)
+            authRepository.adminSignIn(body = body)
                 .asResult()
                 .collectLatest { result->
                     when (result) {
                         is Result.Loading -> _signInUiState.value = SignInUiState.Loading
-                        is Result.Success -> _signInUiState.value = SignInUiState.Success
+                        is Result.Success -> {
+                            _signInUiState.value = SignInUiState.Success
+                            authRepository.saveToken(result.data)
+                        }
                         is Result.Error -> {
                             val exception = result.exception
                             _signInUiState.value = when {

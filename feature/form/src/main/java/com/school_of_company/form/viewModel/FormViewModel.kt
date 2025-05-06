@@ -5,9 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.school_of_company.common.result.Result
 import com.school_of_company.common.result.asResult
-import com.school_of_company.domain.usecase.form.CreateFormUseCase
-import com.school_of_company.domain.usecase.form.GetFormUseCase
-import com.school_of_company.domain.usecase.form.ModifyFormUseCase
+import com.school_of_company.data.repository.form.FormRepository
 import com.school_of_company.form.viewModel.uiState.FormUiState
 import com.school_of_company.form.viewModel.uiState.GetFormUiState
 import com.school_of_company.model.model.form.DynamicFormModel
@@ -15,7 +13,6 @@ import com.school_of_company.model.model.form.FormRequestAndResponseModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -23,9 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class FormViewModel @Inject constructor(
-    private val createFormUseCase: CreateFormUseCase,
-    private val getFormUseCase: GetFormUseCase,
-    private val modifyFormUseCase: ModifyFormUseCase,
+    private val formRepository: FormRepository,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -58,7 +53,7 @@ internal class FormViewModel @Inject constructor(
         informationText: String,
     ) = viewModelScope.launch {
         _formUiState.value = FormUiState.Loading
-        createFormUseCase(
+        formRepository.createForm(
             expoId = expoId,
             body = FormRequestAndResponseModel(
                 participantType = participantType,
@@ -66,22 +61,21 @@ internal class FormViewModel @Inject constructor(
                 informationText = informationText
             ),
         )
-            .onSuccess {
-                it.catch { remoteError ->
-                    _formUiState.value = when {
-                        remoteError is HttpException -> when (remoteError.code()) {
-                            409 -> FormUiState.Conflict
-                            else -> FormUiState.Error(remoteError)
+            .asResult()
+            .collectLatest{result ->
+                when(result) {
+                    is Result.Loading -> _formUiState.value = FormUiState.Loading
+                    is Result.Success -> _formUiState.value = FormUiState.Success
+                    is Result.Error ->
+                        _formUiState.value = when {
+                            result is HttpException -> when (result.code()) {
+                                409 -> FormUiState.Conflict
+                                else -> FormUiState.Error(result)
+                            }
+                            else -> FormUiState.Error(result.exception)
                         }
-                        else -> FormUiState.Error(remoteError)
-                    }
-                }.collect {
-                    _formUiState.value = FormUiState.Success
                 }
-            }
-            .onFailure { error ->
-                _formUiState.value = FormUiState.Error(error)
-            }
+        }
     }
 
     internal fun modifyForm(
@@ -90,7 +84,7 @@ internal class FormViewModel @Inject constructor(
         informationText: String,
     ) = viewModelScope.launch {
         _formUiState.value = FormUiState.Loading
-        modifyFormUseCase(
+        formRepository.modifyForm(
             expoId = expoId,
             body = FormRequestAndResponseModel(
                 participantType = participantType,
@@ -98,21 +92,20 @@ internal class FormViewModel @Inject constructor(
                 informationText = informationText
             ),
         )
-            .onSuccess {
-                it.catch { remoteError ->
-                    _formUiState.value = when {
-                        remoteError is HttpException -> when (remoteError.code()) {
-                            404 -> FormUiState.NotFound
-                            else -> FormUiState.Error(remoteError)
+            .asResult()
+            .collectLatest { result ->
+                when (result) {
+                    is Result.Loading -> _formUiState.value = FormUiState.Loading
+                    is Result.Success -> _formUiState.value = FormUiState.Success
+                    is Result.Error ->
+                        _formUiState.value = when {
+                            result is HttpException -> when (result.code()) {
+                                404 -> FormUiState.NotFound
+                                else -> FormUiState.Error(result)
+                            }
+                            else -> FormUiState.Error(result.exception)
                         }
-                        else -> FormUiState.Error(remoteError)
-                    }
-                }.collect {
-                    _formUiState.value = FormUiState.Success
                 }
-            }
-            .onFailure { error ->
-                _formUiState.value = FormUiState.Error(error)
             }
     }
 
@@ -121,7 +114,7 @@ internal class FormViewModel @Inject constructor(
         participantType: String,
     ) = viewModelScope.launch {
         _getFormUiState.value = GetFormUiState.Loading
-        getFormUseCase(
+        formRepository.getForm(
             expoId = expoId,
             participantType = participantType,
         )

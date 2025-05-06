@@ -8,7 +8,7 @@ import com.school_of_company.common.result.asResult
 import com.school_of_company.data.repository.attendance.AttendanceRepository
 import com.school_of_company.data.repository.participant.ParticipantRepository
 import com.school_of_company.data.repository.standard.StandardRepository
-import com.school_of_company.domain.usecase.trainee.TraineeResponseListUseCase
+import com.school_of_company.data.repository.trainee.TraineeRepository
 import com.school_of_company.domain.usecase.training.TrainingProgramListUseCase
 import com.school_of_company.model.param.attendance.StandardQrCodeRequestParam
 import com.school_of_company.model.param.attendance.TrainingQrCodeRequestParam
@@ -29,7 +29,7 @@ import javax.inject.Inject
 internal class ProgramViewModel @Inject constructor(
     private val trainingProgramListUseCase: TrainingProgramListUseCase,
     private val standardRepository: StandardRepository,
-    private val traineeResponseListUseCase: TraineeResponseListUseCase,
+    private val traineeRepository: TraineeRepository,
     private val attendanceRepository: AttendanceRepository,
     private val participantRepository: ParticipantRepository,
     private val savedStateHandle: SavedStateHandle
@@ -186,7 +186,7 @@ internal class ProgramViewModel @Inject constructor(
         name: String? = null
     ) = viewModelScope.launch {
         _swipeRefreshLoading.value = true
-        traineeResponseListUseCase(
+        traineeRepository.getTraineeList(
             expoId = expoId,
             name = name
         )

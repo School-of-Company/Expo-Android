@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.school_of_company.common.result.Result
 import com.school_of_company.common.result.asResult
 import com.school_of_company.data.repository.attendance.AttendanceRepository
-import com.school_of_company.domain.usecase.participant.ParticipantInformationResponseUseCase
+import com.school_of_company.data.repository.participant.ParticipantRepository
 import com.school_of_company.domain.usecase.standard.StandardProgramListUseCase
 import com.school_of_company.domain.usecase.trainee.TraineeResponseListUseCase
 import com.school_of_company.domain.usecase.training.TrainingProgramListUseCase
@@ -21,7 +21,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -32,7 +31,7 @@ internal class ProgramViewModel @Inject constructor(
     private val standardProgramListUseCase: StandardProgramListUseCase,
     private val traineeResponseListUseCase: TraineeResponseListUseCase,
     private val attendanceRepository: AttendanceRepository,
-    private val getParticipantListInformationUseCase: ParticipantInformationResponseUseCase,
+    private val participantRepository: ParticipantRepository,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     companion object {
@@ -218,9 +217,7 @@ internal class ProgramViewModel @Inject constructor(
         localDate: String? = null
     ) = viewModelScope.launch {
         _swipeRefreshLoading.value = true
-
-
-        getParticipantListInformationUseCase(
+        participantRepository.getParticipantInformationList(
             expoId = expoId,
             localDate = localDate,
             page = currentPage,

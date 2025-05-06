@@ -28,7 +28,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class SignUpViewModel @Inject constructor(
-    private val signUpRequestUseCase: AdminSignUpRequestUseCase,
+    private val authRepository: AuthRepository,
     private val smsSignUpCertificationNumberSendRequestUseCase: SmsSignUpCertificationNumberSendRequestUseCase,
     private val smsSignUpCertificationNumberCertificationRequestUseCase: SmsSignUpCertificationNumberCertificationRequestUseCase,
     private val savedStateHandle: SavedStateHandle,

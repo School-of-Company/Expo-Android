@@ -234,28 +234,34 @@ internal class ExpoViewModel @Inject constructor(
             }
     }
 
-    internal fun registerExpoInformation(body: ExpoAllRequestParam) =
+    internal fun registerExpoInformation() =
         viewModelScope.launch {
             _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Loading
             expoRepository.registerExpoInformation(
-                body = body.copy(
-                    startedDay = body.startedDay.autoFormatToDateTime(),
-                    finishedDay = body.finishedDay.autoFormatToDateTime(),
-                    addStandardProRequestDto = body.addStandardProRequestDto.map { list ->
-                        list.copy(
-                            startedAt = list.startedAt.autoFormatToDateTime(),
-                            endedAt = list.endedAt.autoFormatToDateTime(),
-                        )
-                    },
-                    addTrainingProRequestDto = body.addTrainingProRequestDto.map { list ->
+                body = ExpoAllRequestParam(
+                    title = modify_title.value,
+                    startedDay = started_date.value.autoFormatToDateTime(),
+                    finishedDay = ended_date.value.autoFormatToDateTime(),
+                    description = introduce_title.value,
+                    location = location.value,
+                    coverImage = (imageUpLoadUiState as ImageUpLoadUiState.Success).data.imageURL,
+                    x = coordinateX.value,
+                    y = coordinateY.value,
+                    addStandardProRequestDto = standardProgramTextState.value.map { list ->
+                            list.copy(
+                                startedAt = list.startedAt.autoFormatToDateTime(),
+                                endedAt = list.endedAt.autoFormatToDateTime(),
+                            )
+                        },
+                    addTrainingProRequestDto = trainingProgramTextState.value.map { list ->
                         list.copy(
                             startedAt = list.startedAt.autoFormatToDateTime(),
                             endedAt = list.endedAt.autoFormatToDateTime(),
                         )
                     }
-                ),
-            )
-                .asResult()
+
+                )
+            ).asResult()
                 .collectLatest { result ->
                     when (result) {
                         is Result.Loading -> _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Loading

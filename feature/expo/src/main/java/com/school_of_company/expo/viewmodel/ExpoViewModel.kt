@@ -243,7 +243,7 @@ internal class ExpoViewModel @Inject constructor(
                     finishedDay = ended_date.value.autoFormatToDateTime(),
                     description = introduce_title.value,
                     location = location.value,
-                    coverImage = (imageUpLoadUiState as ImageUpLoadUiState.Success).data.imageURL,
+                    coverImage = (imageUpLoadUiState.value as ImageUpLoadUiState.Success).data.imageURL,
                     x = coordinateX.value,
                     y = coordinateY.value,
                     addStandardProRequestDto = standardProgramTextState.value.map { list ->

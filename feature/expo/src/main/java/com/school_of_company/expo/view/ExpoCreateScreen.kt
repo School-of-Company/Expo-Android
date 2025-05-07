@@ -120,7 +120,7 @@ internal fun ExpoCreateRoute(
                 val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
                 context.contentResolver.openInputStream(uri)?.use { inputStream ->
                     BitmapFactory.decodeStream(inputStream, null, options)
-                    selectedImageUri = selectedImageUri
+                    previousImageUri = selectedImageUri
                     selectedImageUri = uri
                     viewModel.onCoverImageChange(uri.toString())
                 }

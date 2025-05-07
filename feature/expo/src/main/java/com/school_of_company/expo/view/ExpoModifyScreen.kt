@@ -110,6 +110,7 @@ internal fun ExpoModifyRoute(
     val standardProgramTextState by viewModel.standardProgramModifyTextState.collectAsStateWithLifecycle()
 
     var selectedImageUri by rememberSaveable { mutableStateOf<Uri?>(null) }
+    var previousImageUri by rememberSaveable { mutableStateOf<Uri?>(null) }
 
     val context = LocalContext.current
 
@@ -119,6 +120,7 @@ internal fun ExpoModifyRoute(
                 val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
                 context.contentResolver.openInputStream(uri)?.use { inputStream ->
                     BitmapFactory.decodeStream(inputStream, null, options)
+                    previousImageUri = selectedImageUri
                     selectedImageUri = uri
                     viewModel.onCoverImageChange(uri.toString())
                 }
@@ -128,6 +130,9 @@ internal fun ExpoModifyRoute(
     LaunchedEffect(imageUpLoadUiState) {
         when (imageUpLoadUiState) {
             is ImageUpLoadUiState.Error -> {
+                selectedImageUri = previousImageUri
+                viewModel.onCoverImageChange(selectedImageUri.toString())
+                previousImageUri = null
                 onErrorToast(null, R.string.expo_image_fail)
             }
             else -> Unit

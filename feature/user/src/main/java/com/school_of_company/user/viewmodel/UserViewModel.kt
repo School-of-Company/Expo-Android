@@ -4,12 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.school_of_company.common.result.Result
 import com.school_of_company.common.result.asResult
-import com.school_of_company.domain.usecase.admin.AllowAdminRequestUseCase
-import com.school_of_company.domain.usecase.admin.GetAdminInformationUseCase
-import com.school_of_company.domain.usecase.admin.GetAdminRequestAllowListUseCase
-import com.school_of_company.domain.usecase.admin.RejectAdminRequestUseCase
-import com.school_of_company.domain.usecase.admin.ServiceWithdrawalUseCase
-import com.school_of_company.domain.usecase.auth.AdminLogoutUseCase
+import com.school_of_company.data.repository.admin.AdminRepository
+import com.school_of_company.data.repository.auth.AuthRepository
 import com.school_of_company.user.viewmodel.uistate.AllowAdminRequestUiState
 import com.school_of_company.user.viewmodel.uistate.GetAdminInformationUiState
 import com.school_of_company.user.viewmodel.uistate.GetAdminRequestAllowListUiState
@@ -19,19 +15,14 @@ import com.school_of_company.user.viewmodel.uistate.ServiceWithdrawalUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class UserViewModel @Inject constructor(
-    private val logoutUseCase: AdminLogoutUseCase,
-    private val allowAdminRequestUseCase: AllowAdminRequestUseCase,
-    private val rejectAdminRequestUseCase: RejectAdminRequestUseCase,
-    private val serviceWithdrawalUseCase: ServiceWithdrawalUseCase,
-    private val getAdminRequestAllowListUseCase: GetAdminRequestAllowListUseCase,
-    private val getAdminInformationUseCase: GetAdminInformationUseCase
+    private val authRepository: AuthRepository,
+    private val adminRepository: AdminRepository
 ) : ViewModel() {
 
     private val _swipeRefreshLoading = MutableStateFlow(false)
@@ -58,7 +49,7 @@ class UserViewModel @Inject constructor(
     internal fun getAdminRequestAllowList() = viewModelScope.launch {
         _swipeRefreshLoading.value = true
         _getAdminRequestAllowListUiState.value = GetAdminRequestAllowListUiState.Loading
-        getAdminRequestAllowListUseCase()
+        adminRepository.getAdminRequestAllowList()
             .asResult()
             .collectLatest { result ->
                 when (result) {
@@ -82,31 +73,27 @@ class UserViewModel @Inject constructor(
 
     internal fun allowAdminRequest(adminId: Long) = viewModelScope.launch {
         _allowAdminRequestUiState.value = AllowAdminRequestUiState.Loading
-        allowAdminRequestUseCase(adminId = adminId)
-            .onSuccess {
-                it.catch { remoteError ->
-                    _allowAdminRequestUiState.value = AllowAdminRequestUiState.Error(remoteError)
-                }.collect {
-                    _allowAdminRequestUiState.value = AllowAdminRequestUiState.Success
+        adminRepository.allowAdmin(adminId = adminId)
+            .asResult()
+            .collectLatest { result ->
+                when (result) {
+                    is Result.Loading -> _allowAdminRequestUiState.value = AllowAdminRequestUiState.Loading
+                    is Result.Success -> _allowAdminRequestUiState.value = AllowAdminRequestUiState.Success
+                    is Result.Error -> _allowAdminRequestUiState.value = AllowAdminRequestUiState.Error(result.exception)
                 }
-            }
-            .onFailure { error ->
-                _allowAdminRequestUiState.value = AllowAdminRequestUiState.Error(error)
             }
     }
 
     internal fun rejectAdminRequest(adminId: Long) = viewModelScope.launch {
         _rejectAdminRequestUiState.value = RejectAdminRequestUiState.Loading
-        rejectAdminRequestUseCase(adminId = adminId)
-            .onSuccess {
-                it.catch { remoteError ->
-                    _rejectAdminRequestUiState.value = RejectAdminRequestUiState.Error(remoteError)
-                }.collect {
-                    _rejectAdminRequestUiState.value = RejectAdminRequestUiState.Success
+        adminRepository.rejectAdmin(adminId = adminId)
+            .asResult()
+            .collectLatest { result ->
+                when (result) {
+                    is Result.Loading -> _rejectAdminRequestUiState.value = RejectAdminRequestUiState.Loading
+                    is Result.Success -> _rejectAdminRequestUiState.value = RejectAdminRequestUiState.Success
+                    is Result.Error -> _rejectAdminRequestUiState.value = RejectAdminRequestUiState.Error(result.exception)
                 }
-            }
-            .onFailure { error ->
-                _rejectAdminRequestUiState.value = RejectAdminRequestUiState.Error(error)
             }
     }
 
@@ -117,21 +104,19 @@ class UserViewModel @Inject constructor(
 
     internal fun serviceWithdrawal() = viewModelScope.launch {
         _serviceWithdrawalUiState.value = ServiceWithdrawalUiState.Loading
-        serviceWithdrawalUseCase()
-            .onSuccess {
-                it.catch { remoteError ->
-                    _serviceWithdrawalUiState.value = ServiceWithdrawalUiState.Error(remoteError)
-                }.collect {
-                    _serviceWithdrawalUiState.value = ServiceWithdrawalUiState.Success
+        adminRepository.serviceWithdrawal()
+            .asResult()
+            .collectLatest { result ->
+                when (result) {
+                    is Result.Loading -> _serviceWithdrawalUiState.value = ServiceWithdrawalUiState.Loading
+                    is Result.Success -> _serviceWithdrawalUiState.value = ServiceWithdrawalUiState.Success
+                    is Result.Error -> _serviceWithdrawalUiState.value = ServiceWithdrawalUiState.Error(result.exception)
                 }
-            }
-            .onFailure { error ->
-                _serviceWithdrawalUiState.value = ServiceWithdrawalUiState.Error(error)
             }
     }
 
     internal fun logout() = viewModelScope.launch {
-        logoutUseCase()
+        authRepository.adminLogout()
             .asResult()
             .collectLatest { result ->
                 when (result) {
@@ -144,7 +129,7 @@ class UserViewModel @Inject constructor(
 
     internal fun adminInformation() = viewModelScope.launch {
         _adminInformationUiState.value = GetAdminInformationUiState.Loading
-        getAdminInformationUseCase()
+        adminRepository.getAdminInformation()
             .asResult()
             .collectLatest { result ->
                 when (result) {

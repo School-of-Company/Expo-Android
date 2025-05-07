@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.school_of_company.common.result.Result
 import com.school_of_company.common.result.asResult
+import com.school_of_company.data.repository.auth.AuthRepository
 import com.school_of_company.datastore.datasource.AuthTokenDataSource
-import com.school_of_company.domain.usecase.auth.AdminTokenRefreshUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
@@ -17,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AppViewModel @Inject constructor(
     private val authTokenDataSource: AuthTokenDataSource,
-    private val adminTokenRefreshUseCase: AdminTokenRefreshUseCase,
+    private val authRepository: AuthRepository,
 ) : ViewModel() {
     private val _appLoginState = mutableStateOf<AppLoginState>(AppLoginState.Loading)
     internal val appLoginState: State<AppLoginState> = _appLoginState
@@ -33,12 +33,15 @@ class AppViewModel @Inject constructor(
         if (refreshToken.isEmpty()) {
             _appLoginState.value = AppLoginState.Fail
         } else {
-            adminTokenRefreshUseCase()
+            authRepository.adminTokenRefresh()
                 .asResult()
                 .collectLatest { result ->
                     when (result) {
                         Result.Loading -> _appLoginState.value = AppLoginState.Loading
-                        is Result.Success -> _appLoginState.value = AppLoginState.Success
+                        is Result.Success -> {
+                            _appLoginState.value = AppLoginState.Success
+                            authRepository.saveToken(result.data)
+                        }
                         is Result.Error -> _appLoginState.value = AppLoginState.Fail
                     }
                 }

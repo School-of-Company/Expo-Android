@@ -8,18 +8,12 @@ import androidx.lifecycle.viewModelScope
 import com.school_of_company.common.exception.NoResponseException
 import com.school_of_company.common.result.Result
 import com.school_of_company.common.result.asResult
-import com.school_of_company.domain.usecase.Image.ImageUpLoadUseCase
-import com.school_of_company.domain.usecase.expo.CheckExpoSurveyDynamicFormEnableUseCase
-import com.school_of_company.domain.usecase.expo.DeleteExpoInformationUseCase
-import com.school_of_company.domain.usecase.expo.GetExpoInformationUseCase
-import com.school_of_company.domain.usecase.expo.GetExpoListUseCase
-import com.school_of_company.domain.usecase.expo.ModifyExpoInformationUseCase
-import com.school_of_company.domain.usecase.expo.RegisterExpoInformationUseCase
-import com.school_of_company.domain.usecase.juso.GetAddressUseCase
-import com.school_of_company.domain.usecase.kakao.GetCoordinatesToAddressUseCase
-import com.school_of_company.domain.usecase.kakao.GetCoordinatesUseCase
-import com.school_of_company.domain.usecase.standard.StandardProgramListUseCase
-import com.school_of_company.domain.usecase.training.TrainingProgramListUseCase
+import com.school_of_company.data.repository.expo.ExpoRepository
+import com.school_of_company.data.repository.image.ImageRepository
+import com.school_of_company.data.repository.juso.AddressRepository
+import com.school_of_company.data.repository.kakao.KakaoRepository
+import com.school_of_company.data.repository.standard.StandardRepository
+import com.school_of_company.data.repository.training.TrainingRepository
 import com.school_of_company.expo.enum.CurrentScreen
 import com.school_of_company.expo.enum.FilterOptionEnum
 import com.school_of_company.expo.enum.TrainingCategory
@@ -51,7 +45,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
@@ -61,18 +54,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class ExpoViewModel @Inject constructor(
-    private val getAddressUseCase: GetAddressUseCase,
-    private val getExpoListUseCase: GetExpoListUseCase,
-    private val imageUpLoadUseCase: ImageUpLoadUseCase,
-    private val getCoordinatesUseCase: GetCoordinatesUseCase,
-    private val getExpoInformationUseCase: GetExpoInformationUseCase,
-    private val standardProgramListUseCase: StandardProgramListUseCase,
-    private val trainingProgramListUseCase: TrainingProgramListUseCase,
-    private val deleteExpoInformationUseCase: DeleteExpoInformationUseCase,
-    private val modifyExpoInformationUseCase: ModifyExpoInformationUseCase,
-    private val getCoordinatesToAddressUseCase: GetCoordinatesToAddressUseCase,
-    private val registerExpoInformationUseCase: RegisterExpoInformationUseCase,
-    private val checkExpoSurveyDynamicFormEnableUseCase: CheckExpoSurveyDynamicFormEnableUseCase,
+    private val kakaoRepository: KakaoRepository,
+    private val addressRepository: AddressRepository,
+    private val expoRepository: ExpoRepository,
+    private val imageRepository: ImageRepository,
+    private val standardRepository: StandardRepository,
+    private val trainingRepository: TrainingRepository,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     companion object {
@@ -128,7 +115,7 @@ internal class ExpoViewModel @Inject constructor(
     private val _getAddressUiState = MutableStateFlow<GetAddressUiState>(GetAddressUiState.Loading)
     internal val getAddressUiState = _getAddressUiState.asStateFlow()
 
-    private val _registerExpoInformationUiState = MutableStateFlow<RegisterExpoInformationUiState>(RegisterExpoInformationUiState.Loading)
+    private val _registerExpoInformationUiState = MutableStateFlow<RegisterExpoInformationUiState>(RegisterExpoInformationUiState.Initial)
     internal val registerExpoInformationUiState = _registerExpoInformationUiState.asStateFlow()
 
     private val _modifyExpoInformationUiState = MutableStateFlow<ModifyExpoInformationUiState>(ModifyExpoInformationUiState.Loading)
@@ -216,7 +203,7 @@ internal class ExpoViewModel @Inject constructor(
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "")
 
     internal fun getExpoInformation(expoId: String) = viewModelScope.launch {
-        getExpoInformationUseCase(expoId = expoId)
+        expoRepository.getExpoInformation(expoId = expoId)
             .asResult()
             .collectLatest { result ->
                 when (result) {
@@ -247,28 +234,33 @@ internal class ExpoViewModel @Inject constructor(
             }
     }
 
-    internal fun registerExpoInformation(body: ExpoAllRequestParam) =
+    internal fun registerExpoInformation() =
         viewModelScope.launch {
-            _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Loading
-            registerExpoInformationUseCase(
-                body = body.copy(
-                    startedDay = body.startedDay.autoFormatToDateTime(),
-                    finishedDay = body.finishedDay.autoFormatToDateTime(),
-                    addStandardProRequestDto = body.addStandardProRequestDto.map { list ->
-                        list.copy(
-                            startedAt = list.startedAt.autoFormatToDateTime(),
-                            endedAt = list.endedAt.autoFormatToDateTime(),
-                        )
-                    },
-                    addTrainingProRequestDto = body.addTrainingProRequestDto.map { list ->
+            expoRepository.registerExpoInformation(
+                body = ExpoAllRequestParam(
+                    title = modify_title.value,
+                    startedDay = started_date.value.autoFormatToDateTime(),
+                    finishedDay = ended_date.value.autoFormatToDateTime(),
+                    description = introduce_title.value,
+                    location = location.value,
+                    coverImage = (imageUpLoadUiState.value as ImageUpLoadUiState.Success).data.imageURL,
+                    x = coordinateX.value,
+                    y = coordinateY.value,
+                    addStandardProRequestDto = standardProgramTextState.value.map { list ->
+                            list.copy(
+                                startedAt = list.startedAt.autoFormatToDateTime(),
+                                endedAt = list.endedAt.autoFormatToDateTime(),
+                            )
+                        },
+                    addTrainingProRequestDto = trainingProgramTextState.value.map { list ->
                         list.copy(
                             startedAt = list.startedAt.autoFormatToDateTime(),
                             endedAt = list.endedAt.autoFormatToDateTime(),
                         )
                     }
-                ),
-            )
-                .asResult()
+
+                )
+            ).asResult()
                 .collectLatest { result ->
                     when (result) {
                         is Result.Loading -> _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Loading
@@ -280,7 +272,7 @@ internal class ExpoViewModel @Inject constructor(
 
     internal fun initRegisterExpo() {
         _imageUpLoadUiState.value = ImageUpLoadUiState.Loading
-        _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Loading
+        _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Initial
         _getCoordinatesUiState.value = GetCoordinatesUiState.Loading
         _getAddressUiState.value = GetAddressUiState.Loading
     }
@@ -293,7 +285,7 @@ internal class ExpoViewModel @Inject constructor(
             else -> imageUrl.value
         }
         _modifyExpoInformationUiState.value = ModifyExpoInformationUiState.Loading
-        modifyExpoInformationUseCase(
+        expoRepository.modifyExpoInformation(
             expoId = expoId,
             body = ExpoModifyRequestParam(
                 title = modify_title.value,
@@ -318,15 +310,13 @@ internal class ExpoViewModel @Inject constructor(
                 }
             )
         )
-            .onSuccess {
-                it.catch { remoteError ->
-                    _modifyExpoInformationUiState.value = ModifyExpoInformationUiState.Error(remoteError)
-                }.collect {
-                    _modifyExpoInformationUiState.value = ModifyExpoInformationUiState.Success
+            .asResult()
+            .collectLatest { result ->
+                when (result) {
+                    is Result.Loading -> _modifyExpoInformationUiState.value = ModifyExpoInformationUiState.Loading
+                    is Result.Success -> _modifyExpoInformationUiState.value = ModifyExpoInformationUiState.Success
+                    is Result.Error -> _modifyExpoInformationUiState.value = ModifyExpoInformationUiState.Error(result.exception)
                 }
-            }
-            .onFailure { error ->
-                _modifyExpoInformationUiState.value = ModifyExpoInformationUiState.Error(error)
             }
     }
 
@@ -351,17 +341,14 @@ internal class ExpoViewModel @Inject constructor(
 
     internal fun deleteExpoInformation(expoId: String) = viewModelScope.launch {
         _deleteExpoInformationUiState.value = DeleteExpoInformationUiState.Loading
-        deleteExpoInformationUseCase(expoId = expoId)
-            .onSuccess {
-                it.catch { remoteError ->
-                    _deleteExpoInformationUiState.value = DeleteExpoInformationUiState.Error(remoteError)
-                }.collect {
-                    _deleteExpoInformationUiState.value = DeleteExpoInformationUiState.Success
-                    getExpoList()
+        expoRepository.deleteExpoInformation(expoId = expoId)
+            .asResult()
+            .collectLatest { result ->
+                when (result) {
+                    is Result.Loading -> _deleteExpoInformationUiState.value = DeleteExpoInformationUiState.Loading
+                    is Result.Success -> _deleteExpoInformationUiState.value = DeleteExpoInformationUiState.Success
+                    is Result.Error -> _deleteExpoInformationUiState.value = DeleteExpoInformationUiState.Error(result.exception)
                 }
-            }
-            .onFailure { error ->
-                _deleteExpoInformationUiState.value = DeleteExpoInformationUiState.Error(error)
             }
     }
 
@@ -371,7 +358,7 @@ internal class ExpoViewModel @Inject constructor(
 
     internal fun getExpoList() = viewModelScope.launch {
         _swipeRefreshLoading.value = true
-        getExpoListUseCase()
+        expoRepository.getExpoList()
             .asResult()
             .collectLatest { result ->
                 when (result) {
@@ -411,7 +398,7 @@ internal class ExpoViewModel @Inject constructor(
             return@launch
         }
 
-        imageUpLoadUseCase(multipartFile)
+        imageRepository.imageUpLoad(multipartFile)
             .asResult()
             .collectLatest { result ->
                 when (result) {
@@ -424,7 +411,7 @@ internal class ExpoViewModel @Inject constructor(
 
     internal fun getStandardProgramList(expoId: String) = viewModelScope.launch {
         _getStandardProgramListUiState.value = GetStandardProgramListUiState.Loading
-        standardProgramListUseCase(expoId = expoId)
+        standardRepository.standardProgramList(expoId = expoId)
             .asResult()
             .collectLatest { result ->
                 when (result) {
@@ -449,7 +436,7 @@ internal class ExpoViewModel @Inject constructor(
 
     internal fun getTrainingProgramList(expoId: String) = viewModelScope.launch {
         _getTrainingProgramListUiState.value = GetTrainingProgramListUiState.Loading
-        trainingProgramListUseCase(expoId = expoId)
+        trainingRepository.trainingProgramList(expoId = expoId)
             .asResult()
             .collectLatest { result ->
                 when (result) {
@@ -480,7 +467,7 @@ internal class ExpoViewModel @Inject constructor(
     internal fun searchLocation(searchText: String) =
         viewModelScope.launch {
             onSearchedCoordinateChange(x = "", y = "")
-            getAddressUseCase(searchText = searchText)
+            addressRepository.getAddress(keyword = searchText)
                 .asResult()
                 .collectLatest { result ->
                     when (result) {
@@ -501,7 +488,7 @@ internal class ExpoViewModel @Inject constructor(
 
     internal fun convertJibunToXY(searchText: String) = viewModelScope.launch {
         _getAddressUiState.value = GetAddressUiState.Loading
-        getCoordinatesUseCase(address = searchText)
+        kakaoRepository.getCoordinates(address = searchText)
             .asResult()
             .collectLatest { result ->
                 when(result){
@@ -523,7 +510,7 @@ internal class ExpoViewModel @Inject constructor(
     }
 
     private fun convertXYToJibun(x: String, y: String) = viewModelScope.launch {
-        getCoordinatesToAddressUseCase(x = x, y = y)
+        kakaoRepository.getAddress(x = x, y = y)
             .asResult()
             .collectLatest { result ->
                 when (result) {
@@ -542,7 +529,7 @@ internal class ExpoViewModel @Inject constructor(
     private fun checkExpoSurveyDynamicFormEnable() = viewModelScope.launch {
         val currentFilter = _selectedFilter.value ?: return@launch
         _checkExpoSurveyDynamicFormEnableUiState.value = CheckExpoSurveyDynamicFormEnableUiState.Loading
-        checkExpoSurveyDynamicFormEnableUseCase()
+        expoRepository.checkExpoSurveyDynamicFormEnable()
             .asResult()
             .collectLatest { result ->
                 when (result) {

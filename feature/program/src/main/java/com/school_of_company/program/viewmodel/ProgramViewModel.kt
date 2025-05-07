@@ -5,12 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.school_of_company.common.result.Result
 import com.school_of_company.common.result.asResult
-import com.school_of_company.domain.usecase.attendance.StandardQrCodeRequestUseCase
-import com.school_of_company.domain.usecase.attendance.TrainingQrCodeRequestUseCase
-import com.school_of_company.domain.usecase.participant.ParticipantInformationResponseUseCase
-import com.school_of_company.domain.usecase.standard.StandardProgramListUseCase
-import com.school_of_company.domain.usecase.trainee.TraineeResponseListUseCase
-import com.school_of_company.domain.usecase.training.TrainingProgramListUseCase
+import com.school_of_company.data.repository.attendance.AttendanceRepository
+import com.school_of_company.data.repository.participant.ParticipantRepository
+import com.school_of_company.data.repository.standard.StandardRepository
+import com.school_of_company.data.repository.trainee.TraineeRepository
+import com.school_of_company.data.repository.training.TrainingRepository
 import com.school_of_company.model.param.attendance.StandardQrCodeRequestParam
 import com.school_of_company.model.param.attendance.TrainingQrCodeRequestParam
 import com.school_of_company.program.viewmodel.uistate.ParticipantResponseListUiState
@@ -22,19 +21,17 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 internal class ProgramViewModel @Inject constructor(
-    private val trainingProgramListUseCase: TrainingProgramListUseCase,
-    private val standardProgramListUseCase: StandardProgramListUseCase,
-    private val traineeResponseListUseCase: TraineeResponseListUseCase,
-    private val trainingQrCodeRequestUseCase: TrainingQrCodeRequestUseCase,
-    private val standardQrCodeRequestUseCase: StandardQrCodeRequestUseCase,
-    private val getParticipantListInformationUseCase: ParticipantInformationResponseUseCase,
+    private val trainingRepository: TrainingRepository,
+    private val standardRepository: StandardRepository,
+    private val traineeRepository: TraineeRepository,
+    private val attendanceRepository: AttendanceRepository,
+    private val participantRepository: ParticipantRepository,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     companion object {
@@ -69,7 +66,7 @@ internal class ProgramViewModel @Inject constructor(
 
     internal fun trainingProgramList(expoId: String) = viewModelScope.launch {
         _swipeRefreshLoading.value = true
-        trainingProgramListUseCase(expoId = expoId)
+        trainingRepository.trainingProgramList(expoId = expoId)
             .asResult()
             .collectLatest { result ->
                 when (result) {
@@ -96,7 +93,7 @@ internal class ProgramViewModel @Inject constructor(
 
     internal fun standardProgramList(expoId: String) = viewModelScope.launch {
         _swipeRefreshLoading.value = true
-        standardProgramListUseCase(expoId = expoId)
+        standardRepository.standardProgramList(expoId = expoId)
             .asResult()
             .collectLatest { result ->
                 when (result) {
@@ -126,23 +123,22 @@ internal class ProgramViewModel @Inject constructor(
             isRequestInProgress = true
 
             viewModelScope.launch {
-
-                _readQrCodeUiState.value = ReadQrCodeUiState.Loading
                 try {
-                    trainingQrCodeRequestUseCase(
+                    _readQrCodeUiState.value = ReadQrCodeUiState.Loading
+                    attendanceRepository.trainingQrCode(
                         trainingId = trainingId,
                         body = body
                     )
-                        .onSuccess {
-                            it.catch { remoteError ->
-                                _readQrCodeUiState.value = ReadQrCodeUiState.Error(remoteError)
-                            }.collect {
-                                _readQrCodeUiState.value = ReadQrCodeUiState.Success
+                        .asResult()
+                        .collectLatest { result ->
+                            when (result) {
+                                is Result.Loading -> _readQrCodeUiState.value = ReadQrCodeUiState.Loading
+                                is Result.Success -> {
+                                    _readQrCodeUiState.value = ReadQrCodeUiState.Success
+                                    delay(REQUEST_DELAY_MS)
+                                }
+                                is Result.Error -> _readQrCodeUiState.value = ReadQrCodeUiState.Error(result.exception)
                             }
-                            delay(REQUEST_DELAY_MS)
-                        }
-                        .onFailure { error ->
-                            _readQrCodeUiState.value = ReadQrCodeUiState.Error(error)
                         }
                 } finally {
                     isRequestInProgress = false
@@ -150,6 +146,7 @@ internal class ProgramViewModel @Inject constructor(
             }
         }
     }
+
 
     internal fun standardQrCode(
         standardId: Long,
@@ -162,20 +159,20 @@ internal class ProgramViewModel @Inject constructor(
 
                 _readQrCodeUiState.value = ReadQrCodeUiState.Loading
                 try {
-                    standardQrCodeRequestUseCase(
+                    attendanceRepository.standardQrCode(
                         standardId = standardId,
                         body = body
                     )
-                        .onSuccess {
-                            it.catch { remoteError ->
-                                _readQrCodeUiState.value = ReadQrCodeUiState.Error(remoteError)
-                            }.collect {
-                                _readQrCodeUiState.value = ReadQrCodeUiState.Success
+                        .asResult()
+                        .collectLatest { result ->
+                            when (result) {
+                                is Result.Loading -> _readQrCodeUiState.value = ReadQrCodeUiState.Loading
+                                is Result.Success -> {
+                                    _readQrCodeUiState.value = ReadQrCodeUiState.Success
+                                    delay(REQUEST_DELAY_MS)
+                                }
+                                is Result.Error -> _readQrCodeUiState.value = ReadQrCodeUiState.Error(result.exception)
                             }
-                            delay(REQUEST_DELAY_MS)
-                        }
-                        .onFailure { error ->
-                            _readQrCodeUiState.value = ReadQrCodeUiState.Error(error)
                         }
                 } finally {
                     isRequestInProgress = false
@@ -189,7 +186,7 @@ internal class ProgramViewModel @Inject constructor(
         name: String? = null
     ) = viewModelScope.launch {
         _swipeRefreshLoading.value = true
-        traineeResponseListUseCase(
+        traineeRepository.getTraineeList(
             expoId = expoId,
             name = name
         )
@@ -220,9 +217,7 @@ internal class ProgramViewModel @Inject constructor(
         localDate: String? = null
     ) = viewModelScope.launch {
         _swipeRefreshLoading.value = true
-
-
-        getParticipantListInformationUseCase(
+        participantRepository.getParticipantInformationList(
             expoId = expoId,
             localDate = localDate,
             page = currentPage,

@@ -108,8 +108,8 @@ internal fun ExpoCreateRoute(
     val trainingProgramTextState by viewModel.trainingProgramTextState.collectAsStateWithLifecycle()
     val standardProgramTextState by viewModel.standardProgramTextState.collectAsStateWithLifecycle()
 
-    var selectedImageUriString by rememberSaveable { mutableStateOf<String?>(null) }
-    var selectedImageUri: Uri? = selectedImageUriString?.let { Uri.parse(it) }
+    var selectedImageUri by rememberSaveable { mutableStateOf<Uri?>(null) }
+    var previousImageUri by rememberSaveable { mutableStateOf<Uri?>(null) }
 
 
     val context = LocalContext.current
@@ -120,8 +120,9 @@ internal fun ExpoCreateRoute(
                 val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
                 context.contentResolver.openInputStream(uri)?.use { inputStream ->
                     BitmapFactory.decodeStream(inputStream, null, options)
-                    selectedImageUriString = uri.toString()
+                    previousImageUri = selectedImageUri
                     selectedImageUri = uri
+                    viewModel.onCoverImageChange(uri.toString())
                 }
             }
         }
@@ -138,27 +139,19 @@ internal fun ExpoCreateRoute(
 
     LaunchedEffect(imageUpLoadUiState) {
         when (imageUpLoadUiState) {
-            is ImageUpLoadUiState.Loading -> Unit
-            is ImageUpLoadUiState.Success -> {
-                viewModel.registerExpoInformation(
-                    body = ExpoAllRequestParam(
-                        title = viewModel.modify_title.value,
-                        startedDay = viewModel.started_date.value,
-                        finishedDay = viewModel.ended_date.value,
-                        description = viewModel.introduce_title.value,
-                        location = viewModel.location.value,
-                        coverImage = (imageUpLoadUiState as ImageUpLoadUiState.Success).data.imageURL,
-                        x = viewModel.coordinateX.value,
-                        y = viewModel.coordinateY.value,
-                        addStandardProRequestDto = standardProgramTextState,
-                        addTrainingProRequestDto = trainingProgramTextState
-                    )
-                )
-            }
-
             is ImageUpLoadUiState.Error -> {
+                viewModel.onCoverImageChange(previousImageUri.toString())
+                selectedImageUri = previousImageUri
+                previousImageUri = null
                 onErrorToast(null, R.string.expo_image_fail)
             }
+            else -> Unit
+        }
+    }
+
+    LaunchedEffect(selectedImageUri) {
+        if (selectedImageUri != null) {
+            viewModel.imageUpLoad(context, selectedImageUri!!)
         }
     }
 
@@ -166,7 +159,7 @@ internal fun ExpoCreateRoute(
         if (registerExpoInformationUiState is RegisterExpoInformationUiState.Success) {
             viewModel.resetExpoInformation()
             selectedImageUri = null
-            selectedImageUriString = null
+            previousImageUri = null
             makeToast(context, "박람회 등록을 완료하였습니다.")
             viewModel.initRegisterExpo()
         } else if (registerExpoInformationUiState is RegisterExpoInformationUiState.Error) {
@@ -180,7 +173,7 @@ internal fun ExpoCreateRoute(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = ExpoColor.main)
+                .background(color = ExpoColor.white)
         ) {
             LoadingDot()
         }
@@ -195,20 +188,14 @@ internal fun ExpoCreateRoute(
         introduceTitleState = introduceTitleState,
         addressState = addressState,
         locationState = locationState,
-        imageUri = selectedImageUri?.toString() ?: coverImageState,
+        imageUri = selectedImageUri?.toString(),
         onImageClick = { galleryLauncher.launch("image/*") },
         onModifyTitleChange = viewModel::onModifyTitleChange,
         onStartedDateChange = viewModel::onStartedDateChange,
         onEndedDateChange = viewModel::onEndedDateChange,
         onIntroduceTitleChange = viewModel::onIntroduceTitleChange,
         onLocationChange = viewModel::onLocationChange,
-        onExpoCreateCallBack = {
-            if (selectedImageUri != null) {
-                viewModel.imageUpLoad(context, selectedImageUri!!)
-            } else {
-                onErrorToast(null, R.string.expo_image_fail)
-            }
-        },
+        onExpoCreateCallBack = viewModel::registerExpoInformation,
         trainingProgramTextState = trainingProgramTextState,
         onTrainingProgramChange = viewModel::updateTrainingProgramText,
         onAddTrainingProgram = viewModel::addTrainingProgramText,

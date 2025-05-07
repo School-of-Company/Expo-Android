@@ -12,8 +12,8 @@ import com.school_of_company.data.repository.expo.ExpoRepository
 import com.school_of_company.data.repository.image.ImageRepository
 import com.school_of_company.data.repository.juso.AddressRepository
 import com.school_of_company.data.repository.kakao.KakaoRepository
-import com.school_of_company.domain.usecase.standard.StandardProgramListUseCase
-import com.school_of_company.domain.usecase.training.TrainingProgramListUseCase
+import com.school_of_company.data.repository.standard.StandardRepository
+import com.school_of_company.data.repository.training.TrainingRepository
 import com.school_of_company.expo.enum.CurrentScreen
 import com.school_of_company.expo.enum.FilterOptionEnum
 import com.school_of_company.expo.enum.TrainingCategory
@@ -58,8 +58,8 @@ internal class ExpoViewModel @Inject constructor(
     private val addressRepository: AddressRepository,
     private val expoRepository: ExpoRepository,
     private val imageRepository: ImageRepository,
-    private val standardProgramListUseCase: StandardProgramListUseCase,
-    private val trainingProgramListUseCase: TrainingProgramListUseCase,
+    private val standardRepository: StandardRepository,
+    private val trainingRepository: TrainingRepository,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     companion object {
@@ -115,7 +115,7 @@ internal class ExpoViewModel @Inject constructor(
     private val _getAddressUiState = MutableStateFlow<GetAddressUiState>(GetAddressUiState.Loading)
     internal val getAddressUiState = _getAddressUiState.asStateFlow()
 
-    private val _registerExpoInformationUiState = MutableStateFlow<RegisterExpoInformationUiState>(RegisterExpoInformationUiState.Loading)
+    private val _registerExpoInformationUiState = MutableStateFlow<RegisterExpoInformationUiState>(RegisterExpoInformationUiState.Initial)
     internal val registerExpoInformationUiState = _registerExpoInformationUiState.asStateFlow()
 
     private val _modifyExpoInformationUiState = MutableStateFlow<ModifyExpoInformationUiState>(ModifyExpoInformationUiState.Loading)
@@ -236,7 +236,6 @@ internal class ExpoViewModel @Inject constructor(
 
     internal fun registerExpoInformation() =
         viewModelScope.launch {
-            _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Loading
             expoRepository.registerExpoInformation(
                 body = ExpoAllRequestParam(
                     title = modify_title.value,
@@ -273,7 +272,7 @@ internal class ExpoViewModel @Inject constructor(
 
     internal fun initRegisterExpo() {
         _imageUpLoadUiState.value = ImageUpLoadUiState.Loading
-        _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Loading
+        _registerExpoInformationUiState.value = RegisterExpoInformationUiState.Initial
         _getCoordinatesUiState.value = GetCoordinatesUiState.Loading
         _getAddressUiState.value = GetAddressUiState.Loading
     }
@@ -412,7 +411,7 @@ internal class ExpoViewModel @Inject constructor(
 
     internal fun getStandardProgramList(expoId: String) = viewModelScope.launch {
         _getStandardProgramListUiState.value = GetStandardProgramListUiState.Loading
-        standardProgramListUseCase(expoId = expoId)
+        standardRepository.standardProgramList(expoId = expoId)
             .asResult()
             .collectLatest { result ->
                 when (result) {
@@ -437,7 +436,7 @@ internal class ExpoViewModel @Inject constructor(
 
     internal fun getTrainingProgramList(expoId: String) = viewModelScope.launch {
         _getTrainingProgramListUiState.value = GetTrainingProgramListUiState.Loading
-        trainingProgramListUseCase(expoId = expoId)
+        trainingRepository.trainingProgramList(expoId = expoId)
             .asResult()
             .collectLatest { result ->
                 when (result) {

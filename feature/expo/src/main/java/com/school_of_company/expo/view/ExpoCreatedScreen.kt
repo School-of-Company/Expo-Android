@@ -20,7 +20,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -73,6 +72,7 @@ internal fun ExpoCreatedRoute(
             is DeleteExpoInformationUiState.Loading -> Unit
             is DeleteExpoInformationUiState.Success -> {
                 setSelectedIndex(-1)
+                expoViewModel.getExpoList()
                 makeToast(context, "박람회가 삭제되었습니다.")
             }
             is DeleteExpoInformationUiState.Error -> {

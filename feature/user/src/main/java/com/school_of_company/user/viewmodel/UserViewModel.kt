@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.school_of_company.common.result.Result
 import com.school_of_company.common.result.asResult
 import com.school_of_company.data.repository.admin.AdminRepository
-import com.school_of_company.domain.usecase.auth.AdminLogoutUseCase
+import com.school_of_company.data.repository.auth.AuthRepository
 import com.school_of_company.user.viewmodel.uistate.AllowAdminRequestUiState
 import com.school_of_company.user.viewmodel.uistate.GetAdminInformationUiState
 import com.school_of_company.user.viewmodel.uistate.GetAdminRequestAllowListUiState
@@ -21,7 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UserViewModel @Inject constructor(
-    private val logoutUseCase: AdminLogoutUseCase,
+    private val authRepository: AuthRepository,
     private val adminRepository: AdminRepository
 ) : ViewModel() {
 
@@ -116,7 +116,7 @@ class UserViewModel @Inject constructor(
     }
 
     internal fun logout() = viewModelScope.launch {
-        logoutUseCase()
+        authRepository.adminLogout()
             .asResult()
             .collectLatest { result ->
                 when (result) {

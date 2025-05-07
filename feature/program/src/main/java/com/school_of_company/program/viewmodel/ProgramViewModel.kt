@@ -6,10 +6,10 @@ import androidx.lifecycle.viewModelScope
 import com.school_of_company.common.result.Result
 import com.school_of_company.common.result.asResult
 import com.school_of_company.data.repository.attendance.AttendanceRepository
-import com.school_of_company.domain.usecase.participant.ParticipantInformationResponseUseCase
-import com.school_of_company.domain.usecase.standard.StandardProgramListUseCase
-import com.school_of_company.domain.usecase.trainee.TraineeResponseListUseCase
-import com.school_of_company.domain.usecase.training.TrainingProgramListUseCase
+import com.school_of_company.data.repository.participant.ParticipantRepository
+import com.school_of_company.data.repository.standard.StandardRepository
+import com.school_of_company.data.repository.trainee.TraineeRepository
+import com.school_of_company.data.repository.training.TrainingRepository
 import com.school_of_company.model.param.attendance.StandardQrCodeRequestParam
 import com.school_of_company.model.param.attendance.TrainingQrCodeRequestParam
 import com.school_of_company.program.viewmodel.uistate.ParticipantResponseListUiState
@@ -21,18 +21,17 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 internal class ProgramViewModel @Inject constructor(
-    private val trainingProgramListUseCase: TrainingProgramListUseCase,
-    private val standardProgramListUseCase: StandardProgramListUseCase,
-    private val traineeResponseListUseCase: TraineeResponseListUseCase,
+    private val trainingRepository: TrainingRepository,
+    private val standardRepository: StandardRepository,
+    private val traineeRepository: TraineeRepository,
     private val attendanceRepository: AttendanceRepository,
-    private val getParticipantListInformationUseCase: ParticipantInformationResponseUseCase,
+    private val participantRepository: ParticipantRepository,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     companion object {
@@ -67,7 +66,7 @@ internal class ProgramViewModel @Inject constructor(
 
     internal fun trainingProgramList(expoId: String) = viewModelScope.launch {
         _swipeRefreshLoading.value = true
-        trainingProgramListUseCase(expoId = expoId)
+        trainingRepository.trainingProgramList(expoId = expoId)
             .asResult()
             .collectLatest { result ->
                 when (result) {
@@ -94,7 +93,7 @@ internal class ProgramViewModel @Inject constructor(
 
     internal fun standardProgramList(expoId: String) = viewModelScope.launch {
         _swipeRefreshLoading.value = true
-        standardProgramListUseCase(expoId = expoId)
+        standardRepository.standardProgramList(expoId = expoId)
             .asResult()
             .collectLatest { result ->
                 when (result) {
@@ -187,7 +186,7 @@ internal class ProgramViewModel @Inject constructor(
         name: String? = null
     ) = viewModelScope.launch {
         _swipeRefreshLoading.value = true
-        traineeResponseListUseCase(
+        traineeRepository.getTraineeList(
             expoId = expoId,
             name = name
         )
@@ -218,9 +217,7 @@ internal class ProgramViewModel @Inject constructor(
         localDate: String? = null
     ) = viewModelScope.launch {
         _swipeRefreshLoading.value = true
-
-
-        getParticipantListInformationUseCase(
+        participantRepository.getParticipantInformationList(
             expoId = expoId,
             localDate = localDate,
             page = currentPage,

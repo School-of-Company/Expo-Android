@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.school_of_company.common.result.Result
 import com.school_of_company.common.result.asResult
-import com.school_of_company.domain.usecase.standard.StandardProgramAttendListUseCase
+import com.school_of_company.data.repository.standard.StandardRepository
 import com.school_of_company.standard.viewmodel.uistate.StandardProgramAttendListUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class StandardViewModel @Inject constructor(
-    private val standardProgramAttendListUseCase: StandardProgramAttendListUseCase
+    private val standardRepository: StandardRepository
 ): ViewModel() {
 
     private val _swipeRefreshLoading = MutableStateFlow(false)
@@ -26,7 +26,7 @@ internal class StandardViewModel @Inject constructor(
 
     internal fun standardProgramList(standardProId: Long) = viewModelScope.launch {
         _swipeRefreshLoading.value = true
-        standardProgramAttendListUseCase(standardProId = standardProId)
+        standardRepository.standardProgramAttendList(standardProId = standardProId)
             .asResult()
             .collectLatest { result ->
                 when (result) {

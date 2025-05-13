@@ -14,7 +14,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.navigation.NavDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.school_of_company.design_system.component.navigation.ExpoNavigationBar
 import com.school_of_company.design_system.component.navigation.ExpoNavigationBarItem
@@ -25,6 +24,7 @@ import com.school_of_company.expo.navigation.homeRoute
 import com.school_of_company.expo_android.navigation.ExpoNavHost
 import com.school_of_company.expo_android.navigation.TopLevelDestination
 import com.school_of_company.user.navigation.profileRoute
+import kotlinx.collections.immutable.ImmutableList
 
 /**
  * 객체로 앱 상태를 중앙에서 관리하고, Scaffold와 BottomBar를 통해 유연한 UI 구성을 제공합니다.
@@ -84,9 +84,9 @@ fun ExpoApp(
 @Composable
 private fun ExpoBottomBar(
     modifier: Modifier = Modifier,
-    topLevelDestinations: List<TopLevelDestination>,
+    topLevelDestinations: ImmutableList<TopLevelDestination>,
     onNavigateToDestination: (TopLevelDestination) -> Unit, // 사용자가 클릭했을 때 호출될 콜백
-    currentDestination: NavDestination? // 현재 네비게이션 목적지
+    currentDestination: String? // 현재 네비게이션 목적지
 ) {
     ExpoAndroidTheme { _, typography ->
         // 커스텀 네비게이션 바 구성 요소
@@ -96,7 +96,7 @@ private fun ExpoBottomBar(
                 // icon painter를 미리 변수로 추출
                 val iconPainter = painterResource(id = destination.unSelectedIcon)
                 // 현재 목적지가 선택된 상태인지 확인
-                val isSelected = destination.routeName == currentDestination?.route
+                val isSelected = destination.routeName == currentDestination
 
                 ExpoNavigationBarItem(
                     selected = isSelected,

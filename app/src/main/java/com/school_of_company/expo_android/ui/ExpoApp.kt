@@ -82,7 +82,7 @@ fun ExpoApp(
 }
 
 @Composable
-fun ExpoBottomBar(
+private fun ExpoBottomBar(
     modifier: Modifier = Modifier,
     topLevelDestinations: List<TopLevelDestination>,
     onNavigateToDestination: (TopLevelDestination) -> Unit, // 사용자가 클릭했을 때 호출될 콜백

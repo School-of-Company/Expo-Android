@@ -54,6 +54,7 @@ internal fun FormCreateRoute(
     val formState by viewModel.formState.collectAsStateWithLifecycle()
     val formUiState by viewModel.formUiState.collectAsStateWithLifecycle()
     val informationTextState by viewModel.informationTextState.collectAsStateWithLifecycle()
+    val focusManager: FocusManager = LocalFocusManager.current
 
     LaunchedEffect(formUiState) {
         when (formUiState) {
@@ -74,6 +75,7 @@ internal fun FormCreateRoute(
         modifier = modifier,
         informationTextState = informationTextState,
         formList = formState,
+        clearFocusCallback = { focusManager.clearFocus() },
         popUpBackStack = popUpBackStack,
         addFormAtList = viewModel::addEmptyDynamicFormItem,
         createForm = { viewModel.createForm(expoId, participantType, informationTextState) },
@@ -90,6 +92,7 @@ private fun FormCreateScreen(
     formList: PersistentList<DynamicFormModel>,
     focusManager: FocusManager = LocalFocusManager.current,
     scrollState: ScrollState = rememberScrollState(),
+    clearFocusCallback: () -> Unit,
     popUpBackStack: () -> Unit,
     addFormAtList: () -> Unit,
     createForm: () -> Unit,
@@ -104,13 +107,7 @@ private fun FormCreateScreen(
                 .verticalScroll(scrollState)
                 .background(color = colors.white)
                 .padding(horizontal = 16.dp,)
-                .pointerInput(Unit) {
-                    detectTapGestures(
-                        onTap = {
-                            focusManager.clearFocus()
-                        }
-                    )
-                },
+                .pointerInput(Unit) { detectTapGestures(onTap = { clearFocusCallback() }) },
         ) {
             ExpoTopBar(
                 startIcon = {
@@ -159,7 +156,9 @@ private fun FormCreateScreen(
                     formList.all { form ->
                         when (FormType.valueOf(form.formType)) {
                             FormType.SENTENCE -> form.title.isNotEmpty()
-                            FormType.CHECKBOX, FormType.DROPDOWN, FormType.MULTIPLE ->
+                            FormType.CHECKBOX,
+                            FormType.DROPDOWN,
+                            FormType.MULTIPLE ->
                                 form.title.isNotEmpty() &&
                                 form.itemList.isNotEmpty() &&
                                 form.itemList.all { it.isNotEmpty() }
@@ -188,6 +187,7 @@ private fun FormCreateScreenPreview() {
                 otherJson = true,
             ),
         ),
+        clearFocusCallback = {},
         popUpBackStack = {},
         addFormAtList = { },
         createForm = {},

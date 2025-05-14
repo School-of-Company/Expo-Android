@@ -25,11 +25,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.school_of_company.design_system.R
-import com.school_of_company.design_system.component.button.ExpoButton
 import com.school_of_company.design_system.component.button.ExpoStateButton
 import com.school_of_company.design_system.component.button.state.ButtonState
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
-import com.school_of_company.design_system.component.modifier.padding.paddingHorizontal
 import com.school_of_company.design_system.component.topbar.ExpoTopBar
 import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
@@ -40,6 +38,8 @@ import com.school_of_company.form.view.component.PersonaInformationFormCard
 import com.school_of_company.form.viewModel.FormViewModel
 import com.school_of_company.form.viewModel.uiState.FormUiState
 import com.school_of_company.model.model.form.DynamicFormModel
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 internal fun FormCreateRoute(
@@ -54,6 +54,7 @@ internal fun FormCreateRoute(
     val formState by viewModel.formState.collectAsStateWithLifecycle()
     val formUiState by viewModel.formUiState.collectAsStateWithLifecycle()
     val informationTextState by viewModel.informationTextState.collectAsStateWithLifecycle()
+    val focusManager: FocusManager = LocalFocusManager.current
 
     LaunchedEffect(formUiState) {
         when (formUiState) {
@@ -74,6 +75,7 @@ internal fun FormCreateRoute(
         modifier = modifier,
         informationTextState = informationTextState,
         formList = formState,
+        clearFocusCallback = { focusManager.clearFocus() },
         popUpBackStack = popUpBackStack,
         addFormAtList = viewModel::addEmptyDynamicFormItem,
         createForm = { viewModel.createForm(expoId, participantType, informationTextState) },
@@ -87,9 +89,10 @@ internal fun FormCreateRoute(
 private fun FormCreateScreen(
     modifier: Modifier = Modifier,
     informationTextState: String,
-    formList: List<DynamicFormModel>,
+    formList: PersistentList<DynamicFormModel>,
     focusManager: FocusManager = LocalFocusManager.current,
     scrollState: ScrollState = rememberScrollState(),
+    clearFocusCallback: () -> Unit,
     popUpBackStack: () -> Unit,
     addFormAtList: () -> Unit,
     createForm: () -> Unit,
@@ -107,11 +110,10 @@ private fun FormCreateScreen(
                 .pointerInput(Unit) {
                     detectTapGestures(
                         onTap = {
-                            focusManager.clearFocus()
+                            clearFocusCallback()
                         }
                     )
-                },
-        ) {
+                },        ) {
             ExpoTopBar(
                 startIcon = {
                     LeftArrowIcon(
@@ -159,7 +161,9 @@ private fun FormCreateScreen(
                     formList.all { form ->
                         when (FormType.valueOf(form.formType)) {
                             FormType.SENTENCE -> form.title.isNotEmpty()
-                            FormType.CHECKBOX, FormType.DROPDOWN, FormType.MULTIPLE ->
+                            FormType.CHECKBOX,
+                            FormType.DROPDOWN,
+                            FormType.MULTIPLE ->
                                 form.title.isNotEmpty() &&
                                 form.itemList.isNotEmpty() &&
                                 form.itemList.all { it.isNotEmpty() }
@@ -179,7 +183,7 @@ private fun FormCreateScreen(
 private fun FormCreateScreenPreview() {
     FormCreateScreen(
         informationTextState = "informationTextState",
-        formList = listOf(
+        formList = persistentListOf(
             DynamicFormModel(
                 title = "제목",
                 formType = FormType.DROPDOWN.name,
@@ -188,6 +192,7 @@ private fun FormCreateScreenPreview() {
                 otherJson = true,
             ),
         ),
+        clearFocusCallback = {},
         popUpBackStack = {},
         addFormAtList = { },
         createForm = {},

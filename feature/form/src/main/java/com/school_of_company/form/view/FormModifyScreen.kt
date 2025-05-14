@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.school_of_company.design_system.R
-import com.school_of_company.design_system.component.button.ExpoButton
 import com.school_of_company.design_system.component.button.ExpoStateButton
 import com.school_of_company.design_system.component.button.state.ButtonState
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
@@ -39,7 +38,8 @@ import com.school_of_company.form.view.component.PersonaInformationFormCard
 import com.school_of_company.form.viewModel.FormViewModel
 import com.school_of_company.form.viewModel.uiState.FormUiState
 import com.school_of_company.model.model.form.DynamicFormModel
-import java.text.Normalizer.Form
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 internal fun FormModifyRoute(
@@ -53,6 +53,7 @@ internal fun FormModifyRoute(
     val formState by viewModel.formState.collectAsStateWithLifecycle()
     val formActionUiState by viewModel.formUiState.collectAsStateWithLifecycle()
     val informationTextState by viewModel.informationTextState.collectAsStateWithLifecycle()
+    val focusManager: FocusManager = LocalFocusManager.current
 
     LaunchedEffect(Unit) {
         viewModel.getForm(
@@ -68,10 +69,12 @@ internal fun FormModifyRoute(
                 popUpBackStack()
                 onErrorToast(null, R.string.form_modify_success)
             }
+
             is FormUiState.NotFound -> {
                 viewModel.setIsNotFoundError(true)
                 onErrorToast(null, R.string.form_modify_not_found)
             }
+
             is FormUiState.Conflict -> Unit
             is FormUiState.Error -> onErrorToast(null, R.string.form_modify_fail)
         }
@@ -81,6 +84,7 @@ internal fun FormModifyRoute(
         modifier = modifier,
         informationTextState = informationTextState,
         formList = formState,
+        clearFocusCallback = { focusManager.clearFocus() },
         popUpBackStack = popUpBackStack,
         addFormAtList = viewModel::addEmptyDynamicFormItem,
         submitForm = {
@@ -100,9 +104,9 @@ internal fun FormModifyRoute(
 private fun FormModifyScreen(
     modifier: Modifier = Modifier,
     informationTextState: String,
-    formList: List<DynamicFormModel>,
-    focusManager: FocusManager = LocalFocusManager.current,
+    formList: PersistentList<DynamicFormModel>,
     scrollState: ScrollState = rememberScrollState(),
+    clearFocusCallback: () -> Unit,
     popUpBackStack: () -> Unit,
     addFormAtList: () -> Unit,
     submitForm: () -> Unit,
@@ -116,11 +120,11 @@ private fun FormModifyScreen(
                 .fillMaxSize()
                 .verticalScroll(scrollState)
                 .background(color = colors.white)
-                .padding(horizontal = 16.dp,)
+                .padding(horizontal = 16.dp)
                 .pointerInput(Unit) {
                     detectTapGestures(
                         onTap = {
-                            focusManager.clearFocus()
+                            clearFocusCallback()
                         }
                     )
                 },
@@ -135,7 +139,7 @@ private fun FormModifyScreen(
                 betweenText = "폼 수정하기",
                 modifier = Modifier.padding(
                     top = 68.dp,
-                    bottom = 16.dp
+                    bottom = 16.dp,
                 ),
             )
 
@@ -172,12 +176,15 @@ private fun FormModifyScreen(
                     formList.all { form ->
                         when (FormType.valueOf(form.formType)) {
                             FormType.SENTENCE -> form.title.isNotEmpty()
-                            FormType.CHECKBOX, FormType.DROPDOWN, FormType.MULTIPLE ->
+                            FormType.CHECKBOX,
+                            FormType.DROPDOWN,
+                            FormType.MULTIPLE ->
                                 form.title.isNotEmpty() &&
-                                form.itemList.isNotEmpty() &&
-                                form.itemList.all { it.isNotEmpty() }
+                                        form.itemList.isNotEmpty() &&
+                                        form.itemList.all { it.isNotEmpty() }
                         }
-                    }) ButtonState.Enable else ButtonState.Disable,
+                    }
+                ) ButtonState.Enable else ButtonState.Disable,
                 onClick = submitForm,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -192,7 +199,7 @@ private fun FormModifyScreen(
 private fun FormModifyScreenPreview() {
     FormModifyScreen(
         informationTextState = "informationTextState",
-        formList = listOf(
+        formList = persistentListOf(
             DynamicFormModel(
                 title = "제목",
                 formType = FormType.DROPDOWN.name,
@@ -201,6 +208,7 @@ private fun FormModifyScreenPreview() {
                 otherJson = true,
             ),
         ),
+        clearFocusCallback = {},
         popUpBackStack = {},
         addFormAtList = { },
         submitForm = {},

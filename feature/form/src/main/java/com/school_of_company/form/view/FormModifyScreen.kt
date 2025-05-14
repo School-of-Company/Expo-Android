@@ -69,10 +69,12 @@ internal fun FormModifyRoute(
                 popUpBackStack()
                 onErrorToast(null, R.string.form_modify_success)
             }
+
             is FormUiState.NotFound -> {
                 viewModel.setIsNotFoundError(true)
                 onErrorToast(null, R.string.form_modify_not_found)
             }
+
             is FormUiState.Conflict -> Unit
             is FormUiState.Error -> onErrorToast(null, R.string.form_modify_fail)
         }
@@ -119,7 +121,13 @@ private fun FormModifyScreen(
                 .verticalScroll(scrollState)
                 .background(color = colors.white)
                 .padding(horizontal = 16.dp)
-                .pointerInput(Unit) { detectTapGestures(onTap = { clearFocusCallback() }) },
+                .pointerInput(Unit) {
+                    detectTapGestures(
+                        onTap = {
+                            clearFocusCallback()
+                        }
+                    )
+                },
         ) {
             ExpoTopBar(
                 startIcon = {
@@ -172,8 +180,8 @@ private fun FormModifyScreen(
                             FormType.DROPDOWN,
                             FormType.MULTIPLE ->
                                 form.title.isNotEmpty() &&
-                                form.itemList.isNotEmpty() &&
-                                form.itemList.all { it.isNotEmpty() }
+                                        form.itemList.isNotEmpty() &&
+                                        form.itemList.all { it.isNotEmpty() }
                         }
                     }
                 ) ButtonState.Enable else ButtonState.Disable,

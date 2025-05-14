@@ -107,8 +107,13 @@ private fun FormCreateScreen(
                 .verticalScroll(scrollState)
                 .background(color = colors.white)
                 .padding(horizontal = 16.dp,)
-                .pointerInput(Unit) { detectTapGestures(onTap = { clearFocusCallback() }) },
-        ) {
+                .pointerInput(Unit) {
+                    detectTapGestures(
+                        onTap = {
+                            clearFocusCallback()
+                        }
+                    )
+                },        ) {
             ExpoTopBar(
                 startIcon = {
                     LeftArrowIcon(

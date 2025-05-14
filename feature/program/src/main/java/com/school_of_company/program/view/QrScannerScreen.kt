@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.material3.MaterialTheme.typography
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -21,9 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
@@ -44,6 +41,7 @@ import com.school_of_company.model.param.attendance.TrainingQrCodeRequestParam
 import com.school_of_company.program.util.QrReadScreenType
 import com.school_of_company.program.util.parseStandardQrScanModel
 import com.school_of_company.program.util.parseTrainingQr
+import com.school_of_company.program.view.component.StableLifecycleOwner
 import com.school_of_company.ui.toast.makeToast
 import kotlinx.coroutines.delay
 
@@ -65,9 +63,6 @@ internal fun QrScannerRoute(
     val cameraPermissionState = rememberPermissionState(Manifest.permission.CAMERA)
 
     val context = LocalContext.current
-    val lifecycleOwner = context as? LifecycleOwner
-        ?: throw IllegalStateException("Context is not a LifecycleOwner")
-
 
     LaunchedEffect(cameraPermissionState.status) {
         when {
@@ -110,7 +105,6 @@ internal fun QrScannerRoute(
             QrScannerScreen(
                 modifier = modifier,
                 onBackClick = onBackClick,
-                lifecycleOwner = lifecycleOwner,
                 onQrcodeScan = { jsonData ->
                     when (screenType) {
                         QrReadScreenType.TrainingProgramParticipantScreen.routeName -> {
@@ -147,10 +141,11 @@ internal fun QrScannerRoute(
 @Composable
 private fun QrScannerScreen(
     modifier: Modifier = Modifier,
-    lifecycleOwner: LifecycleOwner,
     onBackClick: () -> Unit,
     onQrcodeScan: (String) -> Unit,
 ) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+
     var qrSettingCountdown by rememberSaveable { mutableStateOf(2) }
     var showCountdown by rememberSaveable { mutableStateOf(true) }
 
@@ -180,7 +175,7 @@ private fun QrScannerScreen(
 
                 QrcodeScanView(
                     onQrcodeScan = onQrcodeScan,
-                    lifecycleOwner = lifecycleOwner,
+                    lifecycleOwner = StableLifecycleOwner(lifecycleOwner),
                 )
 
                 QrGuideImage()

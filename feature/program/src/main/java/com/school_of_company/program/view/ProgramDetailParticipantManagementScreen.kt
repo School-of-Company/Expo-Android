@@ -29,7 +29,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
@@ -118,9 +117,9 @@ internal fun ProgramDetailParticipantManagementRoute(
         swipeRefreshState = swipeRefreshState,
         participantListUiState = participantListUiState,
         traineeInformationUiState = traineeInformationUiState,
-        selectedDate = selectedDate,
-        startDate = LocalDate.parse(startDate),
-        endDate = LocalDate.parse(endDate),
+        selectedDate = selectedDate?.toString(),
+        startDate = startDate,
+        endDate = endDate,
         currentPage = currentPage,
         traineeName = traineeName,
         onBackClick = onBackClick,
@@ -148,10 +147,9 @@ private fun ProgramDetailParticipantManagementScreen(
     modifier: Modifier = Modifier,
     swipeRefreshState: SwipeRefreshState,
     scrollState: ScrollState = rememberScrollState(),
-    focusManager: FocusManager = LocalFocusManager.current,
-    selectedDate: LocalDate?,
-    startDate: LocalDate,
-    endDate: LocalDate,
+    selectedDate: String?,
+    startDate: String,
+    endDate: String,
     currentPage: Int,
     traineeName: String,
     participantListUiState: ParticipantResponseListUiState,
@@ -163,13 +161,19 @@ private fun ProgramDetailParticipantManagementScreen(
     getParticipantList: () -> Unit,
     getTraineeList: () -> Unit,
 ) {
+    val focusManager = LocalFocusManager.current
+
     var participantTextState by rememberSaveable { mutableStateOf("사전 & 현장 행사 참가자") }
     var isDropdownExpanded by rememberSaveable { mutableStateOf(false) }
     var selectedItem by rememberSaveable { mutableIntStateOf(0) }
 
-    val dateList = remember {
-        generateSequence(startDate) { it.plusDays(1) }
-            .takeWhile { !it.isAfter(endDate) }
+    val parsedStartDate = rememberSaveable(startDate) { LocalDate.parse(startDate) }
+    val parsedEndDate = rememberSaveable(endDate) { LocalDate.parse(endDate) }
+    val parsedSelectedDate = remember(selectedDate) { selectedDate?.let { LocalDate.parse(it) } }
+
+    val dateList = remember(parsedStartDate, parsedEndDate) {
+        generateSequence(parsedStartDate) { it.plusDays(1) }
+            .takeWhile { !it.isAfter(parsedEndDate) }
             .toList()
     }
 
@@ -370,10 +374,10 @@ private fun ProgramDetailParticipantManagementScreen(
                 ) {
                     items(dateList) { date: LocalDate ->
                         LocalDateButton(
-                            date = date,
-                            selected = selectedDate == date,
+                            date = date.toString(),
+                            selected = parsedSelectedDate == date,
                             onClick = {
-                                if (selectedDate == date) {
+                                if (parsedSelectedDate == date) {
                                     onSelectedDateChange(null)
                                 } else {
                                     onSelectedDateChange(date)
@@ -508,7 +512,7 @@ private fun ProgramDetailParticipantManagementScreen(
 private fun HomeDetailParticipantManagementScreenPreview() {
     ProgramDetailParticipantManagementScreen(
         swipeRefreshState = rememberSwipeRefreshState(isRefreshing = false),
-        selectedDate = LocalDate.now(),
+        selectedDate = LocalDate.now().toString(),
         traineeName = "",
         currentPage = 0,
         participantListUiState = ParticipantResponseListUiState.Success(
@@ -560,7 +564,7 @@ private fun HomeDetailParticipantManagementScreenPreview() {
         getTraineeList = {},
         onSelectedDateChange = { _ -> },
         onCurrentPageChange = { _ -> },
-        endDate = LocalDate.of(2025, 5, 30),
-        startDate = LocalDate.of(2025, 5, 19),
+        endDate = LocalDate.of(2025, 5, 30).toString(),
+        startDate = LocalDate.of(2025, 5, 19).toString(),
     )
 }

@@ -25,11 +25,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.school_of_company.design_system.R
-import com.school_of_company.design_system.component.button.ExpoButton
 import com.school_of_company.design_system.component.button.ExpoStateButton
 import com.school_of_company.design_system.component.button.state.ButtonState
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
-import com.school_of_company.design_system.component.modifier.padding.paddingHorizontal
 import com.school_of_company.design_system.component.topbar.ExpoTopBar
 import com.school_of_company.design_system.icon.LeftArrowIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
@@ -40,6 +38,8 @@ import com.school_of_company.form.view.component.PersonaInformationFormCard
 import com.school_of_company.form.viewModel.FormViewModel
 import com.school_of_company.form.viewModel.uiState.FormUiState
 import com.school_of_company.model.model.form.DynamicFormModel
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 internal fun FormCreateRoute(
@@ -87,7 +87,7 @@ internal fun FormCreateRoute(
 private fun FormCreateScreen(
     modifier: Modifier = Modifier,
     informationTextState: String,
-    formList: List<DynamicFormModel>,
+    formList: PersistentList<DynamicFormModel>,
     focusManager: FocusManager = LocalFocusManager.current,
     scrollState: ScrollState = rememberScrollState(),
     popUpBackStack: () -> Unit,
@@ -179,7 +179,7 @@ private fun FormCreateScreen(
 private fun FormCreateScreenPreview() {
     FormCreateScreen(
         informationTextState = "informationTextState",
-        formList = listOf(
+        formList = persistentListOf(
             DynamicFormModel(
                 title = "제목",
                 formType = FormType.DROPDOWN.name,

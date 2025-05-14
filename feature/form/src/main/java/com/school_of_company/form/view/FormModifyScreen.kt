@@ -100,8 +100,8 @@ internal fun FormModifyRoute(
 private fun FormModifyScreen(
     modifier: Modifier = Modifier,
     informationTextState: String,
-    formList: List<DynamicFormModel>,
     focusManager: FocusManager = LocalFocusManager.current,
+    formList: PersistentList<DynamicFormModel>,
     scrollState: ScrollState = rememberScrollState(),
     popUpBackStack: () -> Unit,
     addFormAtList: () -> Unit,
@@ -192,7 +192,7 @@ private fun FormModifyScreen(
 private fun FormModifyScreenPreview() {
     FormModifyScreen(
         informationTextState = "informationTextState",
-        formList = listOf(
+        formList = persistentListOf(
             DynamicFormModel(
                 title = "제목",
                 formType = FormType.DROPDOWN.name,

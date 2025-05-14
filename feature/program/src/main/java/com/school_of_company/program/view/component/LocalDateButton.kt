@@ -52,7 +52,7 @@ internal fun LocalDateButton(
                 ),
         ) {
             Text(
-                text = date.toString(),
+                text = date,
                 style = typography.captionRegular2,
                 color = textColor,
                 textAlign = TextAlign.Center,

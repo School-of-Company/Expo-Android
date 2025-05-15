@@ -19,11 +19,13 @@ import com.school_of_company.design_system.icon.XIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.expo.enum.FilterOptionEnum
 import com.school_of_company.expo.viewmodel.ExpoViewModel
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 internal fun ExpoFormFilterDialog(
     modifier: Modifier = Modifier,
-    selectedOptions: List<FilterOptionEnum?>,
+    selectedOptions: PersistentList<FilterOptionEnum?>,
     onTrainingFormTrueClick: () -> Unit,
     onTrainingFormFalseClick: () -> Unit,
     onStudentFormTrueClick: () -> Unit,
@@ -32,7 +34,7 @@ internal fun ExpoFormFilterDialog(
 ) {
     ExpoAndroidTheme { colors, typography ->
 
-        val options = listOf(
+        val options = persistentListOf(
             FilterOption(
                 label = "연수자 폼 (O)",
                 selected = selectedOptions.contains(FilterOptionEnum.TRAINING_FORM_TRUE),
@@ -105,7 +107,7 @@ internal fun ExpoFormFilterDialog(
 @Composable
 private fun ExpoFormFilterDialogPreview() {
     ExpoFormFilterDialog(
-        selectedOptions = listOf(),
+        selectedOptions = persistentListOf(),
         onTrainingFormTrueClick = {},
         onTrainingFormFalseClick = {},
         onStudentFormTrueClick = {},

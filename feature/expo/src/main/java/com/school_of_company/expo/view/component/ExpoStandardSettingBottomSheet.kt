@@ -42,12 +42,13 @@ import com.school_of_company.ui.visualTransformation.DateTimeVisualTransformatio
 internal fun ExpoStandardSettingBottomSheet(
     modifier: Modifier = Modifier,
     trainingSettingItem: StandardProRequestParam,
-    focusManager: FocusManager = LocalFocusManager.current,
     sheetState: SheetState = rememberModalBottomSheetState(),
     onCancelClick: () -> Unit,
     onButtonClick: () -> Unit,
     onTrainingSettingChange: (StandardProRequestParam) -> Unit,
 ) {
+    val focusManager: FocusManager = LocalFocusManager.current
+
     var currentItem by remember { mutableStateOf(trainingSettingItem) }
 
     ExpoAndroidTheme { colors, typography ->
@@ -157,12 +158,12 @@ internal fun ExpoStandardSettingBottomSheet(
 internal fun ExpoStandardSettingModifyBottomSheet(
     modifier: Modifier = Modifier,
     trainingSettingItem: StandardProIdRequestParam,
-    focusManager: FocusManager = LocalFocusManager.current,
     sheetState: SheetState = rememberModalBottomSheetState(),
     onCancelClick: () -> Unit,
     onButtonClick: () -> Unit,
     onTrainingSettingChange: (StandardProIdRequestParam) -> Unit,
 ) {
+    val focusManager: FocusManager = LocalFocusManager.current
     var currentItem by remember { mutableStateOf(trainingSettingItem) }
 
     ExpoAndroidTheme { colors, typography ->

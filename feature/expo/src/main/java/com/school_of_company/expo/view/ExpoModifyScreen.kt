@@ -87,6 +87,8 @@ import com.school_of_company.ui.keyBoardOption.numberKeyboardOptions
 import com.school_of_company.ui.toast.makeToast
 import com.school_of_company.ui.util.filterNonDigits
 import com.school_of_company.ui.visualTransformation.DateTimeVisualTransformation
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 internal fun ExpoModifyRoute(
@@ -211,7 +213,6 @@ internal fun ExpoModifyRoute(
 @Composable
 private fun ExpoModifyScreen(
     modifier: Modifier = Modifier,
-    focusManager: FocusManager = LocalFocusManager.current,
     scrollState: ScrollState = rememberScrollState(),
     imageUri: String?,
     modifyCallBack: () -> Unit,
@@ -223,8 +224,8 @@ private fun ExpoModifyScreen(
     addressState: String,
     locationState: String,
     introduceTitleState: String,
-    trainingProgramTextState: List<TrainingProIdRequestParam>,
-    standardProgramTextState: List<StandardProIdRequestParam>,
+    trainingProgramTextState: PersistentList<TrainingProIdRequestParam>,
+    standardProgramTextState: PersistentList<StandardProIdRequestParam>,
     navigateToExpoAddressSearch: () -> Unit,
     onAddStandardProgram: () -> Unit,
     onAddTrainingProgram: () -> Unit,
@@ -240,6 +241,7 @@ private fun ExpoModifyScreen(
     updateExistingTrainingProgram: (Int, TrainingProIdRequestParam) -> Unit,
     updateExistingStandardProgram: (Int, StandardProIdRequestParam) -> Unit
 ) {
+    val focusManager: FocusManager = LocalFocusManager.current
 
     val (openTrainingSettingBottomSheet, isOpenTrainingSettingBottomSheet) = rememberSaveable {
         mutableStateOf(
@@ -701,11 +703,11 @@ private fun HomeDetailModifyScreenPreview() {
         imageUri = "",
         modifyCallBack = {},
         navigateToExpoAddressSearch = {},
-        trainingProgramTextState = emptyList(),
+        trainingProgramTextState = persistentListOf(),
         onTrainingProgramChange = { _, _ -> },
         onAddTrainingProgram = {},
         onRemoveTrainingProgram = {},
-        standardProgramTextState = emptyList(),
+        standardProgramTextState = persistentListOf(),
         onStandardProgramChange = { _, _ -> },
         onAddStandardProgram = {},
         onRemoveStandardProgram = {},

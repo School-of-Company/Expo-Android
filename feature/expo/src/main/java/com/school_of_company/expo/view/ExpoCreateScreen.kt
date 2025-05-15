@@ -87,6 +87,8 @@ import com.school_of_company.ui.keyBoardOption.numberKeyboardOptions
 import com.school_of_company.ui.toast.makeToast
 import com.school_of_company.ui.util.filterNonDigits
 import com.school_of_company.ui.visualTransformation.DateTimeVisualTransformation
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 internal fun ExpoCreateRoute(
@@ -219,9 +221,8 @@ private fun ExpoCreateScreen(
     addressState: String,
     locationState: String,
     imageUri: String?,
-    trainingProgramTextState: List<TrainingProRequestParam>,
-    standardProgramTextState: List<StandardProRequestParam>,
-    focusManager: FocusManager = LocalFocusManager.current,
+    trainingProgramTextState: PersistentList<TrainingProRequestParam>,
+    standardProgramTextState: PersistentList<StandardProRequestParam>,
     scrollState: ScrollState = rememberScrollState(),
     onImageClick: () -> Unit,
     onExpoCreateCallBack: () -> Unit,
@@ -238,6 +239,7 @@ private fun ExpoCreateScreen(
     onTrainingProgramChange: (Int, TrainingProRequestParam) -> Unit,
     onStandardProgramChange: (Int, StandardProRequestParam) -> Unit,
 ) {
+    val focusManager: FocusManager = LocalFocusManager.current
 
     val (openTrainingSettingBottomSheet, isOpenTrainingSettingBottomSheet) = rememberSaveable { mutableStateOf(false) }
     val (openStandardSettingBottomSheet, isOpenStandardSettingBottomSheet) = rememberSaveable { mutableStateOf(false) }
@@ -670,8 +672,8 @@ private fun ExpoCreateScreenPreview() {
         addressState = "",
         locationState = "",
         imageUri = null,
-        trainingProgramTextState = emptyList(),
-        standardProgramTextState = emptyList(),
+        trainingProgramTextState = persistentListOf(),
+        standardProgramTextState = persistentListOf(),
         onImageClick = {},
         onExpoCreateCallBack = {},
         onAddTrainingProgram = {},

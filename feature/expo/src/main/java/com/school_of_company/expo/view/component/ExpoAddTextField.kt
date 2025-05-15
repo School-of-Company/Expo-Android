@@ -27,12 +27,14 @@ import com.school_of_company.design_system.icon.XIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.model.param.expo.TrainingProIdRequestParam
 import com.school_of_company.model.param.expo.TrainingProRequestParam
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 internal fun ExpoAddTextField(
     modifier: Modifier = Modifier,
     placeHolder: String,
-    trainingTextFieldList: List<TrainingProRequestParam>,
+    trainingTextFieldList: PersistentList<TrainingProRequestParam>,
     onAddTextField: () -> Unit,
     onRemoveTextField: (Int) -> Unit,
     onTrainingSetting: (Int) -> Unit,
@@ -130,7 +132,7 @@ internal fun ExpoAddTextField(
 internal fun ExpoAddModifyTextField(
     modifier: Modifier = Modifier,
     placeHolder: String,
-    trainingTextFieldList: List<TrainingProIdRequestParam>,
+    trainingTextFieldList: PersistentList<TrainingProIdRequestParam>,
     onAddTextField: () -> Unit,
     onRemoveTextField: (Int) -> Unit,
     onTrainingSetting: (Int) -> Unit,
@@ -229,7 +231,7 @@ internal fun ExpoAddModifyTextField(
 private fun ExpoAddTextFieldPreview() {
     ExpoAddTextField(
         placeHolder = "연수를 입력하세요.",
-        trainingTextFieldList = listOf(),
+        trainingTextFieldList = persistentListOf(),
         onValueChange = { _, _ ->},
         onAddTextField = {},
         onRemoveTextField = {},

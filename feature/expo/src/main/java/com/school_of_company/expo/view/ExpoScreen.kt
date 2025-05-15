@@ -42,6 +42,7 @@ import com.school_of_company.expo.view.component.ExpoFormFilterDialog
 import com.school_of_company.expo.view.component.ExpoList
 import com.school_of_company.expo.view.component.HomeFilterButton
 import com.school_of_company.expo.viewmodel.uistate.GetExpoListUiState
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 
 @Composable
@@ -187,7 +188,7 @@ private fun ExpoScreen(
     if (openFilterDialog) {
         Dialog(onDismissRequest = {setOpenFilterDialog(false)}) {
             ExpoFormFilterDialog(
-                selectedOptions = listOf(selectedFilter),
+                selectedOptions = persistentListOf(selectedFilter),
                 onStudentFormTrueClick = { onFilterSelected(FilterOptionEnum.STUDENT_FORM_TRUE) },
                 onStudentFormFalseClick = { onFilterSelected(FilterOptionEnum.STUDENT_FORM_FALSE) },
                 onTrainingFormFalseClick = { onFilterSelected(FilterOptionEnum.TRAINING_FORM_FALSE) },

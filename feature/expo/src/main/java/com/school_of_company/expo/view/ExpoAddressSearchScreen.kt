@@ -45,6 +45,9 @@ import com.school_of_company.expo.viewmodel.ExpoViewModel
 import com.school_of_company.expo.viewmodel.uistate.GetAddressUiState
 import com.school_of_company.expo.viewmodel.uistate.GetCoordinatesUiState
 import com.school_of_company.model.model.juso.JusoModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.PersistentList
+import okhttp3.internal.toImmutableList
 
 @Composable
 internal fun ExpoAddressSearchRoute(
@@ -115,13 +118,14 @@ private fun ExpoAddressSearchScreen(
     location: String,
     coordinateX: String,
     coordinateY: String,
-    addressList: List<JusoModel>,
-    focusManager: FocusManager = LocalFocusManager.current,
+    addressList: PersistentList<JusoModel>,
     popUpBackStack: () -> Unit,
     onLocationSearch: () -> Unit,
     onLocationChange: (String) -> Unit,
     onAddressItemClick: (String) -> Unit,
 ) {
+    val focusManager: FocusManager = LocalFocusManager.current
+
     ExpoAndroidTheme { colors, typography ->
         Column(
             modifier = modifier

@@ -57,13 +57,14 @@ import com.school_of_company.ui.visualTransformation.DateTimeVisualTransformatio
 @Composable
 internal fun ExpoSettingBottomSheet(
     modifier: Modifier = Modifier,
-    focusManager: FocusManager = LocalFocusManager.current,
     sheetState: SheetState = rememberModalBottomSheetState(),
     trainingSettingItem: TrainingProRequestParam,
     onCancelClick: () -> Unit,
     onButtonClick: () -> Unit,
     onTrainingSettingChange: (TrainingProRequestParam) -> Unit,
 ) {
+    val focusManager: FocusManager = LocalFocusManager.current
+
     var currentItem by remember { mutableStateOf(trainingSettingItem) }
 
     ExpoAndroidTheme { colors, typography ->

@@ -1,5 +1,7 @@
 package com.school_of_company.model.param.expo
 
+import androidx.compose.runtime.Immutable
+
 data class ExpoModifyRequestParam(
     val title: String,
     val description: String,
@@ -13,6 +15,7 @@ data class ExpoModifyRequestParam(
     val updateTrainingProRequestDto: List<TrainingProIdRequestParam>,
 )
 
+@Immutable
 data class StandardProIdRequestParam(
     val id: Long,
     val title: String,
@@ -20,6 +23,7 @@ data class StandardProIdRequestParam(
     val endedAt: String, // yyyy-MM-DD HH:mm
 )
 
+@Immutable
 data class TrainingProIdRequestParam(
     val id: Long,
     val title: String,

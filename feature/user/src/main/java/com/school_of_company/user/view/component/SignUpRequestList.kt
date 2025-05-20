@@ -38,8 +38,11 @@ internal fun SignUpRequestList(
                 .background(color = colors.white)
                 .padding(horizontal = 16.dp)
         ) {
-            itemsIndexed(item) { index, item ->
-               SignUpRequestListItem(
+            itemsIndexed(
+                items = item,
+                key = { _, item -> item.id },
+            ) { index, item ->
+                SignUpRequestListItem(
                     index = index + 1,
                     selectedIndex = selectedIndex,
                     data = item,
@@ -47,6 +50,7 @@ internal fun SignUpRequestList(
                     onClick = onClick,
                 )
             }
+
 
             item {
                 Spacer(modifier = Modifier.height(48.dp))

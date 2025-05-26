@@ -26,7 +26,13 @@ internal fun ProgramDetailParticipantManagementList(
         ) {
             itemsIndexed(
                 items = item.participant,
+<<<<<<< HEAD
                 key = { _, item -> item.id },
+=======
+                key = { _, item ->
+                    item.id
+                }
+>>>>>>> cd4d46850cb08dd7728fc2fda0e57c38b24c2bff
             ) { index, item ->
                 ProgramDetailParticipantManagementListItem(
                     index = index + 1,

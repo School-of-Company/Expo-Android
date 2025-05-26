@@ -35,6 +35,5 @@ internal fun ProgramDetailParticipantManagementList(
                 )
             }
         }
-
     }
 }

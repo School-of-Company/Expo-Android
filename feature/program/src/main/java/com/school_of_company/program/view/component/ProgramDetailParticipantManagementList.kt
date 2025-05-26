@@ -24,7 +24,12 @@ internal fun ProgramDetailParticipantManagementList(
                 .background(color = colors.white)
                 .padding(start = 16.dp)
         ) {
-            itemsIndexed(item.participant) { index, item ->
+            itemsIndexed(
+                items = item.participant,
+                key = { _, item ->
+                    item.id
+                }
+            ) { index, item ->
                 ProgramDetailParticipantManagementListItem(
                     index = index + 1,
                     data = item,

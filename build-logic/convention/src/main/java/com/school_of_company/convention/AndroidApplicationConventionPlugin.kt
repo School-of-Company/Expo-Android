@@ -26,16 +26,16 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                 // Apply common Kotlin Android settings
                 configureKotlinAndroid(this)
 
-                // Compile SDK - 34 Version
-                compileSdk = 34
+                // Compile SDK - 35 Version
+                compileSdk = 35
 
                 // Configure default settings for the application
                 defaultConfig {
                     applicationId = "com.school_of_company.expo_android"
                     minSdk = 26
-                    targetSdk = 34
-                    versionCode = 20250426
-                    versionName = "1.2"
+                    targetSdk = 35
+                    versionCode = 20250805
+                    versionName = "1.3"
                     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
                     vectorDrawables.useSupportLibrary = true

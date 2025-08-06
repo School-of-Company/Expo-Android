@@ -1,5 +1,7 @@
 package com.school_of_company.model.param.expo
 
+import androidx.compose.runtime.Immutable
+
 data class ExpoAllRequestParam(
     val title: String,
     val description: String,
@@ -13,12 +15,14 @@ data class ExpoAllRequestParam(
     val addTrainingProRequestDto: List<TrainingProRequestParam>,
 )
 
+@Immutable
 data class StandardProRequestParam(
     val title: String,
     val startedAt: String, // yyyy-MM-DD HH:mm
     val endedAt: String, // yyyy-MM-DD HH:mm
 )
 
+@Immutable
 data class TrainingProRequestParam(
     val title: String,
     val startedAt: String, // yyyy-MM-dd HH:mm

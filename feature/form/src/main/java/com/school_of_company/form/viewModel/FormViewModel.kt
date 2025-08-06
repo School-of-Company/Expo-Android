@@ -11,6 +11,7 @@ import com.school_of_company.form.viewModel.uiState.GetFormUiState
 import com.school_of_company.model.model.form.DynamicFormModel
 import com.school_of_company.model.model.form.FormRequestAndResponseModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -34,7 +35,7 @@ internal class FormViewModel @Inject constructor(
 
     private val _getFormUiState = MutableStateFlow<GetFormUiState>(GetFormUiState.Loading)
 
-    internal val formState = savedStateHandle.getStateFlow(FORM_STATE, listOf(DynamicFormModel.createDefault()))
+    internal val formState = savedStateHandle.getStateFlow(FORM_STATE, persistentListOf(DynamicFormModel.createDefault()))
     internal val informationTextState = savedStateHandle.getStateFlow(INFORMATION_TEXT_STATE, "")
 
     private var _isNotFoundError = MutableStateFlow(false)

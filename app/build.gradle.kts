@@ -57,6 +57,8 @@ dependencies {
     implementation(libs.app.update.ktx)
 
     implementation(libs.android.kakao.map)
+
+    implementation(libs.kotlinx.collections.immutable.v037)
 }
 
 fun getApiKey(propertyKey: String) : String {

@@ -14,11 +14,15 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.persistentListOf
 
+@Immutable
 internal data class FilterOption(
     val label: String,
     val selected: Boolean,
@@ -29,7 +33,7 @@ internal data class FilterOption(
 @Composable
 internal fun ExpoFormFilterGroupButton(
     modifier: Modifier = Modifier,
-    options: List<FilterOption>
+    options: PersistentList<FilterOption>
 ) {
     ExpoAndroidTheme { colors, typography ->
         FlowRow(
@@ -90,7 +94,7 @@ private fun ExpoFormFilterButton(
 @Composable
 private fun ExpoFormFilterButtonPreview() {
     ExpoFormFilterGroupButton(
-        options = listOf(
+        options = persistentListOf(
             FilterOption("현장실습 O", true) {  },
             FilterOption("현장실습 X", false) { },
             FilterOption("학생참여 O", false) {  },

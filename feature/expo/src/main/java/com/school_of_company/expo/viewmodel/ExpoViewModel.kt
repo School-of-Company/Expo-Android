@@ -41,6 +41,10 @@ import com.school_of_company.model.param.expo.TrainingProRequestParam
 import com.school_of_company.ui.util.autoFormatToDateTime
 import com.school_of_company.ui.util.formatNoneHyphenServerDate
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -50,6 +54,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import okhttp3.internal.toImmutableList
 import javax.inject.Inject
 
 @HiltViewModel
@@ -91,16 +96,16 @@ internal class ExpoViewModel @Inject constructor(
     private val _swipeRefreshLoading = MutableStateFlow(false)
     val swipeRefreshLoading = _swipeRefreshLoading.asStateFlow()
 
-    private val _trainingProgramTextState = MutableStateFlow<List<TrainingProRequestParam>>(emptyList())
+    private val _trainingProgramTextState = MutableStateFlow<PersistentList<TrainingProRequestParam>>(persistentListOf())
     internal val trainingProgramTextState = _trainingProgramTextState.asStateFlow()
 
-    private val _standardProgramTextState = MutableStateFlow<List<StandardProRequestParam>>(emptyList())
+    private val _standardProgramTextState = MutableStateFlow<PersistentList<StandardProRequestParam>>(persistentListOf())
     internal val standardProgramTextState = _standardProgramTextState.asStateFlow()
 
-    private val _trainingProgramModifyTextState = MutableStateFlow<List<TrainingProIdRequestParam>>(emptyList())
+    private val _trainingProgramModifyTextState = MutableStateFlow<PersistentList<TrainingProIdRequestParam>>(persistentListOf())
     internal val trainingProgramModifyTextState = _trainingProgramModifyTextState.asStateFlow()
 
-    private val _standardProgramModifyTextState = MutableStateFlow<List<StandardProIdRequestParam>>(emptyList())
+    private val _standardProgramModifyTextState = MutableStateFlow<PersistentList<StandardProIdRequestParam>>(persistentListOf())
     internal val standardProgramModifyTextState = _standardProgramModifyTextState.asStateFlow()
 
     private val _getExpoInformationUiState = MutableStateFlow<GetExpoInformationUiState>(GetExpoInformationUiState.Loading)
@@ -168,14 +173,14 @@ internal class ExpoViewModel @Inject constructor(
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0)
 
-    val addressList: StateFlow<List<JusoModel>> = getAddressUiState
+    val addressList: StateFlow<PersistentList<JusoModel>> = getAddressUiState
         .map { state ->
             when (state) {
-                is GetAddressUiState.Success -> state.data
-                else -> listOf()
+                is GetAddressUiState.Success -> state.data.toPersistentList()
+                else -> persistentListOf()
             }
         }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), listOf())
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), persistentListOf())
 
     internal val address: StateFlow<String> = combine(
         currentScreen,
@@ -335,8 +340,8 @@ internal class ExpoViewModel @Inject constructor(
         onModifyTitleChange("")
         onStartedChange("")
         onEndedChange("")
-        _trainingProgramTextState.value = emptyList()
-        _standardProgramTextState.value = emptyList()
+        _trainingProgramTextState.value = persistentListOf()
+        _standardProgramTextState.value = persistentListOf()
     }
 
     internal fun deleteExpoInformation(expoId: String) = viewModelScope.launch {
@@ -426,7 +431,7 @@ internal class ExpoViewModel @Inject constructor(
                                 startedAt = program.startedAt.formatNoneHyphenServerDate(),
                                 endedAt = program.endedAt.formatNoneHyphenServerDate()
                             )
-                        }
+                        }.toPersistentList()
                     }
                     is Result.Error -> _getStandardProgramListUiState.value = GetStandardProgramListUiState.Error(result.exception)
                 }
@@ -452,7 +457,7 @@ internal class ExpoViewModel @Inject constructor(
                                 endedAt = program.endedAt.formatNoneHyphenServerDate(),
                                 category = program.category
                             )
-                        }
+                        }.toPersistentList()
                     }
                     is Result.Error -> _getTrainingProgramListUiState.value = GetTrainingProgramListUiState.Error(result.exception)
                 }
@@ -474,7 +479,7 @@ internal class ExpoViewModel @Inject constructor(
                         is Result.Loading -> _getAddressUiState.value = GetAddressUiState.Loading
                         is Result.Success -> {
                             if (result.data.isNotEmpty()) {
-                                _getAddressUiState.value = GetAddressUiState.Success(result.data)
+                                _getAddressUiState.value = GetAddressUiState.Success(result.data.toPersistentList())
                             } else {
                                 _getAddressUiState.value = GetAddressUiState.Error(
                                     NoResponseException()
@@ -568,33 +573,33 @@ internal class ExpoViewModel @Inject constructor(
     }
 
     internal fun updateTrainingProgramModifyText(index: Int, updateItem: TrainingProIdRequestParam) {
-        _trainingProgramModifyTextState.value = _trainingProgramModifyTextState.value.toMutableList().apply {
-            set(index, updateItem)
-        }
+        _trainingProgramModifyTextState.value = _trainingProgramModifyTextState.value.set(index, updateItem)
     }
 
     internal fun updateStandardProgramModifyText(index: Int, updateItem: StandardProIdRequestParam) {
-        _standardProgramModifyTextState.value = _standardProgramModifyTextState.value.toMutableList().apply {
-            set(index, updateItem)
-        }
+        _standardProgramModifyTextState.value = _standardProgramModifyTextState.value.set(index, updateItem)
     }
 
     internal fun addTrainingProgramModifyText() {
-        _trainingProgramModifyTextState.value += TrainingProIdRequestParam(
-            id = 0,
-            title = "",
-            startedAt = "",
-            endedAt = "",
-            category = ""
+        _trainingProgramModifyTextState.value = _trainingProgramModifyTextState.value.add(
+            TrainingProIdRequestParam(
+                id = 0,
+                title = "",
+                startedAt = "",
+                endedAt = "",
+                category = ""
+            )
         )
     }
 
     internal fun addStandardProgramModifyText() {
-        _standardProgramModifyTextState.value += StandardProIdRequestParam(
-            id = 0,
-            title = "",
-            startedAt = "",
-            endedAt = ""
+        _standardProgramModifyTextState.value = _standardProgramModifyTextState.value.add(
+            StandardProIdRequestParam(
+                id = 0,
+                title = "",
+                startedAt = "",
+                endedAt = ""
+            )
         )
     }
 
@@ -606,68 +611,57 @@ internal class ExpoViewModel @Inject constructor(
     }
 
     internal fun removeTrainingProgramModifyText(index: Int) {
-        _trainingProgramModifyTextState.value = _trainingProgramModifyTextState.value.toMutableList().apply {
-            removeAt(index)
-        }
+        _trainingProgramModifyTextState.value = _trainingProgramModifyTextState.value.removeAt(index)
     }
 
     internal fun removeStandardProgramModifyText(index: Int) {
-        _standardProgramModifyTextState.value = _standardProgramModifyTextState.value.toMutableList().apply {
-            removeAt(index)
-        }
+        _standardProgramModifyTextState.value = _standardProgramModifyTextState.value.removeAt(index)
     }
 
     internal fun updateExistingTrainingProgramModify(index: Int, updatedItem: TrainingProIdRequestParam) {
-        _trainingProgramModifyTextState.value = _trainingProgramModifyTextState.value.toMutableList().apply {
-            this[index] = updatedItem
-        }
+        _trainingProgramModifyTextState.value = _trainingProgramModifyTextState.value.set(index, updatedItem)
     }
 
     internal fun updateExistingStandardProgramModify(index: Int, updatedItem: StandardProIdRequestParam) {
-        _standardProgramModifyTextState.value = _standardProgramModifyTextState.value.toMutableList().apply {
-            this[index] = updatedItem
-        }
+        _standardProgramModifyTextState.value = _standardProgramModifyTextState.value.set(index, updatedItem)
     }
 
+
     internal fun updateTrainingProgramText(index: Int, updateItem: TrainingProRequestParam) {
-        _trainingProgramTextState.value = _trainingProgramTextState.value.toMutableList().apply {
-            set(index, updateItem)
-        }
+        _trainingProgramTextState.value = _trainingProgramTextState.value.set(index, updateItem)
     }
 
     internal fun addTrainingProgramText() {
-        _trainingProgramTextState.value += TrainingProRequestParam(
-            title = "",
-            startedAt = "",
-            endedAt = "",
-            category = TrainingCategory.CHOICE.name
-        )
+        _trainingProgramTextState.value = _trainingProgramTextState.value.add(
+                TrainingProRequestParam(
+                    title = "",
+                    startedAt = "",
+                    endedAt = "",
+                    category = TrainingCategory.CHOICE.name
+                )
+            )
     }
 
     internal fun removeTrainingProgramText(index: Int) {
-        _trainingProgramTextState.value = _trainingProgramTextState.value.toMutableList().apply {
-            removeAt(index)
-        }
+        _trainingProgramTextState.value = _trainingProgramTextState.value.removeAt(index)
     }
 
     internal fun updateStandardProgramText(index: Int, updateItem: StandardProRequestParam) {
-        _standardProgramTextState.value = _standardProgramTextState.value.toMutableList().apply {
-            set(index, updateItem)
-        }
+        _standardProgramTextState.value = _standardProgramTextState.value.set(index, updateItem)
     }
 
     internal fun addStandardProgramText() {
-        _standardProgramTextState.value += StandardProRequestParam(
-            title = "",
-            startedAt = "",
-            endedAt = ""
+        _standardProgramTextState.value = _standardProgramTextState.value.add(
+            StandardProRequestParam(
+                title = "",
+                startedAt = "",
+                endedAt = ""
+            )
         )
     }
 
     internal fun removeStandardProgramText(index: Int) {
-        _standardProgramTextState.value = _standardProgramTextState.value.toMutableList().apply {
-            removeAt(index)
-        }
+        _standardProgramTextState.value = _standardProgramTextState.value.removeAt(index)
     }
 
     internal fun onModifyTitleChange(value: String) {

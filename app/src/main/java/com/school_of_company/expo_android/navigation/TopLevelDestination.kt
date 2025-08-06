@@ -5,6 +5,8 @@ import com.school_of_company.expo.navigation.expoCreateRoute
 import com.school_of_company.expo.navigation.expoCreatedRoute
 import com.school_of_company.expo.navigation.homeRoute
 import com.school_of_company.user.navigation.profileRoute
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 // TopLevelDestination
 enum class TopLevelDestination(
@@ -34,5 +36,11 @@ enum class TopLevelDestination(
         unSelectedIcon = R.drawable.ic_user,
         iconText = "프로필",
         routeName = profileRoute,
-    )
+    );
+
+    companion object {
+        val topLevelDestinations: ImmutableList<TopLevelDestination> = persistentListOf(
+            HOME, EXPO, EXPO_CREATED, PROFILE
+        )
+    }
 }

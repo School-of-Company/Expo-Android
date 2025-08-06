@@ -22,6 +22,7 @@ import com.school_of_company.expo_android.navigation.TopLevelDestination
 import com.school_of_company.navigation.sigInRoute
 import com.school_of_company.signup.navigation.signUpRoute
 import com.school_of_company.user.navigation.navigateToProfile
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
@@ -51,13 +52,13 @@ class ExpoAppState(
     val coroutineScope: CoroutineScope // 코루틴 스코프를 생성합니다.
 ) {
     // 현재 네비게이션 목적지를 얻습니다. 네비게이션 백스택에서 현재 활성화된 목적지를 반환
-    val currentDestination: NavDestination?
+    val currentDestination: String?
         @Composable get() = navController
-            .currentBackStackEntryAsState().value?.destination
+            .currentBackStackEntryAsState().value?.destination?.route
 
     // 현재 화면이 최상위 목적지인지 여부를 반환합니다.
     val currentTopLevelDestination: TopLevelDestination?
-        @Composable get() = when (currentDestination?.route) {
+        @Composable get() = when (currentDestination) {
             else -> null
         }
 
@@ -66,7 +67,7 @@ class ExpoAppState(
         get() = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact
 
     // 최상위 네비게이션 목적지 목록입니다.
-    val topLevelDestinations: List<TopLevelDestination> = TopLevelDestination.values().asList()
+    val topLevelDestinations: ImmutableList<TopLevelDestination> = TopLevelDestination.topLevelDestinations
 
     // 최상위 목적지로 네비게이션하는 함수입니다.
     fun navigateToTopLevelDestination(topLevelDestination: TopLevelDestination) {

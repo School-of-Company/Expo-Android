@@ -23,7 +23,7 @@ import java.time.LocalDate
 @Composable
 internal fun LocalDateButton(
     modifier: Modifier = Modifier,
-    date: LocalDate,
+    date: String,
     selected: Boolean,
     onClick: () -> Unit,
 ) {
@@ -52,7 +52,7 @@ internal fun LocalDateButton(
                 ),
         ) {
             Text(
-                text = date.toString(),
+                text = date,
                 style = typography.captionRegular2,
                 color = textColor,
                 textAlign = TextAlign.Center,
@@ -67,14 +67,14 @@ private fun LocalDateButtonPreview() {
     Column {
         LocalDateButton(
             modifier = Modifier,
-            date = LocalDate.now(),
+            date = LocalDate.now().toString(),
             selected = false,
             onClick = {},
         )
         Spacer(Modifier.height(16.dp))
         LocalDateButton(
             modifier = Modifier,
-            date = LocalDate.now(),
+            date = LocalDate.now().toString(),
             selected = true,
             onClick = {},
         )

@@ -97,8 +97,8 @@ jobs:
           title: CD 성공~
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           status: ${{ job.status }}
+          image: ${{ secrets.SUCCESS_IMAGE }}
           description: |
-            버전: v1.2.3
             빌드 시간: ${{ env.BUILD_TIME }}
             용량: ${{ env.BUNDLE_SIZE }}
             커밋: "${{ env.COMMIT_MSG }}" (${{ env.COMMIT_HASH }})
@@ -114,6 +114,7 @@ jobs:
           title: CD 실패~
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           status: ${{ job.status }}
+          image: ${{ secrets.FAILED_IMAGE }}
           description: |
             커밋: "${{ env.COMMIT_MSG }}" (${{ env.COMMIT_HASH }})
             소요 시간: ${{ env.BUILD_TIME }}

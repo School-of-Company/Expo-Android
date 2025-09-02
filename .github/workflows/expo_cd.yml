@@ -1,14 +1,13 @@
-name: Android CI
+name: Android CD
 
 on:
   push:
-    branches: [ "master", "develop" ]
-  pull_request:
-    branches: [ "*" ]
+    branches: [ "master" ]
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
         with:
@@ -20,7 +19,7 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{runner.os}}-gradle-${{hashFiles('**/*.gradle*', '**/gradle-wrapper.properties')}}
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
             ${{ runner.os }}-
@@ -41,32 +40,57 @@ jobs:
       - name: Create LOCAL_PROPERTIES
         run: echo '${{ secrets.LOCAL_PROPERTIES }}' > ./local.properties
 
-      - name: Build with Gradle (incremental)
-        run: ./gradlew assembleDebug --no-daemon
+      - name: Create service_account.json
+        run: echo '${{ secrets.SERVICE_ACCOUNT_JSON }}' > service_account.json
 
+      - name: Assemble Release Bundle
+        run: ./gradlew bundleRelease --no-daemon
 
-      - name: Expo-Android CI Discord Notification
+      - name: Sign Release
+        uses: r0adkll/sign-android-release@v1
+        with:
+          releaseDirectory: app/build/outputs/bundle/release
+          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+          alias: ${{ secrets.ALIAS }}
+          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+
+      - name: Upload AAB artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-release
+          path: app/build/outputs/bundle/release/app-release.aab
+
+      - name: Deploy to Google Play (Beta)
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJson: service_account.json
+          packageName: com.msg.sms_android
+          releaseFiles: app/build/outputs/bundle/release/app-release.aab
+          track: beta
+
+      - name: Android CD Discord Notification (Success)
         uses: sarisia/actions-status-discord@v1
         if: ${{ success() }}
         with:
-          title: CI 성공~
+          title: CD 성공~
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           status: ${{ job.status }}
           image: ${{ secrets.SUCCESS_IMAGE }}
           description: 뀨
           color: 65280
           url: "https://github.com/sarisia/actions-status-discord"
-          username: Expo-CI Bot
+          username: Android-CD Bot
 
-      - name: Expo-Android CI Discord Notification
+      - name: Android CD Discord Notification (Fail)
         uses: sarisia/actions-status-discord@v1
         if: ${{ failure() }}
         with:
-          title: CI 실패~
+          title: CD 실패~
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           status: ${{ job.status }}
           image: ${{ secrets.FAILED_IMAGE }}
           description: 뀨...
           color: 16711680
           url: "https://github.com/sarisia/actions-status-discord"
-          username: Expo-CI Bot
+          username: Android-CD Bot

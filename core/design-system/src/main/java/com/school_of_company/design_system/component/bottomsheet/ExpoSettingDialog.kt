@@ -6,13 +6,11 @@ import androidx.compose.ui.window.Dialog
 
 @Composable
 fun <T> SettingBottomSheet(
-    isOpen: Boolean,
     selectedItem: T?,
     onDismiss: () -> Unit,
     onUpdateItem: (T) -> Unit,
     content: @Composable (item: T, updateItem: (T) -> Unit) -> Unit
 ) {
-    if (isOpen) {
         Dialog(onDismissRequest = onDismiss) {
             if (selectedItem != null) {
                 content(selectedItem, onUpdateItem)
@@ -20,5 +18,4 @@ fun <T> SettingBottomSheet(
                 Log.d("ExpoModifyScreen - SettingBottomSheet", "selectedItem is null")
             }
         }
-    }
 }

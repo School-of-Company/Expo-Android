@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -31,13 +32,13 @@ import com.school_of_company.design_system.R
 import com.school_of_company.design_system.component.uistate.empty.ShowEmptyState
 import com.school_of_company.design_system.component.uistate.error.ShowErrorState
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
-import com.school_of_company.expo.view.component.ExpoCreatedDeleteButton
 import com.school_of_company.expo.view.component.ExpoCreatedTable
 import com.school_of_company.expo.view.component.ExpoCreatedTopCard
 import com.school_of_company.expo.viewmodel.ExpoViewModel
 import com.school_of_company.expo.viewmodel.uistate.DeleteExpoInformationUiState
 import com.school_of_company.expo.viewmodel.uistate.GetExpoListUiState
 import com.school_of_company.model.entity.expo.ExpoListResponseEntity
+import com.school_of_company.ui.preview.ExpoPreviews
 import com.school_of_company.ui.toast.makeToast
 import kotlinx.collections.immutable.immutableListOf
 import kotlinx.collections.immutable.toPersistentList
@@ -57,14 +58,21 @@ internal fun ExpoCreatedRoute(
 
     val context = LocalContext.current
 
-    LaunchedEffect("initCreatedExpo") {
+    LaunchedEffect(Unit) {
         expoViewModel.getExpoList()
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            expoViewModel.resetDeleteExpoInformationState()
+        }
     }
 
     LaunchedEffect(deleteExpoInformationUiState) {
         when (deleteExpoInformationUiState) {
             is DeleteExpoInformationUiState.Loading -> Unit
             is DeleteExpoInformationUiState.Success -> {
+                setSelectedIndex(-1)
                 makeToast(context, "박람회가 삭제되었습니다.")
             }
             is DeleteExpoInformationUiState.Error -> {
@@ -137,19 +145,19 @@ private fun ExpoCreatedScreen(
                     when (getExpoListUiState) {
                         is GetExpoListUiState.Loading -> Unit
                         is GetExpoListUiState.Success -> {
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier.padding(horizontal = 8.dp)
+                            ) {
                                 CreatedExpoList(
                                     selectedIndex = selectedIndex,
-                                    scrollState = scrollState,
                                     expoList = getExpoListUiState.data.toPersistentList(),
+                                    scrollState = scrollState,
                                     onItemClick = { isSelected, index ->
                                         setSelectedIndex(if (isSelected) -1 else index)
                                     },
-                                )
-                                Spacer(modifier = Modifier.height(32.dp))
-                                ExpoCreatedDeleteButton(
-                                    enabled = selectedIndex != -1,
-                                    onClick = { deleteSelectedExpo(selectedIndex) }
+                                    deleteSelectedExpo = deleteSelectedExpo,
+                                    enabled = selectedIndex != -1
                                 )
                             }
                         }
@@ -174,7 +182,7 @@ private fun ExpoCreatedScreen(
     }
 }
 
-@Preview
+@ExpoPreviews
 @Composable
 private fun ExpoCreatedScreenPreview() {
     ExpoCreatedScreen(
@@ -195,7 +203,39 @@ private fun ExpoCreatedScreenPreview() {
                     startedDay = "2024-11-23",
                     finishedDay = "2024-11-23",
                     coverImage = null,
-                )
+                ),
+                ExpoListResponseEntity(
+                    id = "2",
+                    title = "제목",
+                    description = "묘사",
+                    startedDay = "2024-11-23",
+                    finishedDay = "2024-11-23",
+                    coverImage = null,
+                ),
+                ExpoListResponseEntity(
+                    id = "2",
+                    title = "제목",
+                    description = "묘사",
+                    startedDay = "2024-11-23",
+                    finishedDay = "2024-11-23",
+                    coverImage = null,
+                ),
+                ExpoListResponseEntity(
+                    id = "2",
+                    title = "제목",
+                    description = "묘사",
+                    startedDay = "2024-11-23",
+                    finishedDay = "2024-11-23",
+                    coverImage = null,
+                ),
+                ExpoListResponseEntity(
+                    id = "2",
+                    title = "제목",
+                    description = "묘사",
+                    startedDay = "2024-11-23",
+                    finishedDay = "2024-11-23",
+                    coverImage = null,
+                ),
             )
         ),
         expoListSize = 100,

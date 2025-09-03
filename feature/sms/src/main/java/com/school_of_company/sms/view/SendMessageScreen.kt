@@ -101,7 +101,7 @@ private fun SendMessageScreen(
                 .background(color = colors.white)
                 .paddingHorizontal(
                     horizontal = 16.dp,
-                    top = 61.dp
+                    top = 68.dp
                 )
                 .pointerInput(Unit) {
                     detectTapGestures(
@@ -125,6 +125,7 @@ private fun SendMessageScreen(
 
             LimitedLengthTextField(
                 label = "제목",
+                labelComposable = {},
                 value = title,
                 placeholder = "제목을 입력해주세요.",
                 isError = false,
@@ -137,6 +138,7 @@ private fun SendMessageScreen(
 
             LimitedLengthTextField(
                 label = "내용",
+                labelComposable = {},
                 value = content,
                 placeholder = "내용을 입력해주세요.",
                 isError = false,

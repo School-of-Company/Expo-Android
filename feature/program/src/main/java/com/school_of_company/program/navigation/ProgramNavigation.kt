@@ -24,10 +24,12 @@ fun NavController.navigateToProgramDetailProgram(
 
 fun NavController.navigateToProgramDetailParticipantManagement(
     id: String,
+    startDate: String,
+    endDate: String,
     navOptions: NavOptions? = null
 ) {
     this.navigate(
-        route = "$programDetailParticipantManagementRoute/${id}",
+        route = "$programDetailParticipantManagementRoute/${id}/${startDate}/${endDate}",
         navOptions
     )
 }
@@ -60,10 +62,14 @@ fun NavGraphBuilder.programDetailProgramScreen(
 }
 
 fun NavGraphBuilder.programDetailParticipantManagementScreen(onBackClick: () -> Unit) {
-    composable(route = "$programDetailParticipantManagementRoute/{id}") { backStackEntry ->
+    composable(route = "$programDetailParticipantManagementRoute/{id}/{startDate}/{endDate}") { backStackEntry ->
         val id = backStackEntry.arguments?.getString("id") ?: ""
+        val startDate = backStackEntry.arguments?.getString("startDate") ?: ""
+        val endDate = backStackEntry.arguments?.getString("endDate") ?: ""
         ProgramDetailParticipantManagementRoute(
             id = id,
+            startDate = startDate,
+            endDate = endDate,
             onBackClick = onBackClick
         )
     }

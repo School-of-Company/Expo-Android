@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredWidthIn
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,11 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.school_of_company.design_system.icon.CircleIcon
-import com.school_of_company.design_system.icon.XIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
-import com.school_of_company.design_system.theme.ExpoTypography
-import com.school_of_company.design_system.theme.color.ColorTheme
 import com.school_of_company.expo.util.formatDateToMonthDay
 import com.school_of_company.model.entity.expo.ExpoListResponseEntity
 
@@ -35,9 +32,9 @@ internal fun CreatedExpoListItem(
     onClick: () -> Unit,
 ) {
     with(item) {
-        ExpoAndroidTheme { colors: ColorTheme, typography: ExpoTypography ->
+        ExpoAndroidTheme { colors, typography ->
             Row(
-                horizontalArrangement = Arrangement.spacedBy(38.dp, Alignment.Start),
+                horizontalArrangement = Arrangement.spacedBy(65.dp, Alignment.Start),
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = modifier
                     .horizontalScroll(scrollState)
@@ -56,16 +53,11 @@ internal fun CreatedExpoListItem(
                     textAlign = TextAlign.Center,
                 )
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(48.dp, Alignment.Start),
+                    horizontalArrangement = Arrangement.spacedBy(75.dp, Alignment.Start),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    if (coverImage == null) {
-                        XIcon(tint = colors.error)
-                    } else {
-                        CircleIcon(tint = colors.black)
-                    }
                     Text(
-                        modifier = Modifier.requiredWidthIn(136.dp),
+                        modifier = Modifier.width(80.dp),
                         text = title,
                         style = typography.captionRegular2,
                         fontWeight = FontWeight.W400,

@@ -21,13 +21,14 @@ import androidx.compose.ui.unit.dp
 import com.school_of_company.design_system.icon.CircleIcon
 import com.school_of_company.design_system.icon.XIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
+import com.school_of_company.model.entity.participant.ParticipantEntity
 import com.school_of_company.model.entity.participant.ParticipantInformationResponseEntity
 
 @Composable
 internal fun ProgramDetailParticipantManagementListItem(
     modifier: Modifier = Modifier,
     index: Int,
-    data: ParticipantInformationResponseEntity,
+    data: ParticipantEntity,
     horizontalScrollState: ScrollState,
 ) {
     Spacer(modifier = Modifier.height(20.dp))
@@ -89,7 +90,7 @@ internal fun ProgramDetailParticipantManagementListItem(
 private fun HomeDetailParticipantManagementListItemPreview() {
     ProgramDetailParticipantManagementListItem(
         index = 1,
-        data = ParticipantInformationResponseEntity(
+        data = ParticipantEntity(
             name = "이명훈",
             id = 0,
             phoneNumber = "01038251716",

@@ -38,18 +38,18 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.school_of_company.design_system.R
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.component.modifier.padding.paddingHorizontal
+import com.school_of_company.design_system.component.modifier.padding.paddingVertical
 import com.school_of_company.design_system.component.uistate.empty.ShowEmptyState
 import com.school_of_company.design_system.component.uistate.error.ShowErrorState
 import com.school_of_company.design_system.icon.LogoutIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.user.view.component.SignUpRequestList
-import com.school_of_company.user.view.component.UserAllowButton
 import com.school_of_company.user.view.component.UserBottomSheet
-import com.school_of_company.user.view.component.UserDeleteButton
 import com.school_of_company.user.view.component.UserDialog
 import com.school_of_company.user.viewmodel.UserViewModel
 import com.school_of_company.user.viewmodel.uistate.AllowAdminRequestUiState
+import com.school_of_company.user.viewmodel.uistate.GetAdminInformationUiState
 import com.school_of_company.user.viewmodel.uistate.GetAdminRequestAllowListUiState
 import com.school_of_company.user.viewmodel.uistate.LogoutUiState
 import com.school_of_company.user.viewmodel.uistate.RejectAdminRequestUiState
@@ -73,9 +73,11 @@ internal fun UserRoute(
     val rejectAdminRequestUiState by viewModel.rejectAdminRequestUiState.collectAsStateWithLifecycle()
     val serviceWithdrawalUiState by viewModel.serviceWithdrawalUiState.collectAsStateWithLifecycle()
     val logoutUiState by viewModel.logoutUiState.collectAsStateWithLifecycle()
+    val getAdminInformationUiState by viewModel.adminInformationUiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.getAdminRequestAllowList()
+        viewModel.adminInformation()
     }
 
     DisposableEffect(Unit) {
@@ -142,6 +144,7 @@ internal fun UserRoute(
         modifier = modifier,
         selectedId = selectedId,
         getAdminRequestAllowListUiState = getAdminRequestAllowListUiState,
+        getAdminInformationUiState = getAdminInformationUiState,
         swipeRefreshState = swipeRefreshState,
         logoutCallBack = viewModel::logout,
         withdrawalCallBack = viewModel::serviceWithdrawal,
@@ -157,10 +160,11 @@ internal fun UserRoute(
 @Composable
 private fun UserScreen(
     modifier: Modifier = Modifier,
-    selectedId: Long,
-    getAdminRequestAllowListUiState: GetAdminRequestAllowListUiState,
     swipeRefreshState: SwipeRefreshState,
     scrollState: ScrollState = rememberScrollState(),
+    selectedId: Long,
+    getAdminRequestAllowListUiState: GetAdminRequestAllowListUiState,
+    getAdminInformationUiState: GetAdminInformationUiState,
     logoutCallBack: () -> Unit,
     withdrawalCallBack: () -> Unit,
     getSignUpRequestList: () -> Unit,
@@ -199,11 +203,29 @@ private fun UserScreen(
                             color = colors.gray500
                         )
 
-                        Text(
-                            text = "이명훈", // todo : Apply UiState
-                            style = typography.captionBold2,
-                            color = colors.black
-                        )
+                        when (getAdminInformationUiState) {
+                            is GetAdminInformationUiState.Loading -> {
+                                Text(
+                                    text = "로딩중..",
+                                    style = typography.captionBold2,
+                                    color = colors.gray200
+                                )
+                            }
+                            is GetAdminInformationUiState.Success -> {
+                                Text(
+                                    text = getAdminInformationUiState.data.name,
+                                    style = typography.captionBold2,
+                                    color = colors.black
+                                )
+                            }
+                            is GetAdminInformationUiState.Error -> {
+                                Text(
+                                    text = "데이터를 불러올 수 없습니다..",
+                                    style = typography.captionBold2,
+                                    color = colors.gray200
+                                )
+                            }
+                        }
                     }
 
                     Row(
@@ -216,11 +238,29 @@ private fun UserScreen(
                             color = colors.gray500
                         )
 
-                        Text(
-                            text = "audgns3825 ", // todo : Apply UiState
-                            style = typography.captionBold2,
-                            color = colors.black
-                        )
+                        when (getAdminInformationUiState) {
+                            is GetAdminInformationUiState.Loading -> {
+                                Text(
+                                    text = "로딩중..",
+                                    style = typography.captionBold2,
+                                    color = colors.gray200
+                                )
+                            }
+                            is GetAdminInformationUiState.Success -> {
+                                Text(
+                                    text = getAdminInformationUiState.data.nickname,
+                                    style = typography.captionBold2,
+                                    color = colors.black
+                                )
+                            }
+                            is GetAdminInformationUiState.Error -> {
+                                Text(
+                                    text = "데이터를 불러올 수 없습니다..",
+                                    style = typography.captionBold2,
+                                    color = colors.gray200
+                                )
+                            }
+                        }
                     }
 
                     Row(
@@ -233,11 +273,29 @@ private fun UserScreen(
                             color = colors.gray500
                         )
 
-                        Text(
-                            text = "audgns3825@gmail.com", // todo : Apply UiState
-                            style = typography.captionBold2,
-                            color = colors.black
-                        )
+                        when (getAdminInformationUiState) {
+                            is GetAdminInformationUiState.Loading -> {
+                                Text(
+                                    text = "로딩중..",
+                                    style = typography.captionBold2,
+                                    color = colors.gray200
+                                )
+                            }
+                            is GetAdminInformationUiState.Success -> {
+                                Text(
+                                    text = getAdminInformationUiState.data.email,
+                                    style = typography.captionBold2,
+                                    color = colors.black
+                                )
+                            }
+                            is GetAdminInformationUiState.Error -> {
+                                Text(
+                                    text = "데이터를 불러올 수 없습니다..",
+                                    style = typography.captionBold2,
+                                    color = colors.gray200
+                                )
+                            }
+                        }
                     }
                 }
 
@@ -350,7 +408,10 @@ private fun UserScreen(
                         color = colors.white
                     )
                     .fillMaxWidth()
-                    .padding(vertical = 16.dp)
+                    .paddingVertical(
+                        vertical = 16.dp,
+                        start = 8.dp
+                    )
             ) {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(20.dp),
@@ -411,49 +472,18 @@ private fun UserScreen(
             ) {
                 when (getAdminRequestAllowListUiState) {
                     is GetAdminRequestAllowListUiState.Success -> {
-                        Column {
-                            SignUpRequestList(
-                                item = getAdminRequestAllowListUiState.data.toImmutableList(),
-                                horizontalScrollState = scrollState,
-                                selectedIndex = selectedId,
-                                onClick = { id ->
-                                    setSelectedId(if (selectedId == id) 0L else id)
-                                }
-                            )
-
-                            Spacer(modifier = Modifier.height(48.dp))
-
-                            Row(
-                                horizontalArrangement = Arrangement.spacedBy(
-                                    16.dp,
-                                    Alignment.CenterHorizontally
-                                ),
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                UserAllowButton(
-                                    enabled = selectedId != 0L,
-                                    onClick = {
-                                        if (selectedId == 0L) {
-                                            onErrorToast(null, R.string.check_sign_up_request_list_item)
-                                        } else {
-                                            successCallBack(selectedId)
-                                        }
-                                    },
-                                )
-
-                                UserDeleteButton(
-                                    enabled = selectedId != 0L,
-                                    onClick = {
-                                        if (selectedId == 0L) {
-                                            onErrorToast(null, R.string.check_sign_up_request_list_item)
-                                        } else {
-                                            deleteCallBack(selectedId)
-                                        }
-                                    },
-                                )
-                            }
-                        }
+                        SignUpRequestList(
+                            item = getAdminRequestAllowListUiState.data.toImmutableList(),
+                            horizontalScrollState = scrollState,
+                            selectedIndex = selectedId,
+                            onClick = { id ->
+                                setSelectedId(if (selectedId == id) 0L else id)
+                            },
+                            selectedId = selectedId,
+                            deleteCallBack = { deleteCallBack(selectedId) },
+                            successCallBack = { successCallBack(selectedId) },
+                            onErrorToast = onErrorToast
+                        )
                     }
 
                     is GetAdminRequestAllowListUiState.Error -> {

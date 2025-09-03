@@ -2,6 +2,7 @@ package com.school_of_company.expo.view
 
 import android.graphics.BitmapFactory
 import android.net.Uri
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -28,7 +29,6 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -46,6 +46,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -54,8 +59,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import com.school_of_company.common.regex.isValidDateSequence
 import com.school_of_company.design_system.R
+import com.school_of_company.design_system.component.bottomsheet.SettingBottomSheet
 import com.school_of_company.design_system.component.button.ExpoStateButton
 import com.school_of_company.design_system.component.button.state.ButtonState
+import com.school_of_company.design_system.component.loading.LoadingDot
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.component.modifier.padding.paddingHorizontal
 import com.school_of_company.design_system.component.textfield.ExpoLocationIconTextField
@@ -64,6 +71,8 @@ import com.school_of_company.design_system.component.textfield.NoneLimitedLength
 import com.school_of_company.design_system.icon.ImageIcon
 import com.school_of_company.design_system.icon.WarnIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
+import com.school_of_company.design_system.theme.color.ExpoColor
+import com.school_of_company.expo.enum.CurrentScreen
 import com.school_of_company.expo.view.component.ExpoAddTextField
 import com.school_of_company.expo.view.component.ExpoSettingBottomSheet
 import com.school_of_company.expo.view.component.ExpoStandardAddTextField
@@ -71,11 +80,9 @@ import com.school_of_company.expo.view.component.ExpoStandardSettingBottomSheet
 import com.school_of_company.expo.viewmodel.ExpoViewModel
 import com.school_of_company.expo.viewmodel.uistate.ImageUpLoadUiState
 import com.school_of_company.expo.viewmodel.uistate.RegisterExpoInformationUiState
-import com.school_of_company.expo.viewmodel.uistate.RegisterStandardProgramListUiState
-import com.school_of_company.expo.viewmodel.uistate.RegisterTrainingProgramListUiState
-import com.school_of_company.model.model.expo.ExpoRequestAndResponseModel
-import com.school_of_company.model.model.standard.StandardRequestModel
-import com.school_of_company.model.model.training.TrainingDtoModel
+import com.school_of_company.model.param.expo.ExpoAllRequestParam
+import com.school_of_company.model.param.expo.StandardProRequestParam
+import com.school_of_company.model.param.expo.TrainingProRequestParam
 import com.school_of_company.ui.keyBoardOption.numberKeyboardOptions
 import com.school_of_company.ui.toast.makeToast
 import com.school_of_company.ui.util.filterNonDigits
@@ -83,14 +90,13 @@ import com.school_of_company.ui.visualTransformation.DateTimeVisualTransformatio
 
 @Composable
 internal fun ExpoCreateRoute(
-    modifier: Modifier=Modifier,
+    modifier: Modifier = Modifier,
+    navigateToExpoAddressSearch: () -> Unit,
     onErrorToast: (throwable: Throwable?, message: Int?) -> Unit,
-    viewModel: ExpoViewModel = hiltViewModel()
+    viewModel: ExpoViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
 ) {
     val registerExpoInformationUiState by viewModel.registerExpoInformationUiState.collectAsStateWithLifecycle()
     val imageUpLoadUiState by viewModel.imageUpLoadUiState.collectAsStateWithLifecycle()
-    val registerTrainingProgramListUiState by viewModel.registerTrainingProgramListUiState.collectAsStateWithLifecycle()
-    val registerStandardProgramListUiState by viewModel.registerStandardProgramListUiState.collectAsStateWithLifecycle()
 
     val modifyTitleState by viewModel.modify_title.collectAsStateWithLifecycle()
     val startedDateState by viewModel.started_date.collectAsStateWithLifecycle()
@@ -102,7 +108,9 @@ internal fun ExpoCreateRoute(
     val trainingProgramTextState by viewModel.trainingProgramTextState.collectAsStateWithLifecycle()
     val standardProgramTextState by viewModel.standardProgramTextState.collectAsStateWithLifecycle()
 
-    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+    var selectedImageUriString by rememberSaveable { mutableStateOf<String?>(null) }
+    var selectedImageUri: Uri? = selectedImageUriString?.let { Uri.parse(it) }
+
 
     val context = LocalContext.current
 
@@ -112,10 +120,15 @@ internal fun ExpoCreateRoute(
                 val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
                 context.contentResolver.openInputStream(uri)?.use { inputStream ->
                     BitmapFactory.decodeStream(inputStream, null, options)
+                    selectedImageUriString = uri.toString()
                     selectedImageUri = uri
                 }
             }
         }
+
+    LaunchedEffect(Unit) {
+        viewModel.setCurrentScreen(CurrentScreen.CREATE)
+    }
 
     DisposableEffect(Unit) {
         onDispose {
@@ -128,15 +141,17 @@ internal fun ExpoCreateRoute(
             is ImageUpLoadUiState.Loading -> Unit
             is ImageUpLoadUiState.Success -> {
                 viewModel.registerExpoInformation(
-                    body = ExpoRequestAndResponseModel(
+                    body = ExpoAllRequestParam(
                         title = viewModel.modify_title.value,
                         startedDay = viewModel.started_date.value,
                         finishedDay = viewModel.ended_date.value,
                         description = viewModel.introduce_title.value,
                         location = viewModel.location.value,
                         coverImage = (imageUpLoadUiState as ImageUpLoadUiState.Success).data.imageURL,
-                        x = 37.511734f,
-                        y = 127.05905f
+                        x = viewModel.coordinateX.value,
+                        y = viewModel.coordinateY.value,
+                        addStandardProRequestDto = standardProgramTextState,
+                        addTrainingProRequestDto = trainingProgramTextState
                     )
                 )
             }
@@ -148,41 +163,32 @@ internal fun ExpoCreateRoute(
     }
 
     LaunchedEffect(registerExpoInformationUiState) {
-        when (registerExpoInformationUiState) {
-            is RegisterExpoInformationUiState.Loading -> Unit
-            is RegisterExpoInformationUiState.Success -> {
-                viewModel.registerTrainingProgramList(
-                    expoId = (registerExpoInformationUiState as RegisterExpoInformationUiState.Success).data.expoId,
-                    body = trainingProgramTextState
-                )
-
-                viewModel.registerStandardProgramList(
-                    expoId = (registerExpoInformationUiState as RegisterExpoInformationUiState.Success).data.expoId,
-                    body = standardProgramTextState
-                )
-            }
-
-            is RegisterExpoInformationUiState.Error -> {
-                onErrorToast(null, R.string.expo_register_fail)
-            }
+        if (registerExpoInformationUiState is RegisterExpoInformationUiState.Success) {
+            viewModel.resetExpoInformation()
+            selectedImageUri = null
+            selectedImageUriString = null
+            makeToast(context, "박람회 등록을 완료하였습니다.")
+            viewModel.initRegisterExpo()
+        } else if (registerExpoInformationUiState is RegisterExpoInformationUiState.Error) {
+            onErrorToast(null, R.string.expo_register_fail)
         }
     }
 
-    LaunchedEffect(registerTrainingProgramListUiState, registerStandardProgramListUiState) {
-        if (registerTrainingProgramListUiState is RegisterTrainingProgramListUiState.Loading && registerStandardProgramListUiState is RegisterStandardProgramListUiState.Loading) { Unit }
-        if (registerTrainingProgramListUiState is RegisterTrainingProgramListUiState.Success && registerStandardProgramListUiState is RegisterStandardProgramListUiState.Success) {
-            viewModel.resetExpoInformation()
-            selectedImageUri = null
-            makeToast(context, "박람회 등록을 완료하였습니다.")
-            viewModel.initRegisterExpo()
-        } else if (registerTrainingProgramListUiState is RegisterTrainingProgramListUiState.Error || registerStandardProgramListUiState is RegisterStandardProgramListUiState.Error) {
-            onErrorToast(null, R.string.expo_register_fail)
+    if (registerExpoInformationUiState is RegisterExpoInformationUiState.Loading) {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = ExpoColor.main)
+        ) {
+            LoadingDot()
         }
     }
 
 
     ExpoCreateScreen(
-        modifier= modifier,
+        modifier = modifier,
         startedDateState = startedDateState,
         endedDateState = endedDateState,
         modifyTitleState = modifyTitleState,
@@ -195,7 +201,6 @@ internal fun ExpoCreateRoute(
         onStartedDateChange = viewModel::onStartedDateChange,
         onEndedDateChange = viewModel::onEndedDateChange,
         onIntroduceTitleChange = viewModel::onIntroduceTitleChange,
-        onAddressChange = viewModel::onAddressChange,
         onLocationChange = viewModel::onLocationChange,
         onExpoCreateCallBack = {
             if (selectedImageUri != null) {
@@ -207,11 +212,12 @@ internal fun ExpoCreateRoute(
         trainingProgramTextState = trainingProgramTextState,
         onTrainingProgramChange = viewModel::updateTrainingProgramText,
         onAddTrainingProgram = viewModel::addTrainingProgramText,
+        onAddStandardProgram = viewModel::addStandardProgramText,
+        navigateToExpoAddressSearch = navigateToExpoAddressSearch,
         onRemoveTrainingProgram = viewModel::removeTrainingProgramText,
         standardProgramTextState = standardProgramTextState,
         onRemoveStandardProgram = viewModel::removeStandardProgramText,
         onStandardProgramChange = viewModel::updateStandardProgramText,
-        onAddStandardProgram = viewModel::addStandardProgramText,
     )
 }
 
@@ -226,30 +232,31 @@ private fun ExpoCreateScreen(
     addressState: String,
     locationState: String,
     imageUri: String?,
-    trainingProgramTextState: List<TrainingDtoModel>,
-    standardProgramTextState: List<StandardRequestModel>,
+    trainingProgramTextState: List<TrainingProRequestParam>,
+    standardProgramTextState: List<StandardProRequestParam>,
     focusManager: FocusManager = LocalFocusManager.current,
     scrollState: ScrollState = rememberScrollState(),
     onImageClick: () -> Unit,
     onExpoCreateCallBack: () -> Unit,
     onAddTrainingProgram: () -> Unit,
     onAddStandardProgram: () -> Unit,
+    navigateToExpoAddressSearch: () -> Unit,
     onStartedDateChange: (String) -> Unit,
     onEndedDateChange: (String) -> Unit,
     onModifyTitleChange: (String) -> Unit,
     onIntroduceTitleChange: (String) -> Unit,
-    onAddressChange: (String) -> Unit,
     onLocationChange: (String) -> Unit,
     onRemoveTrainingProgram: (Int) -> Unit,
     onRemoveStandardProgram: (Int) -> Unit,
-    onTrainingProgramChange: (Int, TrainingDtoModel) -> Unit,
-    onStandardProgramChange: (Int, StandardRequestModel) -> Unit,
+    onTrainingProgramChange: (Int, TrainingProRequestParam) -> Unit,
+    onStandardProgramChange: (Int, StandardProRequestParam) -> Unit,
 ) {
+
     val (openTrainingSettingBottomSheet, isOpenTrainingSettingBottomSheet) = rememberSaveable { mutableStateOf(false) }
     val (openStandardSettingBottomSheet, isOpenStandardSettingBottomSheet) = rememberSaveable { mutableStateOf(false) }
 
-    var selectedTrainingIndex by remember { mutableStateOf<Int?>(null) }
-    var selectedStandardIndex by remember { mutableStateOf<Int?>(null) }
+    var selectedTrainingIndex by rememberSaveable { mutableStateOf<Int?>(null) }
+    var selectedStandardIndex by rememberSaveable { mutableStateOf<Int?>(null) }
 
     ExpoAndroidTheme { colors, typography ->
         Column(
@@ -270,9 +277,15 @@ private fun ExpoCreateScreen(
         ) {
             Column(modifier = Modifier.verticalScroll(scrollState)) {
                 Text(
-                    text = "사진",
-                    style = typography.bodyBold2,
-                    color = colors.black,
+                    text = buildAnnotatedString {
+                        withStyle(style = SpanStyle(color = colors.black)) {
+                            append("사진")
+                        }
+                        withStyle(style = SpanStyle(color = colors.main)) {
+                            append(" *")
+                        }
+                    },
+                    style = typography.bodyBold2
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -365,10 +378,42 @@ private fun ExpoCreateScreen(
                     )
                 }
 
+                Spacer(modifier = Modifier.height(3.dp))
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.Start),
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.expoClickable { onImageClick() }
+                ) {
+                    ImageIcon(
+                        tint = colors.gray300,
+                        modifier = Modifier.size(16.dp)
+                    )
+
+                    Text(
+                        text = "이미지 수정하기(클릭)",
+                        style = typography.captionRegular2,
+                        color = colors.gray300,
+                        textDecoration = TextDecoration.Underline
+                    )
+                }
+
                 Spacer(modifier = Modifier.padding(top = 28.dp))
 
                 LimitedLengthTextField(
-                    label = "제목",
+                    labelComposable = {
+                        Text(
+                            text = buildAnnotatedString {
+                                withStyle(style = SpanStyle(color = colors.black)) {
+                                    append("제목")
+                                }
+                                withStyle(style = SpanStyle(color = colors.main)) {
+                                    append(" *")
+                                }
+                            },
+                            style = typography.bodyBold2
+                        )
+                    },
                     value = modifyTitleState,
                     placeholder = "제목을 입력해주세요.",
                     isError = false,
@@ -379,7 +424,19 @@ private fun ExpoCreateScreen(
 
                 Row(horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.Start)) {
                     LimitedLengthTextField(
-                        label = "모집기간",
+                        labelComposable = {
+                            Text(
+                                text = buildAnnotatedString {
+                                    withStyle(style = SpanStyle(color = colors.black)) {
+                                        append("행사 기간")
+                                    }
+                                    withStyle(style = SpanStyle(color = colors.main)) {
+                                        append(" *")
+                                    }
+                                },
+                                style = typography.bodyBold2
+                            )
+                        },
                         value = startedDateState,
                         lengthLimit = 8,
                         showLengthCounter = false,
@@ -392,6 +449,13 @@ private fun ExpoCreateScreen(
                     )
 
                     LimitedLengthTextField(
+                        labelComposable = {
+                            Text(
+                                text = "행사기간",
+                                color = colors.white,
+                                style = typography.bodyBold2
+                            )
+                        },
                         value = endedDateState,
                         lengthLimit = 8,
                         showLengthCounter = false,
@@ -425,8 +489,19 @@ private fun ExpoCreateScreen(
                 Spacer(modifier = Modifier.padding(top = 28.dp))
 
                 LimitedLengthTextField(
-                    label = "소개글",
-                    value = introduceTitleState,
+                    labelComposable = {
+                        Text(
+                            text = buildAnnotatedString {
+                                withStyle(style = SpanStyle(color = colors.black)) {
+                                    append("소개글")
+                                }
+                                withStyle(style = SpanStyle(color = colors.main)) {
+                                    append(" *")
+                                }
+                            },
+                            style = typography.bodyBold2
+                        )
+                    },                    value = introduceTitleState,
                     placeholder = "소개글을 작성해주세요.",
                     isError = false,
                     updateTextValue = onIntroduceTitleChange,
@@ -438,7 +513,7 @@ private fun ExpoCreateScreen(
 
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top)) {
                     Text(
-                        text = "참가자 연수 종류",
+                        text = "참가자 프로그램",
                         style = typography.bodyBold2,
                         color = colors.black,
                     )
@@ -462,7 +537,7 @@ private fun ExpoCreateScreen(
                     Spacer(modifier = Modifier.padding(top = 28.dp))
 
                     Text(
-                        text = "연수자 연수 종류",
+                        text = "연수자 프로그램",
                         style = typography.bodyBold2,
                         color = colors.black,
                     )
@@ -486,19 +561,30 @@ private fun ExpoCreateScreen(
                     Spacer(modifier = Modifier.padding(top = 28.dp))
 
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top)) {
+                        Text(
+                            text = buildAnnotatedString {
+                                withStyle(style = SpanStyle(color = colors.black)) {
+                                    append("장소")
+                                }
+                                withStyle(style = SpanStyle(color = colors.main)) {
+                                    append(" *")
+                                }
+                            },
+                            style = typography.bodyBold2
+                        )
 
                         ExpoLocationIconTextField(
-                            placeholder = "장소를 입력해주세요.",
-                            isDisabled = false,
-                            onValueChange = onLocationChange,
-                            onButtonClicked = { /* todo : Location Web Hook */ },
-                            value = locationState,
+                            placeholder = "장소를 선택해주세요.",
+                            isDisabled = true,
+                            onButtonClicked = navigateToExpoAddressSearch,
+                            value = addressState,
+                            onValueChange = { _ -> },
                         )
 
                         NoneLimitedLengthTextField(
-                            value = addressState,
+                            value = locationState,
                             placeholder = "상세주소를 입력해주세요.",
-                            updateTextValue = onAddressChange
+                            updateTextValue = onLocationChange
                         )
                     }
 
@@ -508,25 +594,28 @@ private fun ExpoCreateScreen(
 
                     ExpoStateButton(
                         text = "생성하기",
-                        state = if (
+                        state = when {
                             modifyTitleState.isNotEmpty() &&
-                            startedDateState.isNotEmpty() &&
-                            endedDateState.isNotEmpty() &&
-                            introduceTitleState.isNotEmpty() &&
-                            addressState.isNotEmpty() &&
-                            locationState.isNotEmpty() &&
-                            trainingProgramTextState.isNotEmpty() &&
-                            standardProgramTextState.isNotEmpty() &&
-                            startedDateState.isValidDateSequence(endedDateState)
-                        ) {
-                            ButtonState.Enable
-                        } else {
-                            ButtonState.Disable
+                                    startedDateState.isNotEmpty() &&
+                                    endedDateState.isNotEmpty() &&
+                                    introduceTitleState.isNotEmpty() &&
+                                    addressState.isNotEmpty() &&
+                                    locationState.isNotEmpty() &&
+                                    startedDateState.isValidDateSequence(endedDateState) -> {
+                                if (trainingProgramTextState.isEmpty() && standardProgramTextState.isEmpty()) {
+                                    ButtonState.Enable
+                                } else if (trainingProgramTextState.all { it.title.isNotEmpty() && it.startedAt.isNotEmpty() && it.endedAt.isNotEmpty() } &&
+                                    standardProgramTextState.all { it.title.isNotEmpty() && it.startedAt.isNotEmpty() && it.endedAt.isNotEmpty() }) {
+                                    ButtonState.Enable
+                                } else {
+                                    ButtonState.Disable
+                                }
+                            }
+                            else -> ButtonState.Disable
                         },
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        onExpoCreateCallBack()
-                    }
+                        onClick = onExpoCreateCallBack,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
 
                     Spacer(modifier = Modifier.height(48.dp))
                 }
@@ -539,16 +628,20 @@ private fun ExpoCreateScreen(
 
             val selectedTrainingItem = selectedTrainingIndex?.let { trainingProgramTextState[it] }
 
-            if (selectedTrainingItem != null) {
+            SettingBottomSheet(
+                onDismiss = { isOpenTrainingSettingBottomSheet(false) },
+                selectedItem = selectedTrainingItem,
+                onUpdateItem = { updateItem ->
+                    selectedTrainingIndex?.let { index ->
+                        onTrainingProgramChange(index, updateItem)
+                    }
+                }
+            ) { item, updateItem ->
                 ExpoSettingBottomSheet(
                     onCancelClick = { isOpenTrainingSettingBottomSheet(false) },
                     onButtonClick = { isOpenTrainingSettingBottomSheet(false) },
-                    trainingSettingItem = selectedTrainingItem,
-                    onTrainingSettingChange = { updateItem ->
-                        selectedTrainingIndex?.let { index ->
-                            onTrainingProgramChange(index, updateItem)
-                        }
-                    },
+                    trainingSettingItem = item,
+                    onTrainingSettingChange = updateItem,
                 )
             }
         }
@@ -559,16 +652,20 @@ private fun ExpoCreateScreen(
 
             val selectedStandardItem = selectedStandardIndex?.let { standardProgramTextState[it] }
 
-            if (selectedStandardItem != null) {
+            SettingBottomSheet(
+                onDismiss = { isOpenStandardSettingBottomSheet(false) },
+                selectedItem = selectedStandardItem,
+                onUpdateItem = { updateItem ->
+                    selectedStandardIndex?.let { index ->
+                        onStandardProgramChange(index, updateItem)
+                    }
+                }
+            ) { item, updateItem ->
                 ExpoStandardSettingBottomSheet(
                     onCancelClick = { isOpenStandardSettingBottomSheet(false) },
                     onButtonClick = { isOpenStandardSettingBottomSheet(false) },
-                    trainingSettingItem = selectedStandardItem,
-                    onTrainingSettingChange = { updateItem ->
-                        selectedStandardIndex?.let { index ->
-                            onStandardProgramChange(index, updateItem)
-                        }
-                    }
+                    trainingSettingItem = item,
+                    onTrainingSettingChange = updateItem,
                 )
             }
         }
@@ -579,28 +676,28 @@ private fun ExpoCreateScreen(
 @Composable
 private fun ExpoCreateScreenPreview() {
     ExpoCreateScreen(
-        imageUri = null,
-        onImageClick = {},
-        modifyTitleState = "",
         startedDateState = "",
         endedDateState = "",
+        modifyTitleState = "",
         introduceTitleState = "",
         addressState = "",
         locationState = "",
-        onModifyTitleChange = {},
-        onLocationChange = {},
-        onAddressChange = {},
+        imageUri = null,
+        trainingProgramTextState = emptyList(),
+        standardProgramTextState = emptyList(),
+        onImageClick = {},
+        onExpoCreateCallBack = {},
+        onAddTrainingProgram = {},
+        onAddStandardProgram = {},
         onStartedDateChange = {},
         onEndedDateChange = {},
+        onModifyTitleChange = {},
         onIntroduceTitleChange = {},
-        onExpoCreateCallBack = {},
-        trainingProgramTextState = emptyList(),
-        onTrainingProgramChange = { _, _ -> },
-        onAddTrainingProgram = {},
+        onLocationChange = {},
         onRemoveTrainingProgram = {},
-        standardProgramTextState = emptyList(),
-        onStandardProgramChange = { _, _ -> },
-        onAddStandardProgram = {},
         onRemoveStandardProgram = {},
+        navigateToExpoAddressSearch = {},
+        onTrainingProgramChange = { _, _ -> },
+        onStandardProgramChange = { _, _ -> }
     )
 }

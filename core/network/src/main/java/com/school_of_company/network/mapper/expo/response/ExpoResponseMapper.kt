@@ -1,9 +1,9 @@
 package com.school_of_company.network.mapper.expo.response
 
 import com.school_of_company.model.model.expo.ExpoRequestAndResponseModel
-import com.school_of_company.network.dto.expo.all.ExpoRequestAndResponse
+import com.school_of_company.network.dto.expo.response.ExpoResponse
 
-fun ExpoRequestAndResponse.toModel(): ExpoRequestAndResponseModel =
+fun ExpoResponse.toModel(): ExpoRequestAndResponseModel =
     ExpoRequestAndResponseModel(
         title = this.title,
         description = this.description,

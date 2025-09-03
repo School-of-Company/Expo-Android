@@ -43,12 +43,15 @@
 
     <string name="expection_saveToken">토큰이 저장되지 않았습니다.</string>
     <string name="expection_signIn">로그인에 실패했습니다.</string>
-    <string name="expection_not_found">서버 관리자에서 문의해주세요..</string>
+    <string name="expection_server_error">서버 관리자에서 문의해주세요..</string>
     <string name="expection_id_not_valid">아이디가 올바르지 않습니다.</string>
     <string name="expection_password_valid">비밀번호가 올바르지 않습니다.</string>
     <string name="expection_password_validdd">비밀번호가 유효하지 않습니다.</string>
     <string name="expection_email_validdddd">이메일이 유효하지 않습니다.</string>
+    <string name="expection_sms_valid">전화번호를 인증하지 않았습니다.</string>
     <string name="expection_bad_request">잘못된 요청입니다.</string>
+    <string name="exception_forbidden">회원가입 수락이 보류 중입니다.</string>
+    <string name="expeciton_not_found">회원 정보를 찾지 못했습니다.</string>
 
     <string name="main_string">EXPO</string>
     <string name="admin_sign_in">관리자 로그인</string>
@@ -76,6 +79,9 @@
     <string name="hint_nickname">아이디를 입력해주세요.</string>
     <string name="success_sign_up">회원가입에 성공하였습니다.</string>
 
+    <string name="conflict_info">중복되는 이메일, 전화번호, 아이디가 있습니다.</string>
+    <string name="not_sms_check">sms 인증을 하지 않았습니다.</string>
+
     <string name="expo_modify_fail">박람회 수정을 실패하였습니다.</string>
     <string name="expo_register_fail">박람회 생성을 실패하였습니다.</string>
 
@@ -87,13 +93,32 @@
     <string name="get_created_expo_list_empty">박람회 리스트가 비어있습니다.</string>
     <string name="expo_delete_fail">박람회 삭제를 실패하였습니다.</string>
 
+    <string name="form_modify_fail">폼 수정을 실패했습니다.</string>
+    <string name="form_create_fail">폼 생성을 실패했습니다.</string>
+    <string name="form_create_success">폼 생성을 성공했습니다.</string>
+    <string name="form_modify_success">폼 수정을 성공했습니다.</string>
+    <string name="form_modify_not_found">폼을 먼저 생성해주세요.</string>
+    <string name="form_conflict_error">이미 폼이 생성되어 있습니다.</string>
+
     <string name="expo_image_fail">박람회 이미지가 유효하지 않습니다.</string>
+
+    <string name="convert_coordinates_to_address_fail">좌표를 주소로 변환하는 과정에서 오류가 발생했습니다.</string>
+    <string name="convert_coordinates_to_address_success">좌표를 주소로 성공적으로 변환했습니다.</string>
+
+    <string name="get_address_success">주소검색을 성공했습니다</string>
+    <string name="get_address_fail">주소검색을 실패했습니다.</string>
+
+    <string name="get_address_convert_success">주소변환을 성공했습니다.</string>
+    <string name="get_address_convert_fail">주소변환을 실패했습니다.</string>
+
+    <string name="get_address_lack_of_length">2글자 이상 입력해주세요</string>
 
     <string name="expo_image_size_fail">박람회 이미지를 다시 업로드 해주세요.</string>
 
     <string name="write_certification">인증 번호 입력</string>
     <string name="valid_certification">인증번호가 올바르지 않습니다.</string>
     <string name="fail_certification">인증에 실패하셨습니다.</string>
+    <string name="sms_not_certification">인증번호를 발급해주세요.</string>
 
     <string name="re_certificationCode">인증번호 재발송</string>
     <string name="certificationCode">인증번호 발송</string>
@@ -105,7 +130,7 @@
     <string name="cancel">취소</string>
     <string name="filter">필터</string>
     <string name="not_image_description">이미지 없음</string>
-    <string name="register_temp">모집 기간</string>
+    <string name="register_temp">행사 기간</string>
 
     <string name="id_hint">아이디를 입력해주세요.</string>
     <string name="wrong_id">아이디를 잘못 입력하셨습니다.</string>

@@ -53,17 +53,10 @@ internal fun StandardProgramParticipantListItem(
             )
 
             Text(
-                text = data.affiliation,
+                text = data.programName,
                 style = typography.captionRegular2,
                 color = colors.black,
                 modifier = Modifier.width(100.dp)
-            )
-
-            Text(
-                text = data.position,
-                style = typography.captionRegular2,
-                color = colors.black,
-                modifier = Modifier.width(80.dp)
             )
 
             Text(
@@ -95,12 +88,10 @@ internal fun StandardProgramParticipantListItem(
 private fun StandardProgramParticipantListItemPreview() {
     StandardProgramParticipantListItem(
         data = StandardAttendListResponseEntity(
-            affiliation = "affiliation",
             entryTime = "입장시간",
             id = 1,
             leaveTime = "퇴장시간",
             name = "연수자 이름",
-            position = "직위",
             programName = "연수 이름",
             status = true
         ),

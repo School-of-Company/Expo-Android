@@ -19,7 +19,7 @@ import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import kotlinx.coroutines.delay
 
 @Composable
-fun UserEffectButton(
+fun EffectButton(
     modifier: Modifier = Modifier,
     text: String,
     defaultTextColor: Color = Color.Black,

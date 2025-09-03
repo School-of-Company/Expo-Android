@@ -10,13 +10,15 @@ class ParticipantDataSourceImpl @Inject constructor(
     private val service: ParticipantAPI
 ) : ParticipantDataSource {
     override fun getParticipantInformationList(
-        type: String,
         expoId: String,
-        name: String?
-    ): Flow<List<ParticipantInformationResponse>> =
+        page: Int?,
+        size: Int?,
+        localDate: String?
+    ): Flow<ParticipantInformationResponse> =
         performApiRequest { service.getParticipantInformationList(
-            type = type,
             expoId = expoId,
-            name = name
+            page = page,
+            size = size,
+            localDate = localDate
         ) }
 }

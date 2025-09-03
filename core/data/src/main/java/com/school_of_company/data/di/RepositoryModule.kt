@@ -8,8 +8,14 @@ import com.school_of_company.data.repository.auth.AuthRepository
 import com.school_of_company.data.repository.auth.AuthRepositoryImpl
 import com.school_of_company.data.repository.expo.ExpoRepository
 import com.school_of_company.data.repository.expo.ExpoRepositoryImpl
+import com.school_of_company.data.repository.form.FormRepository
+import com.school_of_company.data.repository.form.FormRepositoryImpl
 import com.school_of_company.data.repository.image.ImageRepository
 import com.school_of_company.data.repository.image.ImageRepositoryImpl
+import com.school_of_company.data.repository.juso.AddressRepository
+import com.school_of_company.data.repository.juso.AddressRepositoryImpl
+import com.school_of_company.data.repository.kakao.KakaoRepository
+import com.school_of_company.data.repository.kakao.KakaoRepositoryImpl
 import com.school_of_company.data.repository.participant.ParticipantRepository
 import com.school_of_company.data.repository.participant.ParticipantRepositoryImpl
 import com.school_of_company.data.repository.sms.SmsRepository
@@ -32,51 +38,64 @@ abstract class RepositoryModule {
     @Binds
     abstract fun bindAuthRepository(
         authRepositoryImpl: AuthRepositoryImpl
-    ) : AuthRepository
+    ): AuthRepository
 
     @Binds
     abstract fun bindSmsRepository(
         smsRepositoryImpl: SmsRepositoryImpl
-    ) : SmsRepository
+    ): SmsRepository
 
     @Binds
     abstract fun bindExpoRepository(
         expoRepositoryImpl: ExpoRepositoryImpl
-    ) : ExpoRepository
+    ): ExpoRepository
 
     @Binds
     abstract fun bindImageRepository(
         imageRepositoryImpl: ImageRepositoryImpl
-    ) : ImageRepository
+    ): ImageRepository
 
     @Binds
     abstract fun bindTrainingRepository(
         trainingRepositoryImpl: TrainingRepositoryImpl
-    ) : TrainingRepository
+    ): TrainingRepository
 
     @Binds
     abstract fun bindStandardRepository(
         standardRepositoryImpl: StandardRepositoryImpl
-    ) : StandardRepository
+    ): StandardRepository
 
     @Binds
     abstract fun bindAttendanceRepository(
         attendanceRepositoryImpl: AttendanceRepositoryImpl
-    ) : AttendanceRepository
+    ): AttendanceRepository
 
     @Binds
     abstract fun bindAdminRepository(
         adminRepositoryImpl: AdminRepositoryImpl
-    ) : AdminRepository
+    ): AdminRepository
 
     @Binds
     abstract fun bindTraineeRepository(
         traineeRepositoryImpl: TraineeRepositoryImpl
-    ) : TraineeRepository
+    ): TraineeRepository
 
     @Binds
     abstract fun bindParticipantRepository(
         participantRepositoryImpl: ParticipantRepositoryImpl
-    ) : ParticipantRepository
+    ): ParticipantRepository
 
+    @Binds
+    abstract fun bindAddressRepository(
+        addressRepositoryImpl: AddressRepositoryImpl
+    ): AddressRepository
+
+    @Binds
+    abstract fun bindKakaoRepository(
+        kakaoRepositoryImpl: KakaoRepositoryImpl
+    ): KakaoRepository
+    @Binds
+    abstract fun bindFormRepository(
+        formRepositoryImpl: FormRepositoryImpl
+    ) : FormRepository
 }

@@ -13,8 +13,11 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import com.school_of_company.design_system.component.button.state.ButtonState
 import com.school_of_company.design_system.component.modifier.clickable.expoClickable
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
+import kotlinx.coroutines.delay
 
 @Composable
 fun ExpoButton(
@@ -102,6 +106,7 @@ fun ExpoEnableButton(
     modifier: Modifier = Modifier,
     text: String,
     textColor: Color = Color.Black,
+    backgroundColor: Color = Color.White,
     onClick: () -> Unit,
 ) {
     ExpoAndroidTheme { colors, typography ->
@@ -113,7 +118,7 @@ fun ExpoEnableButton(
             interactionSource = interactionSource,
             contentPadding = PaddingValues(vertical = 16.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = colors.white,
+                containerColor = backgroundColor,
                 contentColor = colors.white,
             ),
             shape = RoundedCornerShape(6.dp),

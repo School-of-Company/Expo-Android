@@ -18,6 +18,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,7 +44,6 @@ import com.school_of_company.design_system.icon.EyeIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
 import com.school_of_company.model.param.auth.AdminSignInRequestParam
 import com.school_of_company.signin.viewmodel.SignInViewModel
-import com.school_of_company.signin.viewmodel.uistate.SaveTokenUiState
 import com.school_of_company.signin.viewmodel.uistate.SignInUiState
 import com.school_of_company.ui.toast.makeToast
 
@@ -56,7 +56,6 @@ internal fun SignInRoute(
     viewModel: SignInViewModel = hiltViewModel()
 ) {
     val signInUiState by viewModel.signInUiState.collectAsStateWithLifecycle()
-    val saveTokenUiState by viewModel.savedTokenUiState.collectAsStateWithLifecycle()
     val idState by viewModel.id.collectAsStateWithLifecycle()
     val passwordState by viewModel.password.collectAsStateWithLifecycle()
     val isEmailError by viewModel.isEmailError.collectAsStateWithLifecycle()
@@ -69,56 +68,28 @@ internal fun SignInRoute(
         }
     }
 
-    DisposableEffect(signInUiState, saveTokenUiState) {
+    LaunchedEffect(signInUiState) {
         when (signInUiState) {
             is SignInUiState.Loading -> Unit
             is SignInUiState.Success -> {
-                when (saveTokenUiState) {
-                    is SaveTokenUiState.Loading -> Unit
-                    is SaveTokenUiState.Success -> {
-                        onSignInClick()
-                        makeToast(context, "로그인 성공")
-                    }
-
-                    is SaveTokenUiState.Error -> {
-                        viewModel.setError(true)
-                        onErrorToast(
-                            (saveTokenUiState as SaveTokenUiState.Error).exception,
-                            R.string.expection_saveToken
-                        )
-                    }
-                }
-            }
-
-            is SignInUiState.NotFound -> {
-                viewModel.setNotFoundError(true)
-                onErrorToast(null, R.string.expection_not_found)
-            }
-
-            is SignInUiState.EmailNotValid -> {
-                viewModel.setIdError(true)
-                onErrorToast(null, R.string.expection_id_not_valid)
-            }
-
-            is SignInUiState.PasswordValid -> {
-                viewModel.setPasswordError(true)
-                onErrorToast(null, R.string.expection_password_valid)
-            }
-
-            is SignInUiState.BadRequest -> {
-                viewModel.setBadRequestError(true)
-                onErrorToast(null, R.string.expection_bad_request)
+                onSignInClick()
+                makeToast(context, "로그인 성공")
             }
 
             is SignInUiState.Error -> {
-                viewModel.setError(true)
-                onErrorToast(
-                    (signInUiState as SignInUiState.Error).exception,
-                    R.string.expection_signIn
-                )
+                val error = signInUiState as SignInUiState.Error
+
+                when (error.errorType) {
+                    SignInUiState.ErrorType.PASSWORD -> viewModel.setPasswordError(true)
+                    SignInUiState.ErrorType.NOT_FOUND -> viewModel.setNotFoundError(true)
+                    SignInUiState.ErrorType.BAD_REQUEST -> viewModel.setBadRequestError(true)
+                    SignInUiState.ErrorType.SERVER, SignInUiState.ErrorType.GENERAL -> viewModel.setError(true)
+                    else -> Unit
+                }
+
+                onErrorToast(error.exception, error.messageResId)
             }
         }
-        onDispose { }
     }
 
     SignInScreen(
@@ -251,7 +222,7 @@ private fun SignInScreen(
                     Text(
                         text = stringResource(id = R.string.sign_out_bar),
                         style = typography.captionRegular2,
-                        color = colors.gray500,
+                        color = colors.main,
                         fontWeight = FontWeight.Normal,
                         modifier = modifier.expoClickable { onSignUpClick() }
                     )

@@ -1,13 +1,15 @@
 package com.school_of_company.signin.viewmodel.uistate
 
-import com.school_of_company.model.model.auth.AdminTokenResponseModel
-
 sealed interface SignInUiState {
     object Loading : SignInUiState
-    data class Success(val signInResponseModel: AdminTokenResponseModel) : SignInUiState
-    data class Error(val exception: Throwable) : SignInUiState
-    object BadRequest : SignInUiState
-    object NotFound : SignInUiState
-    object EmailNotValid : SignInUiState
-    object PasswordValid : SignInUiState
+    object Success : SignInUiState
+    data class Error(
+        val exception: Throwable? = null,
+        val messageResId: Int,
+        val errorType: ErrorType
+    ) : SignInUiState
+
+    enum class ErrorType {
+        PASSWORD, NOT_FOUND, BAD_REQUEST, SERVER, GENERAL, FORBIDDEN
+    }
 }

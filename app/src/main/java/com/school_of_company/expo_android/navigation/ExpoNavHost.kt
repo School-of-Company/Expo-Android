@@ -1,21 +1,36 @@
 package com.school_of_company.expo_android.navigation
 
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import com.school_of_company.common.exception.*
 import com.school_of_company.design_system.R
+import com.school_of_company.expo.navigation.expoAddressSearchScreen
+import com.school_of_company.expo.navigation.expoCreateRoute
 import com.school_of_company.expo.navigation.expoCreateScreen
+import com.school_of_company.expo.navigation.expoCreatedRoute
 import com.school_of_company.expo.navigation.expoCreatedScreen
 import com.school_of_company.expo.navigation.expoDetailScreen
 import com.school_of_company.expo.navigation.expoModifyScreen
+import com.school_of_company.expo.navigation.expoNavigationHomeScreen
 import com.school_of_company.expo.navigation.expoScreen
+import com.school_of_company.expo.navigation.homeRoute
+import com.school_of_company.expo.navigation.navigateToExpoAddressSearch
 import com.school_of_company.expo.navigation.navigateToExpoDetail
 import com.school_of_company.expo.navigation.navigateToExpoModify
+import com.school_of_company.expo.navigation.navigateToExpoNavigationHome
 import com.school_of_company.expo.navigation.navigateToHome
 import com.school_of_company.expo_android.ui.ExpoAppState
+import com.school_of_company.expo_android.ui.navigateToHomeAndClearLogin
 import com.school_of_company.expo_android.ui.navigationPopUpToLogin
+import com.school_of_company.form.navigation.formCreateScreen
+import com.school_of_company.form.navigation.formModifyScreen
+import com.school_of_company.form.navigation.navigationToCreateForm
+import com.school_of_company.form.navigation.navigationToModifyForm
 import com.school_of_company.program.navigation.navigateQrScanner
 import com.school_of_company.program.navigation.qrScannerScreen
 import com.school_of_company.navigation.navigateToSignIn
@@ -35,7 +50,15 @@ import com.school_of_company.standard.navigation.standardProgramParticipantScree
 import com.school_of_company.training.navigation.navigateToTrainingProgramParticipant
 import com.school_of_company.training.navigation.trainingProgramParticipantScreen
 import com.school_of_company.ui.toast.makeToast
+import com.school_of_company.user.navigation.profileRoute
 import com.school_of_company.user.navigation.profileScreen
+
+private val ROUTES_WITHOUT_NAV_PADDING = listOf(
+    homeRoute,
+    expoCreateRoute,
+    expoCreatedRoute,
+    profileRoute
+)
 
 @Composable
 fun ExpoNavHost(
@@ -65,12 +88,16 @@ fun ExpoNavHost(
     NavHost(
         navController = navController,
         startDestination = startDestination,
-        modifier = modifier,
+        modifier = if (navController.currentDestination?.route in ROUTES_WITHOUT_NAV_PADDING) {
+            modifier
+        } else {
+            modifier.windowInsetsPadding(WindowInsets.navigationBars)
+        }
     ) {
 
         signInScreen(
             onSignUpClick = navController::navigationToSignUp,
-            onSignInClick = navController::navigateToHome,
+            onSignInClick = navController::navigateToHomeAndClearLogin,
             onErrorToast = makeErrorToast
         )
 
@@ -86,16 +113,13 @@ fun ExpoNavHost(
 
         expoDetailScreen(
             onBackClick = navController::popBackStack,
-            onCheckClick = { id ->
-                navController.navigateToProgramDetailParticipantManagement(id)
-            },
-            onModifyClick = { id ->
-                navController.navigateToExpoModify(id)
-            },
-            onProgramClick = { id ->
-                navController.navigateToProgramDetailProgram(id)
-            },
+            onCheckClick = navController::navigateToProgramDetailParticipantManagement,
+            onModifyClick = navController::navigateToExpoModify,
+            onProgramClick = navController::navigateToProgramDetailProgram,
             onMessageClick = navController::navigateToSmsSendMessage,
+            navigationToFormCreate = navController::navigationToCreateForm,
+            navigationToFormModify = navController::navigationToModifyForm,
+            onErrorToast = makeErrorToast,
         )
 
         smsSendMessageScreen(
@@ -138,16 +162,27 @@ fun ExpoNavHost(
         )
 
         expoModifyScreen(
+            navigateToExpoAddressSearch = navController::navigateToExpoAddressSearch,
             onErrorToast = makeErrorToast,
             onBackClick = navController::popBackStack,
         )
 
         expoCreateScreen(
+            navigateToExpoAddressSearch = navController::navigateToExpoAddressSearch,
             onErrorToast = makeErrorToast
         )
 
         expoCreatedScreen(
             onErrorToast = makeErrorToast
+        )
+
+        expoAddressSearchScreen(
+            popUpBackStack = navController::popBackStack,
+            onErrorToast = makeErrorToast
+        )
+
+        expoNavigationHomeScreen(
+            navigationToHome = navController::navigateToHome
         )
 
         qrScannerScreen(
@@ -159,6 +194,17 @@ fun ExpoNavHost(
         profileScreen(
             onErrorToast = makeErrorToast,
             onMainNavigate = { navController.navigationPopUpToLogin(loginRoute = sigInRoute) }
+        )
+
+        formCreateScreen(
+            popUpBackStack = navController::popBackStack,
+            onErrorToast = makeErrorToast,
+            navigateToExpoNavigationHome = navController::navigateToExpoNavigationHome
+        )
+
+        formModifyScreen(
+            popUpBackStack = navController::popBackStack,
+            onErrorToast = makeErrorToast,
         )
     }
 }

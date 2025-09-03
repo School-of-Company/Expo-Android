@@ -22,17 +22,22 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusManager
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -40,7 +45,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.school_of_company.design_system.icon.LocationIcon
+import com.school_of_company.design_system.icon.SearchIcon
 import com.school_of_company.design_system.theme.ExpoAndroidTheme
+import com.school_of_company.design_system.theme.ExpoTypography
 
 @Composable
 fun ErrorText(
@@ -160,19 +167,13 @@ fun ExpoNoneLabelTextField(
     isError: Boolean,
     isDisabled: Boolean,
     isReadOnly: Boolean = false,
-    focusManager: FocusManager = LocalFocusManager.current,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     visualTransformationState: Boolean = false,
     trailingIcon: @Composable (() -> Unit)? = null
 ) {
-    var text by remember { mutableStateOf(value ?: "") }
-    val isFocused = remember { mutableStateOf(false) }
-
-    DisposableEffect(Unit) {
-        onDispose {
-            focusManager.clearFocus()
-        }
-    }
+    val text by remember(value) { derivedStateOf { value ?: "" } }
+    var isFocused by remember { mutableStateOf(false) }
+    val focusRequester = remember { FocusRequester() }
 
     ExpoAndroidTheme { colors, typography ->
         Column(
@@ -180,23 +181,21 @@ fun ExpoNoneLabelTextField(
         ) {
             OutlinedTextField(
                 value = text,
-                onValueChange = {
-                    text = it
-                    onValueChange(it)
-                },
+                onValueChange = { onValueChange(it) },
                 modifier = modifier
+                    .focusRequester(focusRequester)
                     .border(
                         width = 1.dp,
                         color = when {
                             isDisabled -> colors.gray100
                             isError -> colors.error
-                            isFocused.value -> colors.main
+                            isFocused -> colors.main
                             text.isNotEmpty() -> colors.gray100
                             else -> colors.gray100
                         },
                         shape = RoundedCornerShape(8.dp)
                     )
-                    .onFocusChanged { isFocused.value = it.isFocused }
+                    .onFocusChanged { isFocused = it.isFocused }
                     .background(
                         color = if (isDisabled) colors.white else Color.Transparent
                     ),
@@ -239,15 +238,14 @@ fun LimitedLengthTextField(
     placeholder: String,
     overflowErrorMessage: String = "",
     label: String = "",
+    labelComposable: @Composable () -> Unit,
     isError: Boolean,
     showLengthCounter: Boolean = true,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     lengthLimit: Int = 0,
 ) {
-    val lengthCheck = remember {
-        if (lengthLimit != 0) value.length >= lengthLimit else false
-    }
+    val lengthCheck = lengthLimit != 0 && value.length > lengthLimit
 
     ExpoAndroidTheme { colors, typography ->
         Column(
@@ -255,13 +253,18 @@ fun LimitedLengthTextField(
             horizontalAlignment = Alignment.Start,
             modifier = modifier.background(color = Color.Transparent)
         ) {
-            Text(
-                text = label,
-                style = typography.bodyBold2,
-                color = colors.black,
-                fontWeight = FontWeight(600),
-                modifier = Modifier.padding(bottom = 10.dp)
-            )
+
+            if (label.isNotEmpty()) {
+                Text(
+                    text = label,
+                    style = typography.bodyBold2,
+                    color = colors.black,
+                    fontWeight = FontWeight(600),
+                    modifier = Modifier.padding(bottom = 10.dp)
+                )
+            } else {
+                labelComposable()
+            }
 
             Box(
                 modifier = Modifier
@@ -398,6 +401,104 @@ fun ExpoLocationIconTextField(
     onButtonClicked: () -> Unit,
 ) {
     ExpoAndroidTheme { colors, typography ->
+        Box(modifier = modifier.clip(RoundedCornerShape(8.dp))) {
+            OutlinedTextField(
+                placeholder = {
+                    Text(
+                        text = placeholder,
+                        style = typography.captionRegular1,
+                        color = colors.gray300
+                    )
+                },
+                value = value,
+                onValueChange = { newState ->
+                    onValueChange(newState)
+                },
+                modifier = modifier
+                    .height(50.dp)
+                    .border(
+                        width = 1.dp,
+                        shape = RoundedCornerShape(8.dp),
+                        color = colors.gray100
+                    )
+                    .background(color = Color.Transparent)
+                    .fillMaxWidth(),
+                textStyle = typography.captionRegular1.copy(color = colors.black),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedTextColor = colors.black,
+                    unfocusedTextColor = colors.black,
+                    cursorColor = colors.main,
+                    focusedBorderColor = Color.Transparent,
+                    unfocusedBorderColor = Color.Transparent,
+                ),
+                enabled = !isDisabled,
+                maxLines = 1,
+                singleLine = true,
+                trailingIcon = {
+                    IconButton(onClick = onButtonClicked) {
+                        LocationIcon(
+                            tint = colors.gray500,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                }
+            )
+        }
+    }
+}
+
+@Composable
+fun TransparentTextField(
+    modifier: Modifier = Modifier,
+    placeholder: String,
+    value: String,
+    textStyle: TextStyle,
+    placeholderTextStyle: TextStyle? = null,
+    updateTextValue: (String) -> Unit,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+) {
+    ExpoAndroidTheme { colors, _ ->
+        Column(
+            verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.Top),
+            horizontalAlignment = Alignment.Start,
+            modifier = modifier
+        ) {
+            Box(
+                modifier = Modifier.padding(vertical = 8.dp)
+            ) {
+                BasicTextField(
+                    onValueChange = { newText ->
+                        updateTextValue(newText)
+                    },
+                    keyboardOptions = keyboardOptions,
+                    value = value,
+                    textStyle = textStyle,
+                    cursorBrush = SolidColor(colors.main),
+                    modifier = Modifier.heightIn(min = 10.dp, max = 300.dp)
+                )
+
+                if (value.isEmpty()) {
+                    Text(
+                        text = placeholder,
+                        color = colors.gray500,
+                        style = placeholderTextStyle ?: textStyle,
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ExpoSearchIconTextField(
+    modifier: Modifier = Modifier,
+    value: String,
+    onValueChange: (String) -> Unit,
+    placeholder: String,
+    isDisabled: Boolean,
+    onButtonClicked: () -> Unit,
+) {
+    ExpoAndroidTheme { colors, typography ->
         Box {
             OutlinedTextField(
                 placeholder = {
@@ -433,7 +534,7 @@ fun ExpoLocationIconTextField(
                 singleLine = true,
                 trailingIcon = {
                     IconButton(onClick = onButtonClicked) {
-                        LocationIcon(
+                        SearchIcon(
                             tint = colors.gray500,
                             modifier = Modifier.size(24.dp)
                         )
@@ -443,7 +544,6 @@ fun ExpoLocationIconTextField(
         }
     }
 }
-
 
 @Preview
 @Composable
@@ -478,9 +578,30 @@ fun ExpoOutlinedTextFieldPreview() {
                 isReadOnly = false,
                 label = "비밀번호"
             )
-            LimitedLengthTextField(value = "", placeholder = "", isError = false, updateTextValue = {})
+            LimitedLengthTextField(
+                labelComposable = {},
+                value = "",
+                placeholder = "",
+                isError = false,
+                updateTextValue = {}
+            )
 
-            NoneLimitedLengthTextField(value = "", placeholder = "",updateTextValue = {})
+            NoneLimitedLengthTextField(value = "", placeholder = "", updateTextValue = {})
+
+            TransparentTextField(
+                value = "배경없는 textField",
+                placeholder = "",
+                updateTextValue = {},
+                textStyle = ExpoTypography.bodyBold2.copy(fontWeight = FontWeight.W600)
+            )
+
+            ExpoLocationIconTextField(
+                value = "",
+                onValueChange = {},
+                placeholder = "",
+                isDisabled = false,
+                onButtonClicked = {}
+            )
         }
     }
 }

@@ -8,7 +8,7 @@
     <br>
     <p>
         <b>EXPO</b>는 전국에서 열리는 박람회, 연수를 편리하게 관리하기 위해 <br>
-        스타트업 동아리가 개발한 교내 동아리 관리 플랫폼입니다.<br> 기존 박람회 혹은 연수에서 참가자를 관리할때 사전 신청이나 참가자 조회에서 불편함이 있었고, <br> 외주를 맡기면 약 2000만원의 비용이 들었습니다. <br> 이러한 불편함을 줄일 수 있도록 편리하게 박람회 및 연수를 관리해 주는 서비스입니다. 또한 외주 비용 2000만원 절감을 하는 성과가 있었습니다.
+        스타트업 동아리가 개발한 박람회, 연수 관리 서비스입니다.<br> 기존 박람회 혹은 연수에서 참가자를 관리할때 사전 신청이나 참가자 조회에서 불편함이 있었고, <br> 외주를 맡기면 약 2000만원의 비용이 들었습니다. <br> 이러한 불편함을 줄일 수 있도록 편리하게 박람회 및 연수를 관리해 주는 서비스입니다. 또한 외주 비용 2000만원 절감을 하는 성과가 있었습니다.
     </p>
     <img src = "https://github.com/user-attachments/assets/f4a33c31-c48e-47a0-ab03-ceeff857830d" />
     <img src = "https://github.com/user-attachments/assets/3b002377-e02e-4cfb-a575-371979ecc1df" />
@@ -67,45 +67,8 @@ Team 👯‍♂️
     </table>
 </div>
 <br>
+<br>
 
-## 🗂️ Packages
-```
-Expo Android
- ┣ 📂app
- ┃ ┣ 📂navigation
- ┃ ┣ 📂ui
- ┃ ┗ 📂activity
- ┣ 📂build-logic
- ┣ 📂core
- ┃ ┣ 📂common
- ┃ ┣ 📂data
- ┃ ┃ ┣ 📂di
- ┃ ┃ ┗ 📂repository
- ┃ ┣ 📂datastore
- ┃ ┃ ┣ 📂di
- ┃ ┃ ┗ 📂proto
- ┃ ┣ 📂design-system
- ┃ ┃ ┣ 📂component
- ┃ ┃ ┣ 📂icon
- ┃ ┃ ┣ 📂theme
- ┃ ┃ ┗ 📂util
- ┃ ┣ 📂model
- ┃ ┃ ┣ 📂enum
- ┃ ┃ ┣ 📂request
- ┃ ┃ ┣ 📂response
- ┃ ┃ ┗ 📂util
- ┃ ┣ 📂network
- ┃ ┃ ┣ 📂api
- ┃ ┃ ┣ 📂datasource
- ┃ ┃ ┣ 📂di
- ┃ ┃ ┣ 📂dto
- ┃ ┃ ┣ 📂mapper
- ┃ ┃ ┗ 📂util
- ┃ ┗ 📂ui
- ┗ 📂feature
- ┃ ┗ 📂project element
-
-```
 
 # :people_holding_hands: Collaborate
 
@@ -183,4 +146,46 @@ commit 메세지 작성법
 ```
 ex 1) ✨ :: Add SearchAPI 
 ex 2)💄 :: View Publishing
+```
+
+<br>
+<br>
+
+## 🗂️ Packages
+```
+Expo Android
+ ┣ 📂app
+ ┃ ┣ 📂navigation
+ ┃ ┣ 📂ui
+ ┃ ┗ 📂activity
+ ┣ 📂build-logic
+ ┣ 📂core
+ ┃ ┣ 📂common
+ ┃ ┣ 📂data
+ ┃ ┃ ┣ 📂di
+ ┃ ┃ ┗ 📂repository
+ ┃ ┣ 📂datastore
+ ┃ ┃ ┣ 📂di
+ ┃ ┃ ┗ 📂proto
+ ┃ ┣ 📂design-system
+ ┃ ┃ ┣ 📂component
+ ┃ ┃ ┣ 📂icon
+ ┃ ┃ ┣ 📂theme
+ ┃ ┃ ┗ 📂util
+ ┃ ┣ 📂model
+ ┃ ┃ ┣ 📂enum
+ ┃ ┃ ┣ 📂request
+ ┃ ┃ ┣ 📂response
+ ┃ ┃ ┗ 📂util
+ ┃ ┣ 📂network
+ ┃ ┃ ┣ 📂api
+ ┃ ┃ ┣ 📂datasource
+ ┃ ┃ ┣ 📂di
+ ┃ ┃ ┣ 📂dto
+ ┃ ┃ ┣ 📂mapper
+ ┃ ┃ ┗ 📂util
+ ┃ ┗ 📂ui
+ ┗ 📂feature
+ ┃ ┗ 📂project element
+
 ```

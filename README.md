@@ -30,6 +30,19 @@ Architecture
 <img src = "https://user-images.githubusercontent.com/82383983/220412681-daafd612-8375-4496-86ea-286b4b05e169.png"/>
 
 EXPO Android 공식문서에 서술된 [Android App Architecture](https://developer.android.com/topic/architecture?hl=ko#recommended-app-arch)를 기반으로 작성되었습니다.
+
+* Minumun SDK 26
+* Language: ```Kotlin```
+* Async: ```Coroutine```
+* DI: ```Dagger-Hilt```
+* Network: ```Retrofit2```, ```OKhttp3```
+* Image: ```Coil```
+* AndroidX Jetpack
+* Animation: ```Lottie```
+* CI, CD: ```Github action```
+* Cooperation: ```Git```, ```Github```, ```GitFlow```
+* Architecture: ```Google App Architecture```, ```MVVM```
+
 <br>
 <br>
 <h2>

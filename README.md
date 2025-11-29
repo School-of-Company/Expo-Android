@@ -31,7 +31,7 @@ Architecture
 
 EXPO Android 공식문서에 서술된 [Android App Architecture](https://developer.android.com/topic/architecture?hl=ko#recommended-app-arch)를 기반으로 작성되었습니다.
 <br>
-
+<br>
 <h2>
 Team 👯‍♂️
 </h2>
@@ -105,4 +105,82 @@ Expo Android
  ┗ 📂feature
  ┃ ┗ 📂project element
 
+```
+
+# :people_holding_hands: Collaborate
+
+### Git 전략
+`develop`을 중심으로 합니다.
+
+작업 시에는 `Issue(이슈)`를 열고 해당 이슈에 따른 브랜치 명을 작성합니다.
+
+브랜치 이름 작성법
+```
+(gitflow 전략)/이슈번호-작업내용
+
+`ex) feature/1-project-setting`
+
+hotfix는 정말 크리티컬 이슈여서 바로 master로 머지를 해 업데이트 하는 경우만 사용
+일반적인 버그 고치는 경우는 fix 혹은 bug를 사용한다.
+    
+간단한 수정 사항은 refactor를 사용한다.
+```
+
+<br>
+    
+작업을 한 후 `develop`으로 **PR**을 올립니다.
+
+<br>
+<br>
+
+### Issue 작성 방법
+이슈 제목 작성법
+```
+(작업내용)
+
+ex) project setting
+```
+    
+1. 작업에 맞는 Label을 선택합니다.
+
+2. 개요는 작업하는 내용을 간단하게 한두줄로 정리해서 적습니다.
+
+3. 기타는 궁금하거나 애매한 내용을 적습니다
+
+<br>
+<br>
+
+### Pull Request 작성법
+PR 제목 작성법
+```
+🔀 :: (이슈번호) - (브랜치 명[작업내용])
+
+ex) 🔀 :: (#1) - project_setting
+```
+    
+1. Assignees를 자기자신을 선택한다.
+
+2. 작업에 맞는 Label을 선택합니다.
+
+3. 작업 내용이 많을 경우 →
+`- (내용 1)`
+`- (내용 2)`
+
+4. Reviewer가 `최소 한 명`이상 approve한 경우 develop으로 merge할 수 있습니다.
+
+5. PR을 올린 후 `Android`를 디스코드 방에서 멘션 한다.
+
+<br>
+<br>
+
+### Commit 작성법
+commit 메세지 작성법
+```
+(gitmoji) :: (작업 내용)
+```
+
+한번에 commit 하지 않고 분할하여 commit한다. 
+```
+ex 1) ✨ :: Add SearchAPI 
+ex 2)💄 :: View Publishing
 ```

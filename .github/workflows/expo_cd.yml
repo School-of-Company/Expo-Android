@@ -170,31 +170,31 @@ jobs:
         uses: sarisia/actions-status-discord@v1
         if: ${{ success() }}
         with:
-          title: CD 성공~
+          title: "🚀 배포 완료: ${{ github.event.inputs.track }}"
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           status: ${{ job.status }}
           description: |
-            버전: v${{ env.NEW_VERSION_NAME }} (${{ env.NEW_VERSION_CODE }})
-            트랙: ${{ github.event.inputs.track }}
-            빌드 시간: ${{ env.BUILD_TIME }}
-            용량: ${{ env.BUNDLE_SIZE }}
-            커밋: "${{ env.COMMIT_MSG }}" (${{ env.COMMIT_HASH }})
-            링크: [Play Console](https://play.google.com/console/developers) | [로그 보기](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            **버전**: `v${{ env.NEW_VERSION_NAME }} (${{ env.NEW_VERSION_CODE }})`
+            **실행자**: `${{ github.actor }}`
+
+            **최신 변경사항**
+            > ${{ env.COMMIT_MSG }}
+
+            [Play Console](https://play.google.com/console/developers) | [작업 로그](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
           color: 65280
-          url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           username: Expo-CD Bot
 
       - name: Android CD Discord Notification (Fail)
         uses: sarisia/actions-status-discord@v1
         if: ${{ failure() }}
         with:
-          title: CD 실패~
+          title: "❌ 배포 실패: ${{ github.event.inputs.track }}"
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           status: ${{ job.status }}
           description: |
-            커밋: "${{ env.COMMIT_MSG }}" (${{ env.COMMIT_HASH }})
-            소요 시간: ${{ env.BUILD_TIME }}
-            링크: [로그 확인하기](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            **실행자**: `${{ github.actor }}`
+            **커밋**: `${{ env.COMMIT_MSG }}` (${{ env.COMMIT_HASH }})
+
+            [실패 로그 확인하기](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
           color: 16711680
-          url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           username: Expo-CD Bot

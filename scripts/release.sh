@@ -87,7 +87,7 @@ elif [ "$MENU_SELECTION" == "2" ]; then
     esac
 
     echo "GitHub Action CD 트리거 중... (Track: internal, Bump: $BUMP_TYPE)"
-    gh workflow run "Android CD" --ref refactor/713-imyeonghun-atomic-release-process -f version_bump_type="$BUMP_TYPE" -f track="internal"
+    gh workflow run "Android CD" --ref master -f version_bump_type="$BUMP_TYPE" -f track="internal"
     
     if [ $? -eq 0 ]; then
         echo "성공적으로 트리거되었습니다. GitHub Actions 탭에서 확인하세요."

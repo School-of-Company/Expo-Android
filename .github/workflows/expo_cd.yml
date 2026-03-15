@@ -25,7 +25,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/refactor/713-imyeonghun-atomic-release-process'
+    if: github.ref == 'refs/heads/master'
 
     steps:
       - name: Record start time
@@ -164,8 +164,7 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add version.properties
           git commit -m "chore: bump version to v${{ env.NEW_VERSION_NAME }} (${{ env.NEW_VERSION_CODE }}) [skip ci]"
-          # 현재 테스트 브랜치로 푸시하도록 수정
-          git push origin refactor/713-imyeonghun-atomic-release-process
+          git push origin master
 
       - name: Android CD Discord Notification (Success)
         uses: sarisia/actions-status-discord@v1

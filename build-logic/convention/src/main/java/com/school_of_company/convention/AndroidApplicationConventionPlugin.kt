@@ -7,6 +7,8 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
+import java.io.FileInputStream
+import java.util.Properties
 
 // Plugin class for configuring Android application project settings
 class AndroidApplicationConventionPlugin : Plugin<Project> {
@@ -21,6 +23,16 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                 apply("expo.android.lint") // Apply custom lint plugin (if available)
             }
 
+            // Load versioning from version.properties
+            val versionPropsFile = rootProject.file("version.properties")
+            val versionProps = Properties()
+            if (versionPropsFile.exists()) {
+                versionProps.load(FileInputStream(versionPropsFile))
+            }
+
+            val vCode = versionProps.getProperty("VERSION_CODE")?.toInt() ?: 1
+            val vName = versionProps.getProperty("VERSION_NAME") ?: "1.0.0"
+
             // Configure Android application extension settings
             extensions.configure<ApplicationExtension> {
                 // Apply common Kotlin Android settings
@@ -34,8 +46,8 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                     applicationId = "com.school_of_company.expo_android"
                     minSdk = 26
                     targetSdk = 35
-                    versionCode = 202509022
-                    versionName = "1.4.1"
+                    versionCode = vCode
+                    versionName = vName
                     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
                     vectorDrawables.useSupportLibrary = true

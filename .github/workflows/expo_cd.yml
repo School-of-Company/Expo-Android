@@ -1,12 +1,31 @@
 name: Android CD
 
 on:
-  push:
-    branches: [ "master" ]
+  workflow_dispatch:
+    inputs:
+      version_bump_type:
+        description: 'Version bump type'
+        required: true
+        default: 'None'
+        type: choice
+        options:
+          - None
+          - Patch
+          - Minor
+          - Major
+      track:
+        description: 'Google Play track'
+        required: true
+        default: 'internal'
+        type: choice
+        options:
+          - internal
+          - production
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
 
     steps:
       - name: Record start time
@@ -14,12 +33,60 @@ jobs:
 
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          fetch-depth: 0 # Full history for git push
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Get commit info
         run: |
           echo "COMMIT_HASH=${GITHUB_SHA:0:8}" >> $GITHUB_ENV
           echo "COMMIT_MSG=$(git log -1 --pretty=format:'%s')" >> $GITHUB_ENV
+
+      - name: Update version.properties
+        if: ${{ github.event.inputs.version_bump_type != 'None' }}
+        id: version_bump
+        run: |
+          VERSION_CODE=$(grep 'VERSION_CODE=' version.properties | cut -d'=' -f2)
+          VERSION_NAME=$(grep 'VERSION_NAME=' version.properties | cut -d'=' -f2)
+          
+          NEW_VERSION_CODE=$((VERSION_CODE + 1))
+          
+          IFS='.' read -ra ADDR <<< "$VERSION_NAME"
+          MAJOR=${ADDR[0]}
+          MINOR=${ADDR[1]}
+          PATCH=${ADDR[2]}
+          
+          case "${{ github.event.inputs.version_bump_type }}" in
+            Major)
+              MAJOR=$((MAJOR + 1))
+              MINOR=0
+              PATCH=0
+              ;;
+            Minor)
+              MINOR=$((MINOR + 1))
+              PATCH=0
+              ;;
+            Patch)
+              PATCH=$((PATCH + 1))
+              ;;
+          esac
+          
+          NEW_VERSION_NAME="$MAJOR.$MINOR.$PATCH"
+          
+          sed -i "s/VERSION_CODE=.*/VERSION_CODE=$NEW_VERSION_CODE/" version.properties
+          sed -i "s/VERSION_NAME=.*/VERSION_NAME=$NEW_VERSION_NAME/" version.properties
+          
+          echo "NEW_VERSION_CODE=$NEW_VERSION_CODE" >> $GITHUB_ENV
+          echo "NEW_VERSION_NAME=$NEW_VERSION_NAME" >> $GITHUB_ENV
+          echo "BUMPED=true" >> $GITHUB_ENV
+
+      - name: Set current version for notification
+        if: ${{ github.event.inputs.version_bump_type == 'None' }}
+        run: |
+          VERSION_CODE=$(grep 'VERSION_CODE=' version.properties | cut -d'=' -f2)
+          VERSION_NAME=$(grep 'VERSION_NAME=' version.properties | cut -d'=' -f2)
+          echo "NEW_VERSION_CODE=$VERSION_CODE" >> $GITHUB_ENV
+          echo "NEW_VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
+          echo "BUMPED=false" >> $GITHUB_ENV
 
       - name: Gradle caching
         uses: actions/cache@v4
@@ -82,42 +149,52 @@ jobs:
           name: app-release
           path: app/build/outputs/bundle/release/app-release.aab
 
-      - name: Deploy to Google Play (Production)
+      - name: Deploy to Google Play
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJson: service_account.json
           packageName: com.school_of_company.expo_android
           releaseFiles: app/build/outputs/bundle/release/app-release.aab
-          track: production
+          track: ${{ github.event.inputs.track }}
+
+      - name: Commit & Push Version Update
+        if: ${{ success() && env.BUMPED == 'true' }}
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add version.properties
+          git commit -m "chore: bump version to v${{ env.NEW_VERSION_NAME }} (${{ env.NEW_VERSION_CODE }}) [skip ci]"
+          git push origin master
 
       - name: Android CD Discord Notification (Success)
         uses: sarisia/actions-status-discord@v1
         if: ${{ success() }}
         with:
-          title: CD 성공~
+          title: "🚀 배포 완료: ${{ github.event.inputs.track }}"
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           status: ${{ job.status }}
           description: |
-            버전: v1.2.3
-            빌드 시간: ${{ env.BUILD_TIME }}
-            용량: ${{ env.BUNDLE_SIZE }}
-            커밋: "${{ env.COMMIT_MSG }}" (${{ env.COMMIT_HASH }})
-            링크: [Play Console](https://play.google.com/console/developers) | [로그 보기](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            **버전**: `v${{ env.NEW_VERSION_NAME }} (${{ env.NEW_VERSION_CODE }})`
+            **실행자**: `${{ github.actor }}`
+
+            **최신 변경사항**
+            > ${{ env.COMMIT_MSG }}
+
+            [Play Console](https://play.google.com/console/developers) | [작업 로그](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
           color: 65280
-          url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           username: Expo-CD Bot
 
       - name: Android CD Discord Notification (Fail)
         uses: sarisia/actions-status-discord@v1
         if: ${{ failure() }}
         with:
-          title: CD 실패~
+          title: "❌ 배포 실패: ${{ github.event.inputs.track }}"
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           status: ${{ job.status }}
           description: |
-            커밋: "${{ env.COMMIT_MSG }}" (${{ env.COMMIT_HASH }})
-            소요 시간: ${{ env.BUILD_TIME }}
-            링크: [로그 확인하기](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            **실행자**: `${{ github.actor }}`
+            **커밋**: `${{ env.COMMIT_MSG }}` (${{ env.COMMIT_HASH }})
+
+            [실패 로그 확인하기](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
           color: 16711680
-          url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           username: Expo-CD Bot

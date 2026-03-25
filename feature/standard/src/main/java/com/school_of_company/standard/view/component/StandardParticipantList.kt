@@ -28,7 +28,10 @@ internal fun StandardParticipantList(
                 .background(color = colors.white)
                 .padding(start = 16.dp)
         ) {
-            itemsIndexed(item) { index, item ->
+            itemsIndexed(
+                items = item,
+                key = { _, item -> item.id },
+            ) { index, item ->
                 StandardProgramParticipantListItem(
                     index = index + 1,
                     data = item,
